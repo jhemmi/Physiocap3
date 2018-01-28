@@ -1,0 +1,52 @@
+# This file contains metadata for your plugin. Since 
+# version 2.0 of QGIS this is the proper way to supply 
+# information about a plugin. The old method of 
+# embedding metadata in __init__.py will 
+# is no longer supported since version 2.0.
+
+# This file should be included when you package your plugin.
+# Mandatory items:
+
+[general]
+name=Physiocap3
+qgisMinimumVersion=2.99
+qgisMaximumVersion=3.99
+
+description=This plugin helps analysing raw data from 
+  Physiocap inside QGIS3. This is a plugin dedicaded
+  to Physiocap users "Agronomist of the vine".
+  
+  This version is available in French, Italian & English but documentation
+  is only in French.
+  
+  Cette extension aide à l'analyse des données brutes
+  de Physiocap sans quitter QGIS3. Il est dédié aux 
+  utilisateurs de Physiocap "Agronome de la vigne"
+about= Physiocap est un capteur qui géolocalise les sarments d'une vigne. 
+  L'extension (plugin) Physiocap n'intéresse que le métier "Agronomie de la vigne".
+  Physiocap est breveté par le CIVC.
+version=0.1
+author=jhemmi.eu
+email=jean@jhemmi.eu
+
+tracker=https://github.com/jhemmi/Physiocap3/issues
+repository=https://github.com/jhemmi/Physiocap3
+# End of mandatory metadata
+
+# Recommended items:
+
+# Uncomment the following line and add your changelog:
+changelog=0.1 est une beta version issu d'une copie de QgisPhysiocapAnalyser 1.8.3 
+
+# Tags are comma separated with spaces allowed
+tags=Physiocap,jhemmi.eu, Hemmi, sarment, section, diamètre, biomasse, CIVC, E.re.c.a, 
+
+homepage=https://github.com/jhemmi/Physiocap3/wiki
+category=Plugins
+icon=icon.png
+# experimental flag
+experimental=True
+
+# deprecated flag (applies to the whole plugin, not just a single version)
+deprecated=False
+
