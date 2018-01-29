@@ -15,11 +15,11 @@ L'extension permet de choisir plusieurs paramètres pour filtrer les données qu
 * trois shapefiles qui permettent de visualiser les données mesurées, les points sans mesures et les données retenues (après filtration),
 * quatres histogrammes qui décrivent la population des données mesurées (sarment, diamètre, segment de points contigües).
 
-Cette version apporte des nouveautés pour l'analyse qualitative des données (taux de points sans mesure, segment de points cohérents et contigüs, dérive durant l'avancement de la capture, altitude et PDOP données par le GPS).
+Cette version apporte des nouveautés pour l'analyse qualitative des captures (taux de points sans mesure, segment de points cohérents et contigüs, dérive durant l'avancement de la capture, altitude et PDOP données par le GPS).
 
 Dans son module Inter, l'extension réalise une extraction des données filtrés à partir de votre contour de parcelles. Vous obtenez les moyennes Inter parcellaires pour faire un premier diagnostic de chaque entité agronomique.
 
-Cette version ne permet pas encore les interpolations et des calculs d'isolignes Intra parcellaire pour affiner l'analyse agronomique. Le module INTRA est en cours de développement.
+Cette version ne permet pas encore les interpolations et des calculs d'isolignes Intra parcellaire pour affiner l'analyse agronomique. Le module INTRA de V3 est en cours de développement.
 
 *"Physiocap" est déposé par le CIVC.*
 
@@ -30,11 +30,11 @@ L'extension QgisPysiocapPlugin intègre le code de calcul du CIVC (PHYSIOCAP_V8)
 
 La documentation de la version 2 se trouve dans le Wiki
 https://github.com/jhemmi/QgisPhysiocapPlugin/wiki/Qgis-Physiocap-Plugin-usage-&-installation
-La domentation de la version 3 n'est pas encore disponible.
+La documentation de la version 3 n'est pas encore disponible.
 
 La version 3Beta-Inter0.1 est publiée dans le dépot github. 
 La 3Beta-Inter0.2 sera déposé sous QGIS 3 (elle sera alors accessible directement dans QGIS 3 depuis le Menu "Extension").
-- 
+
 **Attention, ce dépot GitHub contient la version en cours d'évolution (la 3BETA-Inter0.1 est déposée pour des tests. Elle est encore instable - Février 2018 https://github.com/jhemmi/Physiocap3/releases) **
 
 **Warning, this GitHub repo contains last evolution version (Version 3BETA-Inter0.1 is for test purpose only and not stable - Fébruary 2018 https://github.com/jhemmi/Physiocap3/releases) **
