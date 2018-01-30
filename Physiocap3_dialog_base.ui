@@ -93,7 +93,7 @@
     <enum>QTabWidget::North</enum>
    </property>
    <property name="currentIndex">
-    <number>3</number>
+    <number>0</number>
    </property>
    <property name="movable">
     <bool>true</bool>
@@ -956,7 +956,7 @@
         <double>0.100000000000000</double>
        </property>
        <property name="value">
-        <double>2.500000000000000</double>
+        <double>2.000000000000000</double>
        </property>
       </widget>
       <widget class="QSpinBox" name="spinBoxDeriveMaxSegment">
@@ -1031,7 +1031,7 @@
         <double>0.100000000000000</double>
        </property>
        <property name="value">
-        <double>2.000000000000000</double>
+        <double>2.500000000000000</double>
        </property>
       </widget>
       <widget class="QLabel" name="lab_42">
@@ -4367,7 +4367,7 @@
        </font>
       </property>
       <property name="text">
-       <string>Version 3 Beta Inter 0.1</string>
+       <string>Version 3 Beta Inter 0.2</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_500">

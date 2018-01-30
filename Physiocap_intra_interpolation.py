@@ -661,6 +661,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
             physiocap_quelle_projection_demandee(dialogue)
 
         # Assert repertoire shapefile 
+        # TODO pourquoi unicode
         chemin_shapes = os.path.dirname( unicode( vecteur_point.dataProvider().dataSourceUri() ) )
         shape_point_extension = os.path.basename( unicode( vecteur_point.dataProvider().dataSourceUri() ) ) ;
         pos_extension = shape_point_extension.rfind(".")
