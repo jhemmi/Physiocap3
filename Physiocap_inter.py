@@ -1461,6 +1461,17 @@ class PhysiocapInter( QtWidgets.QDialog):
                     nom_sans_mesure_moyenne, nom_sans_mesure_moyenne_prj, 
                     toutes_les_geoms_sans_mesure, les_infos_sans_mesure)
                     
+            # Inserer les SEGMENTS de tous les contours
+            if  version_3 == "YES" and dialogue.checkBoxInterSegment.isChecked() :
+                nom_court_segment_moyenne = nom_noeud_arbre + NOM_SEGMENTS + SEPARATEUR_ + nom_court_du_contour
+                nom_court_segment_moyenne_prj = nom_court_segment_moyenne [:-4] + EXT_CRS_PRJ[ -4:]
+                nom_segment_moyenne = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_segment_moyenne))        
+                nom_segment_moyenne_prj = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_segment_moyenne_prj))        
+
+                physiocap_segment_tous_contours( laProjectionCRS, EPSG_NUMBER, 
+                    nom_segment_moyenne, nom_segment_moyenne_prj,
+                    toutes_les_geoms_segment, les_infos_segment)
+    
             if  version_3 == "YES" and dialogue.checkBoxInterSegmentBrise.isChecked():
                 nom_court_segment_brise_moyenne = nom_noeud_arbre + NOM_SEGMENTS + SEPARATEUR_ + nom_court_du_contour
                 nom_court_segment_brise_moyenne_prj = nom_court_segment_brise_moyenne [:-4] + EXT_CRS_PRJ[ -4:]
@@ -1472,17 +1483,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                     toutes_les_geoms_segment, les_infos_segment, 
                     "BRISE")
 
-            # Inserer les SEGMENTS de tous les contours
-            if  version_3 == "YES" and dialogue.checkBoxInterSegment.isChecked() :
-                nom_court_segment_moyenne = nom_noeud_arbre + NOM_SEGMENTS + SEPARATEUR_ + nom_court_du_contour
-                nom_court_segment_moyenne_prj = nom_court_segment_moyenne [:-4] + EXT_CRS_PRJ[ -4:]
-                nom_segment_moyenne = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_segment_moyenne))        
-                nom_segment_moyenne_prj = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_segment_moyenne_prj))        
-
-                physiocap_segment_tous_contours( laProjectionCRS, EPSG_NUMBER, 
-                    nom_segment_moyenne, nom_segment_moyenne_prj,
-                    toutes_les_geoms_segment, les_infos_segment)
-                
+            
             # Affichage du resultat
             if (consolidation == "YES"):
                 # Cas de consolidation on précise le nom du shaoe de point
