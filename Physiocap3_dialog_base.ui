@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>526</width>
-    <height>767</height>
+    <height>739</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
    <property name="geometry">
     <rect>
      <x>260</x>
-     <y>730</y>
+     <y>710</y>
      <width>211</width>
      <height>31</height>
     </rect>
@@ -64,7 +64,7 @@
      <x>0</x>
      <y>0</y>
      <width>521</width>
-     <height>731</height>
+     <height>711</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -93,7 +93,7 @@
     <enum>QTabWidget::North</enum>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>3</number>
    </property>
    <property name="movable">
     <bool>true</bool>
@@ -2466,7 +2466,7 @@
      </widget>
      <widget class="QCheckBox" name="checkBoxInterLibelle">
       <property name="enabled">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
       <property name="geometry">
        <rect>
@@ -3044,8 +3044,15 @@
        <x>10</x>
        <y>500</y>
        <width>491</width>
-       <height>191</height>
+       <height>181</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
      </property>
      <property name="toolTip">
       <string/>
@@ -3054,7 +3061,7 @@
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Les thématiques proposées par l'extension sont adaptées à un cas général. Il est possible de les modifier avec vos propres choix.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Ne modifier ce répertoire que si vous connaissez bien l'utilisation des modèles dans QGIS.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Vous pourrez ensuite paramétrer vos modèles pour créer des constrastes de couleur plus marqués ou adapter les bornes min et max à vos valeurs ... &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="title">
-      <string/>
+      <string>Sélectionez votre répertoire des thématiques</string>
      </property>
      <widget class="QLabel" name="lab_190">
       <property name="enabled">
@@ -3062,8 +3069,8 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>0</x>
-        <y>10</y>
+        <x>160</x>
+        <y>50</y>
         <width>451</width>
         <height>21</height>
        </rect>
@@ -3075,7 +3082,7 @@
        </font>
       </property>
       <property name="text">
-       <string>Sélectionez votre répertoire des thématiques</string>
+       <string/>
       </property>
      </widget>
      <widget class="QComboBox" name="fieldComboThematiques">
@@ -3085,10 +3092,17 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>35</y>
+        <y>20</y>
         <width>471</width>
-        <height>24</height>
+        <height>20</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
       </property>
       <property name="toolTip">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Par défaut, le répertoire des thématiques est celui du plugin.&lt;/p&gt;&lt;p&gt;Si vous choississez le répertoire des modèles de QGIS, vous&lt;/p&gt;&lt;p&gt;- devez Fermer l'extension Physiocap puis QGIS&lt;/p&gt;&lt;p&gt;- copiez les modèles vers ce répertoire&lt;/p&gt;&lt;p&gt;- pourrez modifier ces modèles puis changer leurs noms&lt;/p&gt;&lt;p&gt;Pour revenir en arrière (vous perdrez vos nommages spécifiques),&lt;/p&gt;&lt;p&gt;choisir à nouveau le répertoire des thématiques du plugin&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -3110,7 +3124,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>60</y>
+        <y>40</y>
         <width>451</width>
         <height>21</height>
        </rect>
@@ -3129,10 +3143,17 @@
       <property name="geometry">
        <rect>
         <x>330</x>
-        <y>100</y>
+        <y>80</y>
         <width>101</width>
         <height>21</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
       </property>
       <property name="minimum">
        <number>5</number>
@@ -3144,14 +3165,14 @@
        <number>1</number>
       </property>
       <property name="value">
-       <number>18</number>
+       <number>13</number>
       </property>
      </widget>
      <widget class="QLabel" name="lab_194">
       <property name="geometry">
        <rect>
         <x>220</x>
-        <y>80</y>
+        <y>60</y>
         <width>101</width>
         <height>21</height>
        </rect>
@@ -3162,6 +3183,13 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
       <property name="text">
        <string>Distance isolignes</string>
       </property>
@@ -3170,10 +3198,17 @@
       <property name="geometry">
        <rect>
         <x>210</x>
-        <y>100</y>
+        <y>80</y>
         <width>101</width>
         <height>21</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
       </property>
       <property name="minimum">
        <number>1</number>
@@ -3185,14 +3220,14 @@
        <number>1</number>
       </property>
       <property name="value">
-       <number>3</number>
+       <number>2</number>
       </property>
      </widget>
      <widget class="QLabel" name="lab_195">
       <property name="geometry">
        <rect>
         <x>330</x>
-        <y>80</y>
+        <y>60</y>
         <width>101</width>
         <height>21</height>
        </rect>
@@ -3202,6 +3237,13 @@
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
       </property>
       <property name="text">
        <string>Valeur maximale</string>
@@ -3211,7 +3253,7 @@
       <property name="geometry">
        <rect>
         <x>120</x>
-        <y>80</y>
+        <y>60</y>
         <width>101</width>
         <height>21</height>
        </rect>
@@ -3222,6 +3264,13 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
       <property name="text">
        <string>Valeur minimale</string>
       </property>
@@ -3230,10 +3279,17 @@
       <property name="geometry">
        <rect>
         <x>120</x>
-        <y>100</y>
+        <y>80</y>
         <width>71</width>
         <height>21</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
       </property>
       <property name="minimum">
        <number>0</number>
@@ -3245,32 +3301,13 @@
        <number>1</number>
       </property>
       <property name="value">
-       <number>4</number>
+       <number>5</number>
       </property>
      </widget>
      <widget class="QComboBox" name="fieldComboIntraDIAM">
       <property name="enabled">
        <bool>true</bool>
       </property>
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>100</y>
-        <width>111</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lab_192">
       <property name="geometry">
        <rect>
         <x>0</x>
@@ -3285,6 +3322,39 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lab_192">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>60</y>
+        <width>111</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
       <property name="text">
        <string>Champ à interpoler</string>
       </property>
@@ -3293,10 +3363,17 @@
       <property name="geometry">
        <rect>
         <x>330</x>
-        <y>120</y>
+        <y>100</y>
         <width>101</width>
         <height>21</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
       </property>
       <property name="minimum">
        <number>5</number>
@@ -3308,17 +3385,24 @@
        <number>1</number>
       </property>
       <property name="value">
-       <number>20</number>
+       <number>11</number>
       </property>
      </widget>
      <widget class="QSpinBox" name="spinBoxIsoMin_Fixe_SARM">
       <property name="geometry">
        <rect>
         <x>120</x>
-        <y>120</y>
+        <y>100</y>
         <width>71</width>
         <height>21</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
       </property>
       <property name="minimum">
        <number>0</number>
@@ -3330,17 +3414,24 @@
        <number>1</number>
       </property>
       <property name="value">
-       <number>2</number>
+       <number>7</number>
       </property>
      </widget>
      <widget class="QSpinBox" name="spinBoxDistanceIso_Fixe_SARM">
       <property name="geometry">
        <rect>
         <x>210</x>
-        <y>120</y>
+        <y>100</y>
         <width>101</width>
         <height>21</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
       </property>
       <property name="minimum">
        <number>1</number>
@@ -3352,7 +3443,7 @@
        <number>1</number>
       </property>
       <property name="value">
-       <number>3</number>
+       <number>1</number>
       </property>
      </widget>
      <widget class="QComboBox" name="fieldComboIntraSARM">
@@ -3362,7 +3453,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>120</y>
+        <y>100</y>
         <width>111</width>
         <height>21</height>
        </rect>
@@ -3373,6 +3464,13 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
       <property name="toolTip">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
@@ -3381,10 +3479,17 @@
       <property name="geometry">
        <rect>
         <x>330</x>
-        <y>140</y>
+        <y>120</y>
         <width>101</width>
         <height>21</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
       </property>
       <property name="minimum">
        <number>5</number>
@@ -3403,10 +3508,17 @@
       <property name="geometry">
        <rect>
         <x>210</x>
-        <y>140</y>
+        <y>120</y>
         <width>101</width>
         <height>21</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
       </property>
       <property name="minimum">
        <number>1</number>
@@ -3428,7 +3540,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>140</y>
+        <y>120</y>
         <width>111</width>
         <height>21</height>
        </rect>
@@ -3439,6 +3551,13 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
       <property name="toolTip">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
@@ -3447,10 +3566,17 @@
       <property name="geometry">
        <rect>
         <x>120</x>
-        <y>140</y>
+        <y>120</y>
         <width>71</width>
         <height>21</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
       </property>
       <property name="minimum">
        <number>0</number>
@@ -3469,7 +3595,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>170</y>
+        <y>150</y>
         <width>131</width>
         <height>21</height>
        </rect>
@@ -3497,10 +3623,17 @@
       <property name="geometry">
        <rect>
         <x>140</x>
-        <y>170</y>
+        <y>150</y>
         <width>211</width>
         <height>20</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
       </property>
       <property name="toolTip">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Vous pouvez choisir le mode de traces : &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Le mode &amp;quot;&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Traces complètes&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;&amp;quot; est le defaut et permet d'avoir un maximum de traces. C'est le mode le plus lent, nécessaire en cas de mise ou point ou de problème.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Le mode&amp;quot;&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Traces minimales&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;&amp;quot; garde une trace des début et fin de traitement.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Le mode &amp;quot;&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Pas de trace&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;&amp;quot; est le mode le plus rapide, mais plus aucun trace de vos traitement n'apparait. A utiliser, en cas de traitement de plusieurs dizaine de parcelles. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Dans ce dernier mode, on évite aussi la vérification des attributs uniques lors de l'affichage de vecteurs dans Intra.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>

@@ -1,19 +1,18 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis hasScaleBasedVisibilityFlag="0" version="2.99.0-Master" readOnly="0" maxScale="-4.65661e-10" simplifyLocal="1" mincale="1e+8" simplifyAlgorithm="0" simplifyDrawingTol="1" simplifyMaxScale="1" simplifyDrawingHints="1">
-  <renderer-v2 symbollevels="0" forceraster="0" attr="NBSARM" graduatedMethod="GraduatedColor" enableorderby="0" type="graduatedSymbol">
+<qgis hasScaleBasedVisibilityFlag="0" version="2.99.0-Master" readOnly="0" maxScale="0" simplifyLocal="1" mincale="1e+8" simplifyAlgorithm="0" simplifyDrawingTol="1" simplifyMaxScale="1" simplifyDrawingHints="1">
+  <renderer-v2 symbollevels="0" forceraster="0" attr="ALTITUDE" graduatedMethod="GraduatedColor" enableorderby="0" type="graduatedSymbol">
     <ranges>
-      <range lower="0.000000000000000" render="true" upper="5.000000000000000" symbol="0" label="- de 5"/>
-      <range lower="5.000000000000000" render="true" upper="7.000000000000000" symbol="1" label="5 à 7"/>
-      <range lower="7.000000000000000" render="true" upper="9.000000000000000" symbol="2" label="7 à 9"/>
-      <range lower="9.000000000000000" render="true" upper="11.000000000000000" symbol="3" label="9 à 11"/>
-      <range lower="11.000000000000000" render="true" upper="13.000000000000000" symbol="4" label="11 à 13"/>
-      <range lower="13.000000000000000" render="true" upper="50.000000000000000" symbol="5" label="+ de 13"/>
+      <range lower="0.000000000000000" render="true" upper="100.000000000000000" symbol="0" label="- 100 m"/>
+      <range lower="100.000000000000000" render="true" upper="200.000000000000000" symbol="1" label="100 - 200 m"/>
+      <range lower="200.000000000000000" render="true" upper="300.000000000000000" symbol="2" label="200 - 300 m"/>
+      <range lower="300.000000000000000" render="true" upper="400.000000000000000" symbol="3" label="300 - 400 m"/>
+      <range lower="400.000000000000000" render="true" upper="1000.000000000000000" symbol="4" label="+ 400 m"/>
     </ranges>
     <symbols>
       <symbol name="0" alpha="1" type="fill" clip_to_extent="1">
         <layer locked="0" enabled="1" pass="0" class="SimpleFill">
           <prop k="border_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-          <prop k="color" v="255,235,172,255"/>
+          <prop k="color" v="253,191,111,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
@@ -35,7 +34,7 @@
       <symbol name="1" alpha="1" type="fill" clip_to_extent="1">
         <layer locked="0" enabled="1" pass="0" class="SimpleFill">
           <prop k="border_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-          <prop k="color" v="215,211,146,255"/>
+          <prop k="color" v="255,127,0,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
@@ -57,7 +56,7 @@
       <symbol name="2" alpha="1" type="fill" clip_to_extent="1">
         <layer locked="0" enabled="1" pass="0" class="SimpleFill">
           <prop k="border_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-          <prop k="color" v="174,186,121,255"/>
+          <prop k="color" v="251,207,207,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
@@ -79,7 +78,7 @@
       <symbol name="3" alpha="1" type="fill" clip_to_extent="1">
         <layer locked="0" enabled="1" pass="0" class="SimpleFill">
           <prop k="border_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-          <prop k="color" v="133,161,95,255"/>
+          <prop k="color" v="251,154,153,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
@@ -101,29 +100,7 @@
       <symbol name="4" alpha="1" type="fill" clip_to_extent="1">
         <layer locked="0" enabled="1" pass="0" class="SimpleFill">
           <prop k="border_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-          <prop k="color" v="92,136,69,255"/>
-          <prop k="joinstyle" v="bevel"/>
-          <prop k="offset" v="0,0"/>
-          <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-          <prop k="offset_unit" v="MM"/>
-          <prop k="outline_color" v="0,0,0,255"/>
-          <prop k="outline_style" v="solid"/>
-          <prop k="outline_width" v="0.26"/>
-          <prop k="outline_width_unit" v="MM"/>
-          <prop k="style" v="solid"/>
-          <data_defined_properties>
-            <Option type="Map">
-              <Option name="name" value="" type="QString"/>
-              <Option name="properties"/>
-              <Option name="type" value="collection" type="QString"/>
-            </Option>
-          </data_defined_properties>
-        </layer>
-      </symbol>
-      <symbol name="5" alpha="1" type="fill" clip_to_extent="1">
-        <layer locked="0" enabled="1" pass="0" class="SimpleFill">
-          <prop k="border_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-          <prop k="color" v="51,111,44,255"/>
+          <prop k="color" v="227,26,28,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
@@ -147,7 +124,7 @@
       <symbol name="0" alpha="1" type="fill" clip_to_extent="1">
         <layer locked="0" enabled="1" pass="0" class="SimpleFill">
           <prop k="border_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-          <prop k="color" v="144,116,164,255"/>
+          <prop k="color" v="114,95,129,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
@@ -168,36 +145,16 @@
       </symbol>
     </source-symbol>
     <colorramp name="[source]" type="gradient">
-      <prop k="color1" v="255,235,172,255"/>
-      <prop k="color2" v="51,111,44,255"/>
+      <prop k="color1" v="255,255,255,255"/>
+      <prop k="color2" v="255,0,0,255"/>
       <prop k="discrete" v="0"/>
       <prop k="rampType" v="gradient"/>
     </colorramp>
     <mode name="equal"/>
     <rotation/>
     <sizescale/>
-    <labelformat decimalplaces="1" trimtrailingzeroes="false" format=" %1 - %2 "/>
+    <labelformat decimalplaces="0" trimtrailingzeroes="false" format=" %1 - %2 "/>
   </renderer-v2>
-  <labeling type="simple">
-    <settings>
-      <text-style previewBkgrdColor="#ffffff" fontCapitals="0" blendMode="0" fontItalic="0" fontSizeUnit="Point" useSubstitutions="0" fontFamily="Ubuntu" fontSizeMapUnitScale="3x:0,0,0,0,0,0" namedStyle="Regular" fontWordSpacing="0" fontSize="10" fieldName="  concat(   &#xa;  &quot;NOM_PHY&quot; ,  ' Nbsarm : ', format_number(&quot;NBSARM&quot;, 2)&#xa;  )" isExpression="1" fontWeight="50" textColor="0,0,0,255" multilineHeight="1" fontLetterSpacing="0" fontUnderline="0" fontStrikeout="0" textOpacity="1">
-        <text-buffer bufferNoFill="0" bufferSize="1" bufferDraw="1" bufferColor="253,191,111,255" bufferBlendMode="0" bufferSizeMapUnitScale="3x:0,0,0,0,0,0" bufferSizeUnits="MM" bufferJoinStyle="64" bufferOpacity="1"/>
-        <background shapeSizeX="0" shapeSizeY="0" shapeRadiiUnit="MM" shapeOffsetX="0" shapeOffsetY="0" shapeOffsetUnit="MM" shapeBorderWidthUnit="MM" shapeBlendMode="0" shapeDraw="0" shapeBorderWidth="0" shapeRadiiX="0" shapeSizeUnit="MM" shapeSizeType="0" shapeOffsetMapUnitScale="3x:0,0,0,0,0,0" shapeRadiiY="0" shapeFillColor="255,255,255,255" shapeRotationType="0" shapeBorderColor="128,128,128,255" shapeOpacity="1" shapeRadiiMapUnitScale="3x:0,0,0,0,0,0" shapeType="0" shapeBorderWidthMapUnitScale="3x:0,0,0,0,0,0" shapeSizeMapUnitScale="3x:0,0,0,0,0,0" shapeRotation="0" shapeSVGFile="" shapeJoinStyle="64"/>
-        <shadow shadowRadiusUnit="MM" shadowRadiusAlphaOnly="0" shadowScale="100" shadowDraw="0" shadowOffsetUnit="MM" shadowRadiusMapUnitScale="3x:0,0,0,0,0,0" shadowOpacity="0.7" shadowOffsetAngle="135" shadowOffsetMapUnitScale="3x:0,0,0,0,0,0" shadowOffsetGlobal="1" shadowBlendMode="6" shadowRadius="1.5" shadowUnder="0" shadowOffsetDist="1" shadowColor="0,0,0,255"/>
-        <substitutions/>
-      </text-style>
-      <text-format wrapChar="~" multilineAlign="0" formatNumbers="0" addDirectionSymbol="0" placeDirectionSymbol="0" plussign="0" rightDirectionSymbol=">" reverseDirectionSymbol="0" leftDirectionSymbol="&lt;" decimals="3"/>
-      <placement quadOffset="4" predefinedPositionOrder="TR,TL,BR,BL,R,L,TSR,BSR" distUnits="MM" fitInPolygonOnly="0" offsetType="0" centroidInside="0" repeatDistanceMapUnitScale="3x:0,0,0,0,0,0" repeatDistance="0" dist="0" centroidWhole="0" maxCurvedCharAngleOut="-20" offsetUnits="MapUnit" yOffset="0" xOffset="0" repeatDistanceUnits="MM" placementFlags="0" rotationAngle="0" maxCurvedCharAngleIn="20" placement="0" labelOffsetMapUnitScale="3x:0,0,0,0,0,0" preserveRotation="1" distMapUnitScale="3x:0,0,0,0,0,0" priority="5"/>
-      <rendering maxNumLabels="2000" labelPerPart="0" scaleMin="1" upsidedownLabels="0" zIndex="0" obstacleFactor="1" mergeLines="0" fontLimitPixelSize="0" obstacleType="0" displayAll="0" scaleMax="10000000" minFeatureSize="0" obstacle="1" fontMaxPixelSize="10000" fontMinPixelSize="3" drawLabels="1" limitNumLabels="0" scaleVisibility="0"/>
-      <dd_properties>
-        <Option type="Map">
-          <Option name="name" value="" type="QString"/>
-          <Option name="properties"/>
-          <Option name="type" value="collection" type="QString"/>
-        </Option>
-      </dd_properties>
-    </settings>
-  </labeling>
   <customproperties>
     <property key="embeddedWidgets/count" value="0"/>
     <property key="variableNames"/>
@@ -636,25 +593,26 @@
       <column hidden="1" width="-1" type="actions"/>
     </columns>
   </attributetableconfig>
-  <editform>.</editform>
+  <editform></editform>
   <editforminit/>
   <editforminitcodesource>0</editforminitcodesource>
-  <editforminitfilepath>.</editforminitfilepath>
+  <editforminitfilepath></editforminitfilepath>
   <editforminitcode><![CDATA[# -*- coding: utf-8 -*-
 """
-Les formulaires QGIS peuvent avoir une fonction Python qui sera appelée à l'ouverture du formulaire.
+QGIS forms can have a Python function that is called when the form is
+opened.
 
-Utilisez cette fonction pour ajouter plus de fonctionnalités à vos formulaires.
+Use this function to add extra logic to your forms.
 
-Entrez le nom de la fonction dans le champ
-"Fonction d'initialisation Python"
-Voici un exemple à suivre:
+Enter the name of the function in the "Python Init function"
+field.
+An example follows:
 """
-from PyQt4.QtGui import QWidget
+from qgis.PyQt.QtWidgets import QWidget
 
 def my_form_open(dialog, layer, feature):
-⇥geom = feature.geometry()
-⇥control = dialog.findChild(QWidget, "MyLineEdit")
+	geom = feature.geometry()
+	control = dialog.findChild(QWidget, "MyLineEdit")
 ]]></editforminitcode>
   <featformsuppress>0</featformsuppress>
   <editorlayout>generatedlayout</editorlayout>
@@ -665,6 +623,6 @@ def my_form_open(dialog, layer, feature):
   </conditionalstyles>
   <expressionfields/>
   <previewExpression>GID</previewExpression>
-  <mapTip>UIDPARCELL</mapTip>
+  <mapTip></mapTip>
   <layerGeometryType>2</layerGeometryType>
 </qgis>

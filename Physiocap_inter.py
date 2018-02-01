@@ -1149,11 +1149,13 @@ class PhysiocapInter( QtWidgets.QDialog):
             le_nombre_segment = 0
             longueur_moyenne_segment = 0
 
-            if version_3 == "YES" and nb_dia > 0:
+            if  version_3 == "YES" and dialogue.checkBoxInterPasMesure.isChecked() \
+                and nb_dia > 0:
                 le_taux_de_sans_mesure = i_sans_mesure / nb_dia * 100
-            if version_3 == "YES":
+            if version_3 == "YES" and ( dialogue.checkBoxInterSegment.isChecked() or \
+                dialogue.checkBoxInterSegmentBrise.isChecked() ):
                 le_nombre_segment = len (les_nombres_points_restant)
-                longueur_moyenne_segment =float(  np.mean( les_nombres_points_restant)) 
+                longueur_moyenne_segment = float(  np.mean( les_nombres_points_restant)) 
             moyennes_point = {}
             ecarts_point = {}
             medianes_point = {}

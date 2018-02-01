@@ -377,7 +377,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 themeSegmentBrise = self.settings.value("Physiocap/themeSegmentBrise", "Filtre segment brisé")
                 self.lineEditThematiqueSegmentBrise.setText( themeSegmentBrise )
                 # Inter
-                themeDiametre = self.settings.value("Physiocap/themeInterDiametre", "Inter diametre")
+                themeDiametre = self.settings.value("Physiocap/themeInterDiametre", "Inter diamètre")
                 self.lineEditThematiqueInterDiametre.setText( themeDiametre )
                 themeSarment = self.settings.value("Physiocap/themeInterSarment", "Inter sarment")
                 self.lineEditThematiqueInterSarment.setText( themeSarment )
@@ -424,8 +424,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 self.lineEditThematiqueSegmentBrise.setText("Filtre segment brisé")
                 self.settings.setValue("Physiocap/themeSegmentBrise","Filtre segment brisé")
                 # Inter
-                self.lineEditThematiqueInterDiametre.setText("Inter diametre")
-                self.settings.setValue("Physiocap/themeInterDiametre", "Inter diametre")
+                self.lineEditThematiqueInterDiametre.setText("Inter diamètre")
+                self.settings.setValue("Physiocap/themeInterDiametre", "Inter diamètre")
                 self.lineEditThematiqueInterSarment.setText("Inter sarment")
                 self.settings.setValue("Physiocap/themeInterSarment", "Inter sarment")
                 self.lineEditThematiqueInterBiomasse.setText("Inter biomasse")
