@@ -1423,12 +1423,12 @@ class PhysiocapInter( QtWidgets.QDialog):
                         ligne_segment.loadNamedStyle( le_template_segment)
 
             else:
-                physiocap_log( self.tr( "== Aucune point dans {0}. Pas de comparaison inter parcellaire").\
+                physiocap_log( self.tr( "== Aucun point dans {0}. Pas de comparaison inter parcellaire").\
                     format( un_nom), leModeDeTrace)       
         
         if ( contour_avec_point == 0):
             return physiocap_message_box( dialogue, 
-                    self.tr( "== Aucune point dans {0}. Pas de comparaison inter parcellaire").\
+                    self.tr( "== Aucun point dans {0}. Pas de comparaison inter parcellaire").\
                     format( self.tr( "vos contours")),
                     "information")
         else:

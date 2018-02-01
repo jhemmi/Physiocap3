@@ -937,7 +937,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
             physiocap_log( self.tr( "=~= Fin des {0}/{1} interpolation(s) intra parcellaire").\
                 format( str(contour_avec_point), str( contours_possibles)))
         else:
-            aText = self.tr( "=~= Aucune point dans votre contour. ")
+            aText = self.tr( "=~= Aucun point dans votre contour. ")
             aText = aText + self.tr( "Pas d'interpolation intra parcellaire")       
             physiocap_log( aText)
             return physiocap_message_box( dialogue, aText, "information")
