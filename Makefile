@@ -31,7 +31,7 @@ LOCALES = Physiocap_it Physiocap_en
 # you have trouble compiling the translations, you may have to specify the full path to
 # lrelease
 LRELEASE = lrelease
-#LRELEASE = lrelease-qt4
+
 
 
 # translation
