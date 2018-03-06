@@ -24,6 +24,7 @@ var/
 .installed.cfg
 *.egg
 *~
+*.qgd
 
 # temporairement JH
 Physiocap_dialog_base.ui_OK*
@@ -35,7 +36,9 @@ Sauve_originaux/
 modeleQgis/V2/*
 ssl/
 scripts/
+PHY.e4p
 .eric6project/
+_eric6project/
 session_eric*
 .noseids
 pylintrc

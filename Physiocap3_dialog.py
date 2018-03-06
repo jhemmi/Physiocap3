@@ -49,7 +49,8 @@ from .Physiocap_tools import physiocap_message_box, \
 
 from .Physiocap_creer_arbre import PhysiocapFiltrer
 from .Physiocap_inter import (PhysiocapInter, physiocap_fill_combo_poly_or_point)
-# TODO: not yetfrom .Physiocap_intra_interpolation import PhysiocapIntra 
+# TODO: not yet
+from .Physiocap_intra_interpolation import PhysiocapIntra 
 from .Physiocap_var_exception import *
 
 from PyQt5 import uic
@@ -744,13 +745,13 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                                     # TODO verifier si deux passage
                                     physiocap_log( "Cas non unique pour l'attribut {0} : valeur {2} ligne {1}".\
                                      format ( field.name(), index,  valeur_cette_ligne[index]), \
-                                     leModeDeTrace,  QgsMessageLog.WARNING)
+                                     leModeDeTrace, Qgis.Warning)
                                     valeur_unique = "NO"
                                 else:
                                     valeur_dic[ valeur_cette_ligne[index]] = k
                             except:
                                 physiocap_log( "Cas non unique par exception {0}: ligne {1}".\
-                                   format ( field.name(), k), leModeDeTrace,  QgsMessageLog.WARNING)
+                                   format ( field.name(), k), leModeDeTrace,  Qgis.Warning)
                                 valeur_unique = "NO"
                             if valeur_unique == "NO":
                                 break
@@ -1185,121 +1186,120 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         """ Slot qui fait appel au interpolation Intra Parcelles et traite exceptions """
 
         leModeDeTrace = self.fieldComboModeTrace.currentText()
-        # NO intra yet        
-        physiocap_log( self.tr( "=~= {0} V3 n'est pas prêt pour les interpolations intra parcelaire.").\
-            format( PHYSIOCAP_UNI), leModeDeTrace, "INTRA")
-        return
-
-#       TODO: intra  à decommenter          
-#        nom_complet_point = self.comboBoxPoints.currentText().split( SEPARATEUR_NOEUD)
-#        if ( len( nom_complet_point) != 2):
-#            aText = self.tr( "Le shape de points n'est pas choisi. ")
-#            aText = aText + self.tr( "Créer une nouvelle instance de projet - bouton Filtrer les données brutes - ")
-#            aText = aText + self.tr( "avant de faire votre calcul de Moyenne Inter puis Intra Parcellaire")   
-#            physiocap_error( self, aText, "CRITICAL")
-#            return physiocap_message_box( self, aText, "information" )
-#
-#        # Memorisation des saisies et les affichage
-#        self.memoriser_affichages()
-#        self.memoriser_saisies_inter_intra_parcelles()
-#            
-#        try:
-#            # Création des répertoires et des résultats de synthèse
-#            intra = PhysiocapIntra( self)
-#            intra.physiocap_interpolation_IntraParcelles( self)
-#            
-#        except physiocap_exception_rep as e:
-#            physiocap_log_for_error( self)
-#            aText = self.tr( "Erreur bloquante lors de la création du répertoire : {0}").\
-#                format( e)
-#            physiocap_error( self, aText, "CRITICAL")
-#            return physiocap_message_box( self, aText, "information" )
-#        except physiocap_exception_vignette_exists as e:
-#            physiocap_log_for_error( self)
-#            aText = self.tr( "Les moyennes IntraParcellaires dans {0} existent déjà. ").\
-#                format( e)
-#            aText = aText + self.tr( "Vous ne pouvez pas redemander ce calcul :\n")
-#            aText = aText + self.tr( "- Vous pouvez détruire le groupe dans le panneau des couches\n- ou ") 
-#            aText = aText + self.tr( "créer une nouvelle instance de projet Physiocap")
-#            physiocap_error( self, aText, "CRITICAL")
-#            return physiocap_message_box( self, aText, "information" )
-#        except physiocap_exception_points_invalid as e:
-#            physiocap_log_for_error( self)
-#            aText = self.tr( "Le fichier de points du projet (champ{0}) ne contient pas les attributs attendus").\
-#                format( e)
-#            physiocap_error( self, aText, "CRITICAL")
-#            return physiocap_message_box( self, aText, "information" )
-#        except physiocap_exception_interpolation as e:
-#            physiocap_log_for_error( self)
-#            allFile = str(e)   # avec str(e) on edite du garbage
-#            finFile = '"...' + allFile[-60:-1] + '"'            
-#            aText = self.tr( "L'interpolation de : {0} n'a pu s'exécuter entièrement. ").\
-#                format( finFile)
-#            aText = aText + self.tr( "\n - Si la librairie d'interpolation (SAGA ou GDAL) ")
-#            aText = aText + self.tr( "est bien installée et activée dans {0}. ").\
-#                format( self.tr( "Traitement"))
-#            aText = aText + self.tr( "\n - Si vous n'avez pas des contours bizarres.")
-#            aText = aText + self.tr( "\n - Si vous n'avez pas détruit de couches récemment...")
-#            aText = aText + self.tr( "\n - Si vous n'avez pas modifié de contexte L93/GPS.")
-#            aText = aText + self.tr( "\nAlors vous pouvez contacter le support avec vos traces et données brutes")
-#            physiocap_error( self, aText, "CRITICAL")
-#            return physiocap_message_box( self, aText, "information" )
-#        except physiocap_exception_no_processing:
-#            physiocap_log_for_error( self)
-#            aText = self.tr( "L'extension {0} n'est pas accessible. ").\
-#                format( self.tr( "Traitement"))
-#            aText = aText + self.tr( "Pour réaliser l'interpolation intra parcellaire, vous devez")
-#            aText = aText + self.tr( " installer l'extension {0} (menu Extension => Installer une extension)").\
-#                format( self.tr( "Traitement"))
-#            physiocap_error( self, aText)
-#            return physiocap_message_box( self, aText, "information")
-#        except physiocap_exception_no_saga:
-#            physiocap_log_for_error( self)
-#            aText = self.tr( "SAGA n'est pas accessible. ")
-#            aText = aText + self.tr( "Pour réaliser l'interpolation intra parcellaire, vous devez")
-#            aText = aText + self.tr( " installer SAGA")
-#            physiocap_error( self, aText)
-#            return physiocap_message_box( self, aText, "information")
-#        except physiocap_exception_project_contour_incoherence as e:
-#            physiocap_log_for_error( self)
-#            aText = self.tr( "Le polygone de contour {0} n'est pas retrouvé. ").\
-#                format( e)
-#            aText = aText + self.tr( "Une incohérence entre le projet Physiocap et ses données vous oblige à ")
-#            aText = aText + self.tr( "créer une nouvelle instance de projet Physiocap")
-#            physiocap_error( self, aText)
-#            return physiocap_message_box( self, aText, "information") 
-#        except physiocap_exception_project_point_incoherence as e:
-#            physiocap_log_for_error( self)
-#            aText = self.tr( "La couche de point {0} n'est pas retrouvé. ").\
-#                format( e)
-#            aText = aText + self.tr( "Une incohérence entre le projet Physiocap et ses données vous oblige à ")
-#            aText = aText + self.tr( "créer une nouvelle instance de projet Physiocap")
-#            physiocap_error( self, aText)
-#            return physiocap_message_box( self, aText, "information")  
-#        except physiocap_exception_windows_saga_ascii as e:
-#            physiocap_log_for_error( self)
-#            aText = self.tr( "Le projet, le champ ou une valeur de champ {0} ont ").\
-#                format( e)
-#            aText = aText + self.tr( "des caractères (non ascii) incompatibles avec l'interpolation SAGA.")
-#            aText = aText + self.tr( "\nErreur bloquante sous Windows qui nécessite de créer une nouvelle instance du projet ")
-#            aText = aText + self.tr( " et du contour avec seulement des caractères ascii (non accentuées).")
-#            physiocap_error( self, aText, "CRITICAL")        
-#
-#            
-###        except x as e:
-###            physiocap_log_for_error( self)
-###            aText = self.tr( "Physiocap")
-###            aText = aText + self.tr( "Intra")
-###            physiocap_error( self, aText)
-###            return physiocap_message_box( self, aText, "information")
-#
-#        except:
-#            raise
-#        finally:
-#            pass
-#        # Fin de capture des erreurs Physiocap        
-#        physiocap_log( self.tr( "=~= {0} a terminé les interpolations intra parcelaire.").\
+#        # NO intra yet        
+#        physiocap_log( self.tr( "=~= {0} V3 n'est pas prêt pour les interpolations intra parcelaire.").\
 #            format( PHYSIOCAP_UNI), leModeDeTrace, "INTRA")
+#        return
+
+        nom_complet_point = self.comboBoxPoints.currentText().split( SEPARATEUR_NOEUD)
+        if ( len( nom_complet_point) != 2):
+            aText = self.tr( "Le shape de points n'est pas choisi. ")
+            aText = aText + self.tr( "Créer une nouvelle instance de projet - bouton Filtrer les données brutes - ")
+            aText = aText + self.tr( "avant de faire votre calcul de Moyenne Inter puis Intra Parcellaire")   
+            physiocap_error( self, aText, "CRITICAL")
+            return physiocap_message_box( self, aText, "information" )
+
+        # Memorisation des saisies et les affichage
+        self.memoriser_affichages()
+        self.memoriser_saisies_inter_intra_parcelles()
+            
+        try:
+            # Création des répertoires et des résultats de synthèse
+            intra = PhysiocapIntra( self)
+            intra.physiocap_interpolation_IntraParcelles( self)
+            
+        except physiocap_exception_rep as e:
+            physiocap_log_for_error( self)
+            aText = self.tr( "Erreur bloquante lors de la création du répertoire : {0}").\
+                format( e)
+            physiocap_error( self, aText, "CRITICAL")
+            return physiocap_message_box( self, aText, "information" )
+        except physiocap_exception_vignette_exists as e:
+            physiocap_log_for_error( self)
+            aText = self.tr( "Les moyennes IntraParcellaires dans {0} existent déjà. ").\
+                format( e)
+            aText = aText + self.tr( "Vous ne pouvez pas redemander ce calcul :\n")
+            aText = aText + self.tr( "- Vous pouvez détruire le groupe dans le panneau des couches\n- ou ") 
+            aText = aText + self.tr( "créer une nouvelle instance de projet Physiocap")
+            physiocap_error( self, aText, "CRITICAL")
+            return physiocap_message_box( self, aText, "information" )
+        except physiocap_exception_points_invalid as e:
+            physiocap_log_for_error( self)
+            aText = self.tr( "Le fichier de points du projet (champ{0}) ne contient pas les attributs attendus").\
+                format( e)
+            physiocap_error( self, aText, "CRITICAL")
+            return physiocap_message_box( self, aText, "information" )
+        except physiocap_exception_interpolation as e:
+            physiocap_log_for_error( self)
+            allFile = str(e)   # avec str(e) on edite du garbage
+            finFile = '"...' + allFile[-60:-1] + '"'            
+            aText = self.tr( "L'interpolation de : {0} n'a pu s'exécuter entièrement. ").\
+                format( finFile)
+            aText = aText + self.tr( "\n - Si la librairie d'interpolation (SAGA ou GDAL) ")
+            aText = aText + self.tr( "est bien installée et activée dans {0}. ").\
+                format( self.tr( "Traitement"))
+            aText = aText + self.tr( "\n - Si vous n'avez pas des contours bizarres.")
+            aText = aText + self.tr( "\n - Si vous n'avez pas détruit de couches récemment...")
+            aText = aText + self.tr( "\n - Si vous n'avez pas modifié de contexte L93/GPS.")
+            aText = aText + self.tr( "\nAlors vous pouvez contacter le support avec vos traces et données brutes")
+            physiocap_error( self, aText, "CRITICAL")
+            return physiocap_message_box( self, aText, "information" )
+        except physiocap_exception_no_processing:
+            physiocap_log_for_error( self)
+            aText = self.tr( "L'extension {0} n'est pas accessible. ").\
+                format( self.tr( "Traitement"))
+            aText = aText + self.tr( "Pour réaliser l'interpolation intra parcellaire, vous devez")
+            aText = aText + self.tr( " installer l'extension {0} (menu Extension => Installer une extension)").\
+                format( self.tr( "Traitement"))
+            physiocap_error( self, aText)
+            return physiocap_message_box( self, aText, "information")
+        except physiocap_exception_no_saga:
+            physiocap_log_for_error( self)
+            aText = self.tr( "SAGA n'est pas accessible. ")
+            aText = aText + self.tr( "Pour réaliser l'interpolation intra parcellaire, vous devez")
+            aText = aText + self.tr( " installer SAGA")
+            physiocap_error( self, aText)
+            return physiocap_message_box( self, aText, "information")
+        except physiocap_exception_project_contour_incoherence as e:
+            physiocap_log_for_error( self)
+            aText = self.tr( "Le polygone de contour {0} n'est pas retrouvé. ").\
+                format( e)
+            aText = aText + self.tr( "Une incohérence entre le projet Physiocap et ses données vous oblige à ")
+            aText = aText + self.tr( "créer une nouvelle instance de projet Physiocap")
+            physiocap_error( self, aText)
+            return physiocap_message_box( self, aText, "information") 
+        except physiocap_exception_project_point_incoherence as e:
+            physiocap_log_for_error( self)
+            aText = self.tr( "La couche de point {0} n'est pas retrouvé. ").\
+                format( e)
+            aText = aText + self.tr( "Une incohérence entre le projet Physiocap et ses données vous oblige à ")
+            aText = aText + self.tr( "créer une nouvelle instance de projet Physiocap")
+            physiocap_error( self, aText)
+            return physiocap_message_box( self, aText, "information")  
+        except physiocap_exception_windows_saga_ascii as e:
+            physiocap_log_for_error( self)
+            aText = self.tr( "Le projet, le champ ou une valeur de champ {0} ont ").\
+                format( e)
+            aText = aText + self.tr( "des caractères (non ascii) incompatibles avec l'interpolation SAGA.")
+            aText = aText + self.tr( "\nErreur bloquante sous Windows qui nécessite de créer une nouvelle instance du projet ")
+            aText = aText + self.tr( " et du contour avec seulement des caractères ascii (non accentuées).")
+            physiocap_error( self, aText, "CRITICAL")        
+
+            
+##        except x as e:
+##            physiocap_log_for_error( self)
+##            aText = self.tr( "Physiocap")
+##            aText = aText + self.tr( "Intra")
+##            physiocap_error( self, aText)
+##            return physiocap_message_box( self, aText, "information")
+
+        except:
+            raise
+        finally:
+            pass
+        # Fin de capture des erreurs Physiocap        
+        physiocap_log( self.tr( "=~= {0} a terminé les interpolations intra parcelaire.").\
+            format( PHYSIOCAP_UNI), leModeDeTrace, "INTRA")
 
                    
     def slot_moyenne_inter_parcelles(self):

@@ -175,6 +175,9 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         if len( listeTriee) >= 15:
             # Beaucoup de MIDs Poser une question si cancel, on stoppe
             uMsg =self.tr( "Plus de 15 fichier MIDs sont à analyser. Temps de traitement > à 1 minute. Voulez-vous continuer ?")
+            if len( listeTriee) >= 30:
+                # Beaucoup de MIDs Poser une question si cancel, on stoppe
+                uMsg =self.tr( "Plus de 30 fichier MIDs sont à analyser. Temps de traitement > à 5 minute. Voulez-vous continuer ?")
             if ( physiocap_question_box( self, uMsg)):
                 pass
             else:

@@ -38,7 +38,7 @@
 from .Physiocap_var_exception import *
 
 from PyQt5 import QtWidgets
-from qgis.core import (QgsProject, QgsMessageLog,  QgsMapLayer,  QgsCoordinateReferenceSystem)
+from qgis.core import (Qgis, QgsProject, QgsMessageLog,  QgsMapLayer,  QgsCoordinateReferenceSystem)
 from PyQt5.QtWidgets import QMessageBox  
 
 # Pour les traces de Tools
@@ -87,29 +87,31 @@ def physiocap_log( aText, modeTrace = TRACE_PAS,  level = "INFO"):
     journal_nom = "{0} Informations".\
         format( PHYSIOCAP_UNI)
     if modeTrace == TRACE_PAS:
-        #QgsMessageLog.logMessage( "Pas de trace : " + aText,  journal_nom, QgsMessageLog.INFO)
+        #QgsMessageLog.logMessage( "Pas de trace : " + aText,  journal_nom, Qgis.Info)
         pass
     elif modeTrace == TRACE_MINI:
         # On monte warning et message debut et fin
-        if level == "WARNING" or level == QgsMessageLog.WARNING :
-            QgsMessageLog.logMessage( aText, journal_nom, QgsMessageLog.WARNING)
+#        if level == "WARNING" or level == Qgis.Warning :
+#            QgsMessageLog.logMessage( aText, journal_nom, Qgis.Warning)
+        if level == "WARNING" or level == Qgis.Warning :
+            QgsMessageLog.logMessage( aText, journal_nom, Qgis.Warning)
         elif (len( aText) >2):
             if ( aText[0:2] in ( PHYSIOCAP_2_ETOILES, PHYSIOCAP_2_EGALS)) or \
                ( aText[0:3] == PHYSIOCAP_INFO + " " + PHYSIOCAP_UNI):
-                QgsMessageLog.logMessage( aText, journal_nom, QgsMessageLog.INFO)
+                QgsMessageLog.logMessage( aText, journal_nom, Qgis.Info)
     else:
-        if level == "WARNING" or level == QgsMessageLog.WARNING :
-            QgsMessageLog.logMessage( aText, journal_nom, QgsMessageLog.WARNING)
+        if level == "WARNING" or level == Qgis.Warning :
+            QgsMessageLog.logMessage( aText, journal_nom, Qgis.Warning)
         elif modeTrace != TRACE_TOUT:
             # Journal spécifique (TOOLS ou SEGMENT ou INTRA) et de niveau INFO
             if LE_MODE_PROD == "YES":
                 pass
             else:
                 journal_nom = "{0} {1}".format( PHYSIOCAP_UNI, modeTrace)
-                QgsMessageLog.logMessage( aText, journal_nom, QgsMessageLog.INFO)
+                QgsMessageLog.logMessage( aText, journal_nom, Qgis.Info)
         else:
             # Cas général
-            QgsMessageLog.logMessage( aText, journal_nom, QgsMessageLog.INFO)
+            QgsMessageLog.logMessage( aText, journal_nom, Qgis.Info)
            
 def physiocap_error( self, aText, level ="WARNING"):
     """Send a text to the Physiocap error
@@ -273,8 +275,8 @@ def physiocap_quelle_projection_demandee( self):
 ##        
 def physiocap_rename_existing( chemin):
     """ Retourne le nom qu'il est possible de creer
-        si chemin existe deja, on creer un "chemin + (1)"
-        si "chemin_projet + [1]" existe déjà, on crée un "chemin_projet + (2)" etc         
+        si chemin existe deja, on creer un "chemin + [1]"
+        si "chemin_projet + [1]" existe déjà, on crée un "chemin_projet + [2]" etc         
     """
     # Exception suffixe
     extension = ""
@@ -330,7 +332,7 @@ def physiocap_rename_existing_file( chemin):
         nouveau_chemin = physiocap_rename_existing( chemin)
         return physiocap_rename_existing_file( nouveau_chemin) 
     else:
-        #physiocap_log( "chemin pour creation du fichier ==" + chemin, leModeTrace)
+        physiocap_log( "Chemin pour la création du fichier ==" + chemin, leModeTrace)
         return chemin
 
 def physiocap_rename_create_dir( chemin):
@@ -387,7 +389,7 @@ def physiocap_list_MID( repertoire, MIDs, synthese="xx"):
     """Fonction qui liste les MID.
     En entrée la liste des MIDs avec leurs nom complet
     nom court, taille en ligne, centroide GPS, vitesse moyenne
-    sont ajoutés à la synthse
+    sont ajoutés à la synthèse
     """
     resultats = []
     un_MIDs_court = ""
@@ -400,7 +402,8 @@ def physiocap_list_MID( repertoire, MIDs, synthese="xx"):
             lignes = fichier_mid.readlines()
             if un_mid.find( repertoire) == 0:
                 un_MIDs_court = un_mid[ len( repertoire) + 1:]
-                nom_tiny = un_MIDs_court[0:2]
+                le_MID_court = os.path.basename( un_MIDs_court)
+                nom_tiny = le_MID_court[0:2]
             gps_x = []
             gps_y = []
             vitesse = []
@@ -452,7 +455,7 @@ class PhysiocapTools( QtWidgets.QDialog):
         journal_nom = self.tr( "{0} Erreurs").\
             format( PHYSIOCAP_UNI)
         if level == "WARNING":
-            QgsMessageLog.logMessage( aText, journal_nom, QgsMessageLog.WARNING)
+            QgsMessageLog.logMessage( aText, journal_nom, Qgis.Warning)
         else:
-            QgsMessageLog.logMessage( aText, journal_nom, QgsMessageLog.CRITICAL)
+            QgsMessageLog.logMessage( aText, journal_nom, Qgis.Critical)
 

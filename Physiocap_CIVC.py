@@ -53,7 +53,7 @@ try :
     import csv
 except ImportError:
     aText = "Erreur bloquante : module csv n'est pas accessible." 
-    QgsMessageLog.logMessage( aText, "\u03D5 Erreurs", QgsMessageLog.WARNING)
+    QgsMessageLog.logMessage( aText, "\u03D5 Erreurs", Qgis.Warning)
 
 try :
     import matplotlib.pyplot as plt
@@ -61,13 +61,13 @@ except ImportError:
     aText ="Erreur bloquante : module matplotlib.pyplot n'est pas accessible\n" 
     aText = aText + 'Sous Ubuntu : installez python3-matplotlib par "sudo apt-get install python3-matplotlib"'
     aText = aText + "Sous Fedora : installez python-matplotlib-qt4" 
-    QgsMessageLog.logMessage( aText, "\u03D5 Erreurs", QgsMessageLog.WARNING)
+    QgsMessageLog.logMessage( aText, "\u03D5 Erreurs", Qgis.Warning)
     
 try :
     import numpy as np
 except ImportError:
     aText ="Erreur bloquante : module numpy n'est pas accessible" 
-    QgsMessageLog.logMessage( aText, "\u03D5 Erreurs", QgsMessageLog.WARNING)
+    QgsMessageLog.logMessage( aText, "\u03D5 Erreurs", Qgis.Warning)
 
 def physiocap_segment_vers_shapefile( self, nom_shape,  nom_prj,  segment,  info_segment, 
         laProjectionCRS, laProjectionTXT, 

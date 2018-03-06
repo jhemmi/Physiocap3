@@ -60,8 +60,8 @@ try :
     import numpy as np
 except ImportError:
     aText ="Erreur bloquante : module numpy n'est pas accessible" 
-    QgsMessageLog.logMessage( aText, "\u03D5 Erreurs", QgsMessageLog.WARNING)
-    QgsMessageLog.logMessage( aText, PHYSIOCAP_LOG_ERREUR, QgsMessageLog.WARNING)
+    QgsMessageLog.logMessage( aText, "\u03D5 Erreurs", Qgis.Warning)
+    QgsMessageLog.logMessage( aText, PHYSIOCAP_LOG_ERREUR, Qgis.Warning)
 
 
 def physiocap_vector_type( self, vector):
@@ -160,7 +160,6 @@ def physiocap_fill_combo_poly_or_point( self, isRoot = None, node = None ):
 def physiocap_moyenne_un_contour( laProjectionCRS, EPSG_NUMBER, nom_vignette, nom_prj,
         geom_poly, la_surface, un_nom, un_autre_ID, date_debut, date_fin,
         nombre_points, le_taux_de_sans_mesure, le_nombre_segment, longueur_moyenne_segment, 
-
         moyennes_point, ecarts_point, medianes_point, 
         version_3 = "NO", details = "NO"):
     """ Creation d'une vignette nommé un_nom avec les moyennes
@@ -915,11 +914,7 @@ class PhysiocapInter( QtWidgets.QDialog):
         else:
             physiocap_log( "INVALIDE CRS", TRACE_TOOLS)
             
-        if MACHINE == "Linux":
-            distancearea.setSourceCrs( laProjectionCRS)
-        else:
-            distancearea.setSourceCrs( laProjectionCRS, QgsProject.instance().transformContext())
-            
+        distancearea.setSourceCrs( laProjectionCRS, QgsProject.instance().transformContext())            
         distancearea.setEllipsoid( spheroid)
         physiocap_log( "Calcul de distance sous ellipsoide {0}".\
             format( distancearea.ellipsoid()), TRACE_TOOLS)
@@ -951,7 +946,7 @@ class PhysiocapInter( QtWidgets.QDialog):
             else:
                 aText = self.tr( "Cette forme n'est pas un polygone : {0}".\
                     format( un_nom))
-                physiocap_log( aText, leModeDeTrace,  QgsMessageLog.WARNING)
+                physiocap_log( aText, leModeDeTrace,  Qgis.Warning)
                 physiocap_error( self, aText)
                 physiocap_message_box( dialogue, aText, "information")
                 continue

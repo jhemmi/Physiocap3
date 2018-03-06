@@ -93,7 +93,7 @@
     <enum>QTabWidget::North</enum>
    </property>
    <property name="currentIndex">
-    <number>3</number>
+    <number>0</number>
    </property>
    <property name="movable">
     <bool>true</bool>
@@ -4500,7 +4500,7 @@
        </font>
       </property>
       <property name="text">
-       <string>Version 3 Beta Inter 0.2</string>
+       <string>Version 3.0.3 - Inter</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_500">

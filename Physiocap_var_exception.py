@@ -44,6 +44,9 @@ if MACHINE == "Linux":
     LE_MODE_PROD = "NO"
 else:
     LE_MODE_PROD = "YES"
+    
+# TODO: Supprimer en Prod
+#LE_MODE_PROD = "NO"
 
 # En prod CENTROIDES vaut NO
 CENTROIDES = "NO"  # CENTROIDES YES est pour voir les centroides dans la synthese
@@ -110,7 +113,8 @@ EXTENSION_CSV = ".csv"
 EXTENSION_SHP = ".shp"
 EXTENSION_PRJ = ".prj"
 EXTENSION_RASTER = ".tif"
-EXTENSION_RASTER_SAGA = ".sdat"
+EXTENSION_RASTER_SAGA_SANS_POINT = "sdat"
+EXTENSION_RASTER_SAGA = "." + EXTENSION_RASTER_SAGA_SANS_POINT
 
 EXTENSION_QML = ".qml"
 
@@ -190,7 +194,12 @@ NOM_INTER = SEPARATEUR_ + "INTER"
 CONSOLIDATION = "CONSOLIDATION"
 
 # Intra PARCELLAIRE
-MON_TEMP="/tmp"
+if MACHINE == "Linux":
+    MON_TEMP="/tmp"
+else:
+    # MON_TEMP="C:\\Utilisateurs\\Utilisateur\\AppData\\Local\\Temp"
+    MON_TEMP="C:/Users/Utilisateurs/AppData/Local/Temp"
+    
 VIGNETTES_INTRA = "INTRA_PARCELLAIRE"
 NOM_INTRA = SEPARATEUR_ + "INTRA"
 REPERTOIRE_RASTERS = "INTRA_PARCELLAIRE"
@@ -199,7 +208,7 @@ ATTRIBUTS_INTRA_DETAILS = ["NBSARMM2", "NBSARCEP","BIOMM2", "BIOMGM2", "BIOMGCEP
 ATTRIBUTS_INTRA_INDEX = {"DIAM" : 4 ,"NBSARM" : 3 ,"BIOM" : 5,  "NBSARMM2":6, "NBSARCEP":7,"BIOMM2":8, "BIOMGM2":9, "BIOMGCEP":10}
 CHEMIN_TEMPLATES = [ "modeleQgis/V3", "project_templates/Physiocap3"]
 
-# Exceptions Physiocap 
+# Exceptions Physiocap à partir de 30 erreurs sur un fchier mid
 TAUX_LIGNES_ERREUR= 30
 
 # ###########################
