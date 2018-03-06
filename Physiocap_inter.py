@@ -55,7 +55,7 @@ from PyQt5.QtCore import QVariant
 from qgis.core import (QgsProject, QgsDistanceArea, QgsVectorLayer, \
     QgsLayerTreeGroup, QgsLayerTreeLayer,\
     QgsFeatureRequest, QgsFields, QgsField, QgsVectorFileWriter, QgsFeature,\
-    QgsPointXY, QgsGeometry, QgsWkbTypes, QgsMessageLog)
+    QgsPoint, QgsPointXY, QgsGeometry, QgsWkbTypes, QgsMessageLog)
 try :
     import numpy as np
 except ImportError:
@@ -506,14 +506,23 @@ def physiocap_point_un_contour( laProjectionCRS, EPSG_NUMBER, nom_point, nom_prj
         les_champs.append( QgsField( "NBSARMM2", QVariant.Double,"double", 10,2))
         les_champs.append( QgsField( "NBSARCEP", QVariant.Double,"double", 10,2))
     # Creation du Shape
-    writer = QgsVectorFileWriter( nom_point, "utf-8", les_champs, 
-        QgsWkbTypes.Point, laProjectionCRS , "ESRI Shapefile")
-
+    if version_3 == "YES":
+        # On ecrit le 3eme Dimension
+        writer = QgsVectorFileWriter( nom_point, "utf-8", les_champs, 
+            QgsWkbTypes.PointZ, laProjectionCRS , "ESRI Shapefile")
+    else:
+        writer = QgsVectorFileWriter( nom_point, "utf-8", les_champs, 
+            QgsWkbTypes.Point, laProjectionCRS , "ESRI Shapefile")        
     i = -1
     for gid in les_GID:   
         i = i+1
         feat = QgsFeature()
-        feat.setGeometry( QgsGeometry.fromPointXY( les_geoms_des_points[ i])) #écrit la géométrie tel que lu dans shape contour
+        if version_3 == "YES":
+            # On pose directement les 3D
+            feat.setGeometry( QgsGeometry( QgsPoint( les_geoms_des_points[ i])))
+        else:
+            # TODO: test sans fromPointXY
+            feat.setGeometry( QgsGeometry.fromPointXY( les_geoms_des_points[ i])) #écrit la géométrie tel que lu dans shape contour
         if details == "YES":
             if version_3 == "YES":
                 # Ecrit tous les attributs avec V3
@@ -628,7 +637,7 @@ def physiocap_moyennes_tous_contours( laProjectionCRS, EPSG_NUMBER,
         
         if details == "YES":
             if version_3 == "YES":
-                # Ecrit tous les attributs pour V3
+                # Ecrit tous les attributs pour V3 (les_taux_sans_mesure puis alti..)
                 feat.setAttributes( [ i, les_parcelles[ i], les_parcelles_ID[ i], les_nombres[ i] / les_surfaces[ i],
                 les_taux_sans_mesure[i], 
                 les_moyennes_par_contour[ i].get( 'sarm'),    les_medianes_par_contour[ i].get( 'sarm'),    les_ecarts_par_contour[ i].get( 'sarm'), 
@@ -1102,7 +1111,15 @@ class PhysiocapInter( QtWidgets.QDialog):
                         if i_point == 2:
                             # Attraper date début
                             date_debut = un_point["DATE"]
-                        les_geoms_des_points.append( un_point.geometry().asPoint())
+                        
+                        une_geom_2D = un_point.geometry().asPoint()
+                        if version_3 == "YES":
+                            # on ajoute la troisième dimension
+                            une_geom_3D = QgsPoint( une_geom_2D.x(),  une_geom_2D.y(), un_point["DIAM"])
+                            les_geoms_des_points.append( une_geom_3D)
+                        else:
+                            les_geoms_des_points.append( une_geom_2D)
+
                         les_dates.append( un_point["DATE"])
                         # Bug 38 : si pas de GID (cf Python V8)
                         try:

@@ -482,7 +482,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             physiocap_log( self.tr( "Le shape file existant déjà, il est détruit."), leModeDeTrace)
             os.remove( nom_shape_sans_0)            
         # cas sans 0, on demande la synthese en passant le nom du fichier
-        retour = physiocap_csv_vers_shapefile( dialogue, 45, nom_csv_sans_0, nom_shape_sans_0, nom_prj_sans_0, 
+        retour = physiocap_csv_vers_shapefile( dialogue, 45, "SANS_0", nom_csv_sans_0, nom_shape_sans_0, nom_prj_sans_0, 
                 laProjectionCRS, laProjectionTXT, 
                 nom_fichier_synthese, details, version_3)
         if retour != 0:
@@ -508,7 +508,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             physiocap_log( self.tr( "Le shape file existant déjà, il est détruit."), leModeDeTrace)
             os.remove( nom_shape_avec_0) 
         # cas avec 0, pas de demande de synthese
-        retour = physiocap_csv_vers_shapefile( dialogue, 60, nom_csv_avec_0, nom_shape_avec_0, nom_prj_avec_0, 
+        retour = physiocap_csv_vers_shapefile( dialogue, 60, "AVEC_0",  nom_csv_avec_0, nom_shape_avec_0, nom_prj_avec_0, 
             laProjectionCRS, laProjectionTXT, "NO", details, version_3)
         if retour != 0:
             return physiocap_error( self, self.tr( \
@@ -531,7 +531,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
                 physiocap_log( self.tr( "Le shape file existant déjà, il est détruit."), leModeDeTrace)
                 os.remove( nom_shape_0_seul) 
             # cas 0 seulement, pas de demande de synthese
-            retour = physiocap_csv_vers_shapefile( dialogue, 75, nom_csv_0_seul, nom_shape_0_seul, nom_prj_0_seul, 
+            retour = physiocap_csv_vers_shapefile( dialogue, 75, "O_SEUL", nom_csv_0_seul, nom_shape_0_seul, nom_prj_0_seul, 
                 laProjectionCRS, laProjectionTXT, "NO", details, version_3)
             if retour != 0:
                 return physiocap_error( self, self.tr( \

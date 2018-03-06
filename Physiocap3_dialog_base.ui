@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Physiocap</string>
+   <string>Physiocap 3 pour QGIS3</string>
   </property>
   <property name="toolTip">
    <string/>
@@ -4500,7 +4500,7 @@
        </font>
       </property>
       <property name="text">
-       <string>Version 3.0.3 - Inter</string>
+       <string>Version 3.0.4 - Inter</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_500">

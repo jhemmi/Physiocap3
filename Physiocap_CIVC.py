@@ -47,7 +47,7 @@ from .Physiocap_var_exception import *
 from PyQt5.QtCore import QVariant
 from qgis.core import (QgsFields, QgsField, \
         QgsFeature, QgsGeometry, QgsCoordinateReferenceSystem,  QgsCoordinateTransform,  \
-        QgsPointXY, QgsVectorFileWriter, QgsMessageLog, QgsWkbTypes)
+        QgsPoint, QgsPointXY, QgsVectorFileWriter, QgsMessageLog, QgsWkbTypes)
         
 try :
     import csv
@@ -133,7 +133,7 @@ def physiocap_segment_vers_shapefile( self, nom_shape,  nom_prj,  segment,  info
     physiocap_create_projection_file( nom_prj,  laProjectionTXT)
 
     return
-def physiocap_csv_vers_shapefile( self, progress_barre, csv_name, shape_name, prj_name, 
+def physiocap_csv_vers_shapefile( self, progress_barre, donnee_3D ,  csv_name, shape_name, prj_name, 
     laProjectionCRS, laProjectionTXT, 
     nom_fichier_synthese = "NO", details = "NO",  version_3 = "NO"):
     """ Creation de shape file à partir des données des CSV
@@ -255,13 +255,31 @@ def physiocap_csv_vers_shapefile( self, progress_barre, csv_name, shape_name, pr
         les_champs.append(QgsField("BIOMGCEP", QVariant.Double,"double", 10,2))
 
     # Creation du Shape
-    writer = QgsVectorFileWriter( shape_name, "utf-8", les_champs, 
-            QgsWkbTypes.Point, laProjectionCRS , "ESRI Shapefile")
-            
+    if version_3 == "YES":
+        writer = QgsVectorFileWriter( shape_name, "utf-8", les_champs, 
+            QgsWkbTypes.PointZ, laProjectionCRS , "ESRI Shapefile")
+    else:
+        writer = QgsVectorFileWriter( shape_name, "utf-8", les_champs, 
+            QgsWkbTypes.Point, laProjectionCRS , "ESRI Shapefile")        
     # Ecriture du shp
     for numPoint,Xpoint in enumerate(x):
         feat = QgsFeature()
-        feat.setGeometry( QgsGeometry.fromPointXY(QgsPointXY( Xpoint,y[numPoint]))) #écrit la géométrie
+        if version_3 == "YES":
+            # choix de la données dans Z
+            val_3D = 0.0
+            if donnee_3D == "SANS_0":
+                val_3D = diamshp[numPoint]
+            if donnee_3D == "AVEC_0":
+                val_3D = altitude[numPoint]
+            if donnee_3D == "O_SEUL":
+                val_3D = vitesseshp[numPoint]                
+            #écrit la géométrie avec le Z = diametre (ou altitude ou vitesse)
+            feat.setGeometry( QgsGeometry(QgsPoint( 
+                Xpoint, y[numPoint], val_3D))) 
+        else:
+            # TODO: test sans fromPointXY
+            feat.setGeometry( QgsGeometry.fromPointXY(QgsPointXY( Xpoint,y[numPoint]))) #écrit la géométrie
+        
         if details == "YES":
             if version_3 == "NO":
                 # Ecrit tous les attributs
