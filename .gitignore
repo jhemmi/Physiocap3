@@ -34,6 +34,7 @@ test/Physiocap.conf
 i18n/bak*
 Sauve_originaux/
 modeleQgis/V2/*
+data/Projet_QGIS_test_Physiocap_3D.qgs
 ssl/
 scripts/
 PHY.e4p

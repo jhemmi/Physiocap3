@@ -44,7 +44,7 @@
 from .Physiocap_tools import physiocap_message_box,\
         physiocap_log, physiocap_error, \
         physiocap_rename_existing_file,  \
-        physiocap_quelle_projection_demandee, \
+        physiocap_quelle_projection_demandee, physiocap_preparer_calcul_distance, \
         physiocap_create_projection_file, \
         physiocap_get_layer_by_URI,  physiocap_get_layer_by_ID
 
@@ -52,7 +52,7 @@ from .Physiocap_var_exception import *
 
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import QVariant
-from qgis.core import (QgsProject, QgsDistanceArea, QgsVectorLayer, \
+from qgis.core import (QgsProject, QgsVectorLayer, \
     QgsLayerTreeGroup, QgsLayerTreeLayer,\
     QgsFeatureRequest, QgsFields, QgsField, QgsVectorFileWriter, QgsFeature,\
     QgsPoint, QgsPointXY, QgsGeometry, QgsWkbTypes, QgsMessageLog)
@@ -316,12 +316,14 @@ def physiocap_segment_tous_contours( laProjectionCRS, EPSG_NUMBER,
                 toutes_les_geoms_segment, les_infos_segment, 
                 segment_simplifie="YES"):
 
-    """ Creation d'un shape de points sans mesure se trouvant dans tous les contours
+    """ Creation d'un shape de segment se trouvant dans tous les contours
     """
     # Prepare les attributs
     les_champs = QgsFields()
     les_champs.append( QgsField("GID", QVariant.Int, "integer", 10))
     les_champs.append( QgsField("GID_10", QVariant.Int, "integer", 10))
+    les_champs.append( QgsField( "AZIMUTH", QVariant.Double, "double", 10,2))
+    les_champs.append( QgsField( "LONGUEUR", QVariant.Double, "double", 10,2))
     les_champs.append( QgsField("NB_PTS_INI", QVariant.Int, "integer", 10))
     les_champs.append( QgsField("NB_POINTS", QVariant.Int, "integer", 10))
     les_champs.append( QgsField("DATE_DEB", QVariant.String, "string", 25))
@@ -337,16 +339,18 @@ def physiocap_segment_tous_contours( laProjectionCRS, EPSG_NUMBER,
             nombre = les_infos_segment[i]["NB_PTS_INI"][j]
             nombre_points = les_infos_segment[i]["NB_POINTS"][j]
             feat = QgsFeature()
-            if (segment_simplifie == "YES"):   # Premier et dernier 
-                feat.setGeometry( QgsGeometry.fromPolylineXY( [ 
-                    toutes_les_geoms_segment[ i][ j][0], 
-                    toutes_les_geoms_segment[ i][ j][nombre_points-1]
-                    ] )) #écrit la géométrie
+            if (segment_simplifie == "YES"):   # Premier et dernier
+                un_point = toutes_les_geoms_segment[ i][ j][0]
+                l_autre = toutes_les_geoms_segment[ i][ j][nombre_points-1]
+                le_segment_droit  = QgsGeometry.fromPolylineXY( [ 
+                    un_point, l_autre ])
+                feat.setGeometry( le_segment_droit) #écrit la géométrie
             else:  # Tous les poins
                 feat.setGeometry( QgsGeometry.fromPolylineXY( toutes_les_geoms_segment[ i][ j] )) #écrit la géométrie            
+
             feat.setAttributes([ les_infos_segment[i]["GID"][j], gid_modulo_10, 
-                                nombre, nombre_points,  les_infos_segment[i]["DATE_DEB"][j], 
-                                les_infos_segment[i]["DATE_FIN"][j]
+                        les_infos_segment[i]["AZIMUTH"][j], les_infos_segment[i]["LONGUEUR"][j], nombre, nombre_points,  les_infos_segment[i]["DATE_DEB"][j], 
+                        les_infos_segment[i]["DATE_FIN"][j]
                                 ])
             # Ecrit le feature
             writer.addFeature( feat)
@@ -358,6 +362,7 @@ def physiocap_segment_tous_contours( laProjectionCRS, EPSG_NUMBER,
 
 def physiocap_segments_un_contour( laProjectionCRS, EPSG_NUMBER, nom_segment, nom_segment_prj, 
                         les_geoms_segment, les_dates_debut_segment, les_dates_fin_segment, 
+                        les_azimuths_segment,  les_longueurs_segment,  
                         les_GID, les_nombres_points_segment, les_nombres_points_restant, 
                         segment_simplifie="YES"):
 
@@ -367,6 +372,8 @@ def physiocap_segments_un_contour( laProjectionCRS, EPSG_NUMBER, nom_segment, no
     les_champs = QgsFields()
     les_champs.append( QgsField("GID", QVariant.Int, "integer", 10))
     les_champs.append( QgsField("GID_10", QVariant.Int, "integer", 10))
+    les_champs.append( QgsField( "AZIMUTH", QVariant.Double, "double", 10,2))
+    les_champs.append( QgsField( "LONGUEUR", QVariant.Double, "double", 10,2))
     # C'est le NB_POINTS du segment filtre qui devient NB_PTS_INI
     les_champs.append( QgsField("NB_PTS_INI", QVariant.Int, "integer", 10))
     les_champs.append( QgsField("NB_POINTS", QVariant.Int, "integer", 10))
@@ -398,6 +405,8 @@ def physiocap_segments_un_contour( laProjectionCRS, EPSG_NUMBER, nom_segment, no
         else:  # Tous les poins
             feat.setGeometry( QgsGeometry.fromPolylineXY( un_segment )) #écrit la géométrie            
         feat.setAttributes([ le_gid, gid_modulo_10, 
+                                les_azimuths_segment[numero_ligne], 
+                                les_longueurs_segment[numero_ligne], 
                                 nombre_points_initiaux, nombre_inter, 
                                 les_dates_debut_segment[numero_ligne], 
                                 les_dates_fin_segment[numero_ligne]
@@ -448,7 +457,7 @@ def physiocap_sans_mesure_tous_contours( laProjectionCRS, EPSG_NUMBER, nom_sans_
  
 def physiocap_sans_mesure_un_contour( laProjectionCRS, EPSG_NUMBER, nom_sans_mesure, nom_prj,
                     les_geoms_des_points, les_GID, les_dates, 
-                    les_vitesses, les_altitudes,  les_pdop):
+                    les_vitesses, les_altitudes,  les_pdop,  les_azimuths):
     """ Creation d'un shape de points sans mesure se trouvant dans le contour
     """
     # Prepare les attributs
@@ -458,6 +467,7 @@ def physiocap_sans_mesure_un_contour( laProjectionCRS, EPSG_NUMBER, nom_sans_mes
     les_champs.append( QgsField("VITESSE", QVariant.Double, "double", 10,2))
     les_champs.append(QgsField("ALTITUDE", QVariant.Double,"double", 10,2)) 
     les_champs.append(QgsField("PDOP", QVariant.Double,"double", 10,2)) 
+    les_champs.append(QgsField("AZIMUTH", QVariant.Double,"double", 10,2)) 
 
     # Creation du Shape
     writer = QgsVectorFileWriter( nom_sans_mesure, "utf-8", les_champs, 
@@ -468,7 +478,8 @@ def physiocap_sans_mesure_un_contour( laProjectionCRS, EPSG_NUMBER, nom_sans_mes
         i = i+1
         feat = QgsFeature()
         feat.setGeometry( QgsGeometry.fromPointXY( les_geoms_des_points[ i])) #écrit la géométrie tel que lu dans shape contour
-        feat.setAttributes( [ les_GID[ i], les_dates[ i], les_vitesses[ i], les_altitudes[ i], les_pdop[ i] ])
+        feat.setAttributes( [ les_GID[ i], les_dates[ i], les_vitesses[ i], \
+            les_altitudes[ i], les_pdop[ i],  les_azimuths[ i] ])
        # Ecrit le feature
         writer.addFeature( feat)
 
@@ -481,6 +492,7 @@ def physiocap_point_un_contour( laProjectionCRS, EPSG_NUMBER, nom_point, nom_prj
                     les_geoms_des_points, les_GID, les_dates, 
                     les_vitesses, les_sarments, les_diametres, les_biom, 
                     les_altitudes, les_pdop, les_distances, les_derives, 
+                    les_azimuths, les_nbsar_s, 
                     les_biomgm2, les_biomgcep, les_biomm2, les_nbsarmm2, les_nbsarcep,
                     version_3 = "NO", details = "NO"):
     """ Creation d'un shape de points se trouvant dans le contour
@@ -498,6 +510,8 @@ def physiocap_point_un_contour( laProjectionCRS, EPSG_NUMBER, nom_point, nom_prj
         les_champs.append(QgsField("PDOP", QVariant.Double,"double", 10,2)) 
         les_champs.append(QgsField("DISTANCE", QVariant.Double,"double", 10,2)) 
         les_champs.append(QgsField("DERIVE", QVariant.Double,"double", 10.1)) 
+        les_champs.append(QgsField("AZIMUTH", QVariant.Double,"double", 10.1)) 
+        les_champs.append(QgsField("NB_SAR",QVariant.Int, "integer", 10))
     if details == "YES":
         # Niveau de detail demandé
         les_champs.append(QgsField("BIOMGM2", QVariant.Double,"double", 10,2))
@@ -529,6 +543,7 @@ def physiocap_point_un_contour( laProjectionCRS, EPSG_NUMBER, nom_point, nom_prj
                 feat.setAttributes( [ les_GID[ i], les_dates[ i], les_vitesses[ i], 
                 les_sarments[ i], les_diametres[ i], les_biom[ i], 
                 les_altitudes[ i], les_pdop[ i], les_distances[ i], les_derives[ i], 
+                les_azimuths[ i], les_nbsar_s[ i],
                 les_biomgm2[ i], les_biomgcep[ i], les_biomm2[ i], les_nbsarmm2[ i], les_nbsarcep[ i] ])
             else:
                 # Ecrit tous les attributs pour V2
@@ -541,7 +556,8 @@ def physiocap_point_un_contour( laProjectionCRS, EPSG_NUMBER, nom_point, nom_prj
                 # Ecrit les premiers attributs
                 feat.setAttributes( [ les_GID[ i], les_dates[ i], les_vitesses[ i], 
                     les_sarments[ i], les_diametres[ i], les_biom[ i],  
-                    les_altitudes[ i], les_pdop[ i], les_distances[ i], les_derives[ i]
+                    les_altitudes[ i], les_pdop[ i], les_distances[ i], les_derives[ i], 
+                    les_azimuths[ i], les_nbsar_s[ i]
                  ])
             else:
                 # Ecrit les premiers attributs
@@ -829,7 +845,7 @@ class PhysiocapInter( QtWidgets.QDialog):
             return physiocap_message_box( dialogue, mes,"information")
                     
         laProjectionCRS, laProjectionTXT, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, EPSG_NUMBER = \
-            physiocap_quelle_projection_demandee(dialogue)
+            physiocap_quelle_projection_demandee( dialogue)
 
         if (version_3 == "NO"):
             rep_vecteur = REPERTOIRE_SHAPEFILE
@@ -908,26 +924,9 @@ class PhysiocapInter( QtWidgets.QDialog):
         les_infos_segment = []
         info_segment_en_cours = {}
 
-        # pour le calcul des distances
-        spheroid = 'inconnu'
-        if ( EPSG_NUMBER == EPSG_NUMBER_L93):
-            spheroid = SPHEROID_L93    
-        if (EPSG_NUMBER == EPSG_NUMBER_GPS):
-            spheroid = SPHEROID_GPS    
-        distancearea = QgsDistanceArea()
-        if laProjectionCRS.isValid():
-            physiocap_log( "Calcul de distance Description CRS {0}".\
-            format( laProjectionCRS.description()), TRACE_TOOLS)
-            physiocap_log( "PROJ.4 CRS {0}".\
-            format( laProjectionCRS.toProj4()), TRACE_TOOLS)
-        else:
-            physiocap_log( "INVALIDE CRS", TRACE_TOOLS)
-            
-        distancearea.setSourceCrs( laProjectionCRS, QgsProject.instance().transformContext())            
-        distancearea.setEllipsoid( spheroid)
-        physiocap_log( "Calcul de distance sous ellipsoide {0}".\
-            format( distancearea.ellipsoid()), TRACE_TOOLS)
-
+        # Preparer distanceArea objet
+        distancearea = physiocap_preparer_calcul_distance( dialogue, EPSG_NUMBER, laProjectionCRS)
+        
         for un_contour in vecteur_poly.getFeatures(): #iterate poly features
             id = id + 1
             try:
@@ -971,6 +970,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                 les_vitesses_sans_mesure = []
                 les_altitudes_sans_mesure = []
                 les_pdop_sans_mesure = []
+                les_azimuths_sans_mesure = []
                 i_sans_mesure = 0
                 # Préfiltre dans un rectangle
                 # Récupération des POINT SANS MESURE qui concernent ce contour
@@ -989,6 +989,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                             les_vitesses_sans_mesure.append( un_sans_mesure["VITESSE"])
                             les_altitudes_sans_mesure.append( un_sans_mesure["ALTITUDE"])
                             les_pdop_sans_mesure.append( un_sans_mesure["PDOP"])
+                            les_azimuths_sans_mesure.append( un_sans_mesure["AZIMUTH"])
                         except KeyError:
                             message = un_nom + " - " + str( i_sans_mesure) + " - "
                             raise physiocap_exception_points_invalid( message)    
@@ -1000,6 +1001,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                 info_en_cours[ "VITESSE"] = les_vitesses_sans_mesure
                 info_en_cours[ "ALTITUDE"] = les_altitudes_sans_mesure
                 info_en_cours[ "PDOP"] = les_pdop_sans_mesure
+                info_en_cours[ "AZIMUTH"] = les_azimuths_sans_mesure
                 les_infos_sans_mesure.append( info_en_cours)
                 info_en_cours = {}
                 
@@ -1007,6 +1009,8 @@ class PhysiocapInter( QtWidgets.QDialog):
                 dialogue.checkBoxInterSegmentBrise.isChecked() ):
                 # on initialise pour ce contour
                 les_geoms_segment = []
+                les_longueurs_segment = []
+                les_azimuths_segment  = []
                 les_dates_debut_segment = []
                 les_dates_fin_segment = []
                 les_GID_segment = []
@@ -1047,6 +1051,12 @@ class PhysiocapInter( QtWidgets.QDialog):
                                 format( j_points, i_segment,  nb_points), leModeDeTrace)
                         try:
                             les_geoms_segment.append( les_geoms_du_segment)
+                            # Calcul de la longueur du segment et de son azimuth
+                            # TODO: et/ou de la moyenne des azimuths
+                            un_point = les_geoms_du_segment[0]
+                            l_autre = les_geoms_du_segment[j_points-1]
+                            les_longueurs_segment.append( distancearea.measureLine( un_point, l_autre))
+                            les_azimuths_segment.append( un_point.azimuth( l_autre))
                             les_dates_debut_segment.append( un_segment["DATE_DEB"])
                             les_dates_fin_segment.append( un_segment["DATE_FIN"])
                             les_nombres_points_segment.append( un_segment["NB_POINTS"])
@@ -1060,8 +1070,11 @@ class PhysiocapInter( QtWidgets.QDialog):
                             message = un_nom + " - PB segment " + str( i_segment) + " - "
                             raise physiocap_exception_segment_invalid( message)    
 
-                # Mémoriser ces sans mesures
-                toutes_les_geoms_segment.append( les_geoms_segment)
+                # Mémoriser ces segments
+                toutes_les_geoms_segment.append( les_geoms_segment)                
+                info_segment_en_cours[ "GID"] = les_GID_segment
+                info_segment_en_cours[ "AZIMUTH"] = les_azimuths_segment
+                info_segment_en_cours[ "LONGUEUR"] = les_longueurs_segment
                 info_segment_en_cours[ "GID"] = les_GID_segment
                 info_segment_en_cours[ "DATE_DEB"] = les_dates_debut_segment
                 info_segment_en_cours[ "DATE_FIN"] = les_dates_fin_segment
@@ -1089,6 +1102,8 @@ class PhysiocapInter( QtWidgets.QDialog):
             les_pdop = []
             les_distances = []
             les_derives = []
+            les_azimuths = []
+            les_nbsar_s = []
             les_biomgm2 = []
             les_biomgcep = []
             les_biomm2 = []
@@ -1135,7 +1150,8 @@ class PhysiocapInter( QtWidgets.QDialog):
                             les_pdop.append( un_point["PDOP"])
                             les_distances.append( un_point["DISTANCE"])
                             les_derives.append( un_point["DERIVE"])
-
+                            les_azimuths.append( un_point["AZIMUTH"])
+                            les_nbsar_s.append( un_point["NBSAR"])
                         if ( details == "YES"):
                             try:
                                 les_biomgm2.append( un_point["BIOMGM2"])
@@ -1199,6 +1215,22 @@ class PhysiocapInter( QtWidgets.QDialog):
                     moyennes_point['derive'] = float(     np.mean( les_derives))
                     ecarts_point['derive'] = float(       np.std( les_derives))
                     medianes_point['derive'] = float(     np.median( les_derives))
+                    # TODO: Moyenne des azimuth >0 et <0
+                    azimuths_positif =[]
+                    azimuths_negatif =[]
+                    for azimuth in les_azimuths:
+                        if azimuth > 0: 
+                           azimuths_positif.append( azimuth)
+                        else:
+                           azimuths_negatif.append( azimuth)
+                    moyennes_point['azimuth_pos'] = float(     np.mean( azimuths_positif))
+                    moyennes_point['azimuth_neg'] = float(     np.mean( azimuths_negatif))
+                    medianes_point['azimuth_pos'] = float(     np.median( azimuths_positif))
+                    medianes_point['azimuth_neg'] = float(     np.median( azimuths_negatif))
+                    ecarts_point['azimuth_pos'] = float(     np.std( azimuths_positif))
+                    ecarts_point['azimuth_neg'] = float(     np.std( azimuths_negatif))
+                    # TODO : moyenne nb_sar sur les longueurs des segments valides
+
                 if ( details == "YES"):
                     moyennes_point['biomgm2'] = float(  np.mean( les_biomgm2))
                     ecarts_point['biomgm2'] = float(    np.std( les_biomgm2))
@@ -1301,7 +1333,8 @@ class PhysiocapInter( QtWidgets.QDialog):
                 physiocap_point_un_contour( laProjectionCRS, EPSG_NUMBER, nom_point, nom_point_prj, 
                     les_geoms_des_points, les_GID, les_dates, 
                     les_vitesses, les_sarments, les_diametres, les_biom,
-                    les_altitudes,  les_pdop, les_distances, les_derives, 
+                    les_altitudes,  les_pdop, les_distances, les_derives,
+                    les_azimuths, les_nbsar_s, 
                     les_biomgm2, les_biomgcep, les_biomm2, les_nbsarmm2, les_nbsarcep,
                     version_3, details)
                 
@@ -1317,7 +1350,8 @@ class PhysiocapInter( QtWidgets.QDialog):
                     physiocap_sans_mesure_un_contour( laProjectionCRS, EPSG_NUMBER, 
                         nom_sans_mesure, nom_sans_mesure_prj, 
                         les_geoms_sans_mesure, les_GID_sans_mesure, les_dates_sans_mesure, 
-                        les_vitesses_sans_mesure, les_altitudes_sans_mesure, les_pdop_sans_mesure)
+                        les_vitesses_sans_mesure, les_altitudes_sans_mesure, les_pdop_sans_mesure, 
+                        les_azimuths_sans_mesure)
 
                 if  version_3 == "YES" and dialogue.checkBoxInterSegmentDetails.isChecked():
                     # ###################
@@ -1330,6 +1364,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                     
                     physiocap_segments_un_contour( laProjectionCRS, EPSG_NUMBER, nom_segment, nom_segment_prj, 
                         les_geoms_segment, les_dates_debut_segment, les_dates_fin_segment, 
+                        les_azimuths_segment,  les_longueurs_segment,  
                         les_GID_segment, les_nombres_points_segment, les_nombres_points_restant)
 
                 if  version_3 == "YES" and dialogue.checkBoxInterSegmentBriseDetails.isChecked():
@@ -1344,6 +1379,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                     
                     physiocap_segments_un_contour( laProjectionCRS, EPSG_NUMBER, nom_segment_brise, nom_segment_brise_prj, 
                         les_geoms_segment, les_dates_debut_segment, les_dates_fin_segment, 
+                        les_azimuths_segment,  les_longueurs_segment,  
                         les_GID_segment, les_nombres_points_segment, les_nombres_points_restant, 
                         "BRISE")
                          

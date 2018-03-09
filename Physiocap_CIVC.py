@@ -41,6 +41,7 @@
 """
 
 from .Physiocap_tools import ( physiocap_log, physiocap_error, \
+    physiocap_quelle_projection_demandee, physiocap_preparer_calcul_distance, \
     physiocap_create_projection_file) 
 from .Physiocap_var_exception import *
 
@@ -145,8 +146,9 @@ def physiocap_csv_vers_shapefile( self, progress_barre, donnee_3D ,  csv_name, s
     #physiocap_log( "Le nom du csv : {0}".format( csv_name),  TRACE_TOOLS)
     
     # Préparation de la liste d'arguments
-    gid, x,y,nbsarmshp,diamshp,biomshp,dateshp,vitesseshp= [],[],[],[],[],[],[],[]
+    gid, x,y,nbsarm,diam,biom,date_capture,vitesse= [],[],[],[],[],[],[],[]
     altitude, pdop,  distance,  derive =  [],[],[],[]
+    azimuth, nbsar =  [],[]
     nbsarmm2,nbsarcep,biommm2,biomgm2,biomgcep=[],[],[],[],[]
     
     un_fic = open( csv_name, "r")
@@ -182,15 +184,14 @@ def physiocap_csv_vers_shapefile( self, progress_barre, donnee_3D ,  csv_name, s
                     if ( laProjectionTXT == "GPS"):
                         x.append(float(row[0]))
                         y.append(float(row[1]))
-                    nbsarmshp.append(float(row[4]))
-                    diamshp.append(float(row[5]))
-                    biomshp.append(float(row[6]))
+                    nbsarm.append(float(row[4]))
+                    diam.append(float(row[5]))
+                    biom.append(float(row[6]))
                     # A_TESTER : sans str
-                    dateshp.append(str(row[7]))
-                    vitesseshp.append(float(row[8]))
+                    date_capture.append(str(row[7]))
+                    vitesse.append(float(row[8]))
                 else: # Changement de position dans cvs
                     gid.append(float(row[0]))
-
                     if ( laProjectionTXT == "L93"):
                         x.append(float(row[3]))
                         y.append(float(row[4]))
@@ -199,14 +200,15 @@ def physiocap_csv_vers_shapefile( self, progress_barre, donnee_3D ,  csv_name, s
                         y.append(float(row[2]))
                     altitude.append(float(row[5]))
                     pdop.append(float(row[6]))
-                    
                     distance.append(float(row[7]))
                     derive.append(float(row[8]))
-                    nbsarmshp.append(float(row[9]))
-                    diamshp.append(float(row[10]))
-                    biomshp.append(float(row[11]))
-                    dateshp.append(str(row[12]))
-                    vitesseshp.append(float(row[13]))
+                    azimuth.append(float(row[9]))
+                    nbsar.append(int(row[10]))
+                    nbsarm.append(float(row[11]))
+                    diam.append(float(row[12]))
+                    biom.append(float(row[13]))
+                    date_capture.append(str(row[14]))
+                    vitesse.append(float(row[15]))
                     
                 if details == "YES":
                     if version_3 == "NO":
@@ -222,15 +224,15 @@ def physiocap_csv_vers_shapefile( self, progress_barre, donnee_3D ,  csv_name, s
                         biomgm2.append(float(row[12]))
                         biomgcep.append(float(row[13]))
                     else:
-                        if len(row) != 19:
+                        if len(row) != 21:
                             return physiocap_error( self, "Le nombre de colonnes :" +
                                     str( len(row)) + 
                                     " du cvs ne permet pas le calcul détaillé")
-                        nbsarmm2.append(float(row[14]))
-                        nbsarcep.append(float(row[15]))
-                        biommm2.append(float(row[16]))
-                        biomgm2.append(float(row[17]))
-                        biomgcep.append(float(row[18]))                        
+                        nbsarmm2.append(float(row[16]))
+                        nbsarcep.append(float(row[17]))
+                        biommm2.append(float(row[18]))
+                        biomgm2.append(float(row[19]))
+                        biomgcep.append(float(row[20]))                        
                 
     # Prepare les attributs
     les_champs = QgsFields()
@@ -243,6 +245,8 @@ def physiocap_csv_vers_shapefile( self, progress_barre, donnee_3D ,  csv_name, s
         les_champs.append( QgsField("PDOP", QVariant.Double, "double", 10,2))
         les_champs.append( QgsField("DISTANCE", QVariant.Double, "double", 10,2))
         les_champs.append( QgsField("DERIVE", QVariant.Double, "double", 10,1))
+        les_champs.append( QgsField("AZIMUTH", QVariant.Double, "double", 10,1))
+        les_champs.append( QgsField("NBSAR",  QVariant.Int, "integer", 10))
     les_champs.append(QgsField("NBSARM",  QVariant.Double, "double", 10,2))
     les_champs.append(QgsField("DIAM",  QVariant.Double, "double", 10,2))
     les_champs.append(QgsField("BIOM", QVariant.Double,"double", 10,2)) 
@@ -268,11 +272,11 @@ def physiocap_csv_vers_shapefile( self, progress_barre, donnee_3D ,  csv_name, s
             # choix de la données dans Z
             val_3D = 0.0
             if donnee_3D == "SANS_0":
-                val_3D = diamshp[numPoint]
+                val_3D = diam[numPoint]
             if donnee_3D == "AVEC_0":
                 val_3D = altitude[numPoint]
             if donnee_3D == "O_SEUL":
-                val_3D = vitesseshp[numPoint]                
+                val_3D = vitesse[numPoint]                
             #écrit la géométrie avec le Z = diametre (ou altitude ou vitesse)
             feat.setGeometry( QgsGeometry(QgsPoint( 
                 Xpoint, y[numPoint], val_3D))) 
@@ -283,29 +287,31 @@ def physiocap_csv_vers_shapefile( self, progress_barre, donnee_3D ,  csv_name, s
         if details == "YES":
             if version_3 == "NO":
                 # Ecrit tous les attributs
-               feat.setAttributes( [ numPoint, dateshp[numPoint], vitesseshp[numPoint], 
-                                    nbsarmshp[numPoint], diamshp[numPoint], biomshp[numPoint],
+               feat.setAttributes( [ numPoint, date_capture[numPoint], vitesse[numPoint], 
+                                    nbsarm[numPoint], diam[numPoint], biom[numPoint],
                                     nbsarmm2[numPoint], nbsarcep[numPoint], biommm2[numPoint], 
                                     biomgm2[numPoint], biomgcep[numPoint]
                                    ])
             else:
-                feat.setAttributes( [ gid[numPoint], dateshp[numPoint], vitesseshp[numPoint], 
+                feat.setAttributes( [ gid[numPoint], date_capture[numPoint], vitesse[numPoint], 
                                     altitude[numPoint], pdop[numPoint],  distance[numPoint],  derive [numPoint], 
-                                    nbsarmshp[numPoint], diamshp[numPoint], biomshp[numPoint],
+                                    azimuth[numPoint], nbsar[numPoint],
+                                    nbsarm[numPoint], diam[numPoint], biom[numPoint],
                                     nbsarmm2[numPoint], nbsarcep[numPoint], biommm2[numPoint], 
                                     biomgm2[numPoint], biomgcep[numPoint]
                                    ])                
         else: # sans les détails
             if version_3 == "NO":
                 # Ecrit les 5 premiers attributs
-                feat.setAttributes( [ numPoint, dateshp[numPoint], vitesseshp[numPoint], 
-                                    nbsarmshp[numPoint], diamshp[numPoint], biomshp[numPoint]
+                feat.setAttributes( [ numPoint, date_capture[numPoint], vitesse[numPoint], 
+                                    nbsarm[numPoint], diam[numPoint], biom[numPoint]
                                     ])
             else:
                 # Ecrit les 10 premiers attributs
-                feat.setAttributes( [ gid[numPoint], dateshp[numPoint], vitesseshp[numPoint], 
+                feat.setAttributes( [ gid[numPoint], date_capture[numPoint], vitesse[numPoint], 
                                     altitude[numPoint], pdop[numPoint], distance[numPoint],  derive[numPoint], 
-                                    nbsarmshp[numPoint], diamshp[numPoint], biomshp[numPoint]
+                                    azimuth[numPoint], nbsar[numPoint],
+                                    nbsarm[numPoint], diam[numPoint], biom[numPoint]
                                     ])                
         # Ecrit le feature
         writer.addFeature( feat)
@@ -394,7 +400,7 @@ def physiocap_csv_vers_shapefile( self, progress_barre, donnee_3D ,  csv_name, s
         fichier_synthese = open(nom_fichier_synthese, "a")
         try:
             fichier_synthese.write("\n\nSTATISTIQUES\n")
-            fichier_synthese.write("Vitesse moyenne d'avancement km/h \n	mean : %0.1f \n" %np.mean(vitesseshp))
+            fichier_synthese.write("Vitesse moyenne d'avancement km/h \n	mean : %0.1f \n" %np.mean(vitesse))
             if version_3 == "YES":
                 fichier_synthese.write("Altitude moyenne GPS en m \n	mean : %0.1f\t std : %0.1f\n" \
                     %(np.mean(altitude), np.std(altitude)))
@@ -405,14 +411,14 @@ def physiocap_csv_vers_shapefile( self, progress_barre, donnee_3D ,  csv_name, s
 #                fichier_synthese.write("Dérive moyenne entre point % \n	mean : %0.1f\t std : %0.1f\n" \
 #                    %(np.mean(derive), np.std(derive)))
         except:
-            msg = "Erreur bloquante - 1 - durant les calculs de moyennes\n"
+            msg = "Erreur bloquante durant premiers calculs de moyennes\n"
             physiocap_error( self, msg )
             return -1
         
         try:
-            fichier_synthese.write("Section moyenne mm\n	mean : %0.1f \t std : %0.1f\n" %(np.mean(diamshp), np.std(diamshp)))
-            fichier_synthese.write("Nombre de sarments au m \n	mean : %0.1f \t std : %0.1f\n" %(np.mean(nbsarmshp), np.std(nbsarmshp)))
-            fichier_synthese.write("Biomasse en mm²/m linéaire \n	mean : %0.1f\t std : %0.1f\n" %(np.mean(biomshp), np.std(biomshp)))
+            fichier_synthese.write("Section moyenne mm\n	mean : %0.1f \t std : %0.1f\n" %(np.mean(diam), np.std(diam)))
+            fichier_synthese.write("Nombre de sarments au m \n	mean : %0.1f \t std : %0.1f\n" %(np.mean(nbsarm), np.std(nbsarm)))
+            fichier_synthese.write("Biomasse en mm²/m linéaire \n	mean : %0.1f\t std : %0.1f\n" %(np.mean(biom), np.std(biom)))
             if details == "YES":
                 fichier_synthese.write("Nombre de sarments au m² \n	 mean : %0.1f  \t std : %0.1f\n" %(np.mean(nbsarmm2), np.std(nbsarmm2)))
                 fichier_synthese.write("Nombre de sarments par cep \n	mean : %0.1f \t\t std : %0.1f\n" %(np.mean(nbsarcep), np.std(nbsarcep)))
@@ -420,7 +426,7 @@ def physiocap_csv_vers_shapefile( self, progress_barre, donnee_3D ,  csv_name, s
                 fichier_synthese.write("Biomasse en gramme/m² \n	mean : %0.1f\t std : %0.1f\n" %(np.mean(biomgm2), np.std(biomgm2)))
                 fichier_synthese.write("Biomasse en gramme/cep \n	mean : %0.1f\t std : %0.1f\n" %(np.mean(biomgcep), np.std(biomgcep))) 
         except:
-            msg = "Erreur bloquante -2 - durant les calculs de moyennes\n"
+            msg = "Erreur bloquante durant deuxièmes calculs de moyennes\n"
             physiocap_error( self, msg )
             return -1
                     
@@ -448,7 +454,8 @@ def physiocap_csv_vers_shapefile( self, progress_barre, donnee_3D ,  csv_name, s
 #        format( PHYSIOCAP_UNI, self.tr("Traitement")), TRACE_TOOLS)    
 
     # Rendre la memoire 
-    x,y,nbsarmshp,diamshp,biomshp,dateshp,vitesseshp= [],[],[],[],[],[],[]
+    x,y,nbsarm,diam,biom,date_capture,vitesse= [],[],[],[],[],[],[]
+    azimuth, nbsar =  [],[]
     altitude,  pdop,  distance,  derive =  [],[],[],[]
     nbsarmm2,nbsarcep,biommm2,biomgm2,biomgcep=[],[],[],[],[]
 
@@ -613,7 +620,7 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
     if version_3 == "NO":
         titre_sans_detail = "X ; Y ; XL93 ; YL93 ; NBSARM ; DIAM ; BIOM ; DATE ; VITESSE"
     else: # Ajout en version 3 de l'altitude 
-        titre_sans_detail = "ID;X ; Y ; XL93 ; YL93 ; ALTITUDE; PDOP ; DISTANCE; DERIVE; NBSARM ; DIAM ; BIOM ; DATE ; VITESSE"
+        titre_sans_detail = "ID;X ; Y ; XL93 ; YL93 ; ALTITUDE; PDOP ; DISTANCE; DERIVE; AZIMUTH; NBSAR; NBSARM ; DIAM ; BIOM ; DATE ; VITESSE"
         
     if details == "NO" :
         titre = titre_sans_detail
@@ -648,6 +655,12 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
     mes_lignes_sans_coupure = []
     info_lignes_sans_coupure = []
     nombre_segments_sans_coupure = 0
+
+    # Preparer le calcul de distance
+    laProjectionCRS, laProjectionTXT, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, EPSG_NUMBER = \
+        physiocap_quelle_projection_demandee( self)
+    distancearea = physiocap_preparer_calcul_distance( self, EPSG_NUMBER, laProjectionCRS)
+
     
     for ligne_brute in lignes_brutes :
         numero_point = numero_point + 1
@@ -661,12 +674,11 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
                 
         comptage = ligne_brute.count(",") # compte le nombre de virgules
         result = ligne_brute.split(",") # split en fonction des virgules
-        #physiocap_log(  "avant try {0}".  format(progress_bar), leModeDeTrace)
-
-        try : # accompli transformation CRS si pas d'erreur sinon except
+        
+        try :  # Transform GPS en L93
             # on extrait les Colonnnes 1 à 8 (XY, puis GPS jusqu'à vitesse)
             # en on les transforme en float  
-            # On utilise XY[0 et 1] puis Altitude XY[2] Pdop XY[5] et vitesse XY[7] 
+            ### On utilise XY[0 et 1] puis Altitude XY[2] Pdop XY[5] et vitesse XY[7] 
             XY = [float(x) for x in result[1:9]]     
             
             # Puis on transforme les WGS84 (du capteur) en L93 (certainement utile)
@@ -686,10 +698,10 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
             # TODO d'autre EPSG ?
             point_L93 = transformer.transform( QgsPointXY( XY[0],XY[1]))
             XY_L93 = [ point_L93.x(), point_L93.y() ]
-#            aMsg = "Transformation faite X {0} et Y {1}". \
-#                    format( XY_L93[0], XY_L93[1])            
-#            physiocap_log( aMsg , leModeDeTrace)
-            #physiocap_log( "La projection {0}". format( laProjectionTXT), leModeDeTrace)
+            # aMsg = "Transformation faite X {0} et Y {1}". \
+            #           format( XY_L93[0], XY_L93[1])            
+            # physiocap_log( aMsg , leModeDeTrace)
+            # physiocap_log( "La projection {0}". format( laProjectionTXT), leModeDeTrace)
             if ( laProjectionTXT == "GPS"):
                 le_point_projete = QgsPointXY( XY[0],XY[1])
             else: # Pour le moment seulement L93
@@ -704,19 +716,20 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
             # monter directemenr exception
             raise
 
+        # TODO: envisager de marquer les points à conserver (non filtré et dans un segment)
+        # pour creer un 4eme csv POINTS_VALIDES
+        # ce qui est complique pour les segments courts que je ne connais pas encore
+        
         try:  # SEGMENT si V3
             # On regarde les points sans mesure avant SEGMENT
             diams = [float(x) for x in result[9:NB_VIRGULES+1]] # on extrait les diams et on les transforme en float 
             diamsF = [i for i in diams if i > mindiam and i < maxdiam ] # on filtre les diams avec les paramètres entrés ci-dessus
             derive = 0.0
-            ma_distance = 0.0 
+            ma_distance = 0.0
+            mon_azimuth = 0.0
             # SEGMENT si V3
             if version_3 == "NO":
                 pass
-### NON IL faut garder les points sans mesure mais on les stocke dans une liste de GID specifique
-### elif len(diamsF) == 0:
-###                # On ne traite pas les points sans MESURE pour les segments
-###                precedent = []  # et on attend un nouveau precedent
             elif precedent == [] or on_coupe == "PREMIER":
                 #physiocap_log( "SEGMENT ==>> point {0} PREMIER".format( numero_point), TRACE_SEGMENT + "_DEBUG")
                 # Stocker le premier point pour comparer au prochain tour    
@@ -733,25 +746,29 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
                 segment_en_cours.append( QgsPointXY( le_point_projete))
                 on_coupe = "NON"
             else:            
+                # On vérifie qualité de mesure
                 # ################################################
                 # Filtre des points pour découpage en SEGMENT ou 
                 # pour montrer les limites de la capture 
-                # == pas de segment
-                # == segment découpé
                 # On cherche si le point est dans la zone attendue
-                # calcul basé sur la vitesse annoncé par GPS sur le point en cours
+                # calcul basé sur la vitesse annoncé par GPS sur 
+                # le point en cours et PDOP
                 # #################################################
 
-                # On vérifie qualité de mesure
                 # Quand vitesse 2.5 et plus et pdop reste cohérent segment_max_pdop
                 if XY[7] >= segment_mini_vitesse and XY[5] < segment_max_pdop:
                     # on est en vitesse de croisière                        
                     # Calcul de la distance théorique par rapport au precedent
-                    # TODO JHJHJH introduire un calcul de distance length et l'azimut
-                    ma_distance =  le_point_projete.distance( precedent[0] ,  precedent[1])
+                    # Introduire un calcul de distance length et l'azimuth
+                    le_point_precedent = QgsPointXY( precedent[0] ,  precedent[1])
+                    ma_distance = distancearea.measureLine( le_point_projete, le_point_precedent)
+                    mon_azimuth = le_point_projete.azimuth( le_point_precedent)
+                    # TODO JHJHJH Traiter l'azimuth depuis le début du segment
+                    
                     distance_theorique = XY[7]*1000/3600 # On suppose une seconde d'avancement
                     derive = ( ma_distance - distance_theorique) / distance_theorique *100
-#                        physiocap_log( "Vitesse {3} Distance théorique {1:.2f} et ma distance {0:.2f} sont distantes de \n  {2:.1f} soit une derive de {4:.1f}".\
+#                    physiocap_log( "Vitesse {3} Distance théorique {1:.2f} et ma distance {0:.2f}  \
+#                        sont distantes de \n  {2:.1f} soit une derive de {4:.1f}".\
 #                            format(ma_distance,  distance_theorique, \
 #                            ( ma_distance - distance_theorique),  XY[7],  derive ), \
 #                            TRACE_SEGMENT)
@@ -789,8 +806,6 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
                         derive_en_cours.append( derive)
                         on_coupe = "NON"
                             
-
-                
                 else: # Cas d'arret (fin de rang) ou pdop
                     on_coupe = "OUI"
                     # Tracer cas decoupe vitessse
@@ -806,7 +821,6 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
                             TRACE_SEGMENT_DECOUPES)  
        
                 if on_coupe == "OUI": # Cas de fin de ligne
-                        
                     if  len(segment_en_cours) > segment_mini_point:
                         # Le segment est à garder
                         manquant_en_cours.append( numero_point)
@@ -854,16 +868,11 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
             raise
  
            
-        try:
-            # ==============
-            # On filtre vraiement
-            # ==============
-#            diams = [float(x) for x in result[9:NB_VIRGULES+1]] # on extrait les diams et on les transforme en float 
-#            diamsF = [i for i in diams if i > mindiam and i < maxdiam ] # on filtre les diams avec les paramètres entrés ci-dessus
-            
+        try: # On filtre vraiement           
             if details == "NO" :
                 if len(diamsF)==0: # si le nombre de diamètre après filtrage = 0 alors pas de mesures
                     nbsarm = 0
+                    nbsar = 0
                     diam =0
                     biom = 0
                     # Ecrire les seuls_0 et aussi les points avec 0
@@ -872,28 +881,38 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
                             %(XY[0],";",XY[1],";",XY_L93[0],";",XY_L93[1],";",nbsarm,";",diam ,";",biom,";",result[0],";",XY[7]))  # on écrit la ligne dans le csv avec ZERO SEUL
                         csv_avec_0.write("%.7f%s%.7f%s%.7f%s%.7f%s%i%s%i%s%i%s%s%s%0.2f\n" \
                             %(XY[0],";",XY[1],";",XY_L93[0],";",XY_L93[1],";",nbsarm,";",diam ,";",biom,";",result[0],";",XY[7]))  # on écrit la ligne dans le fcsv avec ZERO
-                    else:   # Q3 on ajoute altitude, pdop, distance au point precedent et la dérive
-                        a_ecrire = "{0};{1:.7f};{2:.7f};{3:.7f};{4:.7f};{5:.2f};{6:.2f};0;0;0;0;0;{7};{8:.7f}\n". \
-                                format(numero_point, XY[0],XY[1],XY_L93[0],XY_L93[1], XY[2], XY[5],  result[0],XY[7])
+                    else:   # V3 on ajoute altitude, pdop, distance au point precedent et la dérive
+                            # puis AZIMUTH et NBSAR = 0
+                        a_ecrire = "{0};{1:.7f};{2:.7f};{3:.7f};{4:.7f}; \
+                                    {5:.2f};{6:.2f};{7:.2f};{8:.2f};{9:.2f};0;0;0;0;{10};{11:.7f}\n". \
+                                format(numero_point, XY[0],XY[1],XY_L93[0],XY_L93[1], \
+                                    XY[2],XY[5],ma_distance,derive,mon_azimuth,       result[0],XY[7])
                         csv_0_seul.write( a_ecrire)  
                         csv_avec_0.write( a_ecrire)
                         
                 elif comptage==NB_VIRGULES and len(diamsF)>0 : # si le nombre de diamètre après filtrage != 0 alors mesures
+                    nbsar  = len(diamsF)
                     if XY[7] != 0:
                         nbsarm = len(diamsF)/(XY[7]*1000/3600)
+                        # nombre sarment total 
                     else:
                         nbsarm = 0
                     if nbsarm > 1 and nbsarm < max_sarments_metre :                   
                         diam =sum(diamsF)/len(diamsF)
-                        biom=3.1416*(diam/2)*(diam/2)*nbsarm
+                        biom = 3.1416*(diam/2)*(diam/2)*nbsarm
                         if version_3 == "NO":
                             csv_avec_0.write("%.7f%s%.7f%s%.7f%s%.7f%s%0.2f%s%.2f%s%.2f%s%s%s%0.2f\n" \
                                 %(XY[0],";",XY[1],";",XY_L93[0],";",XY_L93[1],";",nbsarm,";",diam,";",biom,";",result[0],";",XY[7])) # on écrit la ligne dans le csv avec ZERO
                             csv_sans_0.write("%.7f%s%.7f%s%.7f%s%.7f%s%0.2f%s%.2f%s%.2f%s%s%s%0.2f\n" \
                                 %(XY[0],";",XY[1],";",XY_L93[0],";",XY_L93[1],";",nbsarm,";",diam,";",biom,";",result[0],";",XY[7])) # on écrit la ligne dans le csv sans ZERO
-                        else: # Q3 on ajoute altitude, pdop,distance au point precedent et risque de dérive
-                            a_ecrire = "{0};{1:.7f};{2:.7f};{3:.7f};{4:.7f};{5:.2f};{6:.2f};{7:.2f};{8:.2f};{9:.2f};{10:.2f};{11:.2f};{12};{13:.7f}\n". \
-                                format( numero_point, XY[0],  XY[1], XY_L93[0] ,XY_L93[1],XY[2],XY[5],ma_distance,derive,nbsarm,diam,  biom,   result[0],XY[7])
+                        else: # V3 on ajoute altitude, pdop,distance au point precedent et risque de dérive
+                              # puis AZIMUTH et NBSAR
+                            a_ecrire = "{0};{1:.7f};{2:.7f};{3:.7f};{4:.7f}; \
+                                {5:.2f};{6:.2f};{7:.2f};{8:.2f};{9:.2f};{10}; \
+                                {11:.2f}; {12:.2f};{13:.2f};{14};{15:.7f}\n". \
+                                format( numero_point, XY[0],  XY[1], XY_L93[0] ,XY_L93[1], \
+                                    XY[2],XY[5],ma_distance,derive,mon_azimuth,nbsar, \
+                                    nbsarm,diam,biom,result[0],XY[7])
                             csv_avec_0.write( a_ecrire) 
                             csv_sans_0.write(a_ecrire)   
     
@@ -901,6 +920,7 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
                             diametre_filtre.write("%f%s" %(diamsF[n],";"))
             elif details == "YES" :
                 if len(diamsF)==0: # si le nombre de diamètre après filtrage = 0 alors pas de mesures
+                    nbsar = 0
                     nbsarm = 0
                     diam =0
                     biom = 0
@@ -915,14 +935,18 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
                         csv_avec_0.write("%.7f%s%.7f%s%.7f%s%.7f%s%i%s%i%s%i%s%s%s%0.2f%s%i%s%i%s%i%s%i%s%i\n" \
                         %(XY[0],";",XY[1],";",XY_L93[0],";",XY_L93[1],";",nbsarm,";",diam ,";",biom,";",result[0],";",XY[7],";",nbsarmm2,";",nbsarcep,";",biommm2,";",biomgm2,";",biomgcep)) 
                     else: # Q3 on ajoute altitude, pdop, distance au point precedent et la dérive
-                        a_ecrire = "{0};{1:.7f};{2:.7f};{3:.7f};{4:.7f};{5:.2f};{6:.2f};0;0;0;0;0;{7};{8:.7f}". \
-                                format(numero_point, XY[0],XY[1],XY_L93[0],XY_L93[1], XY[2], XY[5],  result[0],XY[7])
+                            # puis AZIMUTH et NBSAR = 0
+                        a_ecrire = "{0};{1:.7f};{2:.7f};{3:.7f};{4:.7f}; \
+                                    {5:.2f};{6:.2f};{7:.2f};{8:.2f};{9:.2f};0;0;0;0;{10};{11:.7f}". \
+                                format(numero_point, XY[0],XY[1],XY_L93[0],XY_L93[1], 
+                                    XY[2],XY[5],ma_distance,derive,mon_azimuth,       result[0],XY[7])
                         a_ecrire_detail = ";0;0;0;0;0\n"                     
                         a_ecrire_complet = a_ecrire + a_ecrire_detail
                         csv_0_seul.write( a_ecrire_complet)  
                         csv_avec_0.write(a_ecrire_complet)
                         
                 elif comptage==NB_VIRGULES and len(diamsF)>0 : # si le nombre de diamètre après filtrage != 0 alors mesures
+                    nbsar  = len(diamsF)
                     if XY[7] != 0:
                         nbsarm = len(diamsF)/(XY[7]*1000/3600)
                     else:
@@ -941,14 +965,20 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
                             csv_sans_0.write("%.7f%s%.7f%s%.7f%s%.7f%s%.2f%s%.2f%s%.2f%s%s%s%.2f%s%.2f%s%.2f%s%.2f%s%.2f%s%.2f\n" \
                             %(XY[0],";",XY[1],";",XY_L93[0],";",XY_L93[1],";",nbsarm,";",diam ,";",biom,";",result[0],";",XY[7],";",nbsarmm2,";",nbsarcep,";",biommm2,";",biomgm2,";",biomgcep)) 
                         else: # Q3 on ajoute altitude, pdop,distance au point precedent et risque de dérive
-                            a_ecrire = "{0};{1:.7f};{2:.7f};{3:.7f};{4:.7f};{5:.2f};{6:.2f};{7:.2f};{8:.2f};{9:.2f};{10:.2f};{11:.2f};{12};{13:.7f}". \
-                                format( numero_point,XY[0],XY[1],XY_L93[0],XY_L93[1],XY[2],XY[5],ma_distance,derive,nbsarm,diam,  biom,   result[0],XY[7])
+                              # puis AZIMUTH et NBSAR
+                            a_ecrire = "{0};{1:.7f};{2:.7f};{3:.7f};{4:.7f}; \
+                                {5:.2f};{6:.2f};{7:.2f};{8:.2f};{9:.2f};{10}; \
+                                {11:.2f}; {12:.2f};{13:.2f};{14};{15:.7f}". \
+                                format( numero_point, XY[0],  XY[1], XY_L93[0] ,XY_L93[1],
+                                    XY[2],XY[5],ma_distance,derive,mon_azimuth,nbsar,
+                                    nbsarm,diam,biom,result[0],XY[7])
                             a_ecrire_detail = ";{0:.7f};{1:.7f};{2:.7f};{3:.7f};{4:.7f}\n". \
                                 format( nbsarmm2, nbsarcep,biommm2,biomgm2,biomgcep)
                             a_ecrire_complet = a_ecrire + a_ecrire_detail
                             csv_avec_0.write( a_ecrire_complet) 
                             csv_sans_0.write(a_ecrire_complet) 
 
+                        # Memorise diametre filtré pour histo
                         for n in range(len(diamsF)) :
                             diametre_filtre.write("%f%s" %(diamsF[n],";"))
 
@@ -957,12 +987,9 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
                 format ( PHYSIOCAP_STOP,  numero_point)
             physiocap_error( self, aMsg )
             err.write( aMsg) # on écrit la ligne dans le fichier ERREUR
-            # Pour monter directemenr exception 
-            #raise
+            # Pour monter directement exception 
+            raise
             return -1 # ce retour est géré comme une exception
-
-
-
 
     if version_3 == "NO":
         pass

@@ -38,7 +38,8 @@
 from .Physiocap_var_exception import *
 
 from PyQt5 import QtWidgets
-from qgis.core import (Qgis, QgsProject, QgsMessageLog,  QgsMapLayer,  QgsCoordinateReferenceSystem)
+from qgis.core import (Qgis, QgsDistanceArea, QgsProject, QgsMessageLog, \
+    QgsMapLayer, QgsCoordinateReferenceSystem)
 from PyQt5.QtWidgets import QMessageBox  
 
 # Pour les traces de Tools
@@ -256,6 +257,32 @@ def physiocap_quelle_projection_demandee( self):
         EXTENSION_RASTER_COMPLET = SEPARATEUR_ + la_projection_TXT + EXTENSION_RASTER
 
     return la_projection_CRS, la_projection_TXT,  EXTENSION_SHP_COMPLET, EXTENSION_PRJ_COMPLET, EXTENSION_RASTER_COMPLET, mon_EPSG_number
+
+
+def physiocap_preparer_calcul_distance( self, EPSG_NUMBER, laProjectionCRS):
+    """ Selon l'EPSG prépare l'objet distance area
+    """
+    # pour le calcul des distances
+    spheroid = 'inconnu'
+    if ( EPSG_NUMBER == EPSG_NUMBER_L93):
+        spheroid = SPHEROID_L93    
+    if (EPSG_NUMBER == EPSG_NUMBER_GPS):
+        spheroid = SPHEROID_GPS    
+    distancearea = QgsDistanceArea()
+    if laProjectionCRS.isValid():
+        physiocap_log( "Calcul de distance Description CRS {0}".\
+        format( laProjectionCRS.description()), TRACE_TOOLS)
+        physiocap_log( "PROJ.4 CRS {0}".\
+        format( laProjectionCRS.toProj4()), TRACE_TOOLS)
+    else:
+        physiocap_log( "INVALIDE CRS", TRACE_TOOLS)
+        return None
+        
+    distancearea.setSourceCrs( laProjectionCRS, QgsProject.instance().transformContext())            
+    distancearea.setEllipsoid( spheroid)
+    physiocap_log( "Calcul de distance sous ellipsoide {0}".\
+        format( distancearea.ellipsoid()), TRACE_TOOLS)
+    return distancearea
 
 ##def physiocap_quel_uriname( self):
 ##    """ Retourne l'uriName attendu """
