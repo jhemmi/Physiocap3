@@ -148,7 +148,7 @@ def physiocap_csv_vers_shapefile( self, progress_barre, donnee_3D ,  csv_name, s
     # Préparation de la liste d'arguments
     gid, x,y,nbsarm,diam,biom,date_capture,vitesse= [],[],[],[],[],[],[],[]
     altitude, pdop,  distance,  derive =  [],[],[],[]
-    azimuth, nbsar =  [],[]
+    azimuth, nbsart =  [],[]
     nbsarmm2,nbsarcep,biommm2,biomgm2,biomgcep=[],[],[],[],[]
     
     un_fic = open( csv_name, "r")
@@ -203,7 +203,7 @@ def physiocap_csv_vers_shapefile( self, progress_barre, donnee_3D ,  csv_name, s
                     distance.append(float(row[7]))
                     derive.append(float(row[8]))
                     azimuth.append(float(row[9]))
-                    nbsar.append(int(row[10]))
+                    nbsart.append(int(row[10]))
                     nbsarm.append(float(row[11]))
                     diam.append(float(row[12]))
                     biom.append(float(row[13]))
@@ -246,7 +246,7 @@ def physiocap_csv_vers_shapefile( self, progress_barre, donnee_3D ,  csv_name, s
         les_champs.append( QgsField("DISTANCE", QVariant.Double, "double", 10,2))
         les_champs.append( QgsField("DERIVE", QVariant.Double, "double", 10,1))
         les_champs.append( QgsField("AZIMUTH", QVariant.Double, "double", 10,1))
-        les_champs.append( QgsField("NBSAR",  QVariant.Int, "integer", 10))
+        les_champs.append( QgsField("NBSART",  QVariant.Int, "integer", 10))
     les_champs.append(QgsField("NBSARM",  QVariant.Double, "double", 10,2))
     les_champs.append(QgsField("DIAM",  QVariant.Double, "double", 10,2))
     les_champs.append(QgsField("BIOM", QVariant.Double,"double", 10,2)) 
@@ -295,7 +295,7 @@ def physiocap_csv_vers_shapefile( self, progress_barre, donnee_3D ,  csv_name, s
             else:
                 feat.setAttributes( [ gid[numPoint], date_capture[numPoint], vitesse[numPoint], 
                                     altitude[numPoint], pdop[numPoint],  distance[numPoint],  derive [numPoint], 
-                                    azimuth[numPoint], nbsar[numPoint],
+                                    azimuth[numPoint], nbsart[numPoint],
                                     nbsarm[numPoint], diam[numPoint], biom[numPoint],
                                     nbsarmm2[numPoint], nbsarcep[numPoint], biommm2[numPoint], 
                                     biomgm2[numPoint], biomgcep[numPoint]
@@ -310,7 +310,7 @@ def physiocap_csv_vers_shapefile( self, progress_barre, donnee_3D ,  csv_name, s
                 # Ecrit les 10 premiers attributs
                 feat.setAttributes( [ gid[numPoint], date_capture[numPoint], vitesse[numPoint], 
                                     altitude[numPoint], pdop[numPoint], distance[numPoint],  derive[numPoint], 
-                                    azimuth[numPoint], nbsar[numPoint],
+                                    azimuth[numPoint], nbsart[numPoint],
                                     nbsarm[numPoint], diam[numPoint], biom[numPoint]
                                     ])                
         # Ecrit le feature
@@ -455,7 +455,7 @@ def physiocap_csv_vers_shapefile( self, progress_barre, donnee_3D ,  csv_name, s
 
     # Rendre la memoire 
     x,y,nbsarm,diam,biom,date_capture,vitesse= [],[],[],[],[],[],[]
-    azimuth, nbsar =  [],[]
+    azimuth, nbsart =  [],[]
     altitude,  pdop,  distance,  derive =  [],[],[],[]
     nbsarmm2,nbsarcep,biommm2,biomgm2,biomgcep=[],[],[],[],[]
 
@@ -620,7 +620,7 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
     if version_3 == "NO":
         titre_sans_detail = "X ; Y ; XL93 ; YL93 ; NBSARM ; DIAM ; BIOM ; DATE ; VITESSE"
     else: # Ajout en version 3 de l'altitude 
-        titre_sans_detail = "ID;X ; Y ; XL93 ; YL93 ; ALTITUDE; PDOP ; DISTANCE; DERIVE; AZIMUTH; NBSAR; NBSARM ; DIAM ; BIOM ; DATE ; VITESSE"
+        titre_sans_detail = "ID;X ; Y ; XL93 ; YL93 ; ALTITUDE; PDOP ; DISTANCE; DERIVE; AZIMUTH; NBSART; NBSARM ; DIAM ; BIOM ; DATE ; VITESSE"
         
     if details == "NO" :
         titre = titre_sans_detail
@@ -872,7 +872,7 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
             if details == "NO" :
                 if len(diamsF)==0: # si le nombre de diamètre après filtrage = 0 alors pas de mesures
                     nbsarm = 0
-                    nbsar = 0
+                    nbsart = 0
                     diam =0
                     biom = 0
                     # Ecrire les seuls_0 et aussi les points avec 0
@@ -882,7 +882,7 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
                         csv_avec_0.write("%.7f%s%.7f%s%.7f%s%.7f%s%i%s%i%s%i%s%s%s%0.2f\n" \
                             %(XY[0],";",XY[1],";",XY_L93[0],";",XY_L93[1],";",nbsarm,";",diam ,";",biom,";",result[0],";",XY[7]))  # on écrit la ligne dans le fcsv avec ZERO
                     else:   # V3 on ajoute altitude, pdop, distance au point precedent et la dérive
-                            # puis AZIMUTH et NBSAR = 0
+                            # puis AZIMUTH et NBSART = 0
                         a_ecrire = "{0};{1:.7f};{2:.7f};{3:.7f};{4:.7f}; \
                                     {5:.2f};{6:.2f};{7:.2f};{8:.2f};{9:.2f};0;0;0;0;{10};{11:.7f}\n". \
                                 format(numero_point, XY[0],XY[1],XY_L93[0],XY_L93[1], \
@@ -891,7 +891,7 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
                         csv_avec_0.write( a_ecrire)
                         
                 elif comptage==NB_VIRGULES and len(diamsF)>0 : # si le nombre de diamètre après filtrage != 0 alors mesures
-                    nbsar  = len(diamsF)
+                    nbsart  = len(diamsF)
                     if XY[7] != 0:
                         nbsarm = len(diamsF)/(XY[7]*1000/3600)
                         # nombre sarment total 
@@ -906,12 +906,12 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
                             csv_sans_0.write("%.7f%s%.7f%s%.7f%s%.7f%s%0.2f%s%.2f%s%.2f%s%s%s%0.2f\n" \
                                 %(XY[0],";",XY[1],";",XY_L93[0],";",XY_L93[1],";",nbsarm,";",diam,";",biom,";",result[0],";",XY[7])) # on écrit la ligne dans le csv sans ZERO
                         else: # V3 on ajoute altitude, pdop,distance au point precedent et risque de dérive
-                              # puis AZIMUTH et NBSAR
+                              # puis AZIMUTH et NBSART
                             a_ecrire = "{0};{1:.7f};{2:.7f};{3:.7f};{4:.7f}; \
                                 {5:.2f};{6:.2f};{7:.2f};{8:.2f};{9:.2f};{10}; \
                                 {11:.2f}; {12:.2f};{13:.2f};{14};{15:.7f}\n". \
                                 format( numero_point, XY[0],  XY[1], XY_L93[0] ,XY_L93[1], \
-                                    XY[2],XY[5],ma_distance,derive,mon_azimuth,nbsar, \
+                                    XY[2],XY[5],ma_distance,derive,mon_azimuth,nbsart, \
                                     nbsarm,diam,biom,result[0],XY[7])
                             csv_avec_0.write( a_ecrire) 
                             csv_sans_0.write(a_ecrire)   
@@ -920,7 +920,7 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
                             diametre_filtre.write("%f%s" %(diamsF[n],";"))
             elif details == "YES" :
                 if len(diamsF)==0: # si le nombre de diamètre après filtrage = 0 alors pas de mesures
-                    nbsar = 0
+                    nbsart = 0
                     nbsarm = 0
                     diam =0
                     biom = 0
@@ -935,7 +935,7 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
                         csv_avec_0.write("%.7f%s%.7f%s%.7f%s%.7f%s%i%s%i%s%i%s%s%s%0.2f%s%i%s%i%s%i%s%i%s%i\n" \
                         %(XY[0],";",XY[1],";",XY_L93[0],";",XY_L93[1],";",nbsarm,";",diam ,";",biom,";",result[0],";",XY[7],";",nbsarmm2,";",nbsarcep,";",biommm2,";",biomgm2,";",biomgcep)) 
                     else: # Q3 on ajoute altitude, pdop, distance au point precedent et la dérive
-                            # puis AZIMUTH et NBSAR = 0
+                            # puis AZIMUTH et NBSART = 0
                         a_ecrire = "{0};{1:.7f};{2:.7f};{3:.7f};{4:.7f}; \
                                     {5:.2f};{6:.2f};{7:.2f};{8:.2f};{9:.2f};0;0;0;0;{10};{11:.7f}". \
                                 format(numero_point, XY[0],XY[1],XY_L93[0],XY_L93[1], 
@@ -946,7 +946,7 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
                         csv_avec_0.write(a_ecrire_complet)
                         
                 elif comptage==NB_VIRGULES and len(diamsF)>0 : # si le nombre de diamètre après filtrage != 0 alors mesures
-                    nbsar  = len(diamsF)
+                    nbsart  = len(diamsF)
                     if XY[7] != 0:
                         nbsarm = len(diamsF)/(XY[7]*1000/3600)
                     else:
@@ -965,12 +965,12 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
                             csv_sans_0.write("%.7f%s%.7f%s%.7f%s%.7f%s%.2f%s%.2f%s%.2f%s%s%s%.2f%s%.2f%s%.2f%s%.2f%s%.2f%s%.2f\n" \
                             %(XY[0],";",XY[1],";",XY_L93[0],";",XY_L93[1],";",nbsarm,";",diam ,";",biom,";",result[0],";",XY[7],";",nbsarmm2,";",nbsarcep,";",biommm2,";",biomgm2,";",biomgcep)) 
                         else: # Q3 on ajoute altitude, pdop,distance au point precedent et risque de dérive
-                              # puis AZIMUTH et NBSAR
+                              # puis AZIMUTH et NBSART
                             a_ecrire = "{0};{1:.7f};{2:.7f};{3:.7f};{4:.7f}; \
                                 {5:.2f};{6:.2f};{7:.2f};{8:.2f};{9:.2f};{10}; \
                                 {11:.2f}; {12:.2f};{13:.2f};{14};{15:.7f}". \
                                 format( numero_point, XY[0],  XY[1], XY_L93[0] ,XY_L93[1],
-                                    XY[2],XY[5],ma_distance,derive,mon_azimuth,nbsar,
+                                    XY[2],XY[5],ma_distance,derive,mon_azimuth,nbsart,
                                     nbsarm,diam,biom,result[0],XY[7])
                             a_ecrire_detail = ";{0:.7f};{1:.7f};{2:.7f};{3:.7f};{4:.7f}\n". \
                                 format( nbsarmm2, nbsarcep,biommm2,biomgm2,biomgcep)
