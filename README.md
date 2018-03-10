@@ -32,9 +32,9 @@ La documentation de la version 2 se trouve dans le Wiki
 https://github.com/jhemmi/QgisPhysiocapPlugin/wiki/Qgis-Physiocap-Plugin-usage-&-installation
 La documentation de la version 3 n'est pas encore disponible.
 
-La version 3Beta-Inter0.1 est publiée dans le dépot github. 
-La 3Beta-Inter0.2 sera déposé sous QGIS 3 (elle sera alors accessible directement dans QGIS 3 depuis le Menu "Extension").
+La version 3.0.4-NBSART est publiée dans le dépot github. 
+La 3.0.3 est déposéé sous QGIS 3 (accessible directement dans QGIS 3 depuis le Menu "Extension").
 
-**Attention, ce dépot GitHub contient la version en cours d'évolution (la 3BETA-Inter0.1 est déposée pour des tests. Elle est encore instable - Février 2018 https://github.com/jhemmi/Physiocap3/releases) **
+**Attention, ce dépot GitHub contient la version en cours d'évolution (la 3.0.4 est déposée pour des tests. Elle est encore instable - Mars 2018 https://github.com/jhemmi/Physiocap3/releases) **
 
-**Warning, this GitHub repo contains last evolution version (Version 3BETA-Inter0.1 is for test purpose only and not stable - Fébruary 2018 https://github.com/jhemmi/Physiocap3/releases) **
+**Warning, this GitHub repo contains last evolution version (Version 3.0.4 is for test purpose only and not stable - March 2018 https://github.com/jhemmi/Physiocap3/releases) **
