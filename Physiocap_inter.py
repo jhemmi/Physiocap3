@@ -1373,7 +1373,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                         format( moyennes_point.get('azimuth_segments_neg'), ecarts_point.get('azimuth_segments_neg') ), leModeDeTrace)
                     physiocap_log ( self.tr( "Nombre total de sarments : {0} - Longueurs segment: {1:6.1f}").\
                         format( sommes_point_segment['la_somme_des_nbsart'], sommes_point_segment['la_longueur_des_segments'] ), leModeDeTrace)
-                physiocap_log ( self.tr( 'Nombre de sarments au metre "Méthode Segment NBSART/LONGUEUR_SEGMENT": {0:6.1f}').\
+                    physiocap_log ( self.tr( 'Nombre de sarments au metre "Méthode Segment NBSART/LONGUEUR_SEGMENT": {0:6.1f}').\
                         format( sommes_point_segment['la_somme_des_nbsart'] / sommes_point_segment['la_longueur_des_segments'] ), leModeDeTrace)
                 physiocap_log ( self.tr( 'Moyenne du nombre de sarments au metre "Méthode V2 NBSARM": {0:6.1f} - Ecarts : {1:6.1f}').\
                     format( moyennes_point.get('sarm'), ecarts_point.get('sarm')  ), leModeDeTrace) 
