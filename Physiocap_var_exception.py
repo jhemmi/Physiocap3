@@ -205,6 +205,7 @@ NOM_INTRA = SEPARATEUR_ + "INTRA"
 REPERTOIRE_RASTERS = "INTRA_PARCELLAIRE"
 ATTRIBUTS_INTRA = ["DIAM", "NBSARM", "BIOM"]
 ATTRIBUTS_INTRA_DETAILS = ["NBSARMM2", "NBSARCEP","BIOMM2", "BIOMGM2", "BIOMGCEP"]
+# TODO: si GDAL & version 3 si ces index n'ont pas bougé avec les nouveau attributs de V3
 ATTRIBUTS_INTRA_INDEX = {"DIAM" : 4 ,"NBSARM" : 3 ,"BIOM" : 5,  "NBSARMM2":6, "NBSARCEP":7,"BIOMM2":8, "BIOMGM2":9, "BIOMGCEP":10}
 CHEMIN_TEMPLATES = [ "modeleQgis/V3", "project_templates/Physiocap3"]
 

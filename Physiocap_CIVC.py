@@ -41,7 +41,7 @@
 """
 
 from .Physiocap_tools import ( physiocap_log, physiocap_error, \
-    physiocap_quelle_projection_demandee, physiocap_preparer_calcul_distance, \
+    physiocap_quelle_projection_demandee, \
     physiocap_create_projection_file) 
 from .Physiocap_var_exception import *
 
@@ -656,10 +656,10 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
     info_lignes_sans_coupure = []
     nombre_segments_sans_coupure = 0
 
-    # Preparer le calcul de distance
-    laProjectionCRS, laProjectionTXT, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, EPSG_NUMBER = \
-        physiocap_quelle_projection_demandee( self)
-    distancearea = physiocap_preparer_calcul_distance( self, EPSG_NUMBER, laProjectionCRS)
+    # Recuperer le CRS choisi, les extensions et le calculateur de distance
+    distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
+    laProjectionCRS, laProjectionTXT, EPSG_NUMBER = \
+            physiocap_quelle_projection_demandee( self)
 
     
     for ligne_brute in lignes_brutes :

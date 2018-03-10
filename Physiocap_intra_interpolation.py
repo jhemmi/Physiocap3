@@ -203,8 +203,10 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 format( PHYSIOCAP_UNI, nom_court_point), TRACE_INTRA)
             raise physiocap_exception_project_point_incoherence( nom_court_point)       
      
-        laProjectionCRS, laProjectionTXT, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, EPSG_NUMBER = \
-            physiocap_quelle_projection_demandee(dialogue)
+        # Recuperer le CRS choisi, les extensions et le calculateur de distance
+        distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
+        laProjectionCRS, laProjectionTXT, EPSG_NUMBER = \
+            physiocap_quelle_projection_demandee( dialogue)
 
         # ###################
         # CRÉATION raster
@@ -717,9 +719,10 @@ class PhysiocapIntra( QtWidgets.QDialog):
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( dialogue, aText, "information" ) 
                    
-        # Récupération de la projection en cours
-        laProjectionCRS, laProjectionTXT, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, EPSG_NUMBER = \
-            physiocap_quelle_projection_demandee(dialogue)
+        # Recuperer le CRS choisi, les extensions et le calculateur de distance
+        distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
+        laProjectionCRS, laProjectionTXT, EPSG_NUMBER = \
+            physiocap_quelle_projection_demandee( dialogue)
 
         # Assert repertoire shapefile 
         # TODO pourquoi unicode

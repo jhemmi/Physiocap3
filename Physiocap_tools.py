@@ -227,10 +227,11 @@ def physiocap_get_layer_by_ID( layerID):
         return None
 
 def physiocap_quelle_projection_demandee( self):
-    """ Selon la valeur cochée dans le radio de projection
-    positionne laProjection, EXTENSION_SHP, EXTENSION_PRJ et epsg
+    """ Selon la valeur cochée dans le radio de projection 
+    positionne laProjection (en QgsCoordinateReferenceSystem, texte et nombre (epsg)
+    les extensions EXTENSION_SHP, EXTENSION_PRJ et RASTER selon la demande SAGA
+    Rend aussi un QgsDistanceArea pour cet EPSG
     """
-    
     # defaut L93
     mon_EPSG_number = EPSG_NUMBER_L93
     la_projection_TXT = PROJECTION_L93
@@ -242,10 +243,11 @@ def physiocap_quelle_projection_demandee( self):
         la_projection_TXT = PROJECTION_L93
 
     la_projection_CRS = QgsCoordinateReferenceSystem.fromEpsgId( mon_EPSG_number)
-    laProjection_str = str( la_projection_CRS.postgisSrid())
-    if la_projection_CRS.isValid():
-        physiocap_log("Projection {0} des shapefiles est demandée : {1} est un EPSG valide".\
-            format( la_projection_TXT, laProjection_str), leModeTrace)
+    # TODO: Récuperer le CRS du projet et le compare au choix
+#    laProjection_str = str( la_projection_CRS.postgisSrid())
+#    if la_projection_CRS.isValid():
+#        physiocap_log("Projection {0} des shapefiles est demandée : {1} est un EPSG valide".\
+#            format( la_projection_TXT, laProjection_str), leModeTrace)
         
     EXTENSION_SHP_COMPLET = SEPARATEUR_ + la_projection_TXT + EXTENSION_SHP
     EXTENSION_PRJ_COMPLET = SEPARATEUR_ + la_projection_TXT + EXTENSION_PRJ
@@ -256,7 +258,12 @@ def physiocap_quelle_projection_demandee( self):
     else:
         EXTENSION_RASTER_COMPLET = SEPARATEUR_ + la_projection_TXT + EXTENSION_RASTER
 
-    return la_projection_CRS, la_projection_TXT,  EXTENSION_SHP_COMPLET, EXTENSION_PRJ_COMPLET, EXTENSION_RASTER_COMPLET, mon_EPSG_number
+    # Preparer les calculs de distance et de surface : distanceArea objet
+    distanceArea = physiocap_preparer_calcul_distance( self, mon_EPSG_number, la_projection_CRS)
+
+    return  distanceArea, \
+    EXTENSION_SHP_COMPLET, EXTENSION_PRJ_COMPLET, EXTENSION_RASTER_COMPLET, \
+    la_projection_CRS, la_projection_TXT, mon_EPSG_number
 
 
 def physiocap_preparer_calcul_distance( self, EPSG_NUMBER, laProjectionCRS):

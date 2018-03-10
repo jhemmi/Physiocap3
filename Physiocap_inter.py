@@ -44,7 +44,7 @@
 from .Physiocap_tools import physiocap_message_box,\
         physiocap_log, physiocap_error, \
         physiocap_rename_existing_file,  \
-        physiocap_quelle_projection_demandee, physiocap_preparer_calcul_distance, \
+        physiocap_quelle_projection_demandee, \
         physiocap_create_projection_file, \
         physiocap_get_layer_by_URI,  physiocap_get_layer_by_ID
 
@@ -157,10 +157,12 @@ def physiocap_fill_combo_poly_or_point( self, isRoot = None, node = None ):
     return nombre_poly, nombre_point
 
               
+
+
 def physiocap_moyenne_un_contour( laProjectionCRS, EPSG_NUMBER, nom_vignette, nom_prj,
         geom_poly, la_surface, un_nom, un_autre_ID, date_debut, date_fin,
-        nombre_points, le_taux_de_sans_mesure, le_nombre_segment, longueur_moyenne_segment, 
-        moyennes_point, ecarts_point, medianes_point, 
+        nombre_points, le_taux_de_sans_mesure, 
+        moyennes_point, ecarts_point, medianes_point, sommes_point_segment,  
         version_3 = "NO", details = "NO"):
     """ Creation d'une vignette nommé un_nom avec les moyennes
         qui se trouvent dans le dic "moyenne_point" :
@@ -178,8 +180,9 @@ def physiocap_moyenne_un_contour( laProjectionCRS, EPSG_NUMBER, nom_vignette, no
     les_champs.append( QgsField( "MESURE_HA", QVariant.Double, "double", 10,1))           
     if version_3 == "YES":
         les_champs.append( QgsField( "0_MESURE", QVariant.Double, "double", 10,1))           
-        les_champs.append( QgsField( "NB_SEG", QVariant.Double, "double", 10,1))           
-        les_champs.append( QgsField( "LEN_SEG", QVariant.Double, "double", 10,1))           
+        les_champs.append( QgsField( "T_NBSAR",QVariant.Int, "integer", 10))           
+        les_champs.append( QgsField( "T_LONG_SEG", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "NBSARM_S",  QVariant.Double, "double", 10,2))
 
     les_champs.append( QgsField( "NBSARM",  QVariant.Double, "double", 10,2))
     les_champs.append( QgsField( "M_NBSARM",  QVariant.Double, "double", 10,2))
@@ -191,6 +194,17 @@ def physiocap_moyenne_un_contour( laProjectionCRS, EPSG_NUMBER, nom_vignette, no
     les_champs.append( QgsField( "M_BIOM", QVariant.Double,"double", 10,2))
     les_champs.append( QgsField( "E_BIOM", QVariant.Double,"double", 10,2))
     if version_3 == "YES":
+        les_champs.append( QgsField( "NB_SEG", QVariant.Int, "integer", 10))           
+        les_champs.append( QgsField( "LONG_S", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "M_LONG_S", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "E_LONG_S", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "ORIENT_P", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "M_ORIENT_P", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "E_ORIENT_P", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "ORIENT-P", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "M_ORIENT-P", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "E_ORIENT-P", QVariant.Double, "double", 10,1))   
+        
         les_champs.append( QgsField("ALTITUDE", QVariant.Double, "double", 10,2))
         les_champs.append( QgsField("M_ALTI", QVariant.Double, "double", 10,2))
         les_champs.append( QgsField("E_ALTI", QVariant.Double, "double", 10,2))
@@ -240,23 +254,31 @@ def physiocap_moyenne_un_contour( laProjectionCRS, EPSG_NUMBER, nom_vignette, no
         if version_3 == "YES":
             # Ecrit tous les attributs avec V3
             feat.setAttributes( [ 1, un_nom, un_autre_ID, nombre_points/la_surface,
-                le_taux_de_sans_mesure, le_nombre_segment, longueur_moyenne_segment, 
-                moyennes_point.get( 'sarm'),    medianes_point.get( 'sarm'),    ecarts_point.get( 'sarm'), 
-                moyennes_point.get( 'diam'),    medianes_point.get( 'diam'),    ecarts_point.get( 'diam'),
-                moyennes_point.get( 'biom'),    medianes_point.get( 'biom'),    ecarts_point.get( 'biom'),
+            le_taux_de_sans_mesure, sommes_point_segment.get( 'la_somme_des_nbsar'),
+            sommes_point_segment.get( 'la_longueur_des_segments'),
+            (sommes_point_segment.get( 'la_somme_des_nbsar') / sommes_point_segment.get( 'la_longueur_des_segments')), 
+
+            moyennes_point.get( 'sarm'),    medianes_point.get( 'sarm'),    ecarts_point.get( 'sarm'), 
+            moyennes_point.get( 'diam'),    medianes_point.get( 'diam'),    ecarts_point.get( 'diam'),
+            moyennes_point.get( 'biom'),    medianes_point.get( 'biom'),    ecarts_point.get( 'biom'),
+
+            sommes_point_segment.get( 'le_nombre_de_segments'),
+            moyennes_point.get( 'les_longueurs_segment'), medianes_point.get( 'les_longueurs_segment'),ecarts_point.get('les_longueurs_segment'), 
+            moyennes_point.get( 'azimuth_points_pos'),medianes_point.get( 'azimuth_points_pos'),ecarts_point.get( 'azimuth_points_pos'), 
+            moyennes_point.get( 'azimuth_points_neg'),medianes_point.get( 'azimuth_points_neg'),ecarts_point.get( 'azimuth_points_neg'), 
+
+            moyennes_point.get( 'altitude'),medianes_point.get( 'altitude'),ecarts_point.get( 'altitude'),
+            moyennes_point.get( 'pdop'),medianes_point.get( 'pdop'),ecarts_point.get( 'pdop'),
+            moyennes_point.get( 'distance'),medianes_point.get( 'distance'),ecarts_point.get( 'distance'),
+            moyennes_point.get( 'derive'),  medianes_point.get( 'derive'),  ecarts_point.get( 'derive'),
                 
-                moyennes_point.get( 'altitude'),medianes_point.get( 'altitude'),ecarts_point.get( 'altitude'),
-                moyennes_point.get( 'pdop'),medianes_point.get( 'pdop'),ecarts_point.get( 'pdop'),
-                moyennes_point.get( 'distance'),medianes_point.get( 'distance'),ecarts_point.get( 'distance'),
-                moyennes_point.get( 'derive'),  medianes_point.get( 'derive'),  ecarts_point.get( 'derive'),
-                
-                moyennes_point.get( 'biomgm2'), medianes_point.get( 'biomgm2'),    ecarts_point.get( 'biomgm2'),
-                moyennes_point.get( 'biomgcep'),medianes_point.get( 'biomgcep'),   ecarts_point.get( 'biomgcep'),  
-                moyennes_point.get( 'biomm2'),  medianes_point.get( 'biomm2'),     ecarts_point.get( 'biomm2'),
-                moyennes_point.get( 'nbsarmm2'),medianes_point.get( 'nbsarmm2'),   ecarts_point.get( 'nbsarmm2'), 
-                moyennes_point.get( 'nbsarcep'),medianes_point.get( 'nbsarcep'),   ecarts_point.get( 'nbsarcep'),
+            moyennes_point.get( 'biomgm2'), medianes_point.get( 'biomgm2'),    ecarts_point.get( 'biomgm2'),
+            moyennes_point.get( 'biomgcep'),medianes_point.get( 'biomgcep'),   ecarts_point.get( 'biomgcep'),  
+            moyennes_point.get( 'biomm2'),  medianes_point.get( 'biomm2'),     ecarts_point.get( 'biomm2'),
+            moyennes_point.get( 'nbsarmm2'),medianes_point.get( 'nbsarmm2'),   ecarts_point.get( 'nbsarmm2'), 
+            moyennes_point.get( 'nbsarcep'),medianes_point.get( 'nbsarcep'),   ecarts_point.get( 'nbsarcep'),
       
-                moyennes_point.get( 'vitesse'), medianes_point.get( 'vitesse'), ecarts_point.get( 'vitesse'),
+            moyennes_point.get( 'vitesse'), medianes_point.get( 'vitesse'), ecarts_point.get( 'vitesse'),
                 date_debut, date_fin, la_surface, nombre_points
                 ])
         else:
@@ -278,17 +300,25 @@ def physiocap_moyenne_un_contour( laProjectionCRS, EPSG_NUMBER, nom_vignette, no
         if version_3 == "YES":
             # Ecrit tous les attributs avec V3
             feat.setAttributes( [ 1, un_nom, un_autre_ID, nombre_points/la_surface,
-                le_taux_de_sans_mesure, le_nombre_segment, longueur_moyenne_segment, 
-                moyennes_point.get( 'sarm'),    medianes_point.get( 'sarm'), ecarts_point.get( 'sarm'), 
-                moyennes_point.get( 'diam'),    medianes_point.get( 'diam'), ecarts_point.get( 'diam'),
-                moyennes_point.get( 'biom'),    medianes_point.get( 'biom'), ecarts_point.get( 'biom'),
+            le_taux_de_sans_mesure, sommes_point_segment.get( 'la_somme_des_nbsar'),
+            sommes_point_segment.get( 'la_longueur_des_segments'),
+            (sommes_point_segment.get( 'la_somme_des_nbsar') / sommes_point_segment.get( 'la_longueur_des_segments')), 
 
-                moyennes_point.get( 'altitude'),medianes_point.get( 'altitude'),ecarts_point.get( 'altitude'),
-                moyennes_point.get( 'pdop'),medianes_point.get( 'pdop'),ecarts_point.get( 'pdop'),
-                moyennes_point.get( 'distance'),medianes_point.get( 'distance'),ecarts_point.get( 'distance'),
-                moyennes_point.get( 'derive'),  medianes_point.get( 'derive'),  ecarts_point.get( 'derive'),
-                
-                moyennes_point.get( 'vitesse'), medianes_point.get( 'vitesse'), ecarts_point.get( 'vitesse'),
+            moyennes_point.get( 'sarm'),    medianes_point.get( 'sarm'),    ecarts_point.get( 'sarm'), 
+            moyennes_point.get( 'diam'),    medianes_point.get( 'diam'),    ecarts_point.get( 'diam'),
+            moyennes_point.get( 'biom'),    medianes_point.get( 'biom'),    ecarts_point.get( 'biom'),
+
+            sommes_point_segment.get( 'le_nombre_de_segments'),
+            moyennes_point.get( 'les_longueurs_segment'), medianes_point.get( 'les_longueurs_segment'),ecarts_point.get('les_longueurs_segment'), 
+            moyennes_point.get( 'azimuth_points_pos'),medianes_point.get( 'azimuth_points_pos'),ecarts_point.get( 'azimuth_points_pos'), 
+            moyennes_point.get( 'azimuth_points_neg'),medianes_point.get( 'azimuth_points_neg'),ecarts_point.get( 'azimuth_points_neg'), 
+
+            moyennes_point.get( 'altitude'),medianes_point.get( 'altitude'),ecarts_point.get( 'altitude'),
+            moyennes_point.get( 'pdop'),medianes_point.get( 'pdop'),ecarts_point.get( 'pdop'),
+            moyennes_point.get( 'distance'),medianes_point.get( 'distance'),ecarts_point.get( 'distance'),
+            moyennes_point.get( 'derive'),  medianes_point.get( 'derive'),  ecarts_point.get( 'derive'),
+
+            moyennes_point.get( 'vitesse'), medianes_point.get( 'vitesse'), ecarts_point.get( 'vitesse'),
                 date_debut, date_fin, la_surface, nombre_points
                 ])
 
@@ -372,8 +402,10 @@ def physiocap_segments_un_contour( laProjectionCRS, EPSG_NUMBER, nom_segment, no
     les_champs = QgsFields()
     les_champs.append( QgsField("GID", QVariant.Int, "integer", 10))
     les_champs.append( QgsField("GID_10", QVariant.Int, "integer", 10))
-    les_champs.append( QgsField( "AZIMUTH", QVariant.Double, "double", 10,2))
-    les_champs.append( QgsField( "LONGUEUR", QVariant.Double, "double", 10,2))
+    if (segment_simplifie == "YES"):   
+        # Azimut ni de longueur pour le cas non brisé
+        les_champs.append( QgsField( "AZIMUTH", QVariant.Double, "double", 10,2))
+        les_champs.append( QgsField( "LONGUEUR", QVariant.Double, "double", 10,2))
     # C'est le NB_POINTS du segment filtre qui devient NB_PTS_INI
     les_champs.append( QgsField("NB_PTS_INI", QVariant.Int, "integer", 10))
     les_champs.append( QgsField("NB_POINTS", QVariant.Int, "integer", 10))
@@ -402,11 +434,16 @@ def physiocap_segments_un_contour( laProjectionCRS, EPSG_NUMBER, nom_segment, no
                 format( le_gid,  nombre_points_initiaux,   nombre_inter),  TRACE_SEGMENT) 
         if (segment_simplifie == "YES"):   # Premier et dernier 
             feat.setGeometry( QgsGeometry.fromPolylineXY( [ un_segment[0], un_segment[nombre_inter-1]] )) #écrit la géométrie
-        else:  # Tous les poins
-            feat.setGeometry( QgsGeometry.fromPolylineXY( un_segment )) #écrit la géométrie            
-        feat.setAttributes([ le_gid, gid_modulo_10, 
+            feat.setAttributes([ le_gid, gid_modulo_10, 
                                 les_azimuths_segment[numero_ligne], 
                                 les_longueurs_segment[numero_ligne], 
+                                nombre_points_initiaux, nombre_inter, 
+                                les_dates_debut_segment[numero_ligne], 
+                                les_dates_fin_segment[numero_ligne]
+                                ])
+        else:  # Tous les points sans longueur ni azimuth
+            feat.setGeometry( QgsGeometry.fromPolylineXY( un_segment )) #écrit la géométrie            
+            feat.setAttributes([ le_gid, gid_modulo_10,  
                                 nombre_points_initiaux, nombre_inter, 
                                 les_dates_debut_segment[numero_ligne], 
                                 les_dates_fin_segment[numero_ligne]
@@ -511,7 +548,7 @@ def physiocap_point_un_contour( laProjectionCRS, EPSG_NUMBER, nom_point, nom_prj
         les_champs.append(QgsField("DISTANCE", QVariant.Double,"double", 10,2)) 
         les_champs.append(QgsField("DERIVE", QVariant.Double,"double", 10.1)) 
         les_champs.append(QgsField("AZIMUTH", QVariant.Double,"double", 10.1)) 
-        les_champs.append(QgsField("NB_SAR",QVariant.Int, "integer", 10))
+        les_champs.append(QgsField("NBSAR",QVariant.Int, "integer", 10))
     if details == "YES":
         # Niveau de detail demandé
         les_champs.append(QgsField("BIOMGM2", QVariant.Double,"double", 10,2))
@@ -577,6 +614,7 @@ def physiocap_moyennes_tous_contours( laProjectionCRS, EPSG_NUMBER,
     dates_debut_parcelle, dates_fin_parcelle,
     les_nombres, les_taux_sans_mesure, 
     les_moyennes_par_contour, les_ecarts_par_contour, les_medianes_par_contour, 
+    sommes_point_segment_par_contour, 
     version_3 = "NO", details = "NO"):
     """ Creation d'un contour avec les moyennes, ecart et mediane dans un tableau de dict
        Il s'agit de tous les polygones du contour avec des moyennes 
@@ -590,6 +628,9 @@ def physiocap_moyennes_tous_contours( laProjectionCRS, EPSG_NUMBER,
     les_champs.append( QgsField( "MESURE_HA", QVariant.Double, "double", 10,1))
     if version_3 == "YES":
         les_champs.append( QgsField( "0_MESURE", QVariant.Double, "double", 10,1))                   
+        les_champs.append( QgsField( "T_NBSAR",QVariant.Int, "integer", 10))           
+        les_champs.append( QgsField( "T_LONG_SEG", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "NBSARM_S",  QVariant.Double, "double", 10,2))
 
     les_champs.append( QgsField( "NBSARM",  QVariant.Double, "double", 10,2))
     les_champs.append( QgsField( "M_NBSARM",  QVariant.Double, "double", 10,2))
@@ -602,6 +643,17 @@ def physiocap_moyennes_tous_contours( laProjectionCRS, EPSG_NUMBER,
     les_champs.append( QgsField( "E_BIOM", QVariant.Double,"double", 10,2))
     
     if version_3 == "YES":
+        les_champs.append( QgsField( "NB_SEG", QVariant.Int, "integer", 10))           
+        les_champs.append( QgsField( "LONG_S", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "M_LONG_S", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "E_LONG_S", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "ORIENT_S", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "M_ORIENT_S", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "E_ORIENT_S", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "ORIENT-S", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "M_ORIENT-S", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "E_ORIENT-S", QVariant.Double, "double", 10,1))   
+
         les_champs.append( QgsField("ALTITUDE", QVariant.Double, "double", 10,2))
         les_champs.append( QgsField("M_ALTI", QVariant.Double, "double", 10,2))
         les_champs.append( QgsField("E_ALTI", QVariant.Double, "double", 10,2))
@@ -655,17 +707,37 @@ def physiocap_moyennes_tous_contours( laProjectionCRS, EPSG_NUMBER,
             if version_3 == "YES":
                 # Ecrit tous les attributs pour V3 (les_taux_sans_mesure puis alti..)
                 feat.setAttributes( [ i, les_parcelles[ i], les_parcelles_ID[ i], les_nombres[ i] / les_surfaces[ i],
-                les_taux_sans_mesure[i], 
-                les_moyennes_par_contour[ i].get( 'sarm'),    les_medianes_par_contour[ i].get( 'sarm'),    les_ecarts_par_contour[ i].get( 'sarm'), 
+                les_taux_sans_mesure[i], sommes_point_segment_par_contour[ i].get( 'la_somme_des_nbsar'),
+                sommes_point_segment_par_contour[ i].get( 'la_longueur_des_segments'),
+                (sommes_point_segment_par_contour[ i].get( 'la_somme_des_nbsar') / sommes_point_segment_par_contour[ i].get( 'la_longueur_des_segments')), 
+
+                les_moyennes_par_contour[ i].get( 'sarm'),    
+                    les_medianes_par_contour[ i].get( 'sarm'),    
+                        les_ecarts_par_contour[ i].get( 'sarm'), 
                 les_moyennes_par_contour[ i].get( 'diam'),    les_medianes_par_contour[ i].get( 'diam'),    les_ecarts_par_contour[ i].get( 'diam'),
                 les_moyennes_par_contour[ i].get( 'biom'),    les_medianes_par_contour[ i].get( 'biom'),    les_ecarts_par_contour[ i].get( 'biom'),
 
-                les_moyennes_par_contour[ i].get( 'altitude'),les_medianes_par_contour[ i].get( 'altitude'),les_ecarts_par_contour[ i].get( 'altitude'),
+                sommes_point_segment_par_contour[ i].get( 'le_nombre_de_segments'),
+                les_moyennes_par_contour[ i].get( 'les_longueurs_segment'), 
+                    les_medianes_par_contour[ i].get( 'les_longueurs_segment'),
+                        les_ecarts_par_contour[ i].get( 'les_longueurs_segment'),
+                les_moyennes_par_contour[ i].get( 'azimuth_segments_pos'),
+                    les_medianes_par_contour[ i].get( 'azimuth_segments_pos'),
+                        les_ecarts_par_contour[ i].get( 'azimuth_segments_pos'), 
+                les_moyennes_par_contour[ i].get( 'azimuth_segments_neg'),
+                    les_medianes_par_contour[ i].get( 'azimuth_segments_neg'),
+                        les_ecarts_par_contour[ i].get( 'azimuth_segments_neg'), 
+
+                les_moyennes_par_contour[ i].get( 'altitude'),
+                    les_medianes_par_contour[ i].get( 'altitude'),
+                        les_ecarts_par_contour[ i].get( 'altitude'),
                 les_moyennes_par_contour[ i].get( 'pdop'),les_medianes_par_contour[ i].get( 'pdop'),les_ecarts_par_contour[ i].get( 'pdop'),
                 les_moyennes_par_contour[ i].get( 'distance'),les_medianes_par_contour[ i].get( 'distance'),les_ecarts_par_contour[ i].get( 'distance'),
                 les_moyennes_par_contour[ i].get( 'derive'),les_medianes_par_contour[ i].get( 'derive'),les_ecarts_par_contour[ i].get( 'derive'),
-                    
-                les_moyennes_par_contour[ i].get( 'biomgm2'), les_medianes_par_contour[ i].get( 'biomgm2'), les_ecarts_par_contour[ i].get( 'biomgm2'),
+                        
+                les_moyennes_par_contour[ i].get( 'biomgm2'), 
+                    les_medianes_par_contour[ i].get( 'biomgm2'), 
+                        les_ecarts_par_contour[ i].get( 'biomgm2'),
                 les_moyennes_par_contour[ i].get( 'biomgcep'),les_medianes_par_contour[ i].get( 'biomgcep'),les_ecarts_par_contour[ i].get( 'biomgcep'),   
                 les_moyennes_par_contour[ i].get( 'biomm2'),  les_medianes_par_contour[ i].get( 'biomm2'),  les_ecarts_par_contour[ i].get( 'biomm2'),
                 les_moyennes_par_contour[ i].get( 'nbsarmm2'),les_medianes_par_contour[ i].get( 'nbsarmm2'),les_ecarts_par_contour[ i].get( 'nbsarmm2'),
@@ -693,10 +765,24 @@ def physiocap_moyennes_tous_contours( laProjectionCRS, EPSG_NUMBER,
             if version_3 == "YES":
                 # Ecrit tous les attributs pour V3
                 feat.setAttributes( [ i, les_parcelles[ i], les_parcelles_ID[ i],les_nombres[ i] / les_surfaces[ i],
-                les_taux_sans_mesure[i], 
+                les_taux_sans_mesure[i], sommes_point_segment_par_contour[ i].get( 'la_somme_des_nbsar'),
+                sommes_point_segment_par_contour[ i].get( 'la_longueur_des_segments'),
+                (sommes_point_segment_par_contour[ i].get( 'la_somme_des_nbsar') / sommes_point_segment_par_contour[ i].get( 'la_longueur_des_segments')), 
+
                 les_moyennes_par_contour[ i].get( 'sarm'),    les_medianes_par_contour[ i].get( 'sarm'),    les_ecarts_par_contour[ i].get( 'sarm'), 
                 les_moyennes_par_contour[ i].get( 'diam'),    les_medianes_par_contour[ i].get( 'diam'),    les_ecarts_par_contour[ i].get( 'diam'),
                 les_moyennes_par_contour[ i].get( 'biom'),    les_medianes_par_contour[ i].get( 'biom'),    les_ecarts_par_contour[ i].get( 'biom'),
+
+                sommes_point_segment_par_contour[ i].get( 'le_nombre_de_segments'),
+                les_moyennes_par_contour[ i].get( 'les_longueurs_segment'), 
+                    les_medianes_par_contour[ i].get( 'les_longueurs_segment'),
+                        les_ecarts_par_contour[ i].get( 'les_longueurs_segment'),
+                les_moyennes_par_contour[ i].get( 'azimuth_segments_pos'),
+                    les_medianes_par_contour[ i].get( 'azimuth_segments_pos'),
+                        les_ecarts_par_contour[ i].get( 'azimuth_segments_pos'), 
+                les_moyennes_par_contour[ i].get( 'azimuth_segments_neg'),
+                    les_medianes_par_contour[ i].get( 'azimuth_segments_neg'),
+                        les_ecarts_par_contour[ i].get( 'azimuth_segments_neg'), 
 
                 les_moyennes_par_contour[ i].get( 'altitude'),les_medianes_par_contour[ i].get( 'altitude'),les_ecarts_par_contour[ i].get( 'altitude'),
                 les_moyennes_par_contour[ i].get( 'pdop'),les_medianes_par_contour[ i].get( 'pdop'),les_ecarts_par_contour[ i].get( 'pdop'),
@@ -835,7 +921,7 @@ class PhysiocapInter( QtWidgets.QDialog):
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( dialogue, aText, "information" ) 
 
-        # Verifier SRCs sont les même
+        # Verifier SRCs sont les même entre couches
         crs_poly = vecteur_poly.crs().authid()
         crs_point = vecteur_point.crs().authid()
         if ( crs_poly != crs_point):
@@ -843,15 +929,17 @@ class PhysiocapInter( QtWidgets.QDialog):
                 format( crs_poly, crs_point)
             physiocap_error( self, mes)
             return physiocap_message_box( dialogue, mes,"information")
-                    
-        laProjectionCRS, laProjectionTXT, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, EPSG_NUMBER = \
+                  
+        # Recuperer le CRS choisi, les extensions et le calculateur de distance
+        distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
+        laProjectionCRS, laProjectionTXT, EPSG_NUMBER = \
             physiocap_quelle_projection_demandee( dialogue)
 
         if (version_3 == "NO"):
             rep_vecteur = REPERTOIRE_SHAPEFILE
         else:
             rep_vecteur = REPERTOIRE_SHAPEFILE_V3
-            
+        
 
         # Verification du repertoire shape
         pro = vecteur_point.dataProvider() 
@@ -901,6 +989,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                     physiocap_error( self, aText, "CRITICAL")
                     return physiocap_message_box( dialogue, aText, "information" )  
 
+        # CONTAINEUR DES TOUS LES CONTOURS
         # On passe sur les differents contours
         id = 0
         contour_avec_point = 0
@@ -911,23 +1000,26 @@ class PhysiocapInter( QtWidgets.QDialog):
         dates_debut_parcelle = []
         dates_fin_parcelle = []
         les_nombres = []
-        les_taux_sans_mesure = []  
+        les_taux_sans_mesure = []
+
+        # Moyenne ecart mediane
         les_moyennes_par_contour = []
         les_ecarts_par_contour = []
         les_medianes_par_contour = []
-        
+        sommes_point_segment_par_contour = []
+        # Sans mesures 
         toutes_les_geoms_sans_mesure = []
         les_infos_sans_mesure = []
-        info_en_cours = {}
-
+        info_sans_mesure_en_cours = {}   # Conteneur avec le nom des champs
+        # Segments
         toutes_les_geoms_segment = []
         les_infos_segment = []
-        info_segment_en_cours = {}
+        info_segment_en_cours = {} # Conteneur avec le nom des champs
 
-        # Preparer distanceArea objet
-        distancearea = physiocap_preparer_calcul_distance( dialogue, EPSG_NUMBER, laProjectionCRS)
-        
-        for un_contour in vecteur_poly.getFeatures(): #iterate poly features
+
+        # TODO: Trier par nom de contour
+        # ITERATION PAR CONTOUR
+        for un_contour in vecteur_poly.getFeatures():
             id = id + 1
             try:
                 # A_TESTER : OK avec avec et ? sans str
@@ -962,6 +1054,7 @@ class PhysiocapInter( QtWidgets.QDialog):
             la_surface = distancearea.measureArea( geom_poly) /10000
             #physiocap_log( "Distancearea surface {0}".format( la_surface), leModeDeTrace)
 
+            # PAS DE MESURE DU CONTOUR
             if  version_3 == "YES" and dialogue.checkBoxInterPasMesure.isChecked():
                 # on initialise pour ce contour
                 les_geoms_sans_mesure = []
@@ -996,15 +1089,17 @@ class PhysiocapInter( QtWidgets.QDialog):
                 
                 # Mémoriser ces sans mesures
                 toutes_les_geoms_sans_mesure.append( les_geoms_sans_mesure)
-                info_en_cours[ "DATE"] = les_dates_sans_mesure
-                info_en_cours[ "GID"] = les_GID_sans_mesure
-                info_en_cours[ "VITESSE"] = les_vitesses_sans_mesure
-                info_en_cours[ "ALTITUDE"] = les_altitudes_sans_mesure
-                info_en_cours[ "PDOP"] = les_pdop_sans_mesure
-                info_en_cours[ "AZIMUTH"] = les_azimuths_sans_mesure
-                les_infos_sans_mesure.append( info_en_cours)
-                info_en_cours = {}
+                info_sans_mesure_en_cours[ "DATE"] = les_dates_sans_mesure
+                info_sans_mesure_en_cours[ "GID"] = les_GID_sans_mesure
+                info_sans_mesure_en_cours[ "VITESSE"] = les_vitesses_sans_mesure
+                info_sans_mesure_en_cours[ "ALTITUDE"] = les_altitudes_sans_mesure
+                info_sans_mesure_en_cours[ "PDOP"] = les_pdop_sans_mesure
+                info_sans_mesure_en_cours[ "AZIMUTH"] = les_azimuths_sans_mesure
+                les_infos_sans_mesure.append( info_sans_mesure_en_cours)
+                info_sans_mesure_en_cours = {}
                 
+            # FIN PAS DE MESURE DU CONTOUR
+            # SEGMENT DU CONTOUR
             if  version_3 == "YES" and ( dialogue.checkBoxInterSegment.isChecked() or \
                 dialogue.checkBoxInterSegmentBrise.isChecked() ):
                 # on initialise pour ce contour
@@ -1033,9 +1128,9 @@ class PhysiocapInter( QtWidgets.QDialog):
                         message = un_nom + " - PB multi segment" + str( i_segment) + " - "
                         raise physiocap_exception_segment_invalid( message)
                     les_points = les_multi_points[0]
-                    nb_points = len( les_points)
-#                    physiocap_log( "== Pour le segment {0} le nombre de points {1}". \
-#                        format( i_segment, nb_points), TRACE_SEGMENT)
+                    #nb_points = len( les_points)
+                    #physiocap_log( "== Pour le segment {0} le nombre de points {1}". \
+                    #    format( i_segment, nb_points), TRACE_SEGMENT)
                     # On doit garder les points inter de ce segment 
                     for x_point,  y_point in les_points:
                         le_point = QgsPointXY(x_point, y_point)
@@ -1047,12 +1142,11 @@ class PhysiocapInter( QtWidgets.QDialog):
                                 message = un_nom + " - PB_GEOM " + str( j_points) + " - "
                                 raise physiocap_exception_segment_invalid( message)                                     
                     if ( j_points > 2):
-                        physiocap_log( "Présence finale {0} points sur {2} dans segment {1}". \
-                                format( j_points, i_segment,  nb_points), leModeDeTrace)
+#                        physiocap_log( "Présence finale {0} points sur {2} dans segment {1}". \
+#                                format( j_points, i_segment,  nb_points), leModeDeTrace)
                         try:
                             les_geoms_segment.append( les_geoms_du_segment)
                             # Calcul de la longueur du segment et de son azimuth
-                            # TODO: et/ou de la moyenne des azimuths
                             un_point = les_geoms_du_segment[0]
                             l_autre = les_geoms_du_segment[j_points-1]
                             les_longueurs_segment.append( distancearea.measureLine( un_point, l_autre))
@@ -1085,10 +1179,8 @@ class PhysiocapInter( QtWidgets.QDialog):
                 les_infos_segment.append( info_segment_en_cours)
                 info_segment_en_cours = {}
       
-
-
-       
-            # on initialise pour ce contour
+            # FIN SEGMENT DU CONTOUR       
+            # DONNEES DES COUTOURS
             les_geoms_des_points = []
             les_dates = []
             les_GID = []
@@ -1096,14 +1188,14 @@ class PhysiocapInter( QtWidgets.QDialog):
             les_sarments = []
             les_diametres = []
             nb_dia = 0
-            nb_sar = 0
+            nb_sarments_m = 0
             les_biom = []
             les_altitudes = []
             les_pdop = []
             les_distances = []
             les_derives = []
-            les_azimuths = []
-            les_nbsar_s = []
+            les_azimuths_points = []
+            les_nbsar_points = []
             les_biomgm2 = []
             les_biomgcep = []
             les_biomm2 = []
@@ -1113,7 +1205,7 @@ class PhysiocapInter( QtWidgets.QDialog):
             date_debut = ""
             date_fin = ""
             
-            # Récupération des entites POINTS qui concernent ce contour
+            # POINTS DU CONTOUR COURANT
             for un_point in vecteur_point.getFeatures(QgsFeatureRequest().
                             setFilterRect(geom_poly.boundingBox())):
                 # un_point est un feature ! 
@@ -1150,8 +1242,8 @@ class PhysiocapInter( QtWidgets.QDialog):
                             les_pdop.append( un_point["PDOP"])
                             les_distances.append( un_point["DISTANCE"])
                             les_derives.append( un_point["DERIVE"])
-                            les_azimuths.append( un_point["AZIMUTH"])
-                            les_nbsar_s.append( un_point["NBSAR"])
+                            les_azimuths_points.append( un_point["AZIMUTH"])
+                            les_nbsar_points.append( un_point["NBSAR"])
                         if ( details == "YES"):
                             try:
                                 les_biomgm2.append( un_point["BIOMGM2"])
@@ -1165,29 +1257,28 @@ class PhysiocapInter( QtWidgets.QDialog):
                     except KeyError:
                         raise physiocap_exception_points_invalid( un_nom) 
                             
+            # FIN POINTS DU CONTOUR COURANT
             # en sortie de boucle on attrape la derniere date
             if i_point > 10:
                 date_fin = un_point["DATE"]
                 
-            # On a memorisé pour chaque parcelle les attributs de chaque points
+            # MEMORISATION DES DONNEES DU CONTOUR COURANT (SANS MESURE, SEGMENT, POINT)
             # On fait les calculs des moyenne, médiane et ecart type
             nb_dia = len( les_diametres)
-            nb_sar = len( les_sarments)
+            nb_sarments_m = len( les_sarments) # sarments par metre
             le_taux_de_sans_mesure = -1
-            le_nombre_segment = 0
-            longueur_moyenne_segment = 0
-
             if  version_3 == "YES" and dialogue.checkBoxInterPasMesure.isChecked() \
                 and nb_dia > 0:
                 le_taux_de_sans_mesure = i_sans_mesure / nb_dia * 100
-            if version_3 == "YES" and ( dialogue.checkBoxInterSegment.isChecked() or \
-                dialogue.checkBoxInterSegmentBrise.isChecked() ):
-                le_nombre_segment = len (les_nombres_points_restant)
-                longueur_moyenne_segment = float(  np.mean( les_nombres_points_restant)) 
+# JH           if version_3 == "YES" and ( dialogue.checkBoxInterSegment.isChecked() or \
+#                dialogue.checkBoxInterSegmentBrise.isChecked() ):
+#                le_nombre_segment = len (les_longueurs_segment)
             moyennes_point = {}
             ecarts_point = {}
             medianes_point = {}
-            if ( (nb_dia > 0) and ( nb_dia == nb_sar )):
+            sommes_point_segment = {}
+            
+            if ( (nb_dia > 0) and ( nb_dia == nb_sarments_m )):
                 # Appel np pour mean et std
                 # Ranger toutes les moyennes dans un dict Moyenne et un dict Ecart
                 moyennes_point['vitesse'] = float(  np.mean( les_vitesses))
@@ -1203,34 +1294,60 @@ class PhysiocapInter( QtWidgets.QDialog):
                 ecarts_point['biom'] = float(       np.std( les_biom))
                 medianes_point['biom'] = float(     np.median( les_biom))
                 if version_3 == "YES":
-                    moyennes_point['altitude'] = float(     np.mean( les_altitudes))
-                    ecarts_point['altitude'] = float(       np.std( les_altitudes))
-                    medianes_point['altitude'] = float(     np.median( les_altitudes))
+                    moyennes_point['altitude'] = float( np.mean( les_altitudes))
+                    ecarts_point['altitude'] = float(   np.std( les_altitudes))
+                    medianes_point['altitude'] = float( np.median( les_altitudes))
                     moyennes_point['pdop'] = float(     np.mean( les_pdop))
                     ecarts_point['pdop'] = float(       np.std( les_pdop))
                     medianes_point['pdop'] = float(     np.median( les_pdop))
-                    moyennes_point['distance'] = float(     np.mean( les_distances))
-                    ecarts_point['distance'] = float(       np.std( les_distances))
-                    medianes_point['distance'] = float(     np.median( les_distances))
-                    moyennes_point['derive'] = float(     np.mean( les_derives))
-                    ecarts_point['derive'] = float(       np.std( les_derives))
-                    medianes_point['derive'] = float(     np.median( les_derives))
-                    # TODO: Moyenne des azimuth >0 et <0
-                    azimuths_positif =[]
-                    azimuths_negatif =[]
-                    for azimuth in les_azimuths:
-                        if azimuth > 0: 
-                           azimuths_positif.append( azimuth)
+                    moyennes_point['distance'] = float( np.mean( les_distances))
+                    ecarts_point['distance'] = float(   np.std( les_distances))
+                    medianes_point['distance'] = float( np.median( les_distances))
+                    moyennes_point['derive'] = float(   np.mean( les_derives))
+                    ecarts_point['derive'] = float(     np.std( les_derives))
+                    medianes_point['derive'] = float(   np.median( les_derives))
+                    # Moyenne des azimuths de points (choix >0 et <0 )
+                    azimuths_points_positif =[]
+                    azimuths_points_negatif =[]
+                    for l_azimuth in les_azimuths_points:  # des points
+                        if l_azimuth > 0: 
+                           azimuths_points_positif.append( l_azimuth)
                         else:
-                           azimuths_negatif.append( azimuth)
-                    moyennes_point['azimuth_pos'] = float(     np.mean( azimuths_positif))
-                    moyennes_point['azimuth_neg'] = float(     np.mean( azimuths_negatif))
-                    medianes_point['azimuth_pos'] = float(     np.median( azimuths_positif))
-                    medianes_point['azimuth_neg'] = float(     np.median( azimuths_negatif))
-                    ecarts_point['azimuth_pos'] = float(     np.std( azimuths_positif))
-                    ecarts_point['azimuth_neg'] = float(     np.std( azimuths_negatif))
-                    # TODO : moyenne nb_sar sur les longueurs des segments valides
+                           azimuths_points_negatif.append( l_azimuth)
+                    moyennes_point['azimuth_points_pos'] = float(   np.mean( azimuths_points_positif))
+                    moyennes_point['azimuth_points_neg'] = float(   np.mean( azimuths_points_negatif))
+                    medianes_point['azimuth_points_pos'] = float(   np.median( azimuths_points_positif))
+                    medianes_point['azimuth_points_neg'] = float(   np.median( azimuths_points_negatif))
+                    ecarts_point['azimuth_points_pos'] = float(     np.std( azimuths_points_positif))
+                    ecarts_point['azimuth_points_neg'] = float(     np.std( azimuths_points_negatif))
+                    # Moyenne des azimuths de segments (choix >0 et <0 )
+                    azimuths_segments_positif =[]
+                    azimuths_segments_negatif =[]
+                    for l_azimuth in les_azimuths_segment:  # des segments
+                        if l_azimuth > 0: 
+                           azimuths_segments_positif.append( l_azimuth)
+                        else:
+                           azimuths_segments_negatif.append( l_azimuth)
+                    moyennes_point['azimuth_segments_pos'] = float(  np.mean( azimuths_segments_positif))
+                    moyennes_point['azimuth_segments_neg'] = float(  np.mean( azimuths_segments_negatif))
+                    medianes_point['azimuth_segments_pos'] = float(  np.median( azimuths_segments_positif))
+                    medianes_point['azimuth_segments_neg'] = float(  np.median( azimuths_segments_negatif))
+                    ecarts_point['azimuth_segments_pos'] = float(    np.std( azimuths_segments_positif))
+                    ecarts_point['azimuth_segments_neg'] = float(    np.std( azimuths_segments_negatif))
+                  
+                    # Moyenne nombre de sarment total sur les longueurs des segments valides
+                    moyennes_point['les_nbsar'] = float(  np.mean( les_nbsar_points))
+                    ecarts_point['les_nbsar'] = float(     np.std( les_nbsar_points))
+                    medianes_point['les_nbsar'] = float( np.median( les_nbsar_points))
+                    sommes_point_segment['la_somme_des_nbsar'] = float(sum( les_nbsar_points))
 
+                    moyennes_point['les_longueurs_segment'] = float(   np.mean( les_longueurs_segment))
+                    ecarts_point['les_longueurs_segment'] = float(      np.std( les_longueurs_segment))
+                    medianes_point['les_longueurs_segment'] = float( np.median( les_longueurs_segment))
+                    sommes_point_segment['la_longueur_des_segments'] = float( sum( les_longueurs_segment))
+                    sommes_point_segment['le_nombre_de_segments'] = len( les_longueurs_segment)
+                    #nbsarm_mesure = sum( les_nbsar_points) / sum( les_longueurs_segment)
+                    
                 if ( details == "YES"):
                     moyennes_point['biomgm2'] = float(  np.mean( les_biomgm2))
                     ecarts_point['biomgm2'] = float(    np.std( les_biomgm2))
@@ -1251,11 +1368,15 @@ class PhysiocapInter( QtWidgets.QDialog):
                 physiocap_log ( self.tr( "Date : {0}").\
                     format( date_debut), leModeDeTrace) 
                 if version_3 == "YES":                
-                    physiocap_log ( self.tr( "Moyenne des altitudes : {0:6.1f} - Ecarts : {1:6.1f} en m").\
-                        format( moyennes_point.get('altitude'), ecarts_point.get('altitude') ), leModeDeTrace)
-                    physiocap_log ( self.tr( "Moyenne des dérives entre points : {0:6.1f} - Ecarts : {1:6.1f} en %").\
-                        format( moyennes_point.get('derive'), ecarts_point.get('derive') ), leModeDeTrace)
-                physiocap_log ( self.tr( "Moyenne du nombre de sarments : {0:6.1f} - Ecarts : {1:6.1f}").\
+                    physiocap_log ( self.tr( "Moyenne des orientations Aller par segments : {0:6.1f} - Ecarts : {1:6.1f} en °").\
+                        format( moyennes_point.get('azimuth_segments_pos'), ecarts_point.get('azimuth_segments_pos') ), leModeDeTrace)
+                    physiocap_log ( self.tr( "Moyenne des orientations Retour par segments : {0:6.1f} - Ecarts : {1:6.1f} en °").\
+                        format( moyennes_point.get('azimuth_segments_neg'), ecarts_point.get('azimuth_segments_neg') ), leModeDeTrace)
+                    physiocap_log ( self.tr( "Nombre total de sarments : {0} - Longueurs segment: {1:6.1f}").\
+                        format( sommes_point_segment['la_somme_des_nbsar'], sommes_point_segment['la_longueur_des_segments'] ), leModeDeTrace)
+                physiocap_log ( self.tr( 'Nombre de sarments au metre "Méthode Segment NBSAR/LONGUEUR_SEGMENT": {0:6.1f}').\
+                        format( sommes_point_segment['la_somme_des_nbsar'] / sommes_point_segment['la_longueur_des_segments'] ), leModeDeTrace)
+                physiocap_log ( self.tr( 'Moyenne du nombre de sarments au metre "Méthode V2 NBSARM": {0:6.1f} - Ecarts : {1:6.1f}').\
                     format( moyennes_point.get('sarm'), ecarts_point.get('sarm')  ), leModeDeTrace) 
                 physiocap_log ( self.tr( "Moyenne des diamètres : {0:5.1f} - Ecarts : {1:5.1f} en mm").\
                     format( moyennes_point.get('diam'),  ecarts_point.get('diam')), leModeDeTrace)
@@ -1305,8 +1426,9 @@ class PhysiocapInter( QtWidgets.QDialog):
                 nom_prj = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_prj))        
                 physiocap_moyenne_un_contour( laProjectionCRS, EPSG_NUMBER, nom_vignette, nom_prj, 
                     geom_poly, la_surface,  un_nom, un_autre_ID, date_debut, date_fin,
-                    nb_dia, le_taux_de_sans_mesure, le_nombre_segment, longueur_moyenne_segment, 
-                    moyennes_point, ecarts_point, medianes_point, version_3, details)
+                    nb_dia, le_taux_de_sans_mesure, 
+                    moyennes_point, ecarts_point, medianes_point, sommes_point_segment, 
+                    version_3, details)
                                      
                 # Memorisation de la parcelle du contour et des moyennes
                 les_geoms_poly.append( geom_poly.asMultiPolygon())
@@ -1321,6 +1443,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                 les_moyennes_par_contour.append( moyennes_point)
                 les_ecarts_par_contour.append( ecarts_point)
                 les_medianes_par_contour.append( medianes_point)
+                sommes_point_segment_par_contour.append( sommes_point_segment)
                 
                 # ###################
                 # CRÉATION point
@@ -1334,7 +1457,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                     les_geoms_des_points, les_GID, les_dates, 
                     les_vitesses, les_sarments, les_diametres, les_biom,
                     les_altitudes,  les_pdop, les_distances, les_derives,
-                    les_azimuths, les_nbsar_s, 
+                    les_azimuths_points, les_nbsar_points, 
                     les_biomgm2, les_biomgcep, les_biomm2, les_nbsarmm2, les_nbsarcep,
                     version_3, details)
                 
@@ -1371,7 +1494,6 @@ class PhysiocapInter( QtWidgets.QDialog):
                     # ###################
                     # CRÉATION segment  brisé dans contour
                     # ###################
-
                     nom_court_segment_brise = nom_noeud_arbre + NOM_SEGMENTS_DETAILS + SEPARATEUR_ + un_nom + EXT_CRS_SHP     
                     nnom_court_segment_brise_prj = nom_noeud_arbre + NOM_SEGMENTS_DETAILS + SEPARATEUR_ + un_nom + EXT_CRS_PRJ     
                     nom_segment_brise = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_segment_brise))        
@@ -1474,14 +1596,17 @@ class PhysiocapInter( QtWidgets.QDialog):
                 physiocap_log( self.tr( "== Aucun point dans {0}. Pas de comparaison inter parcellaire").\
                     format( un_nom), leModeDeTrace)       
         
-        if ( contour_avec_point == 0):
+
+        # FIN ITERATION PAR CONTOUR
+
+        # CREATION PUIS AFFICHAGE DES VECTEURS DE TOUS CONTOURS
+        if ( contour_avec_point == 0): # Pas de contours avec des points
             return physiocap_message_box( dialogue, 
                     self.tr( "== Aucun point dans {0}. Pas de comparaison inter parcellaire").\
                     format( self.tr( "vos contours")),
                     "information")
         else:
-            
-            # On a des parcelles dans le contour avec des moyennes
+            # CREATION DU VECTEUR DE MOYENNES
             nom_court_du_contour = os.path.basename( vecteur_poly.name() + EXTENSION_SHP)
             # Inserer "MOYENNES"
             nom_court_du_contour_moyenne = nom_noeud_arbre + NOM_MOYENNE + nom_court_du_contour
@@ -1495,14 +1620,12 @@ class PhysiocapInter( QtWidgets.QDialog):
                 les_geoms_poly, les_surfaces, les_parcelles, les_parcelles_ID, 
                 dates_debut_parcelle,  dates_fin_parcelle,
                 les_nombres, les_taux_sans_mesure, 
-                les_moyennes_par_contour, les_ecarts_par_contour, les_medianes_par_contour, 
+                les_moyennes_par_contour, les_ecarts_par_contour, les_medianes_par_contour,
+                sommes_point_segment_par_contour,  
                 version_3, details)
 
-            # Inserer les PAS DE MESURE de tous les contours
+            # CREATION VECTEUR DE 0_SEUL ou sans mesure
             if  version_3 == "YES" and dialogue.checkBoxInterPasMesure.isChecked():
-                # ###################
-                # CRÉATION point sans mesure
-                # ###################
                 nom_court_sans_mesure_moyenne = nom_noeud_arbre + NOM_POINTS + EXTENSION_ZERO_SEUL + SEPARATEUR_ + nom_court_du_contour
                 nom_court_sans_mesure_moyenne_prj = nom_court_sans_mesure_moyenne [:-4] + EXT_CRS_PRJ[ -4:]
                 nom_sans_mesure_moyenne = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_sans_mesure_moyenne))        
@@ -1511,30 +1634,28 @@ class PhysiocapInter( QtWidgets.QDialog):
                     nom_sans_mesure_moyenne, nom_sans_mesure_moyenne_prj, 
                     toutes_les_geoms_sans_mesure, les_infos_sans_mesure)
                     
-            # Inserer les SEGMENTS de tous les contours
+            # CREATION VECTEUR SEGMENT
             if  version_3 == "YES" and dialogue.checkBoxInterSegment.isChecked() :
                 nom_court_segment_moyenne = nom_noeud_arbre + NOM_SEGMENTS + SEPARATEUR_ + nom_court_du_contour
                 nom_court_segment_moyenne_prj = nom_court_segment_moyenne [:-4] + EXT_CRS_PRJ[ -4:]
                 nom_segment_moyenne = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_segment_moyenne))        
                 nom_segment_moyenne_prj = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_segment_moyenne_prj))        
-
                 physiocap_segment_tous_contours( laProjectionCRS, EPSG_NUMBER, 
                     nom_segment_moyenne, nom_segment_moyenne_prj,
-                    toutes_les_geoms_segment, les_infos_segment)
-    
+                    toutes_les_geoms_segment, les_infos_segment)   
             if  version_3 == "YES" and dialogue.checkBoxInterSegmentBrise.isChecked():
                 nom_court_segment_brise_moyenne = nom_noeud_arbre + NOM_SEGMENTS + SEPARATEUR_ + nom_court_du_contour
                 nom_court_segment_brise_moyenne_prj = nom_court_segment_brise_moyenne [:-4] + EXT_CRS_PRJ[ -4:]
                 nom_segment_brise_moyenne = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_segment_brise_moyenne))        
                 nom_segment_brise_moyenne_prj = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_segment_brise_moyenne_prj))        
-
                 physiocap_segment_tous_contours( laProjectionCRS, EPSG_NUMBER, 
                     nom_segment_brise_moyenne, nom_segment_brise_moyenne_prj,
                     toutes_les_geoms_segment, les_infos_segment, 
                     "BRISE")
-
+                    
+        # FIN CREATION DES VECTEURS DE TOUS CONTOURS
             
-            # Affichage du resultat
+            # AFFICHAGE DES VECTEURS
             if (consolidation == "YES"):
                 # Cas de consolidation on précise le nom du shaoe de point
                 nom_court_affichage = shape_point_sans_extension + \
@@ -1575,7 +1696,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                 qml_is = dialogue.lineEditThematiqueInterSegment.text().strip('"') + EXTENSION_QML
                 SHAPE_A_AFFICHER.append( (nom_affichage, qml_is, nom_segment_moyenne))
 
-            # Afficher le contour_moyennes et/ou pas de mesure et segments dans arbre "projet"
+            # Afficher les vecteurs choisis dans arbre "projet"
             for titre, unTemplate, un_nom in SHAPE_A_AFFICHER:
                 vector = QgsVectorLayer( un_nom, titre, 'ogr')
 
@@ -1591,7 +1712,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                     #physiocap_log ( "Physiocap le template : " + os.path.basename( leTemplate) , leModeDeTrace)
                     vector.loadNamedStyle( le_template)  
 
+        # FIN CREATION PUIS AFFICHAGE DES VECTEURS DE TOUS CONTOURS
         return physiocap_message_box( dialogue, 
-                        self.tr( "== Fin des traitements inter-parcellaires"),
-                        "information")
+            self.tr( "== Fin des traitements inter-parcellaires"), "information")
           

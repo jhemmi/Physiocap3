@@ -57,7 +57,7 @@ from PyQt5 import uic
 from PyQt5.QtCore import (QSettings, Qt, QUrl)
 from PyQt5.QtGui import (QPixmap,  QDesktopServices)
 from PyQt5.QtWidgets import (QDialogButtonBox, QDialog, QFileDialog) 
-from qgis.core import (Qgis, QgsMessageLog) #, QgsProject, QgsMapLayer)   
+from qgis.core import (Qgis) # QgsMessageLog) #, QgsProject, QgsMapLayer)   
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join( os.path.dirname(__file__), 'Physiocap3_dialog_base.ui'))
 
@@ -393,10 +393,10 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 # inter moyenne et points
                 themeMoyenne = self.settings.value("Physiocap/themeInterMoyenne", "Inter parcelle")
                 self.lineEditThematiqueInterMoyenne.setText( themeMoyenne )
-                themePoints = self.settings.value("Physiocap/themeInterPoints", "Filtre diamètre")
+                themePoints = self.settings.value("Physiocap/themeInterPoints", "Filtre diamètre 3D")
                 self.lineEditThematiqueInterPoints.setText( themePoints )
-                themePasMesure = self.settings.value("Physiocap/themeInterPasMesure", "Filtre pas de mesure")
-                self.lineEditThematiqueInterPasMesure.setText( themePasMesure )
+                themeInterPasMesure = self.settings.value("Physiocap/themeInterPasMesure", "Inter pieds manquants")
+                self.lineEditThematiqueInterPasMesure.setText( themeInterPasMesure )
                 themeSegment = self.settings.value("Physiocap/themeInterSegment", "Inter Segment")
                 self.lineEditThematiqueInterSegment.setText( themeSegment )
                 themeSegmentBrise = self.settings.value("Physiocap/themeInterSegmentBrise", "Inter Segment Brise")
@@ -440,10 +440,10 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 # inter moyenne et points
                 self.lineEditThematiqueInterMoyenne.setText("Inter parcelle")
                 self.settings.setValue("Physiocap/themeInterMoyenne", "Inter parcelle")
-                self.lineEditThematiqueInterPoints.setText("Filtre diamètre")
-                self.settings.setValue("Physiocap/themeInterPoints", "Filtre diamètre")     
-                self.lineEditThematiqueInterPasMesure.setText("Filtre pas de mesure")
-                self.settings.setValue("Physiocap/themePasMesure", "Filtre pas de mesure")
+                self.lineEditThematiqueInterPoints.setText("Filtre diamètre 3D")
+                self.settings.setValue("Physiocap/themeInterPoints", "Filtre diamètre 3D")     
+                self.lineEditThematiqueInterPasMesure.setText("Inter pieds manquants")
+                self.settings.setValue("Physiocap/themePasMesure", "Inter pieds manquants")
                 self.lineEditThematiqueInterSegment.setText("Inter segment")
                 self.settings.setValue("Physiocap/themeInterSegment", "Inter segment")
                 self.lineEditThematiqueInterSegmentBrise.setText("Inter segment brisé")
@@ -1520,8 +1520,10 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             consolidation = "YES"
         self.settings.setValue("Physiocap/consolidation", consolidation )
             
-        laProjectionCRS, laProjectionTXT, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, EPSG_NUMBER = \
-            physiocap_quelle_projection_demandee( self) 
+        # Recuperer le CRS choisi, les extensions et le calculateur de distance
+        distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
+        laProjectionCRS, laProjectionTXT, EPSG_NUMBER = \
+            physiocap_quelle_projection_demandee( self)
         self.settings.setValue("Physiocap/laProjection", laProjectionTXT)
         
         # Trop tot self.settings.setValue("Physiocap/dernier_repertoire", self.lineEditDernierProjet.text() )
