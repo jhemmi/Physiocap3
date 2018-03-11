@@ -4464,7 +4464,7 @@
        </font>
       </property>
       <property name="text">
-       <string>Version 3.0.4 - NBSAR</string>
+       <string>Version 3.0.5 - NBSART</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_500">

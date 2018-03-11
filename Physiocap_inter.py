@@ -250,13 +250,20 @@ def physiocap_moyenne_un_contour( laProjectionCRS, EPSG_NUMBER, nom_vignette, no
     feat = QgsFeature()
     feat.setGeometry( QgsGeometry.fromMultiPolygonXY(geom_poly.asMultiPolygon())) #écrit la géométrie tel que lu dans shape contour
 
+    if version_3 == "YES":
+        # Préparer le calcul de nombre de sarment au m (Méthode segments)
+        longueur_segment = sommes_point_segment['la_longueur_des_segments']
+        nbsarm_seg = -1.0
+        if longueur_segment != None and longueur_segment > 0:
+            nbsarm_seg = sommes_point_segment.get( 'la_somme_des_nbsart') / longueur_segment
+        else:
+            nbsarm_seg = 0.0
     if details == "YES":
         if version_3 == "YES":
             # Ecrit tous les attributs avec V3
             feat.setAttributes( [ 1, un_nom, un_autre_ID, nombre_points/la_surface,
             le_taux_de_sans_mesure, sommes_point_segment.get( 'la_somme_des_nbsart'),
-            sommes_point_segment.get( 'la_longueur_des_segments'),
-            (sommes_point_segment.get( 'la_somme_des_nbsart') / sommes_point_segment.get( 'la_longueur_des_segments')), 
+            longueur_segment, nbsarm_seg, 
 
             moyennes_point.get( 'sarm'),    medianes_point.get( 'sarm'),    ecarts_point.get( 'sarm'), 
             moyennes_point.get( 'diam'),    medianes_point.get( 'diam'),    ecarts_point.get( 'diam'),
@@ -301,8 +308,7 @@ def physiocap_moyenne_un_contour( laProjectionCRS, EPSG_NUMBER, nom_vignette, no
             # Ecrit tous les attributs avec V3
             feat.setAttributes( [ 1, un_nom, un_autre_ID, nombre_points/la_surface,
             le_taux_de_sans_mesure, sommes_point_segment.get( 'la_somme_des_nbsart'),
-            sommes_point_segment.get( 'la_longueur_des_segments'),
-            (sommes_point_segment.get( 'la_somme_des_nbsart') / sommes_point_segment.get( 'la_longueur_des_segments')), 
+            longueur_segment, nbsarm_seg, 
 
             moyennes_point.get( 'sarm'),    medianes_point.get( 'sarm'),    ecarts_point.get( 'sarm'), 
             moyennes_point.get( 'diam'),    medianes_point.get( 'diam'),    ecarts_point.get( 'diam'),
@@ -702,14 +708,22 @@ def physiocap_moyennes_tous_contours( laProjectionCRS, EPSG_NUMBER,
         feat = QgsFeature()
         la_geom = QgsGeometry.fromMultiPolygonXY( les_geoms_poly[ i])
         feat.setGeometry( la_geom) #écrit la géométrie tel que lu dans shape contour
-        
+
+        if version_3 == "YES":
+            # Préparer le calcul de nombre de sarment au m (Méthode segments)
+            longueur_segment = sommes_point_segment_par_contour[ i].get( 'la_longueur_des_segments')
+            nbsarm_seg = -1.0
+            if longueur_segment != None and longueur_segment > 0:
+                nbsarm_seg = sommes_point_segment_par_contour[ i].get( 'la_somme_des_nbsart') / longueur_segment
+            else:
+                nbsarm_seg = 0.0
+            
         if details == "YES":
             if version_3 == "YES":
                 # Ecrit tous les attributs pour V3 (les_taux_sans_mesure puis alti..)
                 feat.setAttributes( [ i, les_parcelles[ i], les_parcelles_ID[ i], les_nombres[ i] / les_surfaces[ i],
                 les_taux_sans_mesure[i], sommes_point_segment_par_contour[ i].get( 'la_somme_des_nbsart'),
-                sommes_point_segment_par_contour[ i].get( 'la_longueur_des_segments'),
-                (sommes_point_segment_par_contour[ i].get( 'la_somme_des_nbsart') / sommes_point_segment_par_contour[ i].get( 'la_longueur_des_segments')), 
+                longueur_segment, nbsarm_seg, 
 
                 les_moyennes_par_contour[ i].get( 'sarm'),    
                     les_medianes_par_contour[ i].get( 'sarm'),    
@@ -766,8 +780,7 @@ def physiocap_moyennes_tous_contours( laProjectionCRS, EPSG_NUMBER,
                 # Ecrit tous les attributs pour V3
                 feat.setAttributes( [ i, les_parcelles[ i], les_parcelles_ID[ i],les_nombres[ i] / les_surfaces[ i],
                 les_taux_sans_mesure[i], sommes_point_segment_par_contour[ i].get( 'la_somme_des_nbsart'),
-                sommes_point_segment_par_contour[ i].get( 'la_longueur_des_segments'),
-                (sommes_point_segment_par_contour[ i].get( 'la_somme_des_nbsart') / sommes_point_segment_par_contour[ i].get( 'la_longueur_des_segments')), 
+                longueur_segment, nbsarm_seg, 
 
                 les_moyennes_par_contour[ i].get( 'sarm'),    les_medianes_par_contour[ i].get( 'sarm'),    les_ecarts_par_contour[ i].get( 'sarm'), 
                 les_moyennes_par_contour[ i].get( 'diam'),    les_medianes_par_contour[ i].get( 'diam'),    les_ecarts_par_contour[ i].get( 'diam'),
@@ -1055,7 +1068,7 @@ class PhysiocapInter( QtWidgets.QDialog):
             #physiocap_log( "Distancearea surface {0}".format( la_surface), leModeDeTrace)
 
             # PAS DE MESURE DU CONTOUR
-            if  version_3 == "YES" and dialogue.checkBoxInterPasMesure.isChecked():
+            if  version_3 == "YES": # init pour tous les cas V3
                 # on initialise pour ce contour
                 les_geoms_sans_mesure = []
                 les_dates_sans_mesure = []
@@ -1065,6 +1078,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                 les_pdop_sans_mesure = []
                 les_azimuths_sans_mesure = []
                 i_sans_mesure = 0
+            if  version_3 == "YES" and dialogue.checkBoxInterPasMesure.isChecked():
                 # Préfiltre dans un rectangle
                 # Récupération des POINT SANS MESURE qui concernent ce contour
                 for un_sans_mesure in vecteur_pas_mesure.getFeatures(QgsFeatureRequest().
@@ -1100,8 +1114,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                 
             # FIN PAS DE MESURE DU CONTOUR
             # SEGMENT DU CONTOUR
-            if  version_3 == "YES" and ( dialogue.checkBoxInterSegment.isChecked() or \
-                dialogue.checkBoxInterSegmentBrise.isChecked() ):
+            if  version_3 == "YES": # init pour tous les cas V3
                 # on initialise pour ce contour
                 les_geoms_segment = []
                 les_longueurs_segment = []
@@ -1112,6 +1125,8 @@ class PhysiocapInter( QtWidgets.QDialog):
                 les_nombres_points_segment = []
                 les_nombres_points_restant = []
                 i_segment = 0
+            if  version_3 == "YES" and ( dialogue.checkBoxInterSegment.isChecked() or \
+                dialogue.checkBoxInterSegmentBrise.isChecked() ):
                 # Préfiltre dans un rectangle
                 # Récupération des SEGMENTS qui concernent ce contour
                 for un_segment in vecteur_segment.getFeatures():
@@ -1270,9 +1285,7 @@ class PhysiocapInter( QtWidgets.QDialog):
             if  version_3 == "YES" and dialogue.checkBoxInterPasMesure.isChecked() \
                 and nb_dia > 0:
                 le_taux_de_sans_mesure = i_sans_mesure / nb_dia * 100
-# JH           if version_3 == "YES" and ( dialogue.checkBoxInterSegment.isChecked() or \
-#                dialogue.checkBoxInterSegmentBrise.isChecked() ):
-#                le_nombre_segment = len (les_longueurs_segment)
+
             moyennes_point = {}
             ecarts_point = {}
             medianes_point = {}
@@ -1373,8 +1386,10 @@ class PhysiocapInter( QtWidgets.QDialog):
                         format( moyennes_point.get('azimuth_segments_neg'), ecarts_point.get('azimuth_segments_neg') ), leModeDeTrace)
                     physiocap_log ( self.tr( "Nombre total de sarments : {0} - Longueurs segment: {1:6.1f}").\
                         format( sommes_point_segment['la_somme_des_nbsart'], sommes_point_segment['la_longueur_des_segments'] ), leModeDeTrace)
-                    physiocap_log ( self.tr( 'Nombre de sarments au metre "Méthode Segment NBSART/LONGUEUR_SEGMENT": {0:6.1f}').\
-                        format( sommes_point_segment['la_somme_des_nbsart'] / sommes_point_segment['la_longueur_des_segments'] ), leModeDeTrace)
+                    longueur_segment = sommes_point_segment['la_longueur_des_segments']
+                    if longueur_segment != 0:
+                        physiocap_log ( self.tr( 'Nombre de sarments au metre "Méthode Segment NBSART/LONGUEUR_SEGMENT": {0:6.1f}').\
+                            format( sommes_point_segment['la_somme_des_nbsart'] / longueur_segment ), leModeDeTrace)
                 physiocap_log ( self.tr( 'Moyenne du nombre de sarments au metre "Méthode V2 NBSARM": {0:6.1f} - Ecarts : {1:6.1f}').\
                     format( moyennes_point.get('sarm'), ecarts_point.get('sarm')  ), leModeDeTrace) 
                 physiocap_log ( self.tr( "Moyenne des diamètres : {0:5.1f} - Ecarts : {1:5.1f} en mm").\
