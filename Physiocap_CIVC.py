@@ -609,7 +609,7 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
     Filtre ligne brute par ligne brute les données de source (src) pour les valeurs 
     comprises entre mindiam et maxdiam et verifie si on n'a pas atteint le max_sarments_metre.
     Le résultat est écrit au fur et à mesure dans les fichiers 
-    csv_sans_0 et csv_avec_0 depuis v3, csv_0_seul mais aussi diametre_filtre 
+    csv_sans_0, csv_avec_0 et depuis v3 dans csv_0_seul mais aussi diametre_filtre 
     La synthese est allongé
     "details" pilote l'ecriture de 5 parametres ou de la totalité des 10 parametres 
     """
@@ -891,10 +891,10 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
                         csv_avec_0.write( a_ecrire)
                         
                 elif comptage==NB_VIRGULES and len(diamsF)>0 : # si le nombre de diamètre après filtrage != 0 alors mesures
+                    # Nombre sarment total 
                     nbsart  = len(diamsF)
-                    if XY[7] != 0:
+                    if XY[7] != 0: # Si vitesse non nulle
                         nbsarm = len(diamsF)/(XY[7]*1000/3600)
-                        # nombre sarment total 
                     else:
                         nbsarm = 0
                     if nbsarm > 1 and nbsarm < max_sarments_metre :                   

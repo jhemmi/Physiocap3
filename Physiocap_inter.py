@@ -198,12 +198,12 @@ def physiocap_moyenne_un_contour( laProjectionCRS, EPSG_NUMBER, nom_vignette, no
         les_champs.append( QgsField( "LONG_S", QVariant.Double, "double", 10,1))   
         les_champs.append( QgsField( "M_LONG_S", QVariant.Double, "double", 10,1))   
         les_champs.append( QgsField( "E_LONG_S", QVariant.Double, "double", 10,1))   
-        les_champs.append( QgsField( "ORIENT_P", QVariant.Double, "double", 10,1))   
-        les_champs.append( QgsField( "M_ORIENT_P", QVariant.Double, "double", 10,1))   
-        les_champs.append( QgsField( "E_ORIENT_P", QVariant.Double, "double", 10,1))   
-        les_champs.append( QgsField( "ORIENT-P", QVariant.Double, "double", 10,1))   
-        les_champs.append( QgsField( "M_ORIENT-P", QVariant.Double, "double", 10,1))   
-        les_champs.append( QgsField( "E_ORIENT-P", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "ORIENT_AP", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "M_ORIENT_AP", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "E_ORIENT_AP", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "ORIENT_RP", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "M_ORIENT_RP", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "E_ORIENT_RP", QVariant.Double, "double", 10,1))   
         
         les_champs.append( QgsField("ALTITUDE", QVariant.Double, "double", 10,2))
         les_champs.append( QgsField("M_ALTI", QVariant.Double, "double", 10,2))
@@ -653,12 +653,12 @@ def physiocap_moyennes_tous_contours( laProjectionCRS, EPSG_NUMBER,
         les_champs.append( QgsField( "LONG_S", QVariant.Double, "double", 10,1))   
         les_champs.append( QgsField( "M_LONG_S", QVariant.Double, "double", 10,1))   
         les_champs.append( QgsField( "E_LONG_S", QVariant.Double, "double", 10,1))   
-        les_champs.append( QgsField( "ORIENT_S", QVariant.Double, "double", 10,1))   
-        les_champs.append( QgsField( "M_ORIENT_S", QVariant.Double, "double", 10,1))   
-        les_champs.append( QgsField( "E_ORIENT_S", QVariant.Double, "double", 10,1))   
-        les_champs.append( QgsField( "ORIENT-S", QVariant.Double, "double", 10,1))   
-        les_champs.append( QgsField( "M_ORIENT-S", QVariant.Double, "double", 10,1))   
-        les_champs.append( QgsField( "E_ORIENT-S", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "ORIENT_A", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "M_ORIENT_A", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "E_ORIENT_A", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "ORIENT_R", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "M_ORIENT_R", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "E_ORIENT_R", QVariant.Double, "double", 10,1))   
 
         les_champs.append( QgsField("ALTITUDE", QVariant.Double, "double", 10,2))
         les_champs.append( QgsField("M_ALTI", QVariant.Double, "double", 10,2))
@@ -1284,7 +1284,9 @@ class PhysiocapInter( QtWidgets.QDialog):
             le_taux_de_sans_mesure = -1
             if  version_3 == "YES" and dialogue.checkBoxInterPasMesure.isChecked() \
                 and nb_dia > 0:
-                le_taux_de_sans_mesure = i_sans_mesure / nb_dia * 100
+                # Calcul du taux de sans mesure en % (Bug #4)
+                nb_total = nb_dia + i_sans_mesure
+                le_taux_de_sans_mesure = i_sans_mesure / nb_total * 100
 
             moyennes_point = {}
             ecarts_point = {}
