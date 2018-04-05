@@ -32,7 +32,7 @@ Physiocap*.zip
 Makefile~
 test/Physiocap.conf
 i18n/bak*
-Sauve_originaux/
+Sauve_1.8*/
 modeleQgis/V2/*
 data/Projet_QGIS_test_Physiocap_3D.qgs
 ssl/

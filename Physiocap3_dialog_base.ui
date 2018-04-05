@@ -84,7 +84,7 @@
     <string/>
    </property>
    <property name="whatsThis">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Usage des onglets de l'extension Physiocap :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;- ϕ Params pour les paramètres initaux de l'extension&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;- Synthèse donne une lecture synthétiques de l'analyse de vos données brutes&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;- Histos permet de valider vos filtres&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;- Parcelles pour des calculs de moyennes INTER parcellaires puis une interpolation INTRA&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;- Affichages permet de choisir les couches affichées et leurs thématiques (coloriage, légende...)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;- A Propos donne les liens pour plus d'informations&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Usage des onglets de l'extension Physiocap :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;- ϕ Params pour les paramètres initaux de l'extension et les paramétres utilisés lors de filtre de données brutes&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;- Synthèse donne une lecture synthétiques de l'analyse de vos données brutes&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;- Histos permet de valider vos filtres&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;- Parcelles pour des calculs de moyennes INTER parcellaires puis une interpolation INTRA&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;- Affichages permet de choisir les couches affichées et leurs styles  (thématique regroupant le coloriage, les légendes, les libellés ...)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;- A Propos précise la version, la liste des contributeurs et donne les liens pour plus d'informations&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="accessibleDescription">
     <string/>
@@ -638,7 +638,7 @@
         </font>
        </property>
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Nouveauté de la V3 : &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;attributs, vecteur des POINTS_0_SEUL ou points sans captures de sarments et 3D.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Voici la description des 6 nouveaux attributs présent dans les vecteur de points :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Altitude est la valeur de l'altitude donnée par le GPS. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Pdop est un indicateur qualitatif de la qualité de la capture GPS. * &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Distance est la distance d'une point avec le point précedent. *&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Dérive est le pourcentage de déviation entre le point et le point théorique prévu à partir du point précédent. *&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Azimuth est l'orientation entre le point et son précédent. Il est un indicateur de la précision du GPS (ou de rang courbe (;)).&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Nbsart le nombre total de sarments filtrés. Ne pas confondre avec Nbsarm qui est le nombre de sarments filtrés au m linéaire.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Au niveau des vecteurs de segment par contour, on retrouve l'azimuth et la longueur de chaque segment.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Plus globalement il apparait pour chaque attribut dans les vecteurs de moyennes, l'écart type et la médiane (préfixes respectifs EC_ et M_). &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Les vecteurs arrivant avec Physiocap 3&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt; sont les segment * et les points sans mesure. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Les points sans mesure sont des indicateurs de la qualité de la mesure ou du nombres de pieds manquant mesurés. Après filtrer, la thématique &amp;quot;Filtrer pas de mesure&amp;quot; est la plus facile analyse de la qualité de capture. Les points rouge autour du contour permette de valider la qualité de vos contouts. Les points rouges dans la parcelle montre une eventuelle zone avec plus de points sans mesure. La dansité par ha des points sans mesures donne un autre format de l'indicateur visuel.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce ou révelation : après les moyennes Inter, la thématique &amp;quot;Inter pieds manquants&amp;quot; pour les points sans mesure d'un contour est en cours de validation pour vérifier si elle identifie correctement les pieds manquants que le capteur n'a pas trouver. A suivre ... &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Pour l'&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;utilisation de la 3D (nouveauté de QGIS3)&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;, les attributs suivant rentrent dans la composante Z des vecteurs de points. Les vecteurs de points deviennent des 2.5D :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- DIAM (Diamètre moyen) pour les POINTS_SANS_0&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- ALTITUDE pour les POINTS_AVEC_0&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- VITESSE pour les POINTS_0_SEUL &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;L'extension voit apparaitre des thématiques 3D pour visualiser en 3D ces attributs. Elles ne sont pas choisies par défaut. La visualisation 2D reste le défaut.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : Vous pouvez rester au format des données de l'extension Physiocap 1.8.x, c'est à dire que vos shapefile et cvs reastent sans :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;- les nouveaux attributs de qualification de vos captures (altitude, pdop, distance, derive, azimuth, nbsart)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;- segments de captures contigüs et cohérentes.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Vous pouvez ainsi vérifier la non régression de l'extension Physiocap 3, mais ce mode n'est resté actif que pour re-traiter des données anciennes. Nous vous conseillons de passer aux format V3 pour utiliser les nouveaus attributs, les nouveaux vecteurs et la 3D.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-weight:600; font-style:italic; color:#00aa00;&quot;&gt;* ces trois attributs sont &lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-weight:600; color:#00aa00;&quot;&gt;détaillés dans les TIPS des seuils pour la création de segment&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Nouveauté de la V3 : &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;attributs, vecteur des POINTS_0_SEUL ou points sans captures de sarments et 3D.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Voici la description des 6 nouveaux attributs présent dans les vecteur de points :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Altitude est la valeur de l'altitude donnée par le GPS. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Pdop est un indicateur qualitatif de la qualité de la capture GPS. * &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Distance est la distance d'une point avec le point précédent. *&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Dérive est le pourcentage de déviation entre le point et le point théorique prévu à partir du point précédent. *&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Azimuth est l'orientation entre le point et son précédent. Il est un indicateur de la précision du GPS (ou de rang courbe (;)).&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Nbsart le nombre total de sarments filtrés. Ne pas confondre avec Nbsarm qui est le nombre de sarments filtrés au m linéaire.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Au niveau des vecteurs de segment par contour, on retrouve l'azimuth et la longueur de chaque segment.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Plus globalement il apparaît pour chaque attribut dans les vecteurs de moyennes, l'écart type et la médiane (préfixes respectifs EC_ et M_). &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Les vecteurs arrivant avec Physiocap 3&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt; sont les segments * et les points sans mesure. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Les points sans mesure sont des indicateurs de la qualité de la mesure ou du nombres de pieds manquant mesurés. Après filtrer, la thématique &amp;quot;Filtrer pas de mesure&amp;quot; est la plus facile analyse de la qualité de capture. Les points rouge autour du contour permette de valider la qualité de vos contours. Les points rouges dans la parcelle montre une éventuelle zone avec plus de points sans mesure. La densité par ha des points sans mesures donne un autre format de l'indicateur visuel.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce ou révélation : après les moyennes Inter, la thématique &amp;quot;Inter pieds manquants&amp;quot; pour les points sans mesure d'un contour est en cours de validation pour vérifier si elle identifie correctement les pieds manquants que le capteur n'a pas trouver. A suivre ... &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Pour l'&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;utilisation de la 3D (nouveauté de QGIS3)&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;, les attributs suivant rentrent dans la composante Z des vecteurs de points. Les vecteurs de points deviennent des 2.5D :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- DIAM (Diamètre moyen) pour les POINTS_SANS_0&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- ALTITUDE pour les POINTS_AVEC_0&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- VITESSE pour les POINTS_0_SEUL &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;L'extension voit apparaître des thématiques 3D pour visualiser en 3D ces attributs. Elles ne sont pas choisies par défaut. La visualisation 2D reste le défaut.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : Vous pouvez rester au format des données de l'extension Physiocap 1.8.x, c'est à dire que vos shapefile et cvs restent sans :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;- les nouveaux attributs de qualification de vos captures (altitude, pdop, distance, derive, azimuth, nbsart)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;- segments de captures contigus et cohérentes.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Vous pouvez ainsi vérifier la non régression de l'extension Physiocap 3, mais ce mode n'est resté actif que pour re-traiter des données anciennes. Nous vous conseillons de passer aux format V3 pour utiliser les nouveaux attributs, les nouveaux vecteurs et la 3D.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-weight:600; font-style:italic; color:#00aa00;&quot;&gt;* ces trois attributs sont &lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-weight:600; color:#00aa00;&quot;&gt;détaillés dans les TIPS des seuils pour la création de segment&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
         <string>Attributs et vecteurs Version 3</string>
@@ -868,7 +868,7 @@
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Nouveauté de la V3 : voici la description des seuils utilisés pour créer les segments de points contigüs et cohérents &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Ces segments permettent de visualiser et d'analyser la qualité de l'acquisition GPS. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Physiocap 3 apporte la nouvelle notion de segments de points qui se suivent en restant cohérents. Par contre, les &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;filtres pour nettoyer les points bruts restent inchangé et n'utilisent pas les seuils pour les segments&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;. Ce sont les points filtrés qui servent au calcul pour les moyennes Inter et les interpolations Intra.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Quatres seuils sont utilisés pour créer les segments. Les deux premiers sont des minima et les deux derniers des maxima&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- les points cohérents ont une vitesse supérieure à une &amp;quot;Vitesse minimale&amp;quot;. Les arrets, passages en tournières, pannes sont ainsi isolés et considérés comme non cohérents pour l'analyse.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- le segment reste contigü car il garde un nombre de points supérieur au &amp;quot;Nombre minimun de points&amp;quot;. On évite de garder des segments très courts (un point correspond à une seconde) : le segment est toujours une séquence de capture visualisable.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- la position de chaque point est comparée à une position théorique (calculée à partir de la vitesse donnée par le GPS du point précédent). Le pourcentage de dérive est la distance en % entre le nouveau point réel et la position théorique attendue. Le dépassement de &amp;quot;la dérive maximale&amp;quot; indique le début d'une déviation de la capture GPS. Ces points ne sont pas conservés dans le segment cohérent.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- le point est considéré cohérent quand la valeur de précision d'altitude (pdop : un indicateur de qualité de la mesure GPS) est inférieur au maximum. On identifie ainsi le début des déviations de la capture GPS.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Ces deux derniers découpages de segment permettent d'écarter les points dont la valeur GPS est douteuse. Les informations de &amp;quot;distance au point précedent&amp;quot; et &amp;quot;% de dérive&amp;quot; sont stockés dans les vecteurs de points (shapefile) dans deux nouveaux attributs (DISTANCE et DERIVE). On peut ainsi retrouver et repérer les captures incohérentes (dans les tables d'attributs ou par superposition des points et des segments : les points qui ne sont pas sur les segments sont incohérents ou non contigûs)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : ne modifer les seuils que si vous en avez une réelle compréhension. Comparez dans les vecteurs de points les valeurs de ces nouveaux attributs dans deux cas de capture (bonne qualité et dérive GPS avérée) est un préalable pour maîtriser ces attributs.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Physiocap 3 vous permet de visualiser deux rendus des segments : &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- le &amp;quot;segment brisé&amp;quot; conserve la position GPS capturée de chaque point. Il permet de visualiser la précision du GPS. En particulier, on peut matérialiser un manque de précision par des chevauchements de segments brisés. Dans ce cas, faire très attention à l'interpolation et au conclusion que l'on apporte. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- le &amp;quot;segment&amp;quot; tire un trait unique pour matérialiser le passage moyen. &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Cette visualisation n'est pas la réalité de votre capture GPS, mais elle représente le rang&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;. Elle permet de comparer des azimuths (orientation des rangs), matérialiser la plage de temps, vérifier la continuité et la cohérence des points capturés, Si ces segments sont longs et bien parrallèles, la capture GPS est de qualité, l'interpolation aura du sens.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : la superpostion des segments et des segments brisés permet de qualifier la fiabilité de vos captures. Le segment brisé est la visualistion de vos captures GPS . Le segment est la visualisation du rang (ou d'une parallèle au rang).&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : le segment permet de matérialiser un écart entre la position du capteur GPS et du capteur Physiocap (50 cm par exemple). On identifie des inter-segments qui varient régulièrement selon le sens de capture (aller ou retour). &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Nouveauté de la V3 : voici la description des seuils utilisés pour créer les segments de points contigus et cohérents &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Ces segments permettent de visualiser et d'analyser la qualité de l'acquisition GPS. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Physiocap 3 apporte la nouvelle notion de segments de points qui se suivent en restant cohérents. Par contre, les &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;filtres pour nettoyer les points bruts restent inchangé et n'utilisent pas les seuils pour les segments&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;. Ce sont les points filtrés qui servent au calcul pour les moyennes Inter et les interpolations Intra.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Quatre seuils sont utilisés pour créer les segments. Les deux premiers sont des minima et les deux derniers des maxima&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- les points cohérents ont une vitesse supérieure à une &amp;quot;Vitesse minimale&amp;quot;. Les arrets, passages en tournières, pannes sont ainsi isolés et considérés comme non cohérents pour l'analyse.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- le segment reste contigu car il garde un nombre de points supérieur au &amp;quot;Nombre minimum de points&amp;quot;. On évite de garder des segments très courts (un point correspond à une seconde) : le segment est toujours une séquence de capture visualisable.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- la position de chaque point est comparée à une position théorique (calculée à partir de la vitesse donnée par le GPS du point précédent). Le pourcentage de dérive est la distance en % entre le nouveau point réel et la position théorique attendue. Le dépassement de &amp;quot;la dérive maximale&amp;quot; indique le début d'une déviation de la capture GPS. Ces points ne sont pas conservés dans le segment cohérent.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- le point est considéré cohérent quand la valeur de précision d'altitude (pdop : un indicateur de qualité de la mesure GPS) est inférieur au maximum. On identifie ainsi le début des déviations de la capture GPS.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Ces deux derniers découpages de segment permettent d'écarter les points dont la valeur GPS est douteuse. Les informations de &amp;quot;distance au point précédent&amp;quot; et &amp;quot;% de dérive&amp;quot; sont stockés dans les vecteurs de points (shapefile) dans deux nouveaux attributs (DISTANCE et DERIVE). On peut ainsi retrouver et repérer les captures incohérentes (dans les tables d'attributs ou par superposition des points et des segments : les points qui ne sont pas sur les segments sont incohérents ou non contigus)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : ne modifier les seuils que si vous en avez une réelle compréhension. Comparez dans les vecteurs de points les valeurs de ces nouveaux attributs dans deux cas de capture (bonne qualité et dérive GPS avérée) est un préalable pour maîtriser ces attributs.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Physiocap 3 vous permet de visualiser deux rendus des segments : &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- le &amp;quot;segment brisé&amp;quot; conserve la position GPS capturée de chaque point. Il permet de visualiser la précision du GPS. En particulier, on peut matérialiser un manque de précision par des chevauchements de segments brisés. Dans ce cas, faire très attention à l'interpolation et au conclusion que l'on apporte. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- le &amp;quot;segment&amp;quot; tire un trait unique pour matérialiser le passage moyen. &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Cette visualisation n'est pas la réalité de votre capture GPS, mais elle représente le rang&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;. Elle permet de comparer des azimuths (orientation des rangs), matérialiser la plage de temps, vérifier la continuité et la cohérence des points capturés, Si ces segments sont longs et bien parallèles, la capture GPS est de qualité, l'interpolation aura du sens.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : la superposition des segments et des segments brisés permet de qualifier la fiabilité de vos captures. Le segment brisé est la visualisation de vos captures GPS . Le segment est la visualisation du rang (ou d'une parallèle au rang).&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : le segment permet de matérialiser un écart entre la position du capteur GPS et du capteur Physiocap (50 cm par exemple). On identifie des inter-segments qui varient régulièrement selon le sens de capture (aller ou retour). &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="title">
        <string>Seuils pour les segments de points contigüs cohérents</string>
@@ -1633,14 +1633,14 @@
     </widget>
     <widget class="QGroupBox" name="groupBoxIntra">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>247</y>
        <width>511</width>
-       <height>367</height>
+       <height>401</height>
       </rect>
      </property>
      <property name="sizePolicy">
@@ -1650,10 +1650,11 @@
       </sizepolicy>
      </property>
      <property name="toolTip">
-      <string/>
+      <string>Une interpolation nécessite de comprendre la portée de ses choix.
+Si vous hésitez, trouvez du conseil. </string>
      </property>
      <property name="whatsThis">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Une interpolation nécessite de comprendre la portée de ses choix.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous hésitez, trouvez du conseil. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string/>
      </property>
      <property name="autoFillBackground">
       <bool>true</bool>
@@ -1668,7 +1669,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>79</y>
+        <y>80</y>
         <width>281</width>
         <height>21</height>
        </rect>
@@ -1691,12 +1692,12 @@
      </widget>
      <widget class="QLabel" name="lab_77">
       <property name="enabled">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>97</y>
+        <y>100</y>
         <width>251</width>
         <height>21</height>
        </rect>
@@ -1708,14 +1709,14 @@
        </sizepolicy>
       </property>
       <property name="text">
-       <string>Taille du pixel (en unité de carte)</string>
+       <string>Taille du pixel (unité de carte)</string>
       </property>
      </widget>
      <widget class="QLabel" name="lab_83">
       <property name="geometry">
        <rect>
         <x>290</x>
-        <y>211</y>
+        <y>242</y>
         <width>161</width>
         <height>21</height>
        </rect>
@@ -1734,7 +1735,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>192</y>
+        <y>221</y>
         <width>261</width>
         <height>21</height>
        </rect>
@@ -1759,7 +1760,7 @@
       <property name="geometry">
        <rect>
         <x>290</x>
-        <y>232</y>
+        <y>263</y>
         <width>101</width>
         <height>21</height>
        </rect>
@@ -1781,7 +1782,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>255</y>
+        <y>286</y>
         <width>261</width>
         <height>21</height>
        </rect>
@@ -1851,7 +1852,7 @@
      <widget class="QRadioButton" name="radioButtonSAGA">
       <property name="geometry">
        <rect>
-        <x>320</x>
+        <x>280</x>
         <y>10</y>
         <width>71</width>
         <height>26</height>
@@ -1864,23 +1865,26 @@
        <string>SAGA</string>
       </property>
       <property name="checked">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QRadioButton" name="radioButtonGDAL">
       <property name="geometry">
        <rect>
-        <x>400</x>
+        <x>350</x>
         <y>10</y>
         <width>71</width>
         <height>26</height>
        </rect>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Gdal n'est utile que sous linux&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;GDAL permet une interpolation dans une ellipse qui tient compte de l'orientation des rangs. Cette possibilité n'est disponible qu'avec les attributs et vecteurs en Version 3.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="text">
        <string>GDAL</string>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QLabel" name="lab_79">
@@ -1905,11 +1909,14 @@
      <widget class="QDoubleSpinBox" name="spinBoxPixel">
       <property name="geometry">
        <rect>
-        <x>280</x>
-        <y>97</y>
+        <x>290</x>
+        <y>100</y>
         <width>171</width>
         <height>21</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Selon votre choix de système de coordonnés, la correspondance à 1 mètre varie. Elle vaut 0,5 en L93 et 0,000009 en WGS84&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="inputMethodHints">
        <set>Qt::ImhNone</set>
@@ -1934,7 +1941,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>212</y>
+        <y>243</y>
         <width>111</width>
         <height>21</height>
        </rect>
@@ -1953,7 +1960,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>232</y>
+        <y>263</y>
         <width>101</width>
         <height>21</height>
        </rect>
@@ -1975,7 +1982,7 @@
       <property name="geometry">
        <rect>
         <x>140</x>
-        <y>210</y>
+        <y>241</y>
         <width>211</width>
         <height>21</height>
        </rect>
@@ -1994,7 +2001,7 @@
       <property name="geometry">
        <rect>
         <x>170</x>
-        <y>232</y>
+        <y>263</y>
         <width>91</width>
         <height>21</height>
        </rect>
@@ -2019,7 +2026,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>119</y>
+        <y>120</y>
         <width>481</width>
         <height>21</height>
        </rect>
@@ -2044,7 +2051,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>140</y>
+        <y>160</y>
         <width>281</width>
         <height>21</height>
        </rect>
@@ -2066,7 +2073,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>162</y>
+        <y>180</y>
         <width>511</width>
         <height>33</height>
        </rect>
@@ -2098,8 +2105,8 @@
      <widget class="QDoubleSpinBox" name="spinBoxDoubleRayon">
       <property name="geometry">
        <rect>
-        <x>280</x>
-        <y>140</y>
+        <x>290</x>
+        <y>160</y>
         <width>171</width>
         <height>21</height>
        </rect>
@@ -2127,7 +2134,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>280</y>
+        <y>311</y>
         <width>271</width>
         <height>21</height>
        </rect>
@@ -2149,7 +2156,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>303</y>
+        <y>334</y>
         <width>481</width>
         <height>20</height>
        </rect>
@@ -2173,8 +2180,8 @@
      <widget class="QSpinBox" name="spinBoxDistanceIso">
       <property name="geometry">
        <rect>
-        <x>290</x>
-        <y>256</y>
+        <x>200</x>
+        <y>286</y>
         <width>101</width>
         <height>21</height>
        </rect>
@@ -2196,7 +2203,7 @@
       <property name="geometry">
        <rect>
         <x>300</x>
-        <y>329</y>
+        <y>360</y>
         <width>191</width>
         <height>31</height>
        </rect>
@@ -2221,7 +2228,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>329</y>
+        <y>360</y>
         <width>221</width>
         <height>31</height>
        </rect>
@@ -2283,6 +2290,56 @@
       </property>
       <property name="text">
        <string>Images Intra Parcellaire</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="radioButtonQGIS">
+      <property name="geometry">
+       <rect>
+        <x>420</x>
+        <y>10</y>
+        <width>71</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;L'interpolation QGIS est toujours accessible mais elle ne propose pas un paramétrage fin de l'interpolation.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="text">
+       <string>QGIS</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QDoubleSpinBox" name="spinBoxPixel_2">
+      <property name="geometry">
+       <rect>
+        <x>290</x>
+        <y>140</y>
+        <width>171</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Choix supplémentaire nécessaire à GDAL ou QGIS &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="inputMethodHints">
+       <set>Qt::ImhNone</set>
+      </property>
+      <property name="decimals">
+       <number>2</number>
+      </property>
+      <property name="minimum">
+       <double>0.000000000000000</double>
+      </property>
+      <property name="maximum">
+       <double>3.000000000000000</double>
+      </property>
+      <property name="singleStep">
+       <double>0.100000000000000</double>
+      </property>
+      <property name="value">
+       <double>1.000000000000000</double>
       </property>
      </widget>
     </widget>
@@ -3019,10 +3076,13 @@
       </font>
      </property>
      <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Les styles décrivent la thématique d'affichage de chaque couche : symbologie et libéllés. Un modèle de styles est livré avec l'extension. Ces styles sont adaptés à un cas général. Il est possible de les modifier avec vos propres choix.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Attention : ne modifier ce répertoire que si vous connaissez bien l'utilisation des styles (thématiques ou template) dans QGIS.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Vous pourrez ensuite paramétrer vos propres styles pour créer des constrastes de couleur plus marqués ou adapter les bornes min et max à vos valeurs ...&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Vous pouvez aussi modifier les noms de styles proposés par l'extension. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="statusTip">
       <string/>
      </property>
      <property name="whatsThis">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Les thématiques proposées par l'extension sont adaptées à un cas général. Il est possible de les modifier avec vos propres choix.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Ne modifier ce répertoire que si vous connaissez bien l'utilisation des modèles dans QGIS.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Vous pourrez ensuite paramétrer vos modèles pour créer des constrastes de couleur plus marqués ou adapter les bornes min et max à vos valeurs ... &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string/>
      </property>
      <property name="title">
       <string>Sélectionez votre répertoire des thématiques</string>
@@ -3069,7 +3129,7 @@
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Par défaut, le répertoire des thématiques est celui du plugin.&lt;/p&gt;&lt;p&gt;Si vous choississez le répertoire des modèles de QGIS, vous&lt;/p&gt;&lt;p&gt;- devez Fermer l'extension Physiocap puis QGIS&lt;/p&gt;&lt;p&gt;- copiez les modèles vers ce répertoire&lt;/p&gt;&lt;p&gt;- pourrez modifier ces modèles puis changer leurs noms&lt;/p&gt;&lt;p&gt;Pour revenir en arrière (vous perdrez vos nommages spécifiques),&lt;/p&gt;&lt;p&gt;choisir à nouveau le répertoire des thématiques du plugin&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Par défaut, le répertoire des styles est celui livré avec l'extension (modeleQgiq/V3).&lt;/p&gt;&lt;p&gt;Si vous choississez le répertoire des modèles de QGIS, vous&lt;/p&gt;&lt;p&gt;- devez Fermer l'extension Physiocap puis QGIS&lt;/p&gt;&lt;p&gt;- copiez les modèles vers ce répertoire&lt;/p&gt;&lt;p&gt;- pourrez modifier ces modèles puis changer leurs noms&lt;/p&gt;&lt;p&gt;Pour revenir en arrière (vous perdrez vos nommages spécifiques),&lt;/p&gt;&lt;p&gt;choisir à nouveau le répertoire des thématiques du plugin&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="editable">
        <bool>true</bool>
@@ -3098,6 +3158,15 @@
         <weight>75</weight>
         <bold>true</bold>
        </font>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Le choix fixe pour le paramétrages des isolignes permet de fixer pour l'ensemble de vos calculs les mêmes pas et limites pour vos isolignes.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il est paramétrable pour l'intepolation de trois attributs (par exemple DIAM, NBSAR, BIOM).&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Lors de l'interpolation de ces attributs, le choix fixe s'impose et ne tient plus compte des minimum et maximum retrouvés dans vos données.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Astuce : Quand trois attributs sont renseignés, ce triplet apparait dans vos choix d'interpolation. Vous pouvez ainsi déclancher une interpolation de trois attributs ensemble. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="toolTipDuration">
+       <number>-1</number>
+      </property>
+      <property name="statusTip">
+       <string notr="true"/>
       </property>
       <property name="text">
        <string>Choix fixe pour les isolignes</string>
@@ -4464,7 +4533,7 @@
        </font>
       </property>
       <property name="text">
-       <string>Version 3.0.6</string>
+       <string>Version 3.0.7 INTRA</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_500">

@@ -52,7 +52,7 @@ from .Physiocap_var_exception import *
 
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import QVariant
-from qgis.core import (QgsProject, QgsVectorLayer, \
+from qgis.core import (Qgis, QgsProject, QgsVectorLayer, \
     QgsLayerTreeGroup, QgsLayerTreeLayer,\
     QgsFeatureRequest, QgsFields, QgsField, QgsVectorFileWriter, QgsFeature,\
     QgsPoint, QgsPointXY, QgsGeometry, QgsWkbTypes, QgsMessageLog)
