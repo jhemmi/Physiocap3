@@ -161,7 +161,6 @@ def physiocap_csv_vers_shapefile( self, progress_barre, donnee_3D ,  csv_name, s
     #Lecture des data dans le csv et stockage dans une liste
     with open(csv_name, "rt") as csvfile:
         try:
-            # TODO: Optimiser avec lecture pas à pas ?
             r = csv.reader(csvfile, delimiter=";")
         except NameError:
             uText = "Erreur bloquante : module csv n'est pas accessible."
@@ -636,7 +635,6 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
     csv_avec_0.write("{0}\n".format( titre))
     csv_0_seul.write("{0}\n".format( titre))
 
-    numero_point = 0
     # Pour progress bar entre 15 et 40
     lignes_brutes = src.readlines()
     max_lignes = len( lignes_brutes)
@@ -662,8 +660,7 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
             physiocap_quelle_projection_demandee( self)
 
     
-    for ligne_brute in lignes_brutes :
-        numero_point = numero_point + 1
+    for numero_point, ligne_brute in enumerate( lignes_brutes):
         if not ligne_brute: break 
         
         # Progress BAR de 15 à 40 %

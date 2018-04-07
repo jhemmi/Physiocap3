@@ -1794,12 +1794,12 @@ Si vous hésitez, trouvez du conseil. </string>
        </sizepolicy>
       </property>
       <property name="text">
-       <string>Distance entre isolignes</string>
+       <string>Ecartement des isolignes</string>
       </property>
      </widget>
      <widget class="QLabel" name="lab_70">
       <property name="enabled">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="geometry">
        <rect>
@@ -1829,7 +1829,7 @@ Si vous hésitez, trouvez du conseil. </string>
      </widget>
      <widget class="QComboBox" name="fieldComboIntra">
       <property name="enabled">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="geometry">
        <rect>
@@ -1871,7 +1871,7 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QRadioButton" name="radioButtonGDAL">
       <property name="geometry">
        <rect>
-        <x>350</x>
+        <x>370</x>
         <y>10</y>
         <width>71</width>
         <height>26</height>
@@ -1884,7 +1884,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <string>GDAL</string>
       </property>
       <property name="checked">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
      </widget>
      <widget class="QLabel" name="lab_79">
@@ -2068,7 +2068,7 @@ Si vous hésitez, trouvez du conseil. </string>
      </widget>
      <widget class="QLineEdit" name="lineEditDoubleRayon">
       <property name="enabled">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="geometry">
        <rect>
@@ -2129,7 +2129,7 @@ Si vous hésitez, trouvez du conseil. </string>
      </widget>
      <widget class="QLabel" name="lab_211">
       <property name="enabled">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="geometry">
        <rect>
@@ -2151,7 +2151,7 @@ Si vous hésitez, trouvez du conseil. </string>
      </widget>
      <widget class="QComboBox" name="fieldComboAideIso">
       <property name="enabled">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="geometry">
        <rect>
@@ -2290,25 +2290,6 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="text">
        <string>Images Intra Parcellaire</string>
-      </property>
-     </widget>
-     <widget class="QRadioButton" name="radioButtonQGIS">
-      <property name="geometry">
-       <rect>
-        <x>420</x>
-        <y>10</y>
-        <width>71</width>
-        <height>26</height>
-       </rect>
-      </property>
-      <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;L'interpolation QGIS est toujours accessible mais elle ne propose pas un paramétrage fin de l'interpolation.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-      <property name="text">
-       <string>QGIS</string>
-      </property>
-      <property name="checked">
-       <bool>true</bool>
       </property>
      </widget>
      <widget class="QDoubleSpinBox" name="spinBoxPixel_2">
@@ -2642,7 +2623,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <string>Isolignes de chaque parcelle</string>
       </property>
       <property name="checked">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
      </widget>
      <widget class="QCheckBox" name="checkBoxIntraUnSeul">
@@ -3198,7 +3179,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <number>1</number>
       </property>
       <property name="value">
-       <number>13</number>
+       <number>11</number>
       </property>
      </widget>
      <widget class="QLabel" name="lab_194">
@@ -3253,7 +3234,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <number>1</number>
       </property>
       <property name="value">
-       <number>2</number>
+       <number>1</number>
       </property>
      </widget>
      <widget class="QLabel" name="lab_195">
@@ -3334,7 +3315,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <number>1</number>
       </property>
       <property name="value">
-       <number>5</number>
+       <number>7</number>
       </property>
      </widget>
      <widget class="QComboBox" name="fieldComboIntraDIAM">
@@ -3364,6 +3345,12 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="toolTip">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="editable">
+       <bool>true</bool>
+      </property>
+      <property name="currentText">
+       <string>DIAM</string>
       </property>
      </widget>
      <widget class="QLabel" name="lab_192">
@@ -3418,7 +3405,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <number>1</number>
       </property>
       <property name="value">
-       <number>11</number>
+       <number>13</number>
       </property>
      </widget>
      <widget class="QSpinBox" name="spinBoxIsoMin_Fixe_SARM">
@@ -3447,7 +3434,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <number>1</number>
       </property>
       <property name="value">
-       <number>7</number>
+       <number>5</number>
       </property>
      </widget>
      <widget class="QSpinBox" name="spinBoxDistanceIso_Fixe_SARM">
@@ -3476,7 +3463,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <number>1</number>
       </property>
       <property name="value">
-       <number>1</number>
+       <number>2</number>
       </property>
      </widget>
      <widget class="QComboBox" name="fieldComboIntraSARM">
@@ -3506,6 +3493,12 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="toolTip">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="editable">
+       <bool>true</bool>
+      </property>
+      <property name="currentText">
+       <string>NBSARM</string>
       </property>
      </widget>
      <widget class="QSpinBox" name="spinBoxIsoMax_Fixe_BIOM">
@@ -3593,6 +3586,12 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="toolTip">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="editable">
+       <bool>true</bool>
+      </property>
+      <property name="currentText">
+       <string>BIOM</string>
       </property>
      </widget>
      <widget class="QSpinBox" name="spinBoxIsoMin_Fixe_BIOM">
@@ -4533,7 +4532,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="text">
-       <string>Version 3.0.7 INTRA</string>
+       <string>Version 3.0.7 INTRA BETA</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_500">

@@ -142,6 +142,8 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         
             
         # Verification de l'existance ou création du répertoire des sources MID et fichier csv
+        if version_3 == "YES":
+            REPERTOIRE_SOURCES = REPERTOIRE_SOURCE_V3
         chemin_sources = os.path.join(chemin_projet, REPERTOIRE_SOURCES)
         if not (os.path.exists( chemin_sources)):
             try:
@@ -322,12 +324,22 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
                 os.mkdir( chemin_shapes)
             except :
                 raise physiocap_exception_rep( rep_vecteur)
- 
-        # Création des shapes de segments
-        nom_court_shape_segment = Nom_Projet + NOM_SEGMENTS + EXT_CRS_SHP
-        nom_shape_segment = os.path.join(chemin_shapes, nom_court_shape_segment)
+
+        if (version_3 == "NO"):
+            nom_dir_shape_segment = chemin_shapes
+        else:
+            # Création du dir des shapes de segments
+            nom_court_shape_segment = Nom_Projet + NOM_SEGMENTS + EXT_CRS_SHP
+            nom_dir_shape_segment = os.path.join( chemin_shapes, REPERTOIRE_SEGMENT_V3)
+            if not (os.path.exists( nom_dir_shape_segment)):
+                try :
+                    os.mkdir( nom_dir_shape_segment)
+                except :
+                    raise physiocap_exception_rep( REPERTOIRE_SEGMENT_V3)
+
+        nom_shape_segment = os.path.join( nom_dir_shape_segment, nom_court_shape_segment)
         nom_court_prj_segment = Nom_Projet + NOM_SEGMENTS + EXT_CRS_PRJ
-        nom_prj_segment = os.path.join(chemin_shapes, nom_court_prj_segment)
+        nom_prj_segment = os.path.join( nom_dir_shape_segment, nom_court_prj_segment)
         # Si le shape existe dejà il faut le détruire
         if os.path.isfile( nom_shape_segment):
             # A_TESTER: je doute que ca marche
@@ -335,9 +347,9 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             os.remove( nom_shape_segment) 
 
         nom_court_shape_segment_details = Nom_Projet + NOM_SEGMENTS_DETAILS + EXT_CRS_SHP
-        nom_shape_segment_details = os.path.join(chemin_shapes, nom_court_shape_segment_details)
+        nom_shape_segment_details = os.path.join( nom_dir_shape_segment, nom_court_shape_segment_details)
         nom_court_prj_segment_details = Nom_Projet + NOM_SEGMENTS_DETAILS + EXT_CRS_PRJ
-        nom_prj_segment_details = os.path.join(chemin_shapes, nom_court_prj_segment_details)
+        nom_prj_segment_details = os.path.join( nom_dir_shape_segment, nom_court_prj_segment_details)
         # Si le shape existe dejà il faut le détruire
         if os.path.isfile( nom_shape_segment_details):
             # A_TESTER: je doute que ca marche
@@ -348,6 +360,8 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         dialogue.progressBar.setValue( 12)
         
         # Verification de l'existance 
+        if version_3 == "YES":
+            REPERTOIRE_HISTOS = REPERTOIRE_HISTO_V3
         chemin_histos = os.path.join(chemin_projet, REPERTOIRE_HISTOS)
         if not (os.path.exists( chemin_histos)):
             try:
@@ -355,7 +369,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             except:
                 raise physiocap_exception_rep( REPERTOIRE_HISTOS)
 
-        # TODO: si version 3 ne pas tracer les histo ici        
+        # TODO: si version 4 ne pas tracer les histo ici        
         if histogrammes == "YES":
             # creation d'un histo
             nom_data_histo_sarment, data_histo_sarment = physiocap_open_file( nom_court_fichier_sarment, chemin_textes, 'r')

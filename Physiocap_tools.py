@@ -366,7 +366,7 @@ def physiocap_rename_existing_file( chemin):
         nouveau_chemin = physiocap_rename_existing( chemin)
         return physiocap_rename_existing_file( nouveau_chemin) 
     else:
-        physiocap_log( "Chemin pour la création du fichier ==" + chemin, leModeTrace)
+        #physiocap_log( "Chemin pour la création du fichier ==" + chemin, leModeTrace)
         return chemin
 
 def physiocap_rename_create_dir( chemin):

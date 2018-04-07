@@ -49,7 +49,6 @@ from .Physiocap_tools import physiocap_message_box, \
 
 from .Physiocap_creer_arbre import PhysiocapFiltrer
 from .Physiocap_inter import (PhysiocapInter, physiocap_fill_combo_poly_or_point)
-# TODO: not yet
 from .Physiocap_intra_interpolation import PhysiocapIntra 
 from .Physiocap_var_exception import *
 
@@ -89,12 +88,11 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.fieldComboModeTrace.clear( )
             self.fieldComboModeTrace.addItems( MODE_TRACE )
             # Retrouver le mode de trace de  settings
-            i=0
             leModeDeTrace = self.settings.value("Physiocap/leModeTrace", TRACE_TOUT)
-            for modeTrace in MODE_TRACE:
+            for idx, modeTrace in enumerate( MODE_TRACE):
                 if ( modeTrace == leModeDeTrace):
-                    self.fieldComboModeTrace.setCurrentIndex( i)
-                i=i+1
+                    self.fieldComboModeTrace.setCurrentIndex( idx)
+
          
         #physiocap_log( "Répertoire de QGIS : " +  self.gis_dir, leModeDeTrace)
        
@@ -128,6 +126,10 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Intra        
         self.comboBoxPoints.currentIndexChanged[int].connect( self.slot_maj_points_choix_inter_intra )
         self.fieldComboIntra.currentIndexChanged[int].connect( self.slot_min_max_champ_intra )
+#WARNING: Appel recursif
+#        self.fieldComboIntraDIAM.currentIndexChanged[int].connect( self.slot_maj_attributs_interpolables )
+#        self.fieldComboIntraSARM.currentIndexChanged[int].connect( self.slot_maj_attributs_interpolables )
+#        self.fieldComboIntraBIOM.currentIndexChanged[int].connect( self.slot_maj_attributs_interpolables )
         self.ButtonIntra.pressed.connect(self.slot_interpolation_intra_parcelles)
         self.groupBoxIntra.setEnabled( False)
         self.ButtonIntra.setEnabled( False)
@@ -226,14 +228,12 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 self.fieldComboFormats.addItem( liste_formats[ 0])
                 self.fieldComboFormats.setEnabled( False)
              # Retrouver le format de  settings
-            i=0
             self.fieldComboFormats.setCurrentIndex( 0)
             leFormat = self.settings.value("Physiocap/leFormat", "xx") 
-            for unFormat in liste_formats:
+            for idx, unFormat in enumerate( liste_formats):
                 if ( unFormat == leFormat):
-                    self.fieldComboFormats.setCurrentIndex( i)
+                    self.fieldComboFormats.setCurrentIndex( idx)
                     #physiocap_log( self.tr( "Format retrouvé"), leModeDeTrace) 
-                i=i+1        
 
 
         # Remplissage des parametres segment à partir des settings
@@ -611,7 +611,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.radioButtonGPS.toggled.connect( self.slot_rayon)
         #self.radioButtonL93.toggled.connect( self.slot_rayon)
       
-        # Calcul dynamique du intervale Isolignes
+        # Calcul dynamique des intervale Isolignes
         self.spinBoxIsoMin.valueChanged.connect( self.slot_iso_distance)
         self.spinBoxIsoMax.valueChanged.connect( self.slot_iso_distance)
         self.spinBoxNombreIso.valueChanged.connect( self.slot_iso_distance)
@@ -622,29 +622,69 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
 
  
         # Remplissage de la liste de ATTRIBUTS_INTRA 
-        self.fieldComboIntra.setCurrentIndex( 0)   
-        if len( ATTRIBUTS_INTRA) == 0:
-            self.fieldComboIntra.clear( )
-            physiocap_error( self, self.tr( "Pas de liste des attributs pour Intra pré défini"))
-        else:
-            self.fieldComboIntra.clear( )
-            self.fieldComboIntra.addItems( ATTRIBUTS_INTRA )
-            # TEST JH : cas de details ATTRIBUTS_INTRA_DETAIL
-            if (self.settings.value("Physiocap/details") == "YES"):
-                self.fieldComboIntra.addItems( ATTRIBUTS_INTRA_DETAILS )
-            # Retrouver le format de  settings
-            i=0
-            leFormat = self.settings.value("Physiocap/attributIntra", "xx") 
-            for unFormat in ATTRIBUTS_INTRA:
-                if ( unFormat == leFormat):
-                    self.fieldComboIntra.setCurrentIndex( i)
-                i=i+1
-            if (self.settings.value("Physiocap/details") == "YES"):
-                for unFormat in ATTRIBUTS_INTRA_DETAILS:
-                    if ( unFormat == leFormat):
-                        self.fieldComboIntra.setCurrentIndex( i)
-                    i=i+1
-
+        self.slot_maj_attributs_interpolables()
+        
+###        self.fieldComboIntra.setCurrentIndex( 0)   
+###        self.fieldComboIntraDIAM.setCurrentIndex( 0)   
+###        self.fieldComboIntraSARM.setCurrentIndex( 0)   
+###        self.fieldComboIntraBIOM.setCurrentIndex( 0)   
+###        if len( ATTRIBUTS_INTRA) == 0:
+###            self.fieldComboIntra.clear()
+###            self.fieldComboIntraDIAM.clear()
+###            self.fieldComboIntraSARM.clear()
+###            self.fieldComboIntraBIOM.clear()
+###            physiocap_error( self, self.tr( "Pas de liste des attributs pour Intra pré défini"))
+###        else:
+###            self.fieldComboIntra.clear()
+###            
+###            # Retrouver les choix intra précedent (dans intra ou dans préference)
+###            leChoixIntra = self.settings.value("Physiocap/attributIntra", "xx") 
+###            leChoixDiam = self.settings.value("Physiocap/attributIntraDiam", "xx") 
+###            leChoixSarm = self.settings.value("Physiocap/attributIntraSarm", "xx") 
+###            leChoixBiom = self.settings.value("Physiocap/attributIntraBiom", "xx") 
+###            # Ajout des trois entités choisies dans affichage intra
+###            if ( leChoixDiam != "xx" and leChoixSarm != "xx" and leChoixBiom != "xx"):
+###                attribut_triple = leChoixDiam + SEPARATEUR_NOEUD + leChoixSarm + \
+###                    SEPARATEUR_NOEUD + leChoixBiom
+###                self.fieldComboIntra.addItem( attribut_triple)
+###                
+###            self.fieldComboIntra.addItems( ATTRIBUTS_INTRA)
+###            self.fieldComboIntraDIAM.clear()
+###            self.fieldComboIntraDIAM.addItems( ATTRIBUTS_INTRA)
+###            self.fieldComboIntraSARM.clear()
+###            self.fieldComboIntraSARM.addItems( ATTRIBUTS_INTRA)
+###            self.fieldComboIntraBIOM.clear()
+###            self.fieldComboIntraBIOM.addItems( ATTRIBUTS_INTRA)
+###
+###            # TEST JH : cas de details ATTRIBUTS_INTRA_DETAIL
+###            if (self.settings.value("Physiocap/details") == "YES"):
+###                self.fieldComboIntra.addItems( ATTRIBUTS_INTRA_DETAILS )
+###                self.fieldComboIntraDIAM.addItems( ATTRIBUTS_INTRA_DETAILS)
+###                self.fieldComboIntraSARM.addItems( ATTRIBUTS_INTRA_DETAILS)
+###                self.fieldComboIntraBIOM.addItems( ATTRIBUTS_INTRA_DETAILS)
+###
+###            i=0
+###            for monAttribut in ATTRIBUTS_INTRA:
+###                if ( monAttribut == leChoixIntra):
+###                    self.fieldComboIntra.setCurrentIndex( i)
+###                if ( monAttribut == leChoixDiam):
+###                    self.fieldComboIntraDIAM.setCurrentIndex( i)
+###                if ( monAttribut == leChoixSarm):
+###                    self.fieldComboIntraSARM.setCurrentIndex( i)
+###                if ( monAttribut == leChoixBiom):
+###                    self.fieldComboIntraBIOM.setCurrentIndex( i)
+###                i=i+1
+###            if (self.settings.value("Physiocap/details") == "YES"):
+###                for monAttribut in ATTRIBUTS_INTRA_DETAILS:
+###                    if ( monAttribut == leChoixIntra):
+###                        self.fieldComboIntra.setCurrentIndex( i)
+###                    if ( monAttribut == leChoixDiam):
+###                        self.fieldComboIntraDIAM.setCurrentIndex( i)
+###                    if ( monAttribut == leChoixSarm):
+###                        self.fieldComboIntraSARM.setCurrentIndex( i)
+###                    if ( monAttribut == leChoixBiom):
+###                        self.fieldComboIntraBIOM.setCurrentIndex( i)
+###                    i=i+1
 
         # Auteurs : Icone
         self.label_jhemmi.setPixmap( QPixmap( os.path.join( REPERTOIRE_HELP, 
@@ -675,35 +715,61 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
 
     # FIELDS
     def slot_min_max_champ_intra( self ):
-        """ Create a list of fields for the current vector point in fieldCombo Box"""
+        """ Search min max of attribut ComboIntra in the current vector comboPoints"""
         nom_attribut = self.fieldComboIntra.currentText()
-        #leModeDeTrace = self.fieldComboModeTrace.currentText()
-        #physiocap_log("Attribut pour Intra >" + nom_attribut , leModeDeTrace)
+        # Si plusieurs champs à interpoler, pas de calcul de min max 
+        # Prendre les min spinBoxIsoMin_Fixe_DIAM et max spinBoxIsoMAX_Fixe_DIAM et 
+        # Griser les choix min max
+        decoupage = nom_attribut.split( SEPARATEUR_NOEUD)
+        if len( decoupage) > 2:
+            physiocap_log("Attribut pour Intra à découper {0}".format( decoupage) , TRACE_TOOLS)
+            self.spinBoxIsoMin.setValue( -999999)
+            self.spinBoxIsoMax.setValue( int( self.spinBoxIsoMax_Fixe_DIAM.value()))
+            self.spinBoxIsoMin.setValue( int( self.spinBoxIsoMin_Fixe_DIAM.value()))
+            self.spinBoxNombreIso.setValue( int( self.spinBoxDistanceIso_Fixe_DIAM.value()))
+            self.spinBoxIsoMin.setEnabled( False)
+            self.spinBoxIsoMax.setEnabled( False)
+            self.spinBoxDistanceIso.setEnabled( False)
+            self.spinBoxNombreIso.setEnabled( False)
+            return
+        else:
+            self.spinBoxIsoMin.setEnabled( True)
+            self.spinBoxIsoMax.setEnabled( True)
+            self.slot_bascule_aide_iso()
+
+        max_attribut = -99999
+        min_attribut = 99999
+        leModeDeTrace = self.fieldComboModeTrace.currentText()
+        #physiocap_log("Attribut pour Intra >{0}".format( nom_attribut) , TRACE_TOOLS)
         nom_complet_point = self.comboBoxPoints.currentText().split( SEPARATEUR_NOEUD)
         if (len( nom_complet_point) !=2):
             return
         #nomProjet = nom_complet_point[0] 
         idLayer   = nom_complet_point[1]
-        # Rechecher min et max du layer
         layer = physiocap_get_layer_by_ID( idLayer)
         if layer is not None:
             try:
-                index_attribut = layer.fieldNameIndex( nom_attribut)
+                monProvider = layer.dataProvider()
+                map_champ = monProvider.fieldNameMap()
+                index_attribut =  map_champ[ nom_attribut]
+                # Utilisation du dataProvider maximumValue() et minimumValue()
+                max_attribut = monProvider.maximumValue( index_attribut)
+                min_attribut = monProvider.minimumValue( index_attribut)
             except:
                 physiocap_log_for_error( self)
-                aText = self.tr( "L'attribut {0} n'existe pas dans les données à disposition.").\
+                aText = self.tr( "L'attribut {0} n'existe pas dans les données à disposition. ").\
                 format( nom_attribut)
                 aText = aText + \
                     self.tr( "L'interpolation n'est pas possible. Recréer un nouveau projet Physiocap.")
                 physiocap_error( self, aText, "CRITICAL")
                 return physiocap_message_box( self, aText, "information")
-            valeurs = []
-            for un_point in layer.getFeatures():
-                 valeurs.append( un_point.attributes()[index_attribut])
-##            physiocap_log("Min et max de > " + str( nom_attribut) + " sont "  + \
-##                str( min(valeurs)) + "==" + str(max(valeurs)), leModeDeTrace)
-            self.spinBoxIsoMax.setValue( int( max(valeurs) ))
-            self.spinBoxIsoMin.setValue( int( min(valeurs) ))
+            
+            monProvider = None
+            physiocap_log("Min et max de > {0} < sont {1} =~= {2}". \
+                format( nom_attribut, min_attribut,  max_attribut) , leModeDeTrace)
+            self.spinBoxIsoMin.setValue( -9999999)
+            self.spinBoxIsoMax.setValue( int( max_attribut ))
+            self.spinBoxIsoMin.setValue( int( min_attribut ))
 
     def slot_maj_champ_poly_liste( self ):
         """ Create a list of fields having unique values for the current vector in fieldCombo Box"""
@@ -722,46 +788,36 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             # On exclut les layer qui ne sont pas de type 0 (exemple 1 raster)
             if ( layer.type() == 0):
                 position_combo = 1 # Demarre à 1 car NOM_PHY est dejà ajouté
-                dernierAttribut = self.settings.value("Physiocap/attributPoly", "xx") 
-                for index, field in enumerate(layer.dataProvider().fields()):
-                    # Vérifier si les valeurs du field name sont uniques
-                    valeur_unique = "YES" # a priori oui
-                    valeur_dic = {}
-                    mon_nom = field.name()
-                    #idx = layer.fieldNameIndex(mon_nom)
-                    #physiocap_log( "Dans recherche de champ : field >> {0} et index du field name {1}<<". \
-                    #    format ( field.name(),  idx), leModeDeTrace)
-                    k = 0
-                    if leModeDeTrace != TRACE_TOUT:
-                        # TODO: Optimiser avec enumerate ?
-                        iter = layer.getFeatures()
-                        for feature in iter:
-#  BAD                      for feature in enumerate( layer.getFeatures()):
-                            valeur_cette_ligne = feature.attributes()
-                            try:
-                                if valeur_cette_ligne[index] == None:
-                                    valeur_unique = "NO"
-                                elif valeur_cette_ligne[index] in valeur_dic:
-                                    # TODO verifier si deux passage
-                                    physiocap_log( "Cas non unique pour l'attribut {0} : valeur {2} ligne {1}".\
-                                     format ( field.name(), index,  valeur_cette_ligne[index]), \
-                                     leModeDeTrace, Qgis.Warning)
-                                    valeur_unique = "NO"
-                                else:
-                                    valeur_dic[ valeur_cette_ligne[index]] = k
-                            except:
-                                physiocap_log( "Cas non unique par exception {0}: ligne {1}".\
-                                   format ( field.name(), k), leModeDeTrace,  Qgis.Warning)
-                                valeur_unique = "NO"
-                            if valeur_unique == "NO":
-                                break
-                            k = k+1
-                    
-                    if valeur_unique == "YES":
-                        self.fieldComboContours.addItem( mon_nom )
-                        if ( str( mon_nom) == dernierAttribut):
+                dernierAttribut = self.settings.value("Physiocap/attributPoly", "xx")
+                mon_provider = layer.dataProvider()
+                nombre_ligne = mon_provider.featureCount()
+                map_champ = mon_provider.fieldNameMap()
+                for mon_champ in mon_provider.fields():
+                    nom_champ = mon_champ.name()
+                    if leModeDeTrace == TRACE_PAS:
+                        # Raccourci si aucun trace, on suppose toutes les valeurs sont uniques
+                        valeur_unique = "YES" 
+                    else:
+                        # Vérifier si les valeurs du field name sont toutes uniques
+                        liste_valeurs = mon_provider.uniqueValues( map_champ[ nom_champ])
+    #                    physiocap_log( "Unique : field >> {0} \n {1}<<". \
+    #                        format ( nom_champ,  liste_valeurs), leModeDeTrace)
+                        if nombre_ligne == len( liste_valeurs):
+                            valeur_unique = "YES" 
+                        else:
+#                            physiocap_log( "Dans recherche de champ : field >> {0} nombre {1} mais possible {2}". \
+#                            format ( nom_champ,  len( liste_valeurs),  nombre_ligne), leModeDeTrace)
+                            valeur_unique = "NO" 
+                            
+                    # ne pas remettre NOM_PHY une deuxieme fois
+                    if valeur_unique == "YES" and nom_champ != "NOM_PHY":
+                        self.fieldComboContours.addItem( nom_champ )
+                        if ( nom_champ == dernierAttribut):
                             self.fieldComboContours.setCurrentIndex( position_combo)
-                        position_combo  =position_combo + 1
+                        position_combo = position_combo + 1
+            
+                liste_valeurs={}
+                mon_provider = None
         else:
             # TODO: Exception à traiter pas_de_layer
             physiocap_log( "Dans recherche des champs uniques : aucun layer", leModeDeTrace)            
@@ -947,13 +1003,110 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         Bascule le mode d'aide du calcul iso 
         """
         if ( self.fieldComboAideIso.currentIndex() == 0):
+            self.spinBoxIsoMin.setEnabled( True)
+            self.spinBoxIsoMax.setEnabled( True)
             self.spinBoxDistanceIso.setEnabled( False)
             self.spinBoxNombreIso.setEnabled( True)
         if ( self.fieldComboAideIso.currentIndex() == 1):
+            self.spinBoxIsoMin.setEnabled( True)
+            self.spinBoxIsoMax.setEnabled( True)
             self.spinBoxDistanceIso.setEnabled( True)
             self.spinBoxNombreIso.setEnabled( False)        
-        return
-    
+        if ( self.fieldComboAideIso.currentIndex() == 2):
+            self.spinBoxIsoMin.setEnabled( False)
+            self.spinBoxIsoMax.setEnabled( False)
+            self.spinBoxDistanceIso.setEnabled( False)
+            self.spinBoxNombreIso.setEnabled( False)
+            #self.slot_maj_attributs_interpolables()
+            
+
+    def slot_maj_attributs_interpolables( self):
+        """ Créer la liste des attributs interpolable
+        Cette Liste provient de ATTRIBUTS_INTRA et si details ATTRIBUTS_INTRA_DETAILS
+        mais aussi du choix dans préférence affichage (le triplet d'interpolation fixé)
+        On crée en même temps la liste des attributs possible dans pour le choix du triplet
+        qui se nomme DIAM puis SARM psui BIOM mais peut contenir n'importe quel triplet
+        """
+        ATTR_LISTE=[]
+        ATTR_LISTE_TRIPLET=[]
+        
+        # Mettre à jour les choix dans settings 
+        leChoixDiam = self.fieldComboIntraDIAM.currentText()
+        if leChoixDiam == None or leChoixDiam == "":
+            leChoixDiam = "xx"
+        self.settings.setValue("Physiocap/attributIntraDiam", leChoixDiam)
+        leChoixSarm = self.fieldComboIntraSARM.currentText()
+        if leChoixSarm == None or leChoixSarm == "":
+            leChoixSarm = "xx"        
+        self.settings.setValue("Physiocap/attributIntraSarm", leChoixSarm)
+        leChoixBiom = self.fieldComboIntraBIOM.currentText()
+        if leChoixBiom == None or leChoixBiom == "":
+            leChoixBiom = "xx"
+        self.settings.setValue("Physiocap/attributIntraBiom", leChoixBiom)
+
+
+        if len( ATTRIBUTS_INTRA) == 0:
+            self.fieldComboIntra.clear()
+            self.fieldComboIntraDIAM.clear()
+            self.fieldComboIntraSARM.clear()
+            self.fieldComboIntraBIOM.clear()
+            physiocap_error( self, self.tr( "Pas de liste des attributs pour Intra pré défini"))
+            return
+
+        #self.fieldComboIntra.setCurrentIndex( 0)   
+        self.fieldComboIntraDIAM.setCurrentIndex( 0)   
+        self.fieldComboIntraSARM.setCurrentIndex( 0)   
+        self.fieldComboIntraBIOM.setCurrentIndex( 0) 
+
+        # Retrouver les choix intra précedent (dans intra ou dans préference)
+        leChoixIntra = self.settings.value("Physiocap/attributIntra", "xx") 
+#        leChoixDiam = self.settings.value("Physiocap/attributIntraDiam", "xx") 
+#        leChoixSarm = self.settings.value("Physiocap/attributIntraSarm", "xx") 
+#        leChoixBiom = self.settings.value("Physiocap/attributIntraBiom", "xx") 
+        # Ajout des trois entités choisies dans affichage intra
+        if ( leChoixDiam != "xx" and leChoixSarm != "xx" and leChoixBiom != "xx"):
+            attribut_triple = leChoixDiam + SEPARATEUR_NOEUD + leChoixSarm + \
+                    SEPARATEUR_NOEUD + leChoixBiom
+            ATTR_LISTE.append( attribut_triple)
+
+        # Ajout des attributs standard 
+        ATTR_LISTE = ATTR_LISTE + ATTRIBUTS_INTRA
+        ATTR_LISTE_TRIPLET = ATTRIBUTS_INTRA
+        
+        # Ajout d'un nouvelle liste d'attribut interpolable
+        ATTR_LISTE = ATTR_LISTE + ATTRIBUTS_V3_INTRA
+        
+        # Cas de details ATTRIBUTS_INTRA_DETAIL
+        if (self.settings.value("Physiocap/details") == "YES"):
+            ATTR_LISTE = ATTR_LISTE + ATTRIBUTS_INTRA_DETAILS
+            ATTR_LISTE_TRIPLET = ATTR_LISTE_TRIPLET + ATTRIBUTS_INTRA_DETAILS
+            
+        self.fieldComboIntra.clear()
+        self.fieldComboIntra.addItems( ATTR_LISTE)
+        self.fieldComboIntraDIAM.clear()
+        self.fieldComboIntraDIAM.addItems( ATTR_LISTE_TRIPLET)
+        self.fieldComboIntraSARM.clear()
+        self.fieldComboIntraSARM.addItems( ATTR_LISTE_TRIPLET)
+        self.fieldComboIntraBIOM.clear()
+        self.fieldComboIntraBIOM.addItems( ATTR_LISTE_TRIPLET)
+
+        # Se souvenir du choix inital
+        j=0
+        for monAttribut in ATTR_LISTE:
+            if ( monAttribut == leChoixIntra):
+                self.fieldComboIntra.setCurrentIndex( j)
+            j = j+1
+            
+        i=0
+        for monAttribut in ATTR_LISTE_TRIPLET:        
+            if ( monAttribut == leChoixDiam):
+                self.fieldComboIntraDIAM.setCurrentIndex( i)
+            if ( monAttribut == leChoixSarm):
+                self.fieldComboIntraSARM.setCurrentIndex( i)
+            if ( monAttribut == leChoixBiom):
+                self.fieldComboIntraBIOM.setCurrentIndex( i)
+            i=i+1
+
     def slot_iso_distance( self):
         """ 
         Recherche du la distance optimale tenant compte de min et max et du nombre d'intervalle
@@ -1166,6 +1319,10 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         if self.checkBoxIntraImages.isChecked():
             images = "YES"
         self.settings.setValue("Affichage/IntraImages", images ) 
+
+        self.settings.setValue("Physiocap/attributIntraDiam", self.fieldComboIntraDIAM.currentText())
+        self.settings.setValue("Physiocap/attributIntraSarm", self.fieldComboIntraSARM.currentText())
+        self.settings.setValue("Physiocap/attributIntraBiom", self.fieldComboIntraBIOM.currentText())
         
         # Cas consolidation
         consolidation = "NO"
@@ -1439,7 +1596,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.Vignoble.setEnabled( True)
         else:
             self.Vignoble.setEnabled( False)         
-
+        self.slot_maj_attributs_interpolables()
+        
     def slot_calcul_densite( self):
         # Densité pied /ha
 

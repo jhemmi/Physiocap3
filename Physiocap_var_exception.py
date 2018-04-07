@@ -46,7 +46,7 @@ else:
     LE_MODE_PROD = "YES"
     
 # TODO: Supprimer en Prod
-#LE_MODE_PROD = "NO"
+LE_MODE_PROD = "NO"
 
 # En prod CENTROIDES vaut NO
 CENTROIDES = "NO"  # CENTROIDES YES est pour voir les centroides dans la synthese
@@ -88,6 +88,7 @@ FORMAT_VECTEUR_V3 = [ "ESRI Shapefile"] #,  "memory"] # POSTGRES_NOM] # "memory"
 # Répertoires des sources et de concaténation en fichiers texte
 FICHIER_RESULTAT = "resultat.txt"
 REPERTOIRE_SOURCES = "fichiers_sources"
+REPERTOIRE_SOURCE_V3 = "Copie_MID"
 SUFFIXE_BRUT_CSV = SEPARATEUR_ + "RAW.csv"
 EXTENSION_MID = "*.MID"
 NB_VIRGULES = 58
@@ -101,13 +102,13 @@ FICHIER_HISTO_NON_CALCULE = os.path.join( REPERTOIRE_HELP,
     "Histo_non_calcule.png")
 SUFFIXE_HISTO = ".png"
 REPERTOIRE_HISTOS = "histogrammes"
+REPERTOIRE_HISTO_V3 = "Histogramme"
 FICHIER_HISTO_SARMENT = "histogramme_SARMENT_RAW" + SUFFIXE_HISTO
 FICHIER_HISTO_DIAMETRE = "histogramme_DIAMETRE_RAW"  + SUFFIXE_HISTO
 FICHIER_HISTO_DIAMETRE_FILTRE = "histogramme_DIAM_FILTERED" +  SUFFIXE_HISTO
 
 REPERTOIRE_SHAPEFILE = "shapefile"
-REPERTOIRE_SHAPEFILE_V3 = "vecteur"
-REPERTOIRE_RASTER_V3 = "raster"
+REPERTOIRE_SHAPEFILE_V3 = "Filtrée"
 
 EXTENSION_CSV = ".csv"
 EXTENSION_SHP = ".shp"
@@ -187,6 +188,9 @@ GID_SANS_MESURE = "Points du segment sans mesure"
 SEPARATEUR_NOEUD = "~~"
 NOM_MOYENNE = SEPARATEUR_ + "MOYENNE" + SEPARATEUR_
 VIGNETTES_INTER = "INTER_PARCELLAIRE"
+REPERTOIRE_INTER_V3 = "Inter_Parcellaire"
+#REPERTOIRE_POINTS_V3 = "Point"
+REPERTOIRE_SEGMENT_V3 = "Segment"
 NOM_POINTS = SEPARATEUR_ + "POINTS"
 NOM_SEGMENTS = SEPARATEUR_ + "SEGMENTS"
 NOM_SEGMENTS_DETAILS = NOM_SEGMENTS + SEPARATEUR_ + "BRISES"
@@ -202,12 +206,16 @@ else:
     MON_TEMP="C:/Users/Utilisateurs/AppData/Local/Temp"
     
 VIGNETTES_INTRA = "INTRA_PARCELLAIRE"
+REPERTOIRE_INTRA_V3 = "Interpolation"
 NOM_INTRA = SEPARATEUR_ + "INTRA"
 REPERTOIRE_RASTERS = "INTRA_PARCELLAIRE"
+REPERTOIRE_RASTER_V3 = "Raster"
+REPERTOIRE_ISO_V3 = "Isoligne"
 ATTRIBUTS_INTRA = ["DIAM", "NBSARM", "BIOM"]
+ATTRIBUTS_V3_INTRA = ["VITESSE", "ALTITUDE", "PDOP", "DISTANCE", "NBSART"]
 ATTRIBUTS_INTRA_DETAILS = ["NBSARMM2", "NBSARCEP","BIOMM2", "BIOMGM2", "BIOMGCEP"]
-# TODO: si GDAL & version 3 si ces index n'ont pas bougé avec les nouveau attributs de V3
-ATTRIBUTS_INTRA_INDEX = {"DIAM" : 4 ,"NBSARM" : 3 ,"BIOM" : 5,  "NBSARMM2":6, "NBSARCEP":7,"BIOMM2":8, "BIOMGM2":9, "BIOMGCEP":10}
+# si QGIS & version 3 verifier que ces index n'ont pas bougé avec les nouveau attributs 
+# ATTRIBUTS_INTRA_INDEX = {"DIAM" : 4 ,"NBSARM" : 3 ,"BIOM" : 5,  "NBSARMM2":6, "NBSARCEP":7,"BIOMM2":8, "BIOMGM2":9, "BIOMGCEP":10}
 CHEMIN_TEMPLATES = [ "modeleQgis/V3", "project_templates/Physiocap3"]
 
 # Exceptions Physiocap à partir de 30 erreurs sur un fchier mid
