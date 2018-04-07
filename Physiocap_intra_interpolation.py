@@ -567,8 +567,11 @@ class PhysiocapIntra( QtWidgets.QDialog):
             aText = self.tr( "Pas d'interpolation disponible avec Physiocap 3. Interpolez avec les versions QGIS 2.14 et l'extension 1.8.3.")
             physiocap_error( self, aText)
             return physiocap_message_box( dialogue, aText, "information")
+            
+        version_3 = "NO"
+        if dialogue.checkBoxV3.isChecked():
+            version_3 = "YES"
 
-      
         # Répertoire
         repertoire_data = dialogue.lineEditDirectoryPhysiocap.text()
         if ((repertoire_data == "") or ( not os.path.exists( repertoire_data))):
