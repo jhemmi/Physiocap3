@@ -739,15 +739,16 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 chemin_raster = os.path.join( chemin_shapes, REPERTOIRE_RASTERS)
                 chemin_iso = chemin_raster
             else:
-                chemin_intra =  os.path.join( chemin_projet , REPERTOIRE_INTER_V3)
-                chemin_raster =  os.path.join( chemin_intra, RETERTOIRE_RASTER_V3)
-                chemin_iso =  os.path.join( chemin_intra, RETERTOIRE_ISO_V3)
+                chemin_intra =  os.path.join( chemin_projet , REPERTOIRE_INTRA_V3)
+                chemin_raster =  os.path.join( chemin_intra, REPERTOIRE_RASTER_V3)
+                chemin_iso =  os.path.join( chemin_intra, REPERTOIRE_ISO_V3)
 
-        if not (os.path.exists( chemin_intra)) and version_3 == "YES":
-            try:
-                os.mkdir( chemin_intra)
-            except:
-                raise physiocap_exception_rep( REPERTOIRE_INTER_V3)
+        if version_3 == "YES":
+            if not (os.path.exists( chemin_intra)):
+                try:
+                    os.mkdir( chemin_intra)
+                except:
+                    raise physiocap_exception_rep( REPERTOIRE_INTRA_V3)
         if not (os.path.exists( chemin_raster)):
             try:
                 os.mkdir( chemin_raster)
@@ -757,7 +758,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
             try:
                 os.mkdir( chemin_iso)
             except:
-                raise physiocap_exception_rep( RETERTOIRE_ISO_V3)
+                raise physiocap_exception_rep( REPERTOIRE_ISO_V3)
 
        
         # Pour les templates

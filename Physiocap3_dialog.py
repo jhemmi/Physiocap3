@@ -78,6 +78,10 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.python_dir = os.path.dirname( self.plugins_dir)
         self.gis_dir = os.path.dirname( self.python_dir)
 
+#        version_3 = "NO"
+#        if self.checkBoxV3.isChecked():
+#            version_3 = "YES"
+
         self.settings= QSettings(PHYSIOCAP_NOM, PHYSIOCAP_NOM_3)
         # Remplissage du mode de traces
         self.fieldComboModeTrace.setCurrentIndex( 0)
@@ -126,7 +130,10 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Intra        
         self.comboBoxPoints.currentIndexChanged[int].connect( self.slot_maj_points_choix_inter_intra )
         self.fieldComboIntra.currentIndexChanged[int].connect( self.slot_min_max_champ_intra )
-#WARNING: Appel recursif
+#WARNING: Appel recursif infini problématique : il faut trouver un autre refresh : 
+#                       choix details vignoble
+#                       choix calcul io 
+#                       ? refresh contour
 #        self.fieldComboIntraDIAM.currentIndexChanged[int].connect( self.slot_maj_attributs_interpolables )
 #        self.fieldComboIntraSARM.currentIndexChanged[int].connect( self.slot_maj_attributs_interpolables )
 #        self.fieldComboIntraBIOM.currentIndexChanged[int].connect( self.slot_maj_attributs_interpolables )
@@ -619,72 +626,10 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         
         # Alerte GPS
         self.radioButtonGPS.toggled.connect( self.slot_GPS_alert)
-
  
-        # Remplissage de la liste de ATTRIBUTS_INTRA 
+        # Remplissage de la liste de ATTRIBUTS_INTRA etc... 
         self.slot_maj_attributs_interpolables()
         
-###        self.fieldComboIntra.setCurrentIndex( 0)   
-###        self.fieldComboIntraDIAM.setCurrentIndex( 0)   
-###        self.fieldComboIntraSARM.setCurrentIndex( 0)   
-###        self.fieldComboIntraBIOM.setCurrentIndex( 0)   
-###        if len( ATTRIBUTS_INTRA) == 0:
-###            self.fieldComboIntra.clear()
-###            self.fieldComboIntraDIAM.clear()
-###            self.fieldComboIntraSARM.clear()
-###            self.fieldComboIntraBIOM.clear()
-###            physiocap_error( self, self.tr( "Pas de liste des attributs pour Intra pré défini"))
-###        else:
-###            self.fieldComboIntra.clear()
-###            
-###            # Retrouver les choix intra précedent (dans intra ou dans préference)
-###            leChoixIntra = self.settings.value("Physiocap/attributIntra", "xx") 
-###            leChoixDiam = self.settings.value("Physiocap/attributIntraDiam", "xx") 
-###            leChoixSarm = self.settings.value("Physiocap/attributIntraSarm", "xx") 
-###            leChoixBiom = self.settings.value("Physiocap/attributIntraBiom", "xx") 
-###            # Ajout des trois entités choisies dans affichage intra
-###            if ( leChoixDiam != "xx" and leChoixSarm != "xx" and leChoixBiom != "xx"):
-###                attribut_triple = leChoixDiam + SEPARATEUR_NOEUD + leChoixSarm + \
-###                    SEPARATEUR_NOEUD + leChoixBiom
-###                self.fieldComboIntra.addItem( attribut_triple)
-###                
-###            self.fieldComboIntra.addItems( ATTRIBUTS_INTRA)
-###            self.fieldComboIntraDIAM.clear()
-###            self.fieldComboIntraDIAM.addItems( ATTRIBUTS_INTRA)
-###            self.fieldComboIntraSARM.clear()
-###            self.fieldComboIntraSARM.addItems( ATTRIBUTS_INTRA)
-###            self.fieldComboIntraBIOM.clear()
-###            self.fieldComboIntraBIOM.addItems( ATTRIBUTS_INTRA)
-###
-###            # TEST JH : cas de details ATTRIBUTS_INTRA_DETAIL
-###            if (self.settings.value("Physiocap/details") == "YES"):
-###                self.fieldComboIntra.addItems( ATTRIBUTS_INTRA_DETAILS )
-###                self.fieldComboIntraDIAM.addItems( ATTRIBUTS_INTRA_DETAILS)
-###                self.fieldComboIntraSARM.addItems( ATTRIBUTS_INTRA_DETAILS)
-###                self.fieldComboIntraBIOM.addItems( ATTRIBUTS_INTRA_DETAILS)
-###
-###            i=0
-###            for monAttribut in ATTRIBUTS_INTRA:
-###                if ( monAttribut == leChoixIntra):
-###                    self.fieldComboIntra.setCurrentIndex( i)
-###                if ( monAttribut == leChoixDiam):
-###                    self.fieldComboIntraDIAM.setCurrentIndex( i)
-###                if ( monAttribut == leChoixSarm):
-###                    self.fieldComboIntraSARM.setCurrentIndex( i)
-###                if ( monAttribut == leChoixBiom):
-###                    self.fieldComboIntraBIOM.setCurrentIndex( i)
-###                i=i+1
-###            if (self.settings.value("Physiocap/details") == "YES"):
-###                for monAttribut in ATTRIBUTS_INTRA_DETAILS:
-###                    if ( monAttribut == leChoixIntra):
-###                        self.fieldComboIntra.setCurrentIndex( i)
-###                    if ( monAttribut == leChoixDiam):
-###                        self.fieldComboIntraDIAM.setCurrentIndex( i)
-###                    if ( monAttribut == leChoixSarm):
-###                        self.fieldComboIntraSARM.setCurrentIndex( i)
-###                    if ( monAttribut == leChoixBiom):
-###                        self.fieldComboIntraBIOM.setCurrentIndex( i)
-###                    i=i+1
 
         # Auteurs : Icone
         self.label_jhemmi.setPixmap( QPixmap( os.path.join( REPERTOIRE_HELP, 
@@ -706,8 +651,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         
         # Init fin 
         return
-
-
     
     # ################
     #  Différents SLOT
@@ -827,6 +770,10 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         nom_complet_point = self.comboBoxPoints.currentText().split( SEPARATEUR_NOEUD)
         if ( len( nom_complet_point) != 2):
             return
+            
+        version_3 = "NO"
+        if self.checkBoxV3.isChecked():
+            version_3 = "YES"
         
         #projet = nom_complet_point[0]
         # Chercher dans arbre si le projet Inter existe
@@ -837,8 +784,9 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             pro = layer.dataProvider()
             chemin_shapes = "chemin vers shapeFile"
             if pro.name() != POSTGRES_NOM:
-                chemin_shapes = os.path.dirname( layer.dataProvider().dataSourceUri())  ;
-                nom_shape = os.path.basename( layer.dataProvider().dataSourceUri())  ;
+                chemin_shapes = os.path.dirname( pro.dataSourceUri())  ;
+                chemin_projet = os.path.dirname(chemin_shapes)  ;
+                nom_shape = os.path.basename( pro.dataSourceUri())  ;
                 if ( not os.path.exists( chemin_shapes)):
                     raise physiocap_exception_rep( "chemin vers shapeFile")
 
@@ -851,7 +799,10 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                     chemin_shape_et_nom = os.path.join( chemin_shapes, nom_shape_sans_ext)            
                     chemin_inter = os.path.join( chemin_shape_et_nom, VIGNETTES_INTER)
                 else:
-                    chemin_inter = os.path.join( chemin_shapes, VIGNETTES_INTER)
+                    if version_3 == "NO":
+                        chemin_inter = os.path.join( chemin_shapes, VIGNETTES_INTER)
+                    else:
+                        chemin_inter = os.path.join( chemin_projet, REPERTOIRE_INTER_V3)
                 if (os.path.exists( chemin_inter)):
                     # On aiguille vers Intra
                     self.groupBoxIntra.setEnabled( True)

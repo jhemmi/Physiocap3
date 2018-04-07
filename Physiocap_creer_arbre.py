@@ -143,8 +143,9 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             
         # Verification de l'existance ou création du répertoire des sources MID et fichier csv
         if version_3 == "YES":
-            REPERTOIRE_SOURCES = REPERTOIRE_SOURCE_V3
-        chemin_sources = os.path.join(chemin_projet, REPERTOIRE_SOURCES)
+            chemin_sources = os.path.join(chemin_projet, REPERTOIRE_SOURCE_V3)
+        else:
+            chemin_sources = os.path.join(chemin_projet, REPERTOIRE_SOURCES)
         if not (os.path.exists( chemin_sources)):
             try:
                 os.mkdir( chemin_sources)
@@ -325,17 +326,18 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             except :
                 raise physiocap_exception_rep( rep_vecteur)
 
+        nom_court_shape_segment = Nom_Projet + NOM_SEGMENTS + EXT_CRS_SHP
         if (version_3 == "NO"):
-            nom_dir_shape_segment = chemin_shapes
+            nom_dir_shape_segment = os.path.join(chemin_projet, rep_vecteur)
         else:
             # Création du dir des shapes de segments
-            nom_court_shape_segment = Nom_Projet + NOM_SEGMENTS + EXT_CRS_SHP
             nom_dir_shape_segment = os.path.join( chemin_shapes, REPERTOIRE_SEGMENT_V3)
-            if not (os.path.exists( nom_dir_shape_segment)):
-                try :
-                    os.mkdir( nom_dir_shape_segment)
-                except :
-                    raise physiocap_exception_rep( REPERTOIRE_SEGMENT_V3)
+            
+        if not (os.path.exists( nom_dir_shape_segment)):
+            try :
+                os.mkdir( nom_dir_shape_segment)
+            except :
+                raise physiocap_exception_rep( REPERTOIRE_SEGMENT_V3)
 
         nom_shape_segment = os.path.join( nom_dir_shape_segment, nom_court_shape_segment)
         nom_court_prj_segment = Nom_Projet + NOM_SEGMENTS + EXT_CRS_PRJ
@@ -361,8 +363,9 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         
         # Verification de l'existance 
         if version_3 == "YES":
-            REPERTOIRE_HISTOS = REPERTOIRE_HISTO_V3
-        chemin_histos = os.path.join(chemin_projet, REPERTOIRE_HISTOS)
+            chemin_histos = os.path.join(chemin_projet, REPERTOIRE_HISTO_V3)
+        else:
+            chemin_histos = os.path.join(chemin_projet, REPERTOIRE_HISTOS)
         if not (os.path.exists( chemin_histos)):
             try:
                 os.mkdir( chemin_histos)

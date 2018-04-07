@@ -997,8 +997,9 @@ class PhysiocapInter( QtWidgets.QDialog):
             shape_point_sans_extension = shape_point_extension[:pos_extension]
         if ( not os.path.exists( chemin_shapes)):
             raise physiocap_exception_rep( chemin_shapes)
-        if ( not os.path.exists( chemin_shapes_segment)):
-            raise physiocap_exception_rep( chemin_shapes_segment)
+        if  version_3 == "YES":
+            if ( not os.path.exists( chemin_shapes_segment)):
+                raise physiocap_exception_rep( chemin_shapes_segment)
                     
         # TODO: où est le cas de consolidation 
         if  version_3 == "YES":

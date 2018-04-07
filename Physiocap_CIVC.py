@@ -654,12 +654,11 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
     info_lignes_sans_coupure = []
     nombre_segments_sans_coupure = 0
 
-    # Recuperer le CRS choisi, les extensions et le calculateur de distance
+    # Récuperer le CRS choisi, les extensions et le calculateur de distance
     distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
     laProjectionCRS, laProjectionTXT, EPSG_NUMBER = \
             physiocap_quelle_projection_demandee( self)
 
-    
     for numero_point, ligne_brute in enumerate( lignes_brutes):
         if not ligne_brute: break 
         
@@ -836,7 +835,7 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
                         manquant_en_cours = []
 
                     else:
-                        # TODO: Vérifier les gid_sans_mesure
+                        # Vérifier les gid_sans_mesure
                         # On ne perd pas les points manquants qui seront ajouter dans GID_TROU pour le segment suivant
                         # On aditionne des gid en cours avec les manquants...
                         for gid_perdu in gid_en_cours:
