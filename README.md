@@ -19,7 +19,7 @@ Cette version apporte des nouveautés pour l'analyse qualitative des captures (t
 
 Dans son module Inter, l'extension réalise une extraction des données filtrés à partir de votre contour de parcelles. Vous obtenez les moyennes Inter parcellaires pour faire un premier diagnostic de chaque entité agronomique.
 
-Cette version ne permet pas encore les interpolations et des calculs d'isolignes Intra parcellaire pour affiner l'analyse agronomique. Le module INTRA de V3 est en cours de développement.
+Cette version permet les interpolations et des calculs d'isolignes Intra parcellaire pour affiner l'analyse agronomique avec la librarie GDAL. Le module INTRA SAGA de V3 est en cours de développement.
 
 *"Physiocap" est déposé par le CIVC.*
 
@@ -32,9 +32,9 @@ La documentation de la version 2 se trouve dans le Wiki
 https://github.com/jhemmi/QgisPhysiocapPlugin/wiki/Qgis-Physiocap-Plugin-usage-&-installation
 La documentation de la version 3 n'est pas encore disponible.
 
-La version 3.0.4-NBSART est publiée dans le dépot github. 
+La version 3.0.8-INTRA-BETA est publiée dans le dépot github. 
 La 3.0.3 est déposéé sous QGIS 3 (accessible directement dans QGIS 3 depuis le Menu "Extension").
 
-**Attention, ce dépot GitHub contient la version en cours d'évolution (la 3.0.4 est déposée pour des tests. Elle est encore instable - Mars 2018 https://github.com/jhemmi/Physiocap3/releases) **
+**Attention, ce dépot GitHub contient la version en cours d'évolution (la 3.0.8 est déposée pour des tests. Elle est encore instable - Mars 2018 https://github.com/jhemmi/Physiocap3/releases) **
 
-**Warning, this GitHub repo contains last evolution version (Version 3.0.4 is for test purpose only and not stable - March 2018 https://github.com/jhemmi/Physiocap3/releases) **
+**Warning, this GitHub repo contains last evolution version (Version 3.0.8 is for test purpose only and not stable - March 2018 https://github.com/jhemmi/Physiocap3/releases) **
