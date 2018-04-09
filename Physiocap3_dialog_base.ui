@@ -1850,6 +1850,9 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
      </widget>
      <widget class="QRadioButton" name="radioButtonSAGA">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>280</x>
@@ -1859,7 +1862,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </rect>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Saga n'est accessible que sous Windows&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Saga n'est pas encore accessible avec la Version 3&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="text">
        <string>SAGA</string>
@@ -1878,7 +1881,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </rect>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;GDAL permet une interpolation dans une ellipse qui tient compte de l'orientation des rangs. Cette possibilité n'est disponible qu'avec les attributs et vecteurs en Version 3.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;GDAL permet une interpolation dans une ellipse qui tient compte de l'orientation des rangs. Cette possibilité n'est disponible qu'avec les attributs et vecteurs en Version 3.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Avec cette interpolation, seul l'écartement  entre les isolignes est réglable.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="text">
        <string>GDAL</string>
@@ -1911,7 +1914,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <rect>
         <x>290</x>
         <y>100</y>
-        <width>171</width>
+        <width>121</width>
         <height>21</height>
        </rect>
       </property>
@@ -1934,7 +1937,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <double>0.100000000000000</double>
       </property>
       <property name="value">
-       <double>0.500000000000000</double>
+       <double>1.000000000000000</double>
       </property>
      </widget>
      <widget class="QLabel" name="lab_81">
@@ -2021,7 +2024,7 @@ Si vous hésitez, trouvez du conseil. </string>
      </widget>
      <widget class="QLabel" name="lab_78">
       <property name="enabled">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="geometry">
        <rect>
@@ -2051,7 +2054,7 @@ Si vous hésitez, trouvez du conseil. </string>
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>160</y>
+        <y>140</y>
         <width>281</width>
         <height>21</height>
        </rect>
@@ -2106,8 +2109,8 @@ Si vous hésitez, trouvez du conseil. </string>
       <property name="geometry">
        <rect>
         <x>290</x>
-        <y>160</y>
-        <width>171</width>
+        <y>140</y>
+        <width>121</width>
         <height>21</height>
        </rect>
       </property>
@@ -2292,12 +2295,12 @@ Si vous hésitez, trouvez du conseil. </string>
        <string>Images Intra Parcellaire</string>
       </property>
      </widget>
-     <widget class="QDoubleSpinBox" name="spinBoxPixel_2">
+     <widget class="QDoubleSpinBox" name="spinBoxMultiplieRayon">
       <property name="geometry">
        <rect>
         <x>290</x>
-        <y>140</y>
-        <width>171</width>
+        <y>160</y>
+        <width>121</width>
         <height>21</height>
        </rect>
       </property>
@@ -2308,19 +2311,38 @@ Si vous hésitez, trouvez du conseil. </string>
        <set>Qt::ImhNone</set>
       </property>
       <property name="decimals">
-       <number>2</number>
+       <number>1</number>
       </property>
       <property name="minimum">
-       <double>0.000000000000000</double>
+       <double>0.500000000000000</double>
       </property>
       <property name="maximum">
-       <double>3.000000000000000</double>
+       <double>5.000000000000000</double>
       </property>
       <property name="singleStep">
        <double>0.100000000000000</double>
       </property>
       <property name="value">
-       <double>1.000000000000000</double>
+       <double>2.000000000000000</double>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lab_87">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>160</y>
+        <width>271</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>Multiplicateur du rayon pour ellipse</string>
       </property>
      </widget>
     </widget>
@@ -3150,13 +3172,13 @@ Si vous hésitez, trouvez du conseil. </string>
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>Choix fixe pour les isolignes</string>
+       <string>Choisissez un paramétrage fixe pour les isolignes</string>
       </property>
      </widget>
      <widget class="QSpinBox" name="spinBoxIsoMax_Fixe_DIAM">
       <property name="geometry">
        <rect>
-        <x>330</x>
+        <x>360</x>
         <y>80</y>
         <width>101</width>
         <height>21</height>
@@ -3187,7 +3209,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <rect>
         <x>220</x>
         <y>60</y>
-        <width>101</width>
+        <width>121</width>
         <height>21</height>
        </rect>
       </property>
@@ -3205,13 +3227,13 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="text">
-       <string>Distance isolignes</string>
+       <string>Ecartement isolignes</string>
       </property>
      </widget>
      <widget class="QSpinBox" name="spinBoxDistanceIso_Fixe_DIAM">
       <property name="geometry">
        <rect>
-        <x>210</x>
+        <x>230</x>
         <y>80</y>
         <width>101</width>
         <height>21</height>
@@ -3240,7 +3262,7 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QLabel" name="lab_195">
       <property name="geometry">
        <rect>
-        <x>330</x>
+        <x>360</x>
         <y>60</y>
         <width>101</width>
         <height>21</height>
@@ -3382,7 +3404,7 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QSpinBox" name="spinBoxIsoMax_Fixe_SARM">
       <property name="geometry">
        <rect>
-        <x>330</x>
+        <x>360</x>
         <y>100</y>
         <width>101</width>
         <height>21</height>
@@ -3440,7 +3462,7 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QSpinBox" name="spinBoxDistanceIso_Fixe_SARM">
       <property name="geometry">
        <rect>
-        <x>210</x>
+        <x>230</x>
         <y>100</y>
         <width>101</width>
         <height>21</height>
@@ -3504,7 +3526,7 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QSpinBox" name="spinBoxIsoMax_Fixe_BIOM">
       <property name="geometry">
        <rect>
-        <x>330</x>
+        <x>360</x>
         <y>120</y>
         <width>101</width>
         <height>21</height>
@@ -3533,7 +3555,7 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QSpinBox" name="spinBoxDistanceIso_Fixe_BIOM">
       <property name="geometry">
        <rect>
-        <x>210</x>
+        <x>230</x>
         <y>120</y>
         <width>101</width>
         <height>21</height>
@@ -4532,7 +4554,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="text">
-       <string>Version 3.0.7 INTRA BETA</string>
+       <string>Version 3.0.8 INTRA BETA</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_500">

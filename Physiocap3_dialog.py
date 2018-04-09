@@ -319,7 +319,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.fieldComboShapePasMesure.addItem( self.tr("Points sans mesure"))
         self.fieldComboShapeDiametre.setCurrentIndex( 0)                
 
-        # Remplissage du choix de calcul isoligne
+        # Remplissage du choix d'aide au calcul isoligne
         self.fieldComboAideIso.setCurrentIndex( 0)   
         leChoixAideIso = int( self.settings.value("Physiocap/leChoixAideIso", -1)) 
         # Cas inital
@@ -329,7 +329,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.fieldComboAideIso.addItem( \
             self.tr("Ecartement des isolignes permet le calcul du nombre d'isolignes"))
         self.fieldComboAideIso.addItem( \
-            self.tr("Fixer les min, nombre des isolignes et le max pour chaque attribut"))
+            self.tr("Utilisation des paramètres fixes (min, nombre des isolignes et max) pour chaque attribut"))
         if ( leChoixAideIso == -1):
             leChoixAideIso = 0
             self.fieldComboAideIso.setCurrentIndex( leChoixAideIso)                
@@ -489,7 +489,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.spinBoxPower.setValue( float( self.settings.value("Physiocap/powerIntra", 2 )))
         self.spinBoxPixel.setValue( float( self.settings.value("Physiocap/pixelIntra", 0.5 )))
         self.spinBoxDoubleRayon.setValue( float( self.settings.value("Physiocap/rayonIntra", 12 )))
-        self.slot_rayon()
+        self.slot_rayon_selon_SCR_LIB()
         self.spinBoxIsoMin.setValue( int( self.settings.value("Physiocap/isoMin", 1 )))
         self.spinBoxIsoMax.setValue( int( self.settings.value("Physiocap/isoMax", 1000 )))
         self.spinBoxNombreIso.setValue( int( self.settings.value("Physiocap/isoNombres", 5 )))
@@ -613,10 +613,10 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.spinBoxInterceps.valueChanged.connect( self.slot_calcul_densite)
  
         # Calcul du commentaire sur pixel et rayon en unite de carte
-        self.radioButtonSAGA.toggled.connect( self.slot_rayon)
-        #self.radioButtonGDAL.toggled.connect( self.slot_rayon)
-        self.radioButtonGPS.toggled.connect( self.slot_rayon)
-        #self.radioButtonL93.toggled.connect( self.slot_rayon)
+        self.radioButtonSAGA.toggled.connect( self.slot_rayon_selon_SCR_LIB)
+        #self.radioButtonGDAL.toggled.connect( self.slot_rayon_selon_SCR_LIB)
+        self.radioButtonGPS.toggled.connect( self.slot_rayon_selon_SCR_LIB)
+        #self.radioButtonL93.toggled.connect( self.slot_rayon_selon_SCR_LIB)
       
         # Calcul dynamique des intervale Isolignes
         self.spinBoxIsoMin.valueChanged.connect( self.slot_iso_distance)
@@ -724,8 +724,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         #   format ( inputLayer), leModeDeTrace)
 
         layer = physiocap_get_layer_by_name( inputLayer)
-        # Initialisation avec NOM_PHY
-        self.fieldComboContours.addItem( "NOM_PHY")
+        # Initialisation avec CHAMP_NOM_PHY = NOM_PHY
+        self.fieldComboContours.addItem( CHAMP_NOM_PHY)
         self.fieldComboContours.setCurrentIndex( 0)
         if layer is not None:
             # On exclut les layer qui ne sont pas de type 0 (exemple 1 raster)
@@ -753,7 +753,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                             valeur_unique = "NO" 
                             
                     # ne pas remettre NOM_PHY une deuxieme fois
-                    if valeur_unique == "YES" and nom_champ != "NOM_PHY":
+                    if valeur_unique == "YES" and nom_champ != CHAMP_NOM_PHY:
                         self.fieldComboContours.addItem( nom_champ )
                         if ( nom_champ == dernierAttribut):
                             self.fieldComboContours.setCurrentIndex( position_combo)
@@ -864,7 +864,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.groupBoxInter.setEnabled( False)
         
         # Mise à jour du commentaire pour le rayon
-        self.slot_rayon()
+        self.slot_rayon_selon_SCR_LIB()
             
     def slot_contrib_alert( self):
         """ 
@@ -912,7 +912,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         
         return physiocap_message_box( self, aText, "information")
             
-    def slot_rayon( self):
+    def slot_rayon_selon_SCR_LIB( self):
         """ 
         Selon GPS ou L93 et SAGA ou GDAL mise en place du x=commentaire pour le
         rayon en unite de carte
@@ -925,6 +925,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         
         if self.radioButtonSAGA.isChecked():
             self.spinBoxPixel.setEnabled( True)
+            self.spinBoxMultiplieRayon.setEnabled( False)
             if self.radioButtonL93.isChecked():
                 aText = self.tr( "{0} conseille un rayon d'interpolation entre 5 et 15").\
                     format( PHYSIOCAP_UNI)
@@ -936,6 +937,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 
         if self.radioButtonGDAL.isChecked():
             self.spinBoxPixel.setEnabled( False)
+            self.spinBoxMultiplieRayon.setEnabled( True)
             if self.radioButtonL93.isChecked():
                 # Proposer un texte
                 aText = self.tr( "{0} conseille un rayon d'interpolation proche de 5").\
@@ -1080,8 +1082,14 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             # forcer le nombre d'intervalle à 1
             self.spinBoxDistanceIso.setValue( 1)
             return 
+        
+        choix_aide_calcul = self.fieldComboAideIso.currentIndex()
+        if ( choix_aide_calcul == 2):
+            # TODO le cas 2 qui utilise les valeurs fixes des trois champs
+            pass
+ 
 
-        if ( self.fieldComboAideIso.currentIndex() == 0):
+        if ( choix_aide_calcul == 0):
             # du nombre d'iso on déduit l'écart
             nombre_iso = round( float ( self.spinBoxNombreIso.value())) 
             distance = max_entier - min_entier
@@ -1095,7 +1103,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
 ##                str( min_entier) + " max =" + str( max_entier) + " nombre iso =" + str( nombre_iso), leModeDeTrace)
             self.spinBoxDistanceIso.setValue( ecart_intervalle)
             return
-        if ( self.fieldComboAideIso.currentIndex() == 1):
+        if ( choix_aide_calcul == 1):
             # de l'écartentre iso on deduit nombre d'iso
             ecart_intervalle = round( float ( self.spinBoxDistanceIso.value()))
             distance = max_entier - min_entier
@@ -1110,9 +1118,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
 ##                str( min_entier) + " max =" + str( max_entier) + " nombre iso =" + str( nombre_iso), leModeDeTrace)
             self.spinBoxNombreIso.setValue( nombre_iso)                    
             return
-        
-        # TODO le cas 2 qui fixe les valeur des trois champs
-        
+               
         
     def memoriser_affichages(self):
         """ Mémoriser les choix d'affichage """        
@@ -1392,6 +1398,14 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             aText = aText + self.tr( "\nErreur bloquante sous Windows qui nécessite de créer une nouvelle instance du projet ")
             aText = aText + self.tr( " et du contour avec seulement des caractères ascii (non accentuées).")
             physiocap_error( self, aText, "CRITICAL")        
+        except physiocap_exception_attribut_multiple_incoherent as e:
+            physiocap_log_for_error( self)
+            aText = self.tr( "Les attributs fixes pour les isolignes de {0} sont incohérents.").\
+                format( e)
+            aText = aText + self.tr( "des caractères (non ascii) incompatibles avec l'interpolation SAGA.")
+            aText = aText + self.tr( "\nErreur bloquante sous Windows qui nécessite de créer une nouvelle instance du projet ")
+            aText = aText + self.tr( " et du contour avec seulement des caractères ascii (non accentuées).")
+            physiocap_error( self, aText, "CRITICAL")        
 
             
 ##        except x as e:
@@ -1406,7 +1420,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         finally:
             pass
         # Fin de capture des erreurs Physiocap        
-        physiocap_log( self.tr( "=~= {0} a terminé les interpolations intra parcelaire.").\
+        physiocap_log( self.tr( "=~= {0} a terminé toutes les interpolations intra parcelaire.").\
             format( PHYSIOCAP_UNI), leModeDeTrace, "INTRA")
 
                    
@@ -1522,7 +1536,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.checkBoxInterPasMesure.setEnabled( set_quoi)
         self.checkBoxInterSegment.setEnabled( set_quoi)
         self.checkBoxInterSegmentBrise.setEnabled( set_quoi)
-        self.groupBoxChoixAvances.setEnabled( set_quoi)
+        # la boite de choix affichage avancés
+        #self.groupBoxChoixAvances.setEnabled( set_quoi)
 
 
 

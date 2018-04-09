@@ -172,6 +172,11 @@ PARAMETER["central_meridian",3], \
 PARAMETER["false_easting",1700000], \
 PARAMETER["false_northing",4200000],UNIT["Meter",1]]'
 
+# CHAMP pour nommer les entités 
+CHAMP_NOM_PHY = "NOM_PHY"
+#CHAMP_NOM_ID = "ID_PHY"
+NOM_CHAMP_ID = "PHY_ID"
+
 # Champ des INFO DES SEGMENT FILTRE
 DATE_DEBUT = "Date debut"
 DATE_FIN = "Date fin"
@@ -265,6 +270,8 @@ class physiocap_exception_no_processing( physiocap_exception):
 class physiocap_exception_no_saga( physiocap_exception):
     pass
 class physiocap_exception_project_contour_incoherence( physiocap_exception):
+    pass
+class physiocap_exception_attribut_multiple_incoherent( physiocap_exception):
     pass
 class physiocap_exception_project_point_incoherence( physiocap_exception):
     pass

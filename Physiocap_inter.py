@@ -80,8 +80,8 @@ def physiocap_vector_type( self, vector):
         #    format( geomTypeText, geomType,  geomWkbType), TRACE_TOOLS)
         return geomTypeText, geomWkbTypeText, geomWkbType,  geomWkbMultiType  
     except:
-        physiocap_error( self, self.tr("Warning : couche (layer) {0} n'est ni (is nor) point, ni (nor) polygone").\
-            format( vector.id()))
+#        physiocap_error( self, self.tr("Warning : couche (layer) {0} n'est ni (is nor) point, ni (nor) polygone").\
+#            format( vector.id()))
         pass
         # On evite les cas imprévus
         return "Inconnu", "WkbInconnu",  None,  None
@@ -152,8 +152,9 @@ def physiocap_fill_combo_poly_or_point( self, isRoot = None, node = None ):
             elif ( type_layer == "Line"):
                 pass # cas de segments
             else:
-                physiocap_log( "- Layer de type {0} rejeté : {1} ID: ".\
-                    format( type_layer, child.name(),  child.layerId()), leModeDeTrace) 
+                pass
+#                physiocap_log( "- Layer de type {0} rejeté : {1} ID: ".\
+#                    format( type_layer, child.name(),  child.layerId()), leModeDeTrace) 
     return nombre_poly, nombre_point
 
               
@@ -175,7 +176,7 @@ def physiocap_moyenne_un_contour( laProjectionCRS, EPSG_NUMBER, nom_vignette, no
     # Prépare les attributs
     les_champs = QgsFields()
     les_champs.append( QgsField( "GID", QVariant.Int, "integer", 10))
-    les_champs.append( QgsField( "NOM_PHY", QVariant.String, "string", 25))
+    les_champs.append( QgsField( CHAMP_NOM_PHY, QVariant.String, "string", 25))
     les_champs.append( QgsField( "ID_PHY", QVariant.String, "string", 15))
     les_champs.append( QgsField( "MESURE_HA", QVariant.Double, "double", 10,1))           
     if version_3 == "YES":
@@ -640,7 +641,7 @@ def physiocap_moyennes_tous_contours( laProjectionCRS, EPSG_NUMBER,
     # Prepare les attributs
     les_champs = QgsFields()
     les_champs.append( QgsField( "GID", QVariant.Int, "integer", 10))
-    les_champs.append( QgsField( "NOM_PHY", QVariant.String, "string", 25))
+    les_champs.append( QgsField( CHAMP_NOM_PHY, QVariant.String, "string", 25))
     les_champs.append( QgsField( "ID_PHY", QVariant.String, "string", 15))
     les_champs.append( QgsField( "MESURE_HA", QVariant.Double, "double", 10,1))
     if version_3 == "YES":
@@ -1068,15 +1069,16 @@ class PhysiocapInter( QtWidgets.QDialog):
             id = id + 1
             try:
                 # A_TESTER : OK avec avec et ? sans str
-                un_nom = str( un_contour[ leChampPoly]) #get attribute of poly layer
+                #un_nom = str( un_contour[ leChampPoly]) #get attribute of poly layer
+                un_nom = un_contour[ leChampPoly] #get attribute of poly layer
             except:
-                un_nom = "PHY_ID_" + str(id)
+                un_nom = NOM_CHAMP_ID + SEPARATEUR_ + str(id)
                 pass
             
             physiocap_log ( self.tr( "{0} {1} Début Inter pour {2} >>>> ").\
                 format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI, un_nom), leModeDeTrace)
             
-            un_autre_ID = "PHY_ID" + str(id)
+            un_autre_ID = NOM_CHAMP_ID + str(id)
             geom_poly = un_contour.geometry() #get geometry of poly layer
             geomWkbType = geom_poly.wkbType()
             geomWkbMultiType = QgsWkbTypes.multiType( geomWkbType) # multiple sous processing
@@ -1201,29 +1203,33 @@ class PhysiocapInter( QtWidgets.QDialog):
                             l_autre = les_geoms_du_segment[j_points-1]
                             les_longueurs_segment.append( distancearea.measureLine( un_point, l_autre))
                             if ( i_segment > 1):
-                                if ligne_courante != None:
-                                    ligne_precedente = ligne_courante 
-                                    point_precedent =  ligne_precedente.centroid().asPoint()
-                                else:
-                                    point_precedent = None
-                                ligne_courante = QgsGeometry.fromPolylineXY( [ un_point, l_autre] )
-                                # Calcul de la distance entre ce segment et le segment précedent
-                                # TODO Comparer a distance to nearest hub
-                                # Valider aussi si pas trop de cas abérent avec les centoides
-                                # Centroide du segment courant
-                                point_actuel =  ligne_courante.centroid().asPoint()
-                                if point_precedent != None:
-#                                    physiocap_log( "Type de point precedent {0} et point courant {1}". \
-#                                        format( point_precedent,  point_actuel), leModeDeTrace)
-                                    les_distances_entre_segment.append( distancearea.measureLine( \
-                                        point_actuel, point_precedent))                                                                
-                                else:
-                                    les_distances_entre_segment.append(1)
+                                les_distances_entre_segment.append(1)
+#                                if ligne_courante != None:
+#                                    ligne_precedente = ligne_courante 
+#                                    point_precedent =  ligne_precedente.centroid().asPoint()
+#                                else:
+#                                    point_precedent = None
+#                                ligne_courante = QgsGeometry.fromPolylineXY( [ un_point, l_autre] )
+#                                # Calcul de la distance entre ce segment et le segment précedent
+#                                # TODO Comparer a distance to nearest hub
+#                                # Valider aussi si pas trop de cas abérent avec les centoides
+#                                # Centroide du segment courant
+#                                point_actuel =  ligne_courante.centroid().asPoint()
+#                                if point_precedent != None:
+##                                    physiocap_log( "Type de point precedent {0} et point courant {1}". \
+##                                        format( point_precedent,  point_actuel), leModeDeTrace)
+#                                    # TODO: trouver un algo solide
+#                                    # ne prendre que les segments valides et long
+#                                    #les_distances_entre_segment.append( distancearea.measureLine( \
+#                                        point_actuel, point_precedent))                                                                
+#                                else:
+#                                    les_distances_entre_segment.append(1)
                             else:
-                                physiocap_log( "Pas de calcul de distance : segment {0}". \
-                                    format( i_segment))
-                                # Premier segment on ne sait pas
-                                les_distances_entre_segment.append(2)
+#                                physiocap_log( "Pas de calcul de distance : segment {0}". \
+#                                    format( i_segment))
+                                # TODO: Premier segment on ne sait pas 
+                                # prendre valeur dans detail vignoble spinBoxInterrangs
+                                les_distances_entre_segment.append(1)
                             les_azimuths_segment.append( un_point.azimuth( l_autre))
                             les_dates_debut_segment.append( un_segment["DATE_DEB"])
                             les_dates_fin_segment.append( un_segment["DATE_FIN"])
