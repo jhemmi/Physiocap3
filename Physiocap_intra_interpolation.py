@@ -1105,8 +1105,8 @@ class PhysiocapIntra( QtWidgets.QDialog):
             else:
                 aText = self.tr( "=~= Aucun point dans votre contour. ")
                 aText = aText + self.tr( "Pas d'interpolation intra parcellaire.")       
-                aText = aText + self.tr( "Un changement a eu lieu depuis votre calcul inter parcellaire.")       
-                aText = aText + self.tr( "Vérifiez le champ identifiant votre contour.")       
+                aText = aText + self.tr( "\nUn changement a eu lieu depuis votre calcul inter parcellaire.")       
+                aText = aText + self.tr( "\nVérifiez le champ identifiant votre contour.")       
                 physiocap_log( aText, leModeDeTrace)
                 return physiocap_message_box( dialogue, aText, "information")
             

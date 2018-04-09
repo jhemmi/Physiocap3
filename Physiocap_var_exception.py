@@ -45,8 +45,8 @@ if MACHINE == "Linux":
 else:
     LE_MODE_PROD = "YES"
     
-# TODO: Supprimer en Prod
-LE_MODE_PROD = "NO"
+# TODO: à livraison : supprimer en Prod
+#LE_MODE_PROD = "NO"
 
 # En prod CENTROIDES vaut NO
 CENTROIDES = "NO"  # CENTROIDES YES est pour voir les centroides dans la synthese
