@@ -1037,7 +1037,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         format( PHYSIOCAP_UNI, un_nom,  id_contour), leModeDeTrace)
 
                     # Nom du Shape moyenne 
-                    nom_court_vignette = nom_noeud_arbre + NOM_MOYENNE + un_nom +  EXT_CRS_SHP     
+                    nom_court_vignette = nom_noeud_arbre + NOM_MOYENNE + physiocap_PHY_nom_entite_sans_cote(un_nom) +  EXT_CRS_SHP     
                     # Attention j'ai enleve physiocap_rename_existing_file(
                     nom_vignette = os.path.join( chemin_vignettes, nom_court_vignette)        
                                 
@@ -1050,10 +1050,12 @@ class PhysiocapIntra( QtWidgets.QDialog):
 
                     # Verifier si le point et la vignette existent
                     if not (os.path.exists( nom_vignette)):
-                        physiocap_log( self.tr( "=~= Vignette absente : pas d'interpolation"), TRACE_INTRA)
+                        physiocap_log( self.tr( "=~= {0} Vignette {1} absente : pas d'interpolation").\
+                            format( PHYSIOCAP_WARNING, un_nom ), leModeDeTrace)
                         continue
                     if not (os.path.exists( nom_point)):
-                        physiocap_log( self.tr( "=~= Points absents : pas d'interpolation"), TRACE_INTRA)
+                        physiocap_log( self.tr( "=~= {0} Points de {1} absents : pas d'interpolation").\
+                            format( PHYSIOCAP_WARNING, un_nom ), leModeDeTrace)
                         continue
                     else:
                         contour_avec_point = contour_avec_point + 1
