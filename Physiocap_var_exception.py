@@ -174,8 +174,8 @@ PARAMETER["false_northing",4200000],UNIT["Meter",1]]'
 
 # CHAMP pour nommer les entités 
 CHAMP_NOM_PHY = "NOM_PHY"
-#CHAMP_NOM_ID = "ID_PHY"
-NOM_CHAMP_ID = "PHY_ID"
+CHAMP_NOM_ID = "ID_PHY"
+NOM_CHAMP_ID = PHYSIOCAP_UNI + "_ID"
 
 # Champ des INFO DES SEGMENT FILTRE
 DATE_DEBUT = "Date debut"
@@ -216,7 +216,9 @@ NOM_INTRA = SEPARATEUR_ + "INTRA"
 REPERTOIRE_RASTERS = "INTRA_PARCELLAIRE"
 REPERTOIRE_RASTER_V3 = "Raster"
 REPERTOIRE_ISO_V3 = "Isoligne"
+ATTR_CONTINUE = ["Arrêt si existe", "Ne pas re-créer", "Nouvelle instance"]
 ATTRIBUTS_INTRA = ["DIAM", "NBSARM", "BIOM"]
+# Interpolation étendue aux nouveaux attributs de V3
 ATTRIBUTS_V3_INTRA = ["VITESSE", "ALTITUDE", "PDOP", "DISTANCE", "NBSART"]
 ATTRIBUTS_INTRA_DETAILS = ["NBSARMM2", "NBSARCEP","BIOMM2", "BIOMGM2", "BIOMGCEP"]
 # si QGIS & version 3 verifier que ces index n'ont pas bougé avec les nouveau attributs 
@@ -280,5 +282,9 @@ class physiocap_exception_windows_saga_ascii( physiocap_exception):
 class physiocap_exception_windows_value_ascii( physiocap_exception):
     pass
 class physiocap_exception_pg( physiocap_exception):
+    pass
+class physiocap_exception_raster_sans_iso( physiocap_exception):
+    pass
+class physiocap_exception_no_choix_raster_iso( physiocap_exception):
     pass
 

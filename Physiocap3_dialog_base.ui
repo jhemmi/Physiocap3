@@ -1805,7 +1805,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <rect>
         <x>10</x>
         <y>34</y>
-        <width>471</width>
+        <width>221</width>
         <height>21</height>
        </rect>
       </property>
@@ -1824,7 +1824,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="text">
-       <string>Choisir le champ à interpoler pour l'analyse Intra parcellaire</string>
+       <string>Choisir le champ à interpoler </string>
       </property>
      </widget>
      <widget class="QComboBox" name="fieldComboIntra">
@@ -1851,7 +1851,7 @@ Si vous hésitez, trouvez du conseil. </string>
      </widget>
      <widget class="QRadioButton" name="radioButtonSAGA">
       <property name="enabled">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="geometry">
        <rect>
@@ -2345,6 +2345,58 @@ Si vous hésitez, trouvez du conseil. </string>
        <string>Multiplicateur du rayon pour ellipse</string>
       </property>
      </widget>
+     <widget class="QComboBox" name="fieldComboIntraContinue">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>290</x>
+        <y>54</y>
+        <width>201</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lab_71">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>290</x>
+        <y>34</y>
+        <width>181</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+        <underline>false</underline>
+       </font>
+      </property>
+      <property name="text">
+       <string>Si interpolation existe déjà</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QCheckBox" name="checkBoxConsolidation">
      <property name="geometry">
@@ -2617,7 +2669,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <rect>
         <x>0</x>
         <y>405</y>
-        <width>261</width>
+        <width>141</width>
         <height>21</height>
        </rect>
       </property>
@@ -4554,7 +4606,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="text">
-       <string>Version 3.0.8 INTRA BETA</string>
+       <string>Version 3.0.9 INTRA BETA</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_500">

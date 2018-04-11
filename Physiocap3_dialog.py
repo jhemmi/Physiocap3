@@ -61,6 +61,7 @@ from qgis.core import (Qgis) # QgsMessageLog) #, QgsProject, QgsMapLayer)
 FORM_CLASS, _ = uic.loadUiType(os.path.join( os.path.dirname(__file__), 'Physiocap3_dialog_base.ui'))
 
 class Physiocap3Dialog( QDialog, FORM_CLASS):
+
     def __init__(self, parent=None):
         """Constructeur du dialogue Physiocap 
         Initialisation et recupération des variables, sauvegarde des parametres.
@@ -502,14 +503,14 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         else:
             self.radioButtonGDAL.setChecked(  Qt.Checked)
         
-        # On ne vérifie pas la version SAGA ici
-        # Cas Windows : on force SAGA
-        if ( MACHINE == "Windows"):
-            self.radioButtonSAGA.setChecked(  Qt.Checked)
-            # On bloque Gdal
-            self.radioButtonGDAL.setEnabled( False)
-            self.spinBoxPower.setEnabled( False)
-            self.spinBoxPixel.setEnabled( True)
+#       # On ne vérifie pas la version SAGA ici mais dans Intra
+###        # Cas Windows : on force SAGA
+###        if ( MACHINE == "Windows"):
+###            self.radioButtonSAGA.setChecked(  Qt.Checked)
+###            # On bloque Gdal
+###            self.radioButtonGDAL.setEnabled( False)
+###            self.spinBoxPower.setEnabled( False)
+###            self.spinBoxPixel.setEnabled( True)
 
         # Choix d'affichage généraux
         # Toujour le diametre qui est necessaire à "Inter"
@@ -1060,6 +1061,17 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 self.fieldComboIntraBIOM.setCurrentIndex( i)
             i=i+1
 
+        self.fieldComboIntraContinue.clear()
+        self.fieldComboIntraContinue.addItems( ATTR_CONTINUE)        
+        k=0
+        LeChoixContinue = self.fieldComboIntraContinue.currentText()
+        for monChoix in ATTR_CONTINUE:        
+            if ( monChoix == LeChoixContinue):
+                self.fieldComboIntraContinue.setCurrentIndex( k)
+            k = k+1
+        self.settings.setValue("Physiocap/continueIntra", LeChoixContinue)
+
+
     def slot_iso_distance( self):
         """ 
         Recherche du la distance optimale tenant compte de min et max et du nombre d'intervalle
@@ -1195,6 +1207,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.settings.setValue("Physiocap/attributPoly", self.fieldComboContours.currentText())
 
         self.settings.setValue("Physiocap/attributIntra", self.fieldComboIntra.currentText())
+        self.settings.setValue("Physiocap/continueIntra", self.fieldComboIntraContinue.currentText())
         self.settings.setValue("Physiocap/powerIntra", float( self.spinBoxPower.value()))
         self.settings.setValue("Physiocap/rayonIntra", float( self.spinBoxDoubleRayon.value()))
         self.settings.setValue("Physiocap/pixelIntra", float( self.spinBoxPixel.value()))
@@ -1330,7 +1343,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             return physiocap_message_box( self, aText, "information" )
         except physiocap_exception_vignette_exists as e:
             physiocap_log_for_error( self)
-            aText = self.tr( "Les moyennes IntraParcellaires dans {0} existent déjà. ").\
+            aText = self.tr( "Les interpolations IntraParcellaires dans {0} existent déjà. ").\
                 format( e)
             aText = aText + self.tr( "Vous ne pouvez pas redemander ce calcul :\n")
             aText = aText + self.tr( "- Vous pouvez détruire le groupe dans le panneau des couches\n- ou ") 
@@ -1406,8 +1419,17 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             aText = aText + self.tr( "\nErreur bloquante sous Windows qui nécessite de créer une nouvelle instance du projet ")
             aText = aText + self.tr( " et du contour avec seulement des caractères ascii (non accentuées).")
             physiocap_error( self, aText, "CRITICAL")        
-
-            
+        except physiocap_exception_raster_sans_iso as e:
+            physiocap_log_for_error( self)
+            aText = self.tr( "Le raster {0} existe sans isoligne correspondante (ou inversement). La situation n'est pas prévu et ")
+            aText = aText + self.tr( "nécessite de créer une nouvelle instance de projet Physiocap")
+            physiocap_error( self, aText, "CRITICAL")
+            return physiocap_message_box( self, aText, "information" )    
+        except physiocap_exception_no_choix_raster_iso as e:
+            physiocap_log_for_error( self)
+            aText = self.tr( "Le choix de continuation du traitement intra n'est pas prévu.")
+            physiocap_error( self, aText, "CRITICAL")
+            return physiocap_message_box( self, aText, "information" )           
 ##        except x as e:
 ##            physiocap_log_for_error( self)
 ##            aText = self.tr( "Physiocap")

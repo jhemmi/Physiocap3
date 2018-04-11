@@ -146,6 +146,15 @@ def physiocap_create_projection_file( prj_name,  laProjection):
     prj.close()
     return
     
+def  physiocap_PHY_nom_entite_sans_cote( un_nom,  mon_unique = 0):
+    if un_nom.find('\'') < 0:
+        return un_nom
+    elif mon_unique == 0:
+        return un_nom.replace("\'", "")
+    else:
+        # on veut un nom unique
+        return PHYSIOCAP_UNI + SEPARATEUR_+ un_nom.replace("\'", "") + SEPARATEUR_ + str( unique)
+        
 def physiocap_get_layer_by_URI( layerURI ):
     """Rend le layer affiché dans le projet 
     qui répond à l'URI layerURI"""

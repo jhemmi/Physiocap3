@@ -43,7 +43,7 @@
 """
 from .Physiocap_tools import physiocap_message_box,\
         physiocap_log, physiocap_error, \
-        physiocap_rename_existing_file,  \
+        physiocap_PHY_nom_entite_sans_cote, physiocap_rename_existing_file,  \
         physiocap_quelle_projection_demandee, \
         physiocap_create_projection_file, \
         physiocap_get_layer_by_URI,  physiocap_get_layer_by_ID
@@ -176,8 +176,8 @@ def physiocap_moyenne_un_contour( laProjectionCRS, EPSG_NUMBER, nom_vignette, no
     # Prépare les attributs
     les_champs = QgsFields()
     les_champs.append( QgsField( "GID", QVariant.Int, "integer", 10))
-    les_champs.append( QgsField( CHAMP_NOM_PHY, QVariant.String, "string", 25))
-    les_champs.append( QgsField( "ID_PHY", QVariant.String, "string", 15))
+    les_champs.append( QgsField( CHAMP_NOM_PHY, QVariant.String, "string", 50))
+    les_champs.append( QgsField( CHAMP_NOM_ID, QVariant.String, "string", 50))
     les_champs.append( QgsField( "MESURE_HA", QVariant.Double, "double", 10,1))           
     if version_3 == "YES":
         les_champs.append( QgsField( "0_MESURE", QVariant.Double, "double", 10,1))           
@@ -641,8 +641,8 @@ def physiocap_moyennes_tous_contours( laProjectionCRS, EPSG_NUMBER,
     # Prepare les attributs
     les_champs = QgsFields()
     les_champs.append( QgsField( "GID", QVariant.Int, "integer", 10))
-    les_champs.append( QgsField( CHAMP_NOM_PHY, QVariant.String, "string", 25))
-    les_champs.append( QgsField( "ID_PHY", QVariant.String, "string", 15))
+    les_champs.append( QgsField( CHAMP_NOM_PHY, QVariant.String, "string", 50))
+    les_champs.append( QgsField( CHAMP_NOM_ID, QVariant.String, "string", 50))
     les_champs.append( QgsField( "MESURE_HA", QVariant.Double, "double", 10,1))
     if version_3 == "YES":
         les_champs.append( QgsField( "0_MESURE", QVariant.Double, "double", 10,1))                   
@@ -1068,8 +1068,6 @@ class PhysiocapInter( QtWidgets.QDialog):
         for un_contour in vecteur_poly.getFeatures(QgsFeatureRequest().addOrderBy( leChampPoly)):
             id = id + 1
             try:
-                # A_TESTER : OK avec avec et ? sans str
-                #un_nom = str( un_contour[ leChampPoly]) #get attribute of poly layer
                 un_nom = un_contour[ leChampPoly] #get attribute of poly layer
             except:
                 un_nom = NOM_CHAMP_ID + SEPARATEUR_ + str(id)
@@ -1078,7 +1076,9 @@ class PhysiocapInter( QtWidgets.QDialog):
             physiocap_log ( self.tr( "{0} {1} Début Inter pour {2} >>>> ").\
                 format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI, un_nom), leModeDeTrace)
             
-            un_autre_ID = NOM_CHAMP_ID + str(id)
+            # Prepare un nom sans cote (requete dans gdal et nommage dans gdal)
+            un_autre_ID = physiocap_PHY_nom_entite_sans_cote( un_nom) # pour unique deuxieme parametre str(id)
+
             geom_poly = un_contour.geometry() #get geometry of poly layer
             geomWkbType = geom_poly.wkbType()
             geomWkbMultiType = QgsWkbTypes.multiType( geomWkbType) # multiple sous processing
@@ -1519,8 +1519,8 @@ class PhysiocapInter( QtWidgets.QDialog):
                 # ###################
                 # CRÉATION moyenne
                 # ################### 
-                nom_court_vignette = nom_noeud_arbre + NOM_MOYENNE + un_nom +  EXT_CRS_SHP     
-                nom_court_prj = nom_noeud_arbre + NOM_MOYENNE + un_nom  + EXT_CRS_PRJ     
+                nom_court_vignette = nom_noeud_arbre + NOM_MOYENNE + un_autre_ID +  EXT_CRS_SHP     
+                nom_court_prj = nom_noeud_arbre + NOM_MOYENNE + un_autre_ID  + EXT_CRS_PRJ     
                 #physiocap_log( "Vignette court : " + nom_court_vignette , leModeDeTrace)       
                 nom_vignette = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_vignette))        
                 nom_prj = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_prj))        
