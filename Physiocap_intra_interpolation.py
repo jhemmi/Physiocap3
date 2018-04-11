@@ -273,11 +273,9 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     # il faut creer les deux
                     nom_raster =  physiocap_rename_existing_file( le_raster_possible) # utile physiocap_rename_existing_file()
                     nom_isoligne =  physiocap_rename_existing_file( l_iso_possible) # utile physiocap_rename_existing_file()        
-        elif le_choix_INTRA_continue == 2:        
+        elif le_choix_INTRA_continue == 2 or le_choix_INTRA_continue == 0:        
             nom_raster =  physiocap_rename_existing_file( le_raster_possible) # utile physiocap_rename_existing_file()
             nom_isoligne =  physiocap_rename_existing_file( l_iso_possible) # utile physiocap_rename_existing_file()        
-        elif le_choix_INTRA_continue == 0: 
-            pass
         else:
             raise physiocap_exception_no_choix_raster_iso( le_nom_entite)
             
