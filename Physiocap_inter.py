@@ -1548,8 +1548,8 @@ class PhysiocapInter( QtWidgets.QDialog):
                 # ###################
                 # CRÉATION point
                 # ###################
-                nom_court_point = nom_noeud_arbre + NOM_POINTS + SEPARATEUR_ + un_nom + EXT_CRS_SHP     
-                nom_court_point_prj = nom_noeud_arbre + NOM_POINTS + SEPARATEUR_ + un_nom + EXT_CRS_PRJ     
+                nom_court_point = nom_noeud_arbre + NOM_POINTS + SEPARATEUR_ + un_autre_ID + EXT_CRS_SHP     
+                nom_court_point_prj = nom_noeud_arbre + NOM_POINTS + SEPARATEUR_ + un_autre_ID + EXT_CRS_PRJ     
                 nom_point = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_point))        
                 nom_point_prj = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_point_prj))        
                 
@@ -1565,8 +1565,8 @@ class PhysiocapInter( QtWidgets.QDialog):
                     # ###################
                     # CRÉATION point sans mesure
                     # ###################
-                    nom_court_sans_mesure = nom_noeud_arbre + NOM_POINTS + EXTENSION_ZERO_SEUL + SEPARATEUR_ + un_nom + EXT_CRS_SHP     
-                    nom_court_sans_mesure_prj = nom_noeud_arbre + NOM_POINTS + EXTENSION_ZERO_SEUL + SEPARATEUR_ + un_nom + EXT_CRS_PRJ     
+                    nom_court_sans_mesure = nom_noeud_arbre + NOM_POINTS + EXTENSION_ZERO_SEUL + SEPARATEUR_ + un_autre_ID + EXT_CRS_SHP     
+                    nom_court_sans_mesure_prj = nom_noeud_arbre + NOM_POINTS + EXTENSION_ZERO_SEUL + SEPARATEUR_ + un_autre_ID + EXT_CRS_PRJ     
                     nom_sans_mesure = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_sans_mesure))        
                     nom_sans_mesure_prj = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_sans_mesure_prj))        
                     
@@ -1580,8 +1580,8 @@ class PhysiocapInter( QtWidgets.QDialog):
                     # ###################
                     # CRÉATION segment droit dans contour
                     # ###################
-                    nom_court_segment = nom_noeud_arbre + NOM_SEGMENTS + SEPARATEUR_ + un_nom + EXT_CRS_SHP     
-                    nnom_court_segment_prj = nom_noeud_arbre + NOM_SEGMENTS + SEPARATEUR_ + un_nom + EXT_CRS_PRJ     
+                    nom_court_segment = nom_noeud_arbre + NOM_SEGMENTS + SEPARATEUR_ + un_autre_ID + EXT_CRS_SHP     
+                    nnom_court_segment_prj = nom_noeud_arbre + NOM_SEGMENTS + SEPARATEUR_ + un_autre_ID + EXT_CRS_PRJ     
                     nom_segment = physiocap_rename_existing_file( os.path.join( chemin_segments, nom_court_segment))        
                     nom_segment_prj = physiocap_rename_existing_file( os.path.join( chemin_segments, nnom_court_segment_prj))        
                     
@@ -1594,8 +1594,8 @@ class PhysiocapInter( QtWidgets.QDialog):
                     # ###################
                     # CRÉATION segment  brisé dans contour
                     # ###################
-                    nom_court_segment_brise = nom_noeud_arbre + NOM_SEGMENTS_DETAILS + SEPARATEUR_ + un_nom + EXT_CRS_SHP     
-                    nnom_court_segment_brise_prj = nom_noeud_arbre + NOM_SEGMENTS_DETAILS + SEPARATEUR_ + un_nom + EXT_CRS_PRJ     
+                    nom_court_segment_brise = nom_noeud_arbre + NOM_SEGMENTS_DETAILS + SEPARATEUR_ + un_autre_ID + EXT_CRS_SHP     
+                    nnom_court_segment_brise_prj = nom_noeud_arbre + NOM_SEGMENTS_DETAILS + SEPARATEUR_ + un_autre_ID + EXT_CRS_PRJ     
                     nom_segment_brise = physiocap_rename_existing_file( os.path.join( chemin_segments, nom_court_segment_brise))        
                     nom_segment_brise_prj = physiocap_rename_existing_file( os.path.join( chemin_segments, nnom_court_segment_brise_prj))        
                     

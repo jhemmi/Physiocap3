@@ -1043,7 +1043,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                                 
                     
                     # Nom point 
-                    nom_court_point = nom_noeud_arbre + NOM_POINTS + SEPARATEUR_ + un_nom + EXT_CRS_SHP     
+                    nom_court_point = nom_noeud_arbre + NOM_POINTS + SEPARATEUR_ + physiocap_PHY_nom_entite_sans_cote(un_nom) + EXT_CRS_SHP     
                     # Attention j'ai enleve physiocap_rename_existing_file(
                     nom_point = os.path.join( chemin_vignettes, nom_court_point)                    
                     #physiocap_log( "=~= Vignette court : " +  nom_court_vignette , TRACE_INTRA)  
