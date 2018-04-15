@@ -44,7 +44,8 @@
 """
 from .Physiocap_tools import physiocap_message_box,\
         physiocap_log, physiocap_error, \
-        physiocap_PHY_nom_entite_sans_cote,  physiocap_rename_existing_file, \
+        physiocap_PHY_nom_entite_sans_cote,  physiocap_nom_entite_avec_pb_caractere, \
+        physiocap_rename_existing_file, \
         physiocap_quelle_projection_demandee, \
         physiocap_get_layer_by_ID
 
@@ -171,7 +172,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
         produit_algo = None
         try:
             produit_algo = textes_sortie_algo[ nom_produit_algo]
-            physiocap_log( "={0}= texte en sortie {1}". \
+            physiocap_log( "={0}= texte en sortie \n===>>{1}<<====". \
                 format( lettre_algo, textes_sortie_algo[ nom_produit_algo]), TRACE_INTRA)
              
         except:
@@ -265,17 +266,21 @@ class PhysiocapIntra( QtWidgets.QDialog):
         if le_choix_INTRA_continue == 1:
             # on vérifie si le raster existe déjà
             if os.path.exists( le_raster_possible) and os.path.exists( l_iso_possible):
-                    return "PAS NOUVEAU", le_raster_possible, nom_court_raster, l_iso_possible, nom_court_isoligne
+                physiocap_log( self.tr( "=~= Interpolation pour {0} existe déjà. Pas de nouveau calcul").\
+                    format(  le_nom_entite), leModeDeTrace)
+                return "PAS NOUVEAU", le_raster_possible, nom_court_raster, l_iso_possible, nom_court_isoligne
             else:
                 if os.path.exists( le_raster_possible) or os.path.exists( l_iso_possible):
                     raise physiocap_exception_raster_sans_iso( le_champ_choisi + '_POUR_'+  le_nom_entite)
                 else:
                     # il faut creer les deux
-                    nom_raster =  physiocap_rename_existing_file( le_raster_possible) # utile physiocap_rename_existing_file()
-                    nom_isoligne =  physiocap_rename_existing_file( l_iso_possible) # utile physiocap_rename_existing_file()        
+                    nom_raster =  physiocap_rename_existing_file( le_raster_possible)
+                    nom_isoligne =  l_iso_possible # ? utile physiocap_rename_existing_file()        
+                    #nom_isoligne =  physiocap_rename_existing_file( l_iso_possible) # utile physiocap_rename_existing_file()        
         elif le_choix_INTRA_continue == 2 or le_choix_INTRA_continue == 0:        
-            nom_raster =  physiocap_rename_existing_file( le_raster_possible) # utile physiocap_rename_existing_file()
-            nom_isoligne =  physiocap_rename_existing_file( l_iso_possible) # utile physiocap_rename_existing_file()        
+            nom_raster =  physiocap_rename_existing_file( le_raster_possible)
+            nom_isoligne =  l_iso_possible # ? utile physiocap_rename_existing_file()        
+            #nom_isoligne =  physiocap_rename_existing_file( l_iso_possible) # utile physiocap_rename_existing_file()        
         else:
             raise physiocap_exception_no_choix_raster_iso( le_nom_entite)
             
@@ -856,7 +861,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
             physiocap_log( self.tr( "=~= {0} Champ == {1} est le {2} parmi {3} ==").\
                 format( PHYSIOCAP_UNI, le_champ_choisi, idx, len( les_champs_INTRA_choisis)), leModeDeTrace)
 
-            # Si plusieurs champs choisis : mettre à jour les parametres depuis affichage
+            # Si plusieurs champs choisis : récupérer le parametres fixe présent Affichage
             if len( les_champs_INTRA_choisis) > 1:
                 # Forcer pour éviter le calcul d'aide
                 dialogue.fieldComboAideIso.setCurrentIndex( 2) 
@@ -1020,10 +1025,9 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         ( dialogue.checkBoxIntraImages.isChecked())):        
               
                 # On tourne sur les contours qui ont été crée par Inter
-                # On passe sur les differents contours de chaque parcelle
-                # A_TESTER: Apres test Enumeration vers id_contour OK propager aux boucles for
-                # Attention au test sur id_contour > 0 ne marchait plus
-                for id_contour, un_contour in enumerate( vecteur_poly.getFeatures()): #iterate poly features
+                id_contour = 0
+                for un_contour in vecteur_poly.getFeatures(): #iterate poly features
+                    id_contour = id_contour + 1
                     contours_possibles = contours_possibles + 1
                     try:
                         # A_TESTER: sans str
@@ -1033,6 +1037,11 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         un_nom = NOM_CHAMP_ID + SEPARATEUR_ + str(id_contour)
                         pass
 
+                    if physiocap_nom_entite_avec_pb_caractere( un_nom,  choix_interpolation):
+                        # ASSERT un nom contient un caractère non supporté par GDAL
+                        physiocap_log ( self.tr( "=~= {0} Pas d'interpolation de {1}>>>>").\
+                        format( PHYSIOCAP_UNI, un_nom), leModeDeTrace)
+                        raise physiocap_exception_probleme_caractere_librairie( [un_nom, choix_interpolation])
                     physiocap_log ( self.tr( "=~= {0} Début d'interpolation de {1} index {2} >>>>").\
                         format( PHYSIOCAP_UNI, un_nom,  id_contour), leModeDeTrace)
 
@@ -1106,7 +1115,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     dialogue.progressBarIntra.setValue( positionBar)
                     physiocap_log( "=~= Barre {0}".format( positionBar) , TRACE_INTRA)                     
                        
-                    if ( id_contour >=  0 ):                                            
+                    if ( id_contour >  0 ):                                            
                         # Affichage dans panneau QGIS                           
                         if (( dialogue.checkBoxIntraIsos.isChecked()) or 
                             ( dialogue.checkBoxIntraImages.isChecked())):
@@ -1130,6 +1139,8 @@ class PhysiocapIntra( QtWidgets.QDialog):
                             if ( dialogue.checkBoxIntraImages.isChecked()):
                                 afficheRaster = "YES"
                                 if nouveau == "NOUVEAUX":
+                                    physiocap_log ( self.tr( "=~= Affichage résultat d'interpolation de {0} <<<<").\
+                                        format( un_nom), "OGR")
                                     physiocap_affiche_raster_iso( \
                                     nom_raster_final, nom_court_raster, le_template_raster, afficheRaster,
                                     nom_iso_final, nom_court_isoligne, le_template_isolignes, afficheIso,

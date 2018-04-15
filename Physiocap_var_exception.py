@@ -57,6 +57,7 @@ TRACE_PAS  = "Pas de trace"
 MODE_TRACE = [ TRACE_TOUT,  TRACE_MINI, TRACE_PAS]
 TRACE_INTRA  = "Intra"
 TRACE_TOOLS  = "Tools"
+TRACE_MIN_MAX  = "Min-Max"
 TRACE_SEGMENT  = "Segment"
 TRACE_SEGMENT_DECOUPES  = "Découpe"
 TRACE_PG  = "POSTGRES"
@@ -216,7 +217,9 @@ NOM_INTRA = SEPARATEUR_ + "INTRA"
 REPERTOIRE_RASTERS = "INTRA_PARCELLAIRE"
 REPERTOIRE_RASTER_V3 = "Raster"
 REPERTOIRE_ISO_V3 = "Isoligne"
-ATTR_CONTINUE = ["Arrêt si existe", "Ne pas re-créer", "Nouvelle instance"]
+ATTR_CONTINUE = ["Arrêt si une interpolation existe", \
+    "Ne pas re-créer si une interpolation existe dejà", \
+    "Nouveau groupe d'interpolation"]    # Ceci evite les creations de [1] au niveaux des rasters ou iso
 ATTRIBUTS_INTRA = ["DIAM", "NBSARM", "BIOM"]
 # Interpolation étendue aux nouveaux attributs de V3
 ATTRIBUTS_V3_INTRA = ["VITESSE", "ALTITUDE", "PDOP", "DISTANCE", "NBSART"]
@@ -286,5 +289,9 @@ class physiocap_exception_pg( physiocap_exception):
 class physiocap_exception_raster_sans_iso( physiocap_exception):
     pass
 class physiocap_exception_no_choix_raster_iso( physiocap_exception):
+    pass
+class physiocap_exception_probleme_caractere_librairie( physiocap_exception):
+    pass
+class physiocap_exception_choix_iso_impossible( physiocap_exception):
     pass
 

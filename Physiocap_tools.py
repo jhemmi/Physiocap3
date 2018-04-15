@@ -147,14 +147,28 @@ def physiocap_create_projection_file( prj_name,  laProjection):
     return
     
 def  physiocap_PHY_nom_entite_sans_cote( un_nom,  mon_unique = 0):
-    if un_nom.find('\'') < 0:
-        return un_nom
-    elif mon_unique == 0:
-        return un_nom.replace("\'", "")
-    else:
-        # on veut un nom unique
-        return PHYSIOCAP_UNI + SEPARATEUR_+ un_nom.replace("\'", "") + SEPARATEUR_ + str( unique)
-        
+    """Change la chaine un_nom selon qu'elle contient ou non le caractère '
+    peut creer aussi un champ unique"""
+    # Peut ne rien faire
+    return un_nom
+#    if un_nom.find('\'') < 0:
+#        return un_nom
+#    elif mon_unique == 0:
+#        return un_nom.replace("\'", "")
+#    else:
+#        # on veut un nom unique
+#        return PHYSIOCAP_UNI + SEPARATEUR_+ un_nom.replace("\'", "") + SEPARATEUR_ + str( unique)
+     
+def  physiocap_nom_entite_avec_pb_caractere( un_nom, un_texte = "GDAL"):
+    """rend True si la chaine un_nom contient un caractère ' problematique pour la librairie : un_texte"""
+    if un_texte == "GDAL":
+        # Tester si une cote '
+        if un_nom.find('\'') >= 0:
+            return True
+    # fin c'est OK on a rien trouvé
+    return False
+    
+       
 def physiocap_get_layer_by_URI( layerURI ):
     """Rend le layer affiché dans le projet 
     qui répond à l'URI layerURI"""

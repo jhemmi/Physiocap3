@@ -1804,7 +1804,7 @@ Si vous hésitez, trouvez du conseil. </string>
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>34</y>
+        <y>30</y>
         <width>221</width>
         <height>21</height>
        </rect>
@@ -1833,9 +1833,9 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>54</y>
-        <width>201</width>
+        <x>0</x>
+        <y>50</y>
+        <width>191</width>
         <height>20</height>
        </rect>
       </property>
@@ -1855,8 +1855,8 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="geometry">
        <rect>
-        <x>280</x>
-        <y>10</y>
+        <x>310</x>
+        <y>0</y>
         <width>71</width>
         <height>26</height>
        </rect>
@@ -1874,8 +1874,8 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QRadioButton" name="radioButtonGDAL">
       <property name="geometry">
        <rect>
-        <x>370</x>
-        <y>10</y>
+        <x>390</x>
+        <y>0</y>
         <width>71</width>
         <height>26</height>
        </rect>
@@ -1893,9 +1893,9 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QLabel" name="lab_79">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>301</width>
+        <x>0</x>
+        <y>0</y>
+        <width>281</width>
         <height>21</height>
        </rect>
       </property>
@@ -2345,57 +2345,91 @@ Si vous hésitez, trouvez du conseil. </string>
        <string>Multiplicateur du rayon pour ellipse</string>
       </property>
      </widget>
-     <widget class="QComboBox" name="fieldComboIntraContinue">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
+     <widget class="QGroupBox" name="groupBoxArret">
       <property name="geometry">
        <rect>
-        <x>290</x>
-        <y>54</y>
-        <width>201</width>
-        <height>20</height>
+        <x>230</x>
+        <y>30</y>
+        <width>271</width>
+        <height>61</height>
        </rect>
       </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
+      <property name="title">
+       <string/>
       </property>
-      <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lab_71">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>290</x>
-        <y>34</y>
-        <width>181</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>10</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-        <underline>false</underline>
-       </font>
-      </property>
-      <property name="text">
-       <string>Si interpolation existe déjà</string>
-      </property>
+      <widget class="QComboBox" name="fieldComboIntraContinue">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>40</y>
+         <width>251</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="lab_71">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>181</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+         <underline>false</underline>
+        </font>
+       </property>
+       <property name="text">
+        <string>Si interpolation existe déjà</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBoxArret">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>0</y>
+         <width>221</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#4e9a06;&quot;&gt;Cette option évite de relancer un traitement déjà effectué dans le même contexte.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>Arret si le groupe existe</string>
+       </property>
+      </widget>
      </widget>
     </widget>
     <widget class="QCheckBox" name="checkBoxConsolidation">
@@ -4606,7 +4640,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="text">
-       <string>Version 3.0.9 INTRA BETA</string>
+       <string>Version 3.0.9 JHJH INTRA BETA</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_500">

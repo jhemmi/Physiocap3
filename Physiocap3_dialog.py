@@ -98,8 +98,10 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 if ( modeTrace == leModeDeTrace):
                     self.fieldComboModeTrace.setCurrentIndex( idx)
 
-         
+        
         #physiocap_log( "Répertoire de QGIS : " +  self.gis_dir, leModeDeTrace)
+        physiocap_log( "Répertoire des plugins ou extensions : " +  self.plugins_dir, leModeDeTrace)
+        physiocap_log( "Répertoire des plugins ou extensions : " +  self.plugins_dir, TRACE_TOOLS)
        
         # Slot for boutons : ces deux sont déjà sont dans UI
         ##self.buttonBox.button( QDialogButtonBox.Ok ).pressed.connect(self.accept)
@@ -131,6 +133,9 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Intra        
         self.comboBoxPoints.currentIndexChanged[int].connect( self.slot_maj_points_choix_inter_intra )
         self.fieldComboIntra.currentIndexChanged[int].connect( self.slot_min_max_champ_intra )
+        self.fieldComboIntraDIAM.currentIndexChanged[int].connect( self.slot_DIAM_min_max_champ_intra )
+        self.fieldComboIntraSARM.currentIndexChanged[int].connect( self.slot_SARM_min_max_champ_intra )
+        self.fieldComboIntraBIOM.currentIndexChanged[int].connect( self.slot_BIOM_min_max_champ_intra )
 #WARNING: Appel recursif infini problématique : il faut trouver un autre refresh : 
 #                       choix details vignoble
 #                       choix calcul io 
@@ -658,32 +663,107 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
     # ################
 
     # FIELDS
+    def slot_DIAM_min_max_champ_intra( self ):
+        """ Vérifie si min et max du choix fixe DIAM sont cohérents"""
+        mon_champ = self.fieldComboIntraDIAM.currentText()
+        min_entier = round( float ( self.spinBoxIsoMin_Fixe_DIAM.value()))
+        le_max = float ( self.spinBoxIsoMax_Fixe_DIAM.value())      
+        max_entier = round( le_max)
+        if (min_entier >= max_entier):
+            aText = self.tr( "Votre minimum pour {0} ne doit pas être plus grand que votre maximum".\
+                format( mon_champ))
+            return physiocap_message_box( self, aText, "information")              
+        return
+    def slot_SARM_min_max_champ_intra( self ):
+        """ Vérifie si min et max du choix fixe SARM sont cohérents"""
+        mon_champ = self.fieldComboIntraSARM.currentText()
+        min_entier = round( float ( self.spinBoxIsoMin_Fixe_SARM.value()))
+        le_max = float ( self.spinBoxIsoMax_Fixe_SARM.value())      
+        max_entier = round( le_max)
+        if (min_entier >= max_entier):
+            aText = self.tr( "Votre minimum pour {0} ne doit pas être plus grand que votre maximum".\
+                format( mon_champ))
+            return physiocap_message_box( self, aText, "information")              
+        return
+    def slot_BIOM_min_max_champ_intra( self ):
+        """ Vérifie si min et max du choix fixe BIOM sont cohérents"""
+        mon_champ = self.fieldComboIntraBIOM.currentText()
+        min_entier = round( float ( self.spinBoxIsoMin_Fixe_BIOM.value()))
+        le_max = float ( self.spinBoxIsoMax_Fixe_BIOM.value())      
+        max_entier = round( le_max)
+        if (min_entier >= max_entier):
+            aText = self.tr( "Votre minimum pour {0} ne doit pas être plus grand que votre maximum".\
+                format( mon_champ))
+            return physiocap_message_box( self, aText, "information")              
+        return
+        
     def slot_min_max_champ_intra( self ):
-        """ Search min max of attribut ComboIntra in the current vector comboPoints"""
+        """ Recherche et mise à jour min max de l'attribut ComboIntra dans le vecteur comboPoints"""
         nom_attribut = self.fieldComboIntra.currentText()
+        choix_aide_calcul = self.fieldComboAideIso.currentIndex()
+        leModeDeTrace = self.fieldComboModeTrace.currentText()
+        # Remettre le bouton intra à enable
+        self.ButtonIntra.setEnabled( True)
+        
         # Si plusieurs champs à interpoler, pas de calcul de min max 
         # Prendre les min spinBoxIsoMin_Fixe_DIAM et max spinBoxIsoMAX_Fixe_DIAM et 
         # Griser les choix min max
         decoupage = nom_attribut.split( SEPARATEUR_NOEUD)
         if len( decoupage) > 2:
-            physiocap_log("Attribut pour Intra à découper {0}".format( decoupage) , TRACE_TOOLS)
+            if ( choix_aide_calcul != 2):
+                physiocap_log("Attribut pour Intra à découper {0}. {1} force le choix le la méthode de calcul des isolignes ".\
+                    format( decoupage,  PHYSIOCAP_UNI) , leModeDeTrace)
+                self.fieldComboAideIso.setCurrentIndex( 2)   
+            else:
+                physiocap_log("Attribut pour Intra à découper {0}.".\
+                    format( decoupage) , leModeDeTrace)                
             self.spinBoxIsoMin.setValue( -999999)
             self.spinBoxIsoMax.setValue( int( self.spinBoxIsoMax_Fixe_DIAM.value()))
             self.spinBoxIsoMin.setValue( int( self.spinBoxIsoMin_Fixe_DIAM.value()))
-            self.spinBoxNombreIso.setValue( int( self.spinBoxDistanceIso_Fixe_DIAM.value()))
+            self.spinBoxDistanceIso.setValue( int( self.spinBoxDistanceIso_Fixe_DIAM.value()))
             self.spinBoxIsoMin.setEnabled( False)
             self.spinBoxIsoMax.setEnabled( False)
             self.spinBoxDistanceIso.setEnabled( False)
             self.spinBoxNombreIso.setEnabled( False)
             return
+        elif ( choix_aide_calcul == 2):
+            if nom_attribut == self.fieldComboIntraDIAM.currentText():
+                self.spinBoxIsoMin.setValue( -999999)
+                self.spinBoxIsoMax.setValue( int( self.spinBoxIsoMax_Fixe_DIAM.value()))
+                self.spinBoxIsoMin.setValue( int( self.spinBoxIsoMin_Fixe_DIAM.value()))
+                self.spinBoxDistanceIso.setValue( int( self.spinBoxDistanceIso_Fixe_DIAM.value()))
+                return
+            elif nom_attribut == self.fieldComboIntraSARM.currentText():
+                self.spinBoxIsoMin.setValue( -999999)
+                self.spinBoxIsoMax.setValue( int( self.spinBoxIsoMax_Fixe_SARM.value()))
+                self.spinBoxIsoMin.setValue( int( self.spinBoxIsoMin_Fixe_SARM.value()))
+                self.spinBoxDistanceIso.setValue( int( self.spinBoxDistanceIso_Fixe_SARM.value()))
+                return
+            elif nom_attribut == self.fieldComboIntraBIOM.currentText():
+                self.spinBoxIsoMin.setValue( -999999)
+                self.spinBoxIsoMax.setValue( int( self.spinBoxIsoMax_Fixe_BIOM.value()))
+                self.spinBoxIsoMin.setValue( int( self.spinBoxIsoMin_Fixe_BIOM.value()))
+                self.spinBoxDistanceIso.setValue( int( self.spinBoxDistanceIso_Fixe_BIOM.value()))
+                return
+            else:
+                aText = self.tr( "L'attribut {0} n'est pas l'un des trois champs à interpoler dont les choix sont fixés dans l'onglet Affichage. ").\
+                format( nom_attribut)
+                aText = aText + \
+                    self.tr( "Cette interpolation n'est possible quand modifiant votre méthode d'aide au calcul des isolignes. ")
+                aText = aText + \
+                    self.tr( "Vous pouvez aussi changer d'attribut à interpoler.")
+                physiocap_error( self, aText, "CRITICAL")
+                # Bloquer la possibilité de lancer intra
+                self.ButtonIntra.setEnabled( False)
+                return physiocap_message_box( self, aText, "information")
+                #raise physiocap_exception_choix_iso_impossible( nom_attribut)
         else:
-            self.spinBoxIsoMin.setEnabled( True)
-            self.spinBoxIsoMax.setEnabled( True)
+#            self.spinBoxIsoMin.setEnabled( True)
+#            self.spinBoxIsoMax.setEnabled( True)
             self.slot_bascule_aide_iso()
 
         max_attribut = -99999
         min_attribut = 99999
-        leModeDeTrace = self.fieldComboModeTrace.currentText()
         #physiocap_log("Attribut pour Intra >{0}".format( nom_attribut) , TRACE_TOOLS)
         nom_complet_point = self.comboBoxPoints.currentText().split( SEPARATEUR_NOEUD)
         if (len( nom_complet_point) !=2):
@@ -701,10 +781,10 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 min_attribut = monProvider.minimumValue( index_attribut)
             except:
                 physiocap_log_for_error( self)
-                aText = self.tr( "L'attribut {0} n'existe pas dans les données à disposition. ").\
+                aText = self.tr( "L'attribut {0} n'existe pas dans les données à disposition.").\
                 format( nom_attribut)
                 aText = aText + \
-                    self.tr( "L'interpolation n'est pas possible. Recréer un nouveau projet Physiocap.")
+                    self.tr( "Cette interpolation n'est pas possible. Recréer un nouveau projet Physiocap.")
                 physiocap_error( self, aText, "CRITICAL")
                 return physiocap_message_box( self, aText, "information")
             
@@ -1075,7 +1155,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
     def slot_iso_distance( self):
         """ 
         Recherche du la distance optimale tenant compte de min et max et du nombre d'intervalle
-        si erreur rend 1 
         """
         # retrouve sans QT
         #leModeDeTrace = self.fieldComboModeTrace.currentText()
@@ -1101,7 +1180,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             pass
  
 
-        if ( choix_aide_calcul == 0):
+        if ( choix_aide_calcul == 0) or ( choix_aide_calcul == 2):
             # du nombre d'iso on déduit l'écart
             nombre_iso = round( float ( self.spinBoxNombreIso.value())) 
             distance = max_entier - min_entier
@@ -1131,6 +1210,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.spinBoxNombreIso.setValue( nombre_iso)                    
             return
                
+        return
         
     def memoriser_affichages(self):
         """ Mémoriser les choix d'affichage """        
@@ -1345,8 +1425,9 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             physiocap_log_for_error( self)
             aText = self.tr( "Les interpolations IntraParcellaires dans {0} existent déjà. ").\
                 format( e)
-            aText = aText + self.tr( "Vous ne pouvez pas redemander ce calcul :\n")
+            aText = aText + self.tr( "Vous ne pouvez pas redemander ce calcul d'interpolation :\n")
             aText = aText + self.tr( "- Vous pouvez détruire le groupe dans le panneau des couches\n- ou ") 
+            aText = aText + self.tr( '- Décocher le choix "Arrêt si groupe existe"  \n- ou ') 
             aText = aText + self.tr( "créer une nouvelle instance de projet Physiocap")
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
@@ -1429,7 +1510,16 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             physiocap_log_for_error( self)
             aText = self.tr( "Le choix de continuation du traitement intra n'est pas prévu.")
             physiocap_error( self, aText, "CRITICAL")
-            return physiocap_message_box( self, aText, "information" )           
+            return physiocap_message_box( self, aText, "information" ) 
+        except physiocap_exception_probleme_caractere_librairie as e:
+            e1, e2 = e
+            physiocap_log_for_error( self)
+            aText = self.tr( "Le nom du contour {0} contient un caratère (parmi ',PHYSIOCAP_UNI) non supporté par la librairie {1}."). \
+            format( e1, e2)
+            aText = aText + self.tr( "Modifiez ce nom en supprimant ce caractère de vos contours et relancez les traitements inter et/ou intra.")
+            physiocap_error( self, aText, "CRITICAL")
+            return physiocap_message_box( self, aText, "information" )
+
 ##        except x as e:
 ##            physiocap_log_for_error( self)
 ##            aText = self.tr( "Physiocap")
@@ -1480,8 +1570,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 format( e)
             physiocap_log(aText1, leModeDeTrace,  "information")
             physiocap_log_for_error( self)
-            aText = aText1 + self.tr( "Vous ne pouvez pas redemander ce calcul : vous devez détruire le groupe ") 
-            aText = aText + self.tr( "ou mieux créer un nouveau projet Physiocap")
+            aText = aText1 + self.tr( "Vous ne pouvez pas redemander ce calcul Inter : vous devez détruire le groupe ") 
+            aText = aText + self.tr( "ou créer une nouvelle instance du projet Physiocap")
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
         except physiocap_exception_points_invalid as e:
