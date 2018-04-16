@@ -108,7 +108,10 @@ def physiocap_log( aText, modeTrace = TRACE_PAS,  level = "INFO"):
             if LE_MODE_PROD == "YES":
                 pass
             else:
-                journal_nom = "{0} {1}".format( PHYSIOCAP_UNI, modeTrace)
+                if modeTrace in ["OGR"]:
+                    journal_nom = modeTrace
+                else:
+                    journal_nom = "{0} {1}".format( PHYSIOCAP_UNI, modeTrace)
                 QgsMessageLog.logMessage( aText, journal_nom, Qgis.Info)
         else:
             # Cas général

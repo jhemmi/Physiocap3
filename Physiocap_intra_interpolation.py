@@ -263,7 +263,17 @@ class PhysiocapIntra( QtWidgets.QDialog):
  
         le_raster_possible = os.path.join( chemin_raster, nom_court_raster) 
         l_iso_possible = os.path.join( chemin_iso, nom_court_isoligne)
-        if le_choix_INTRA_continue == 1:
+        if le_choix_INTRA_continue == 0:
+            # CAS 0 : Arrêt si une interpolation existe
+            if os.path.exists( le_raster_possible) or os.path.exists( l_iso_possible):
+                raise physiocap_exception_raster_ou_iso_existe_deja( le_champ_choisi + ' pour ' +  le_nom_entite)  
+            else:
+                # il faut creer les deux
+                nom_raster =  physiocap_rename_existing_file( le_raster_possible)
+                nom_isoligne =  l_iso_possible # ? utile physiocap_rename_existing_file()
+        
+        elif le_choix_INTRA_continue == 1:
+            # CAS 1 : Ne pas re-créer 
             # on vérifie si le raster existe déjà
             if os.path.exists( le_raster_possible) and os.path.exists( l_iso_possible):
                 physiocap_log( self.tr( "=~= Interpolation pour {0} existe déjà. Pas de nouveau calcul").\
@@ -271,16 +281,25 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 return "PAS NOUVEAU", le_raster_possible, nom_court_raster, l_iso_possible, nom_court_isoligne
             else:
                 if os.path.exists( le_raster_possible) or os.path.exists( l_iso_possible):
-                    raise physiocap_exception_raster_sans_iso( le_champ_choisi + '_POUR_'+  le_nom_entite)
+                    if os.path.exists( le_raster_possible):
+                        physiocap_log( self.tr( "=~= raster existe {0}").\
+                            format( le_raster_possible), leModeDeTrace)
+                    else:
+                        physiocap_log( self.tr( "=~= pas de raster "), leModeDeTrace)
+                    if os.path.exists( l_iso_possible):
+                        physiocap_log( self.tr( "=~= l'iso existe {0}").\
+                            format( l_iso_possible), leModeDeTrace)
+                    else:
+                        physiocap_log( self.tr( "=~= pas l'iso "), leModeDeTrace)
+                        
+                    raise physiocap_exception_raster_sans_iso( le_champ_choisi  + ' pour ' +  le_nom_entite)
                 else:
                     # il faut creer les deux
                     nom_raster =  physiocap_rename_existing_file( le_raster_possible)
                     nom_isoligne =  l_iso_possible # ? utile physiocap_rename_existing_file()        
                     #nom_isoligne =  physiocap_rename_existing_file( l_iso_possible) # utile physiocap_rename_existing_file()        
-        elif le_choix_INTRA_continue == 2 or le_choix_INTRA_continue == 0:        
-            nom_raster =  physiocap_rename_existing_file( le_raster_possible)
-            nom_isoligne =  l_iso_possible # ? utile physiocap_rename_existing_file()        
-            #nom_isoligne =  physiocap_rename_existing_file( l_iso_possible) # utile physiocap_rename_existing_file()        
+#        elif le_choix_INTRA_continue == 2:
+#            # CAS 2 : Recreer de nouvelle instance  
         else:
             raise physiocap_exception_no_choix_raster_iso( le_nom_entite)
             
@@ -801,8 +820,13 @@ class PhysiocapIntra( QtWidgets.QDialog):
         les_champs_INTRA_choisis = dialogue.fieldComboIntra.currentText().split( SEPARATEUR_NOEUD)
         physiocap_log( self.tr( "=~= Les champs à traiter {0}". \
             format( les_champs_INTRA_choisis)), TRACE_INTRA)
-        le_choix_INTRA_continue = dialogue.fieldComboIntraContinue.currentIndex()
-
+        arret_groupe_intra = "NO"
+        if dialogue.checkBoxArret.isChecked():
+            arret_groupe_intra = "YES"
+            le_choix_INTRA_continue = 0
+        else:
+            le_choix_INTRA_continue = dialogue.fieldComboIntraContinue.currentIndex()
+            
         # Création du REP RASTER et ISOLIGNES
         # Test selon Consolidation
         if (consolidation == "YES"):
@@ -859,7 +883,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
         for idx, le_champ_choisi in enumerate( les_champs_INTRA_choisis):
             # Pour chaque attribut à interpoler
             physiocap_log( self.tr( "=~= {0} Champ == {1} est le {2} parmi {3} ==").\
-                format( PHYSIOCAP_UNI, le_champ_choisi, idx, len( les_champs_INTRA_choisis)), leModeDeTrace)
+                format( PHYSIOCAP_UNI, le_champ_choisi, idx+1, len( les_champs_INTRA_choisis)), leModeDeTrace)
 
             # Si plusieurs champs choisis : récupérer le parametres fixe présent Affichage
             if len( les_champs_INTRA_choisis) > 1:
@@ -1002,7 +1026,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     if ( vignette_existante == None ):
                         vignette_group_intra = un_groupe.addGroup( vignette_projet)
                     else:
-                        if le_choix_INTRA_continue == 0:
+                        if arret_groupe_intra == "YES":
                             # Si vignette preexiste, on ne recommence pas
                             raise physiocap_exception_vignette_exists( vignette_projet) 
 
@@ -1041,7 +1065,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         # ASSERT un nom contient un caractère non supporté par GDAL
                         physiocap_log ( self.tr( "=~= {0} Pas d'interpolation de {1}>>>>").\
                         format( PHYSIOCAP_UNI, un_nom), leModeDeTrace)
-                        raise physiocap_exception_probleme_caractere_librairie( [un_nom, choix_interpolation])
+                        raise physiocap_exception_probleme_caractere_librairie( un_nom)
                     physiocap_log ( self.tr( "=~= {0} Début d'interpolation de {1} index {2} >>>>").\
                         format( PHYSIOCAP_UNI, un_nom,  id_contour), leModeDeTrace)
 
@@ -1081,7 +1105,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                             if ( vignette_existante == None ):
                                 vignette_group_intra = un_groupe.addGroup( vignette_projet)
                             else:
-                                if le_choix_INTRA_continue == 0:
+                                if arret_groupe_intra == "YES":
                                     # Si vignette preexiste, on ne recommence pas
                                     raise physiocap_exception_vignette_exists( vignette_projet)            
                     try:
@@ -1153,8 +1177,9 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     format( str(contour_avec_point), str( contours_possibles)), leModeDeTrace)
             else:
                 aText = self.tr( "=~= Aucun point dans votre contour. ")
-                aText = aText + self.tr( "Pas d'interpolation intra parcellaire.")       
-                aText = aText + self.tr( "\nUn changement a eu lieu depuis votre calcul inter parcellaire.")       
+                aText = aText + self.tr( "Pas d'interpolation intra parcellaire. ")       
+                aText = aText + self.tr( "Un changement a eu lieu depuis votre calcul inter parcellaire.")       
+                aText = aText + self.tr( "\nVérifiez votre choix de jeu de mesures.")       
                 aText = aText + self.tr( "\nVérifiez le champ identifiant votre contour.")       
                 physiocap_log( aText, leModeDeTrace)
                 return physiocap_message_box( dialogue, aText, "information")

@@ -218,8 +218,8 @@ REPERTOIRE_RASTERS = "INTRA_PARCELLAIRE"
 REPERTOIRE_RASTER_V3 = "Raster"
 REPERTOIRE_ISO_V3 = "Isoligne"
 ATTR_CONTINUE = ["Arrêt si une interpolation existe", \
-    "Ne pas re-créer si une interpolation existe dejà", \
-    "Nouveau groupe d'interpolation"]    # Ceci evite les creations de [1] au niveaux des rasters ou iso
+    "Ne pas re-créer si une interpolation existe dejà"] #, \
+  #  "Nouveau groupe d'interpolation"]    # Ceci evite les creations de [1] au niveaux des rasters ou iso
 ATTRIBUTS_INTRA = ["DIAM", "NBSARM", "BIOM"]
 # Interpolation étendue aux nouveaux attributs de V3
 ATTRIBUTS_V3_INTRA = ["VITESSE", "ALTITUDE", "PDOP", "DISTANCE", "NBSART"]
@@ -294,4 +294,5 @@ class physiocap_exception_probleme_caractere_librairie( physiocap_exception):
     pass
 class physiocap_exception_choix_iso_impossible( physiocap_exception):
     pass
-
+class physiocap_exception_raster_ou_iso_existe_deja( physiocap_exception):
+    pass

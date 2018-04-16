@@ -31,6 +31,7 @@ Physiocap_dialog_base.ui_OK*
 Physiocap*.zip
 Makefile~
 test/Physiocap.conf
+test/Physiocap3.conf
 i18n/bak*
 Sauve_1.8*/
 modeleQgis/V2/*

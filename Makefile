@@ -82,8 +82,8 @@ HELP_FILES = $(HELP)/index.html $(HELP)/Histo_non_calcule.png \
     $(HELP)/Logo_MHCS.png $(HELP)/Logo_VCP.png $(HELP)/Logo_TAITTINGER.png
     
     
-CONF_TARGET = $(HOME)/.config/Physiocap/Physiocap.conf
-CONF_MODEL = test/Physiocap.conf
+CONF_TARGET = $(HOME)/.config/Physiocap/Physiocap3.conf
+CONF_MODEL = test/Physiocap3.conf
 CONF_SAVE = $(CONF_TARGET).sauve
 
 TEMPLATE = modeleQgis
