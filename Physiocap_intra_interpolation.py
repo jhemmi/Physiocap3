@@ -292,7 +292,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     else:
                         physiocap_log( self.tr( "=~= pas l'iso "), leModeDeTrace)
                         
-                    raise physiocap_exception_raster_sans_iso( le_champ_choisi  + ' pour ' +  le_nom_entite)
+                    raise physiocap_exception_raster_sans_iso( le_champ_choisi  + ' pour jhjh ' +  le_nom_entite)
                 else:
                     # il faut creer les deux
                     nom_raster =  physiocap_rename_existing_file( le_raster_possible)
