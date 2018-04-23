@@ -19,7 +19,7 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>260</x>
+     <x>210</x>
      <y>710</y>
      <width>211</width>
      <height>31</height>
@@ -93,7 +93,7 @@
     <enum>QTabWidget::North</enum>
    </property>
    <property name="currentIndex">
-    <number>3</number>
+    <number>5</number>
    </property>
    <property name="movable">
     <bool>true</bool>
