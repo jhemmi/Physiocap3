@@ -145,6 +145,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
 #        self.fieldComboIntraBIOM.currentIndexChanged[int].connect( self.slot_INTRA_interpolation_parcelles )
         self.ButtonIntra.pressed.connect(self.slot_INTRA_interpolation_parcelles)
         self.groupBoxIntra.setEnabled( False)
+        self.groupBoxArret.setEnabled( False)
+        self.groupBoxMethode.setEnabled( False)
         self.ButtonIntra.setEnabled( False)
         
         # Affichage
@@ -933,12 +935,16 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 if (os.path.exists( chemin_inter)):
                     # On aiguille vers Intra
                     self.groupBoxIntra.setEnabled( True)
+                    self.groupBoxArret.setEnabled( True)
+                    self.groupBoxMethode.setEnabled( True)
                     self.ButtonIntra.setEnabled( True)
                     self.ButtonInter.setEnabled( False)
 
                 else:
                     # On aiguille vers Inter
                     self.groupBoxIntra.setEnabled( False)
+                    self.groupBoxArret.setEnabled( False)
+                    self.groupBoxMethode.setEnabled( False)
                     self.ButtonIntra.setEnabled( False)
                     self.ButtonInter.setEnabled( True)
                               
@@ -1684,6 +1690,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Fin de capture des erreurs Physiocap        
         
         self.groupBoxIntra.setEnabled( True)
+        self.groupBoxArret.setEnabled( True)
+        self.groupBoxMethode.setEnabled( True)
         self.ButtonIntra.setEnabled( True)
         physiocap_log( self.tr( "== {0} a terminé les moyennes inter parcelaire.").\
             format( PHYSIOCAP_UNI), leModeDeTrace)
