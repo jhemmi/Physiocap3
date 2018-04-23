@@ -899,7 +899,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         format( PHYSIOCAP_UNI, leChoixEncours), leModeDeTrace)                    
                     dialogue.spinBoxIsoMax.setValue( int( dialogue.spinBoxIsoMax_Fixe_DIAM.value()))
                     dialogue.spinBoxIsoMin.setValue( int( dialogue.spinBoxIsoMin_Fixe_DIAM.value()))
-                    dialogue.spinBoxDistanceIso.setValue( int( dialogue.spinBoxDistanceIso_Fixe_DIAM.value()))                    
+                    dialogue.spinBoxDistanceIso.setValue( int( dialogue.spinBoxIsoDistance_Fixe_DIAM.value()))                    
                 elif idx == 1:
                     # récuperer les saisies nommées SARM
                     # ASSERT : 
@@ -910,7 +910,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         format( PHYSIOCAP_UNI, leChoixEncours), leModeDeTrace)                    
                     dialogue.spinBoxIsoMax.setValue( int( dialogue.spinBoxIsoMax_Fixe_SARM.value()))
                     dialogue.spinBoxIsoMin.setValue( int( dialogue.spinBoxIsoMin_Fixe_SARM.value()))
-                    dialogue.spinBoxDistanceIso.setValue( int( dialogue.spinBoxDistanceIso_Fixe_SARM.value()))
+                    dialogue.spinBoxDistanceIso.setValue( int( dialogue.spinBoxIsoDistance_Fixe_SARM.value()))
                 elif idx == 2:
                     # récuperer les saisies nommées BIOM
                     # ASSERT : 
@@ -921,7 +921,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         format( PHYSIOCAP_UNI, leChoixEncours), leModeDeTrace)                    
                     dialogue.spinBoxIsoMax.setValue( int( dialogue.spinBoxIsoMax_Fixe_BIOM.value()))
                     dialogue.spinBoxIsoMin.setValue( int( dialogue.spinBoxIsoMin_Fixe_BIOM.value()))
-                    dialogue.spinBoxDistanceIso.setValue( int( dialogue.spinBoxDistanceIso_Fixe_BIOM.value()))
+                    dialogue.spinBoxDistanceIso.setValue( int( dialogue.spinBoxIsoDistance_Fixe_BIOM.value()))
                 else:
                     raise physiocap_exception_attribut_multiple_incoherent( "Autre choix")
 

@@ -152,8 +152,9 @@ def physiocap_create_projection_file( prj_name,  laProjection):
 def  physiocap_PHY_nom_entite_sans_cote( un_nom,  mon_unique = 0):
     """Change la chaine un_nom selon qu'elle contient ou non le caractère '
     peut creer aussi un champ unique"""
-    # Peut ne rien faire
-    return un_nom
+    ## Peut ne rien faire
+    return un_nom.replace(" ","")
+    #return un_nom
 #    if un_nom.find('\'') < 0:
 #        return un_nom
 #    elif mon_unique == 0:
