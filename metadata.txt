@@ -25,7 +25,7 @@ description=This plugin helps analysing raw data from
 about= Physiocap est un capteur qui géolocalise les sarments d'une vigne. 
   L'extension (plugin) Physiocap n'intéresse que le métier "Agronomie de la vigne".
   Physiocap est breveté par le CIVC.
-version=3.1.0
+version=3.1.1
 author=jhemmi.eu
 email=jean@jhemmi.eu
 
@@ -36,7 +36,7 @@ repository=https://github.com/jhemmi/Physiocap3
 # Recommended items:
 
 # Uncomment the following line and add your changelog:
-changelog=3.1.0 INTRA GDAL Appel de 3 interpolations. Nouveaux attributs (métriques qualité capture) et vecteur V3
+changelog=3.1.1 INTRA GDAL Appel de 3 interpolations. Nouveaux attributs (métriques qualité capture) et vecteurs V3
 
 # Tags are comma separated with spaces allowed
 tags=Physiocap,jhemmi.eu, Hemmi, sarment, section, diamètre, biomasse, CIVC, E.re.c.a, 

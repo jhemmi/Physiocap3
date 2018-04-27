@@ -34,7 +34,7 @@ test/Physiocap.conf
 test/Physiocap3.conf
 i18n/bak*
 Sauve_1.8*/
-modeleQgis/V2/*
+modeleQgis/OLD/*
 data/Projet_QGIS_test_Physiocap_3D.qgs
 ssl/
 scripts/

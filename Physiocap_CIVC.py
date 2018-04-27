@@ -599,7 +599,7 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
     nom_shape_segment,  nom_prj_segment, nom_shape_segment_details, nom_prj_segment_details,
     diametre_filtre, nom_fichier_synthese, err, 
     mindiam, maxdiam, max_sarments_metre, 
-    segment_mini_vitesse,  segment_mini_point, segment_max_pdop, 
+    segment_mini_vitesse,  segment_maxi_vitesse,  segment_mini_point, segment_max_pdop, 
     segment_max_derive,  segment_pas_de_derive, 
     details, eer, eec, d, hv,
     laProjectionCRS, laProjectionTXT, 
@@ -751,8 +751,8 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
                 # le point en cours et PDOP
                 # #################################################
 
-                # Quand vitesse 2.5 et plus et pdop reste cohérent segment_max_pdop
-                if XY[7] >= segment_mini_vitesse and XY[5] < segment_max_pdop:
+                # Quand vitesse plus de 2.5 et moins de 8 et pdop reste cohérent segment_max_pdop
+                if XY[7] >= segment_mini_vitesse and XY[7] < segment_maxi_vitesse and XY[5] < segment_max_pdop:
                     # on est en vitesse de croisière                        
                     # Calcul de la distance théorique par rapport au precedent
                     # Introduire un calcul de distance length et l'azimuth
@@ -807,9 +807,14 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
                     # Tracer cas decoupe vitessse
                     if XY[7] < segment_mini_vitesse:
                         if  len(segment_en_cours) > 0:
-                            physiocap_log("{0} DECOUPAGE point {1} : vitesse {2:.1f} min est  {3:.1f}! ".\
+                            physiocap_log("{0} DECOUPAGE point {1} : vitesse {2:.1f} alors que min est {3:.1f}! ".\
                             format(PHYSIOCAP_WARNING, numero_point, XY[7],  segment_mini_vitesse), \
                             TRACE_SEGMENT_DECOUPES)                           
+                    if XY[7] > segment_maxi_vitesse:
+                        if  len(segment_en_cours) > 0:
+                            physiocap_log("{0} DECOUPAGE point {1} : vitesse {2:.1f} que max est {3:.1f}! ".\
+                            format(PHYSIOCAP_WARNING, numero_point, XY[7],  segment_maxi_vitesse), \
+                            TRACE_SEGMENT_DECOUPES)      
                     # Tracer cas decoupe pdop
                     if XY[5] >= segment_max_pdop:
                         physiocap_log("{0} DECOUPAGE point {1} : pdop {2:.1f} max est  {3:.1f}! ".\

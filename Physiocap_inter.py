@@ -442,7 +442,7 @@ def physiocap_segments_un_contour( laProjectionCRS, EPSG_NUMBER, nom_segment, no
         gid_modulo_10 = le_gid % 10
         nombre_inter = les_nombres_points_restant[numero_ligne]
         nombre_points_initiaux = les_nombres_points_segment[numero_ligne]
-        # ASSERT sur nombre de points intérieurs et longuur du segment
+        # ASSERT sur nombre de points intérieurs et longueur du segment
         if len( un_segment) != nombre_inter:
             message = " - ASSERT GID {0} longueur segment {1} différent du nombre points {2} interieurs au contour  - ". \
                 format( le_gid, len( un_segment), nombre_inter )
@@ -990,8 +990,12 @@ class PhysiocapInter( QtWidgets.QDialog):
             # Ca fonctionne pour consolidation
             # A_TESTER: WINDOWS apres suppression des  deux : unicode( vecteur 
             nom_vecteur_point = vecteur_point.dataProvider().dataSourceUri()
+            physiocap_log( "Nom du vecteur point {0} type vecteur point {1}". \
+                        format(nom_vecteur_point, type(nom_vecteur_point)), leModeDeTrace)
             chemin_shapes = os.path.dirname( nom_vecteur_point)
             chemin_shapes_segment = os.path.join( chemin_shapes, REPERTOIRE_SEGMENT_V3)
+            physiocap_log( "Nom du chemin shape {0} ". \
+                        format(chemin_shapes_segment), leModeDeTrace)
             chemin_projet = os.path.dirname( chemin_shapes)
             shape_point_extension = os.path.basename( nom_vecteur_point)
             pos_extension = shape_point_extension.rfind(".")
@@ -1012,6 +1016,8 @@ class PhysiocapInter( QtWidgets.QDialog):
             #nom_de_base = os.path.dirname( nom_base_point)
             nom_de_base_a_point = os.path.basename( nom_base_point)
             nom_base_segment = os.path.join( chemin_shapes_segment, nom_de_base_a_point)  
+            physiocap_log( "Nom du chemin base segment {0} ". \
+                        format(nom_base_segment), leModeDeTrace)
             if ( dialogue.checkBoxInterPasMesure.isChecked()):
                 nom_vecteur_pas_mesure = nom_base_point + NOM_POINTS + EXTENSION_ZERO_SEUL + EXT_CRS_SHP
                 vecteur_pas_mesure = physiocap_get_layer_by_URI( nom_vecteur_pas_mesure)
@@ -1027,6 +1033,8 @@ class PhysiocapInter( QtWidgets.QDialog):
                 nom_vecteur_segment = nom_base_segment + NOM_SEGMENTS_DETAILS + EXT_CRS_SHP
                 vecteur_segment = physiocap_get_layer_by_URI( nom_vecteur_segment)
                 if ( vecteur_segment == None) or ( not vecteur_segment.isValid()):
+                    physiocap_log( "Nom du vecteur segment {0} type vecteur {1}". \
+                        format(nom_vecteur_segment, vecteur_segment), leModeDeTrace)
                     aText = self.tr( "La couche des segments brisés n'est pas disponible ou valide. ")
                     aText = aText + self.tr( "Créer une nouvelle instance de projet - bouton Filtrer les données brutes - ")
                     aText = aText + self.tr( "en cochant le Format version 3 ")

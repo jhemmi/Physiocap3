@@ -681,7 +681,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
             aText = aText + self.tr( "Avez-vous ouvert votre shapefile de contour ?")
             physiocap_error( self, aText)
             return physiocap_message_box( dialogue, aText, "information")            
-        #nom_poly = nom_complet_poly[ 0] 
+        nom_poly = nom_complet_poly[ 0] 
         id_poly = nom_complet_poly[ 1] 
         vecteur_poly = physiocap_get_layer_by_ID( id_poly)
 
@@ -765,7 +765,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
             return physiocap_message_box( dialogue, aText, "information" )            
         
         # Vérification 
-        if ( vecteur_point == None):
+        if ( vecteur_point == None) or ( not vecteur_point.isValid()):
             aText = self.tr( "Le jeu de points choisi n'est pas valide. ")
             aText = aText + self.tr( "Créer une nouvelle instance de projet - bouton Filtrer les données brutes puis Inter - ")
             aText = aText + self.tr( "avant de faire votre interpolation Intra Parcellaire")
@@ -788,9 +788,17 @@ class PhysiocapIntra( QtWidgets.QDialog):
         # A_TESTER: pourquoi ces unicode et le point virgule !
         #chemin_shapes = os.path.dirname( unicode( vecteur_point.dataProvider().dataSourceUri() ) )
         nom_point_en_cours = vecteur_point.dataProvider().dataSourceUri()
-        chemin_shapes = os.path.dirname( nom_point_en_cours ) 
+        pos_fin_layer = nom_point_en_cours.rfind( "|layerid=")
+        if ( pos_fin_layer != -1):
+            nom_point_exact = nom_point_en_cours[:pos_fin_layer]
+        else:
+            nom_point_exact  = nom_point_exact
+        
+        #nom_point_en_cours = vecteur_point.name()
+
+        chemin_shapes = os.path.dirname( nom_point_exact ) 
         chemin_projet = os.path.dirname( chemin_shapes)
-        shape_point_extension = os.path.basename( nom_point_en_cours)
+        shape_point_extension = os.path.basename( nom_point_exact)
         pos_extension = shape_point_extension.rfind(".")
         shape_point_sans_extension = shape_point_extension[:pos_extension]
         if ( not os.path.exists( chemin_shapes)):
@@ -1047,15 +1055,13 @@ class PhysiocapIntra( QtWidgets.QDialog):
             # Eviter de tourner en Intra sur chaque parcelle
             if (( dialogue.checkBoxIntraIsos.isChecked()) or 
                         ( dialogue.checkBoxIntraImages.isChecked())):        
-              
+
                 # On tourne sur les contours qui ont été crée par Inter
                 id_contour = 0
                 for un_contour in vecteur_poly.getFeatures(): #iterate poly features
                     id_contour = id_contour + 1
                     contours_possibles = contours_possibles + 1
                     try:
-                        # A_TESTER: sans str
-                        #un_nom = str( un_contour[ le_champ_poly]) #get attribute of poly layer
                         un_nom = un_contour[ le_champ_poly] 
                     except:
                         un_nom = NOM_CHAMP_ID + SEPARATEUR_ + str(id_contour)
@@ -1074,7 +1080,6 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     # Attention j'ai enleve physiocap_rename_existing_file(
                     nom_vignette = os.path.join( chemin_vignettes, nom_court_vignette)        
                                 
-                    
                     # Nom point 
                     nom_court_point = nom_noeud_arbre + NOM_POINTS + SEPARATEUR_ + physiocap_PHY_nom_entite_sans_cote(un_nom) + EXT_CRS_SHP     
                     # Attention j'ai enleve physiocap_rename_existing_file(
@@ -1175,8 +1180,16 @@ class PhysiocapIntra( QtWidgets.QDialog):
             if ( contour_avec_point >  0 ):                                            
                 physiocap_log( self.tr( "=~= Fin des {0}/{1} interpolation(s) intra parcellaire").\
                     format( str(contour_avec_point), str( contours_possibles)), leModeDeTrace)
+            elif (contours_possibles == 0):
+                aText = self.tr( "=~= Aucune interpolation(s) intra parcellaire à réaliser")
+                aText = aText + self.tr( "=~= Vérifier dans l'onglet affichage vos choix.")
+                physiocap_log( aText, leModeDeTrace)
+                return physiocap_message_box( dialogue, aText, "information")
             else:
-                aText = self.tr( "=~= Aucun point dans votre contour. ")
+                aText = self.tr( "=~= Aucun point interpolé dans vos {0} contours présents dans {1}\n".\
+                    format(  contours_possibles, nom_poly))      
+                aText = aText + self.tr( "\nNom point {0} \n".\
+                    format( nom_point_exact))       
                 aText = aText + self.tr( "Pas d'interpolation intra parcellaire. ")       
                 aText = aText + self.tr( "Un changement a eu lieu depuis votre calcul inter parcellaire.")       
                 aText = aText + self.tr( "\nVérifiez votre choix de jeu de mesures.")       

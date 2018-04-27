@@ -87,12 +87,14 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             
         if version_3 == "YES":
             segment_mini_vitesse = float( dialogue.doubleSpinBoxVitesseMiniSegment.value())
+            segment_maxi_vitesse = float( dialogue.doubleSpinBoxVitesseMaxiSegment.value())
             segment_max_pdop = float( dialogue.doubleSpinBoxPdopMaxSegment.value())   
             segment_mini_point = int( dialogue.spinBoxNombreMiniPointsConsecutifs.value())
             segment_max_derive = int( dialogue.spinBoxDeriveMaxSegment.value())
             segment_pas_de_derive = int( dialogue.spinBoxPasDeDerive.value())
         else:
             segment_mini_vitesse = 0.0
+            segment_maxi_vitesse = 1000.0
             segment_mini_point = 2
             segment_max_pdop = 0.1
             segment_max_derive = 50
@@ -425,7 +427,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
                     nom_shape_segment,  nom_prj_segment,  nom_shape_segment_details, nom_prj_segment_details,
                     diametre_filtre, nom_fichier_synthese, erreur, 
                     mindiam, maxdiam, max_sarments_metre, 
-                    segment_mini_vitesse, segment_mini_point, segment_max_pdop, 
+                    segment_mini_vitesse, segment_maxi_vitesse, segment_mini_point, segment_max_pdop, 
                     segment_max_derive,  segment_pas_de_derive, 
                     details, interrangs, interceps, densite, hauteur,
                     laProjectionCRS, laProjectionTXT, 

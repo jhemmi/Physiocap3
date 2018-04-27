@@ -87,7 +87,7 @@ CONF_MODEL = test/Physiocap3.conf
 CONF_SAVE = $(CONF_TARGET).sauve
 
 TEMPLATE = modeleQgis
-VERSION_TEMPLATE= V3
+VERSION_TEMPLATE= Physiocap3
 
 PLUGIN_UPLOAD = $(c)/plugin_upload.py
 

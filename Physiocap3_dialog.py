@@ -101,7 +101,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         
         #physiocap_log( "Répertoire de QGIS : " +  self.gis_dir, leModeDeTrace)
         physiocap_log( "Répertoire des plugins ou extensions : " +  self.plugins_dir, leModeDeTrace)
-        physiocap_log( "Répertoire des plugins ou extensions : " +  self.plugins_dir, TRACE_TOOLS)
        
         # Slot for boutons : ces deux sont déjà sont dans UI
         ##self.buttonBox.button( QDialogButtonBox.Ok ).pressed.connect(self.accept)
@@ -155,7 +154,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Slot pour les contours
         # self.toolButtonContours.pressed.connect( self.lecture_shape_contours )   
               
-#        machine = platform.system()
         physiocap_log( self.tr( "Votre machine tourne sous QGIS {0} et {1} ").\
             format( Qgis.QGIS_VERSION, MACHINE), TRACE_TOOLS)        
 ##        physiocap_log( self.tr( "Test 1 et 2 : {0} <===> {1} ").\
@@ -188,7 +186,12 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         else:
             self.checkBoxV3.setChecked( Qt.Unchecked)        
         self.slot_bascule_V3()    
-        
+ 
+        mode_expert = self.settings.value("Physiocap/expert", "As-tu contribué ?")
+        self.lineEditExpert.setText( mode_expert)
+        self.groupBoxSegment.setEnabled( mode_expert == MODE_EXPERT)
+        self.groupBoxThemaTrace.setEnabled( mode_expert == MODE_EXPERT)
+
         # Nom du projet et des répertoires
         repertoire_brut = self.settings.value("Physiocap/repertoire",
             REPERTOIRE_DONNEES_BRUTES)
@@ -222,7 +225,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         
         # Remplissage de la liste de FORMAT_VECTEUR 
         self.fieldComboFormats.setCurrentIndex( 0) 
-        if (self.settings.value("Physiocap/version3") == "YES"):
+        
+        if ( self.settings.value("Physiocap/expert", "As-tu contribué ?") == MODE_EXPERT):
             liste_formats = FORMAT_VECTEUR_V3
         else:
             liste_formats = FORMAT_VECTEUR
@@ -254,6 +258,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Remplissage des parametres segment à partir des settings
         self.doubleSpinBoxVitesseMiniSegment.setValue( 
             float( self.settings.value("Physiocap/vitesse_mini_segment", 2.5 )))
+        self.doubleSpinBoxVitesseMaxiSegment.setValue( 
+            float( self.settings.value("Physiocap/vitesse_maxi_segment", 8.0 )))
         self.spinBoxNombreMiniPointsConsecutifs.setValue( 
             int( self.settings.value("Physiocap/nombre_mini_points", 5 )))
         self.spinBoxDeriveMaxSegment.setValue( int( self.settings.value("Physiocap/derive_max_segment", 35 )))
@@ -329,7 +335,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
 
         # Remplissage du choix d'aide au calcul isoligne
         self.fieldComboAideIso.setCurrentIndex( 0)   
-        leChoixAideIso = int( self.settings.value("Physiocap/leChoixAideIso", -1)) 
+        leChoixAideIso = int( self.settings.value("Physiocap/leChoixAideIso", 0)) 
         # Cas inital
         self.fieldComboAideIso.clear( )
         self.fieldComboAideIso.addItem( \
@@ -338,10 +344,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.tr("Ecartement des isolignes permet le calcul du nombre d'isolignes"))
         self.fieldComboAideIso.addItem( \
             self.tr("Utilisation des paramètres fixes (min, nombre des isolignes et max) pour chaque attribut"))
-        if ( leChoixAideIso == -1):
-            leChoixAideIso = 0
-            self.fieldComboAideIso.setCurrentIndex( leChoixAideIso)                
-        
         # Le combo a déjà été rempli, on retrouve le choix
         self.fieldComboAideIso.setCurrentIndex( leChoixAideIso) 
                 
@@ -581,10 +583,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.checkBoxInterAltitude.setChecked( Qt.Checked)
         else:
             self.checkBoxInterAltitude.setChecked( Qt.Unchecked)
-        if (self.settings.value("Affichage/InterLibelle", "NO") == "YES"):
-            self.checkBoxInterLibelle.setChecked( Qt.Checked)
-        else:
-            self.checkBoxInterLibelle.setChecked( Qt.Unchecked)        
+        # Toujours interpoint qui est necessaire à "Inter"
+        self.checkBoxInterLibelle.setChecked( Qt.Checked)     
         if (self.settings.value("Affichage/InterPoints", "NO") == "YES"):
             self.checkBoxInterPoints.setChecked( Qt.Checked)
         else:
@@ -1154,9 +1154,10 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         ATTR_LISTE = ATTR_LISTE + ATTRIBUTS_INTRA
         ATTR_LISTE_TRIPLET = ATTRIBUTS_INTRA
 
-        if self.checkBoxV3.isChecked():       
+        if self.checkBoxV3.isChecked() and ( self.settings.value("Physiocap/expert", "As-tu contribué ?") == MODE_EXPERT):     
             # Ajout d'un nouvelle liste d'attribut interpolable
             ATTR_LISTE = ATTR_LISTE + ATTRIBUTS_V3_INTRA
+            ATTR_LISTE_TRIPLET = ATTR_LISTE_TRIPLET + ATTRIBUTS_V3_INTRA
         
         # Cas de details ATTRIBUTS_INTRA_DETAIL
         if (self.settings.value("Physiocap/details") == "YES"):
@@ -1174,6 +1175,10 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.fieldComboIntraDIAM.setCurrentIndex( 0)   
         self.fieldComboIntraSARM.setCurrentIndex( 1)   
         self.fieldComboIntraBIOM.setCurrentIndex( 2) 
+
+        # Ne pas rester à 0 dans le premier cas
+        if len( ATTR_LISTE) > 1:
+            self.fieldComboIntra.setCurrentIndex( 1)
         # Se souvenir du choix inital
         j=0
         for monAttribut in ATTR_LISTE:
@@ -1442,12 +1447,12 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.settings.setValue("Physiocap/attributIntraFixe_2", self.fieldComboIntraSARM.currentText())
         self.settings.setValue("Physiocap/isoMinFixe_2",  self.spinBoxIsoMin_Fixe_SARM.value())
         self.settings.setValue("Physiocap/isoMaxFixe_2",  self.spinBoxIsoMax_Fixe_SARM.value())
-        self.settings.setValue("Physiocap/isoDistanceFixe_1",  self.spinBoxIsoDistance_Fixe_SARM.value())
+        self.settings.setValue("Physiocap/isoDistanceFixe_2",  self.spinBoxIsoDistance_Fixe_SARM.value())
 
         self.settings.setValue("Physiocap/attributIntraFixe_3", self.fieldComboIntraBIOM.currentText())
         self.settings.setValue("Physiocap/isoMinFixe_3",  self.spinBoxIsoMin_Fixe_BIOM.value())
-        self.settings.setValue("Physiocap/isoMaxFixe_2",  self.spinBoxIsoMax_Fixe_BIOM.value())
-        self.settings.setValue("Physiocap/isoDistanceFixe_1",  self.spinBoxIsoDistance_Fixe_BIOM.value())
+        self.settings.setValue("Physiocap/isoMaxFixe_3",  self.spinBoxIsoMax_Fixe_BIOM.value())
+        self.settings.setValue("Physiocap/isoDistanceFixe_3",  self.spinBoxIsoDistance_Fixe_BIOM.value())
         
         # Choix choix de continuer ou non
         continue_group = "NO"
@@ -1669,7 +1674,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             return physiocap_message_box( self, aText, "information" )
         except physiocap_exception_points_invalid as e:
             physiocap_log_for_error( self)
-            aText = self.tr( "Le fichier de points du projet {0} ne contient pas les attributs attendus. ").\
+            aText = self.tr( "La couche de points du projet {0} ne contient pas les attributs attendus. ").\
                 format( e)
             aText = aText + self.tr( "Lancez le traitement initial - bouton Filtrer les données brutes - avant de faire votre ")
             aText = aText + self.tr( "calcul de Moyenne Inter Parcellaire" )
@@ -1677,7 +1682,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             return physiocap_message_box( self, aText, "information" )
         except physiocap_exception_segment_invalid as e:
             physiocap_log_for_error( self)
-            aText = self.tr( "Le fichier de segment brisé du projet {0} ne contient pas les attributs attendus. ").\
+            aText = self.tr( "La couche de segment brisé du projet {0} ne contient pas les attributs attendus. ").\
                 format( e)
             aText = aText + self.tr( "Lancez le traitement initial - bouton Filtrer les données brutes - avant de faire votre ")
             aText = aText + self.tr( "calcul de Moyenne Inter Parcellaire" )
@@ -1736,16 +1741,20 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         else:
             set_quoi = False
                 
-        self.groupBox_Segment.setEnabled( set_quoi)
         self.checkBoxSegment.setEnabled( set_quoi)
         self.checkBoxSegmentBrise.setEnabled( set_quoi)
         self.checkBoxInterAltitude.setEnabled( set_quoi)
         self.checkBoxInterPasMesure.setEnabled( set_quoi)
         self.checkBoxInterSegment.setEnabled( set_quoi)
         self.checkBoxInterSegmentBrise.setEnabled( set_quoi)
-        # la boite de choix affichage avancés
-        #self.groupBoxChoixAvances.setEnabled( set_quoi)
         
+        if self.lineEditExpert.text() == MODE_EXPERT:
+            self.groupBoxSegment.setEnabled( set_quoi)
+            self.groupBoxThemaTrace.setEnabled( set_quoi)
+        else:
+            self.groupBoxSegment.setEnabled( False)
+            self.groupBoxThemaTrace.setEnabled( False)
+            
         # appel des attributs INTRA
         self.slot_INTRA_maj_attributs_interpolables()
 
@@ -1829,6 +1838,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Sauvergarde des saisies dans les settings
         self.settings= QSettings( PHYSIOCAP_NOM, PHYSIOCAP_NOM_3)
         self.settings.setValue("Physiocap/projet", self.lineEditProjet.text() )
+        self.settings.setValue("Physiocap/expert", self.lineEditExpert.text() )
         self.settings.setValue("Physiocap/repertoire", self.lineEditDirectoryPhysiocap.text() )
         self.settings.setValue("Physiocap/cible_repertoire", self.lineEditDirectoryFiltre.text() )
         #self.settings.setValue("Physiocap/contours", self.lineEditContours.text() )
@@ -1865,6 +1875,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
 
         # Cas détail segment
         self.settings.setValue("Physiocap/vitesse_mini_segment", float( self.doubleSpinBoxVitesseMiniSegment.value()))        
+        self.settings.setValue("Physiocap/vitesse_maxi_segment", float( self.doubleSpinBoxVitesseMaxiSegment.value()))        
         self.settings.setValue("Physiocap/nombre_mini_points", int( self.spinBoxNombreMiniPointsConsecutifs.value()))
         self.settings.setValue("Physiocap/derive_max_segment", int( self.spinBoxDeriveMaxSegment.value()))
         self.settings.setValue("Physiocap/pas_de_la_derive", int( self.spinBoxPasDeDerive.value()))

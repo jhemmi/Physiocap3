@@ -46,7 +46,7 @@ else:
     LE_MODE_PROD = "YES"
     
 # TODO: à livraison : supprimer en Prod
-#LE_MODE_PROD = "NO"
+LE_MODE_PROD = "NO"
 
 # En prod CENTROIDES vaut NO
 CENTROIDES = "NO"  # CENTROIDES YES est pour voir les centroides dans la synthese
@@ -73,6 +73,7 @@ PHYSIOCAP_2_ETOILES = "**"
 PHYSIOCAP_2_EGALS = "=="
 PHYSIOCAP_LOG_ERREUR = PHYSIOCAP_WARNING + " " + PHYSIOCAP_UNI + " Erreurs"
 
+MODE_EXPERT = "J'ai contribué"
 # Test de robustesse de la gestion des unicodes
 PHYSIOCAP_TEST1 = "ȧƈƈḗƞŧḗḓ ŧḗẋŧ ƒǿř ŧḗşŧīƞɠ"
 PHYSIOCAP_TEST2 = "ℛℯα∂α♭ℓℯ ♭ʊ☂ η☺т Ѧ$☾ℐℐ"
@@ -227,7 +228,7 @@ ATTRIBUTS_V3_INTRA = ["VITESSE", "ALTITUDE", "PDOP", "DISTANCE", "NBSART"]
 ATTRIBUTS_INTRA_DETAILS = ["NBSARMM2", "NBSARCEP","BIOMM2", "BIOMGM2", "BIOMGCEP"]
 # si QGIS & version 3 verifier que ces index n'ont pas bougé avec les nouveau attributs 
 # ATTRIBUTS_INTRA_INDEX = {"DIAM" : 4 ,"NBSARM" : 3 ,"BIOM" : 5,  "NBSARMM2":6, "NBSARCEP":7,"BIOMM2":8, "BIOMGM2":9, "BIOMGCEP":10}
-CHEMIN_TEMPLATES = [ "modeleQgis/V3", "project_templates/Physiocap3"]
+CHEMIN_TEMPLATES = [ "modeleQgis/Physiocap3", "project_templates/Physiocap3"]
 
 # Exceptions Physiocap à partir de 30 erreurs sur un fchier mid
 TAUX_LIGNES_ERREUR= 30
