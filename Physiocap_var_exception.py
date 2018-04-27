@@ -46,7 +46,7 @@ else:
     LE_MODE_PROD = "YES"
     
 # TODO: à livraison : supprimer en Prod
-LE_MODE_PROD = "NO"
+#LE_MODE_PROD = "NO"
 
 # En prod CENTROIDES vaut NO
 CENTROIDES = "NO"  # CENTROIDES YES est pour voir les centroides dans la synthese
