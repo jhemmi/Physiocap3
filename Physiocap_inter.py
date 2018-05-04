@@ -43,7 +43,7 @@
 """
 from .Physiocap_tools import physiocap_message_box,\
         physiocap_log, physiocap_error, \
-        physiocap_PHY_nom_entite_sans_cote, physiocap_rename_existing_file,  \
+        physiocap_nom_entite_sans_pb_caractere, physiocap_rename_existing_file,  \
         physiocap_quelle_projection_demandee, \
         physiocap_create_projection_file, \
         physiocap_get_layer_by_URI,  physiocap_get_layer_by_ID
@@ -179,11 +179,6 @@ def physiocap_moyenne_un_contour( laProjectionCRS, EPSG_NUMBER, nom_vignette, no
     les_champs.append( QgsField( CHAMP_NOM_PHY, QVariant.String, "string", 50))
     les_champs.append( QgsField( CHAMP_NOM_ID, QVariant.String, "string", 50))
     les_champs.append( QgsField( "MESURE_HA", QVariant.Double, "double", 10,1))           
-    if version_3 == "YES":
-        les_champs.append( QgsField( "0_MESURE", QVariant.Double, "double", 10,1))           
-        les_champs.append( QgsField( "NBSART",QVariant.Int, "integer", 10))           
-        les_champs.append( QgsField( "T_LONG_SEG", QVariant.Double, "double", 10,1))   
-        les_champs.append( QgsField( "NBSARM_S",  QVariant.Double, "double", 10,2))
 
     les_champs.append( QgsField( "NBSARM",  QVariant.Double, "double", 10,2))
     les_champs.append( QgsField( "M_NBSARM",  QVariant.Double, "double", 10,2))
@@ -195,6 +190,11 @@ def physiocap_moyenne_un_contour( laProjectionCRS, EPSG_NUMBER, nom_vignette, no
     les_champs.append( QgsField( "M_BIOM", QVariant.Double,"double", 10,2))
     les_champs.append( QgsField( "E_BIOM", QVariant.Double,"double", 10,2))
     if version_3 == "YES":
+        les_champs.append( QgsField( "0_MESURE", QVariant.Double, "double", 10,1))           
+        les_champs.append( QgsField( "NBSART",QVariant.Int, "integer", 10))           
+        les_champs.append( QgsField( "T_LONG_SEG", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "NBSARM_S",  QVariant.Double, "double", 10,2))
+
         les_champs.append( QgsField( "NB_SEG", QVariant.Int, "integer", 10))           
         les_champs.append( QgsField( "LONG_S", QVariant.Double, "double", 10,1))   
         les_champs.append( QgsField( "M_LONG_S", QVariant.Double, "double", 10,1))   
@@ -268,13 +268,13 @@ def physiocap_moyenne_un_contour( laProjectionCRS, EPSG_NUMBER, nom_vignette, no
         if version_3 == "YES":
             # Ecrit tous les attributs avec V3
             feat.setAttributes( [ 1, un_nom, un_autre_ID, nombre_points/la_surface,
-            le_taux_de_sans_mesure, sommes_point_segment.get( 'la_somme_des_nbsart'),
-            longueur_segment, nbsarm_seg, 
 
             moyennes_point.get( 'sarm'),    medianes_point.get( 'sarm'),    ecarts_point.get( 'sarm'), 
             moyennes_point.get( 'diam'),    medianes_point.get( 'diam'),    ecarts_point.get( 'diam'),
             moyennes_point.get( 'biom'),    medianes_point.get( 'biom'),    ecarts_point.get( 'biom'),
 
+            le_taux_de_sans_mesure, sommes_point_segment.get( 'la_somme_des_nbsart'),
+            longueur_segment, nbsarm_seg, 
             sommes_point_segment.get( 'le_nombre_de_segments'),
             moyennes_point.get( 'les_longueurs_segment'), medianes_point.get( 'les_longueurs_segment'),ecarts_point.get('les_longueurs_segment'),
             moyennes_point.get( 'les_distances_entre_segment'), medianes_point.get( 'les_distances_entre_segment'),ecarts_point.get('les_distances_entre_segment'),
@@ -314,14 +314,14 @@ def physiocap_moyenne_un_contour( laProjectionCRS, EPSG_NUMBER, nom_vignette, no
     else:
         if version_3 == "YES":
             # Ecrit tous les attributs avec V3
-            feat.setAttributes( [ 1, un_nom, un_autre_ID, nombre_points/la_surface,
-            le_taux_de_sans_mesure, sommes_point_segment.get( 'la_somme_des_nbsart'),
-            longueur_segment, nbsarm_seg, 
+            feat.setAttributes( [ 1, un_nom, un_autre_ID, nombre_points/la_surface, 
 
             moyennes_point.get( 'sarm'),    medianes_point.get( 'sarm'),    ecarts_point.get( 'sarm'), 
             moyennes_point.get( 'diam'),    medianes_point.get( 'diam'),    ecarts_point.get( 'diam'),
             moyennes_point.get( 'biom'),    medianes_point.get( 'biom'),    ecarts_point.get( 'biom'),
 
+            le_taux_de_sans_mesure, sommes_point_segment.get( 'la_somme_des_nbsart'),
+            longueur_segment, nbsarm_seg, 
             sommes_point_segment.get( 'le_nombre_de_segments'),
             moyennes_point.get( 'les_longueurs_segment'), medianes_point.get( 'les_longueurs_segment'),ecarts_point.get('les_longueurs_segment'), 
             moyennes_point.get( 'les_distances_entre_segment'), medianes_point.get( 'les_distances_entre_segment'),ecarts_point.get('les_distances_entre_segment'),
@@ -644,11 +644,6 @@ def physiocap_moyennes_tous_contours( laProjectionCRS, EPSG_NUMBER,
     les_champs.append( QgsField( CHAMP_NOM_PHY, QVariant.String, "string", 50))
     les_champs.append( QgsField( CHAMP_NOM_ID, QVariant.String, "string", 50))
     les_champs.append( QgsField( "MESURE_HA", QVariant.Double, "double", 10,1))
-    if version_3 == "YES":
-        les_champs.append( QgsField( "0_MESURE", QVariant.Double, "double", 10,1))                   
-        les_champs.append( QgsField( "NBSART",QVariant.Int, "integer", 10))           
-        les_champs.append( QgsField( "T_LONG_SEG", QVariant.Double, "double", 10,1))   
-        les_champs.append( QgsField( "NBSARM_S",  QVariant.Double, "double", 10,2))
 
     les_champs.append( QgsField( "NBSARM",  QVariant.Double, "double", 10,2))
     les_champs.append( QgsField( "M_NBSARM",  QVariant.Double, "double", 10,2))
@@ -661,6 +656,10 @@ def physiocap_moyennes_tous_contours( laProjectionCRS, EPSG_NUMBER,
     les_champs.append( QgsField( "E_BIOM", QVariant.Double,"double", 10,2))
     
     if version_3 == "YES":
+        les_champs.append( QgsField( "0_MESURE", QVariant.Double, "double", 10,1))                   
+        les_champs.append( QgsField( "NBSART",QVariant.Int, "integer", 10))           
+        les_champs.append( QgsField( "T_LONG_SEG", QVariant.Double, "double", 10,1))   
+        les_champs.append( QgsField( "NBSARM_S",  QVariant.Double, "double", 10,2))
         les_champs.append( QgsField( "NB_SEG", QVariant.Int, "integer", 10))           
         les_champs.append( QgsField( "LONG_S", QVariant.Double, "double", 10,1))   
         les_champs.append( QgsField( "M_LONG_S", QVariant.Double, "double", 10,1))   
@@ -739,8 +738,6 @@ def physiocap_moyennes_tous_contours( laProjectionCRS, EPSG_NUMBER,
             if version_3 == "YES":
                 # Ecrit tous les attributs pour V3 (les_taux_sans_mesure puis alti..)
                 feat.setAttributes( [ i, les_parcelles[ i], les_parcelles_ID[ i], les_nombres[ i] / les_surfaces[ i],
-                les_taux_sans_mesure[i], sommes_point_segment_par_contour[ i].get( 'la_somme_des_nbsart'),
-                longueur_segment, nbsarm_seg, 
 
                 les_moyennes_par_contour[ i].get( 'sarm'),    
                     les_medianes_par_contour[ i].get( 'sarm'),    
@@ -748,6 +745,8 @@ def physiocap_moyennes_tous_contours( laProjectionCRS, EPSG_NUMBER,
                 les_moyennes_par_contour[ i].get( 'diam'),    les_medianes_par_contour[ i].get( 'diam'),    les_ecarts_par_contour[ i].get( 'diam'),
                 les_moyennes_par_contour[ i].get( 'biom'),    les_medianes_par_contour[ i].get( 'biom'),    les_ecarts_par_contour[ i].get( 'biom'),
 
+                les_taux_sans_mesure[i], sommes_point_segment_par_contour[ i].get( 'la_somme_des_nbsart'),
+                longueur_segment, nbsarm_seg, 
                 sommes_point_segment_par_contour[ i].get( 'le_nombre_de_segments'),
                 les_moyennes_par_contour[ i].get( 'les_longueurs_segment'), 
                     les_medianes_par_contour[ i].get( 'les_longueurs_segment'),
@@ -799,13 +798,13 @@ def physiocap_moyennes_tous_contours( laProjectionCRS, EPSG_NUMBER,
             if version_3 == "YES":
                 # Ecrit tous les attributs pour V3
                 feat.setAttributes( [ i, les_parcelles[ i], les_parcelles_ID[ i],les_nombres[ i] / les_surfaces[ i],
-                les_taux_sans_mesure[i], sommes_point_segment_par_contour[ i].get( 'la_somme_des_nbsart'),
-                longueur_segment, nbsarm_seg, 
 
                 les_moyennes_par_contour[ i].get( 'sarm'),    les_medianes_par_contour[ i].get( 'sarm'),    les_ecarts_par_contour[ i].get( 'sarm'), 
                 les_moyennes_par_contour[ i].get( 'diam'),    les_medianes_par_contour[ i].get( 'diam'),    les_ecarts_par_contour[ i].get( 'diam'),
                 les_moyennes_par_contour[ i].get( 'biom'),    les_medianes_par_contour[ i].get( 'biom'),    les_ecarts_par_contour[ i].get( 'biom'),
 
+                les_taux_sans_mesure[i], sommes_point_segment_par_contour[ i].get( 'la_somme_des_nbsart'),
+                longueur_segment, nbsarm_seg, 
                 sommes_point_segment_par_contour[ i].get( 'le_nombre_de_segments'),
                 les_moyennes_par_contour[ i].get( 'les_longueurs_segment'), 
                     les_medianes_par_contour[ i].get( 'les_longueurs_segment'),
@@ -1083,10 +1082,14 @@ class PhysiocapInter( QtWidgets.QDialog):
             
             physiocap_log ( self.tr( "{0} {1} Début Inter pour {2} >>>> ").\
                 format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI, un_nom), leModeDeTrace)
-            
-            # Prepare un nom sans cote (requete dans gdal et nommage dans gdal)
-            un_autre_ID = physiocap_PHY_nom_entite_sans_cote( un_nom) # pour unique deuxieme parametre str(id)
 
+            if ( dialogue.fieldComboModePhyId.currentIndex() == 0):
+                un_autre_ID = NOM_CHAMP_ID + SEPARATEUR_ + str(id)
+                un_nom_libere = un_nom
+            else:
+                # Prepare un nom sans cote (requete dans gdal et nommage dans gdal)
+                un_autre_ID = physiocap_nom_entite_sans_pb_caractere( un_nom) # pour unique deuxieme parametre str(id)
+                un_nom_libere = un_autre_ID
             geom_poly = un_contour.geometry() #get geometry of poly layer
             geomWkbType = geom_poly.wkbType()
             geomWkbMultiType = QgsWkbTypes.multiType( geomWkbType) # multiple sous processing
@@ -1527,8 +1530,8 @@ class PhysiocapInter( QtWidgets.QDialog):
                 # ###################
                 # CRÉATION moyenne
                 # ################### 
-                nom_court_vignette = nom_noeud_arbre + NOM_MOYENNE + un_autre_ID +  EXT_CRS_SHP     
-                nom_court_prj = nom_noeud_arbre + NOM_MOYENNE + un_autre_ID  + EXT_CRS_PRJ     
+                nom_court_vignette = nom_noeud_arbre + NOM_MOYENNE + un_nom_libere +  EXT_CRS_SHP     
+                nom_court_prj = nom_noeud_arbre + NOM_MOYENNE + un_nom_libere  + EXT_CRS_PRJ     
                 #physiocap_log( "Vignette court : " + nom_court_vignette , leModeDeTrace)       
                 nom_vignette = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_vignette))        
                 nom_prj = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_prj))        
@@ -1556,8 +1559,8 @@ class PhysiocapInter( QtWidgets.QDialog):
                 # ###################
                 # CRÉATION point
                 # ###################
-                nom_court_point = nom_noeud_arbre + NOM_POINTS + SEPARATEUR_ + un_autre_ID + EXT_CRS_SHP     
-                nom_court_point_prj = nom_noeud_arbre + NOM_POINTS + SEPARATEUR_ + un_autre_ID + EXT_CRS_PRJ     
+                nom_court_point = nom_noeud_arbre + NOM_POINTS + SEPARATEUR_ + un_nom_libere + EXT_CRS_SHP     
+                nom_court_point_prj = nom_noeud_arbre + NOM_POINTS + SEPARATEUR_ + un_nom_libere + EXT_CRS_PRJ     
                 nom_point = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_point))        
                 nom_point_prj = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_point_prj))        
                 
@@ -1573,8 +1576,8 @@ class PhysiocapInter( QtWidgets.QDialog):
                     # ###################
                     # CRÉATION point sans mesure
                     # ###################
-                    nom_court_sans_mesure = nom_noeud_arbre + NOM_POINTS + EXTENSION_ZERO_SEUL + SEPARATEUR_ + un_autre_ID + EXT_CRS_SHP     
-                    nom_court_sans_mesure_prj = nom_noeud_arbre + NOM_POINTS + EXTENSION_ZERO_SEUL + SEPARATEUR_ + un_autre_ID + EXT_CRS_PRJ     
+                    nom_court_sans_mesure = nom_noeud_arbre + NOM_POINTS + EXTENSION_ZERO_SEUL + SEPARATEUR_ + un_nom_libere + EXT_CRS_SHP     
+                    nom_court_sans_mesure_prj = nom_noeud_arbre + NOM_POINTS + EXTENSION_ZERO_SEUL + SEPARATEUR_ + un_nom_libere + EXT_CRS_PRJ     
                     nom_sans_mesure = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_sans_mesure))        
                     nom_sans_mesure_prj = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_sans_mesure_prj))        
                     
@@ -1588,8 +1591,8 @@ class PhysiocapInter( QtWidgets.QDialog):
                     # ###################
                     # CRÉATION segment droit dans contour
                     # ###################
-                    nom_court_segment = nom_noeud_arbre + NOM_SEGMENTS + SEPARATEUR_ + un_autre_ID + EXT_CRS_SHP     
-                    nnom_court_segment_prj = nom_noeud_arbre + NOM_SEGMENTS + SEPARATEUR_ + un_autre_ID + EXT_CRS_PRJ     
+                    nom_court_segment = nom_noeud_arbre + NOM_SEGMENTS + SEPARATEUR_ + un_nom_libere + EXT_CRS_SHP     
+                    nnom_court_segment_prj = nom_noeud_arbre + NOM_SEGMENTS + SEPARATEUR_ + un_nom_libere + EXT_CRS_PRJ     
                     nom_segment = physiocap_rename_existing_file( os.path.join( chemin_segments, nom_court_segment))        
                     nom_segment_prj = physiocap_rename_existing_file( os.path.join( chemin_segments, nnom_court_segment_prj))        
                     
@@ -1602,8 +1605,8 @@ class PhysiocapInter( QtWidgets.QDialog):
                     # ###################
                     # CRÉATION segment  brisé dans contour
                     # ###################
-                    nom_court_segment_brise = nom_noeud_arbre + NOM_SEGMENTS_DETAILS + SEPARATEUR_ + un_autre_ID + EXT_CRS_SHP     
-                    nnom_court_segment_brise_prj = nom_noeud_arbre + NOM_SEGMENTS_DETAILS + SEPARATEUR_ + un_autre_ID + EXT_CRS_PRJ     
+                    nom_court_segment_brise = nom_noeud_arbre + NOM_SEGMENTS_DETAILS + SEPARATEUR_ + un_nom_libere + EXT_CRS_SHP     
+                    nnom_court_segment_brise_prj = nom_noeud_arbre + NOM_SEGMENTS_DETAILS + SEPARATEUR_ + un_nom_libere + EXT_CRS_PRJ     
                     nom_segment_brise = physiocap_rename_existing_file( os.path.join( chemin_segments, nom_court_segment_brise))        
                     nom_segment_brise_prj = physiocap_rename_existing_file( os.path.join( chemin_segments, nnom_court_segment_brise_prj))        
                     

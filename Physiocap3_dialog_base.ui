@@ -638,7 +638,7 @@
         </font>
        </property>
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Nouveauté de la V3 : &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;attributs, vecteur des POINTS_0_SEUL ou points sans captures de sarments et 3D.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Voici la description des 6 nouveaux attributs présent dans les vecteur de points :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Altitude est la valeur de l'altitude donnée par le GPS. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Pdop est un indicateur qualitatif de la qualité de la capture GPS. * &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Distance est la distance d'une point avec le point précédent. *&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Dérive est le pourcentage de déviation entre le point et le point théorique prévu à partir du point précédent. *&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Azimuth est l'orientation entre le point et son précédent. Il est un indicateur de la précision du GPS (ou de rang courbe (;)).&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Nbsart le nombre total de sarments filtrés. Ne pas confondre avec Nbsarm qui est le nombre de sarments filtrés au m linéaire.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Au niveau des vecteurs de segment par contour, on retrouve l'azimuth et la longueur de chaque segment.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Plus globalement il apparaît pour chaque attribut dans les vecteurs de moyennes, l'écart type et la médiane (préfixes respectifs EC_ et M_). &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Les points sans mesure sont des indicateurs de la qualité de la mesure ou du nombres de pieds manquant mesurés. Après filtrer, la thématique &amp;quot;Filtrer pas de mesure&amp;quot; est la plus facile analyse de la qualité de capture. Les points rouge autour du contour permette de valider la qualité de vos contours. Les points rouges dans la parcelle montre une éventuelle zone avec plus de points sans mesure. La densité par ha des points sans mesures donne un autre format de l'indicateur visuel.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Pour l'&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;utilisation de la 3D (nouveauté de QGIS3)&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;, les attributs suivant rentrent dans la composante Z des vecteurs de points. Les vecteurs de points deviennent des 2.5D :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- DIAM (Diamètre moyen) pour les POINTS_SANS_0&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- VITESSE pour les POINTS_AVEC_0&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;L'extension voit apparaître des thématiques 3D pour visualiser en 3D ces attributs. Elles ne sont pas choisies par défaut. La visualisation 2D reste le défaut.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : Vous pouvez rester au format des données de l'extension Physiocap 1.8.x, c'est à dire que vos shapefile et cvs restent sans :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;- les nouveaux attributs de qualification de vos captures (altitude, pdop, distance, derive, azimuth, nbsart)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;- segments de captures contigus et cohérentes.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Vous pouvez ainsi vérifier la non régression de l'extension Physiocap 3, mais ce mode n'est resté actif que pour re-traiter des données anciennes. Nous vous conseillons de passer aux format V3 pour utiliser les nouveaux attributs, les nouveaux vecteurs et la 3D.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Les vecteurs arrivant avec Physiocap 3&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt; sont décrits dans l'onglet Expert et sur le wiki https://github.com/jhemmi/Physiocap3/wiki&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Nouveautés de la V3 : &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;attributs, vecteur des POINTS_0_SEUL ou points sans captures de sarments et 3D.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Voici la description des 6 nouveaux attributs présent dans les vecteur de points :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Altitude est la valeur de l'altitude donnée par le GPS. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Pdop est un indicateur qualitatif de la qualité de la capture GPS. * &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Distance est la distance d'une point avec le point précédent. *&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Dérive est le pourcentage de déviation entre le point et le point théorique prévu à partir du point précédent. *&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Azimuth est l'orientation entre le point et son précédent. Il est un indicateur de la précision du GPS (ou de rang courbe (;)).&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Nbsart le nombre total de sarments filtrés. Ne pas confondre avec Nbsarm qui est le nombre de sarments filtrés au m linéaire.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Au niveau des vecteurs de segment par contour, on retrouve l'azimuth et la longueur de chaque segment.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Plus globalement il apparaît pour chaque attribut dans les vecteurs de moyennes, l'écart type et la médiane (préfixes respectifs EC_ et M_). &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Les points sans mesure sont des indicateurs de la qualité de la mesure ou du nombres de pieds manquant mesurés. Après filtrer, la thématique &amp;quot;Filtrer pas de mesure&amp;quot; est la plus facile analyse de la qualité de capture. Les points rouge autour du contour permette de valider la qualité de vos contours. Les points rouges dans la parcelle montre une éventuelle zone avec plus de points sans mesure. La densité par ha des points sans mesures donne un autre format de l'indicateur visuel.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Pour l'&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;utilisation de la 3D (nouveauté de QGIS3)&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;, les attributs suivant rentrent dans la composante Z des vecteurs de points. Les vecteurs de points deviennent des 2.5D :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- DIAM (Diamètre moyen) pour les POINTS_SANS_0&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- VITESSE pour les POINTS_AVEC_0&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;L'extension voit apparaître des thématiques 3D pour visualiser en 3D ces attributs. Elles ne sont pas choisies par défaut. La visualisation 2D reste le défaut.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : Vous pouvez rester au format des données de l'extension Physiocap 1.8.x, c'est à dire que vos shapefile et cvs restent sans :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;- les nouveaux attributs de qualification de vos captures (altitude, pdop, distance, derive, azimuth, nbsart)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;- segments de captures contigus et cohérentes.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Vous pouvez ainsi vérifier la non régression de l'extension Physiocap 3, mais ce mode n'est resté actif que pour re-traiter des données anciennes. Nous vous conseillons de passer aux format V3 pour utiliser les nouveaux attributs, les nouveaux vecteurs et la 3D.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Les vecteurs arrivant avec Physiocap 3&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt; sont décrits dans l'onglet Expert et sur le wiki https://github.com/jhemmi/Physiocap3/wiki&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
         <string>Attributs et vecteurs V3</string>
@@ -669,7 +669,7 @@
       <property name="title">
        <string>Filtres permettant de nettoyer les données brutes</string>
       </property>
-      <widget class="QLabel" name="lab_29">
+      <widget class="QLabel" name="lab_20">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -738,7 +738,7 @@
         <number>4</number>
        </property>
       </widget>
-      <widget class="QLabel" name="lab_30">
+      <widget class="QLabel" name="lab_21">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -757,7 +757,7 @@
         <string>Tailles d'exclusion des mesures  de sarments (en mm)</string>
        </property>
       </widget>
-      <widget class="QLabel" name="lab_31">
+      <widget class="QLabel" name="lab_22">
        <property name="geometry">
         <rect>
          <x>110</x>
@@ -2971,7 +2971,7 @@ Si vous hésitez, trouvez du conseil. </string>
      <property name="title">
       <string>Choisissez un paramétrage fixe pour les isolignes</string>
      </property>
-     <widget class="QLabel" name="lab_190">
+     <widget class="QLabel" name="lab_290">
       <property name="enabled">
        <bool>true</bool>
       </property>
@@ -3022,7 +3022,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <number>11</number>
       </property>
      </widget>
-     <widget class="QLabel" name="lab_194">
+     <widget class="QLabel" name="lab_294">
       <property name="geometry">
        <rect>
         <x>220</x>
@@ -3077,7 +3077,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <number>1</number>
       </property>
      </widget>
-     <widget class="QLabel" name="lab_195">
+     <widget class="QLabel" name="lab_295">
       <property name="geometry">
        <rect>
         <x>360</x>
@@ -3103,7 +3103,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <string>Valeur maximale</string>
       </property>
      </widget>
-     <widget class="QLabel" name="lab_193">
+     <widget class="QLabel" name="lab_293">
       <property name="geometry">
        <rect>
         <x>120</x>
@@ -3193,7 +3193,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <string>DIAM</string>
       </property>
      </widget>
-     <widget class="QLabel" name="lab_192">
+     <widget class="QLabel" name="lab_292">
       <property name="geometry">
        <rect>
         <x>0</x>
@@ -4152,9 +4152,9 @@ Si vous hésitez, trouvez du conseil. </string>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>100</y>
+       <y>90</y>
        <width>491</width>
-       <height>101</height>
+       <height>131</height>
       </rect>
      </property>
      <property name="font">
@@ -4204,9 +4204,9 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="geometry">
        <rect>
-        <x>160</x>
-        <y>60</y>
-        <width>211</width>
+        <x>150</x>
+        <y>50</y>
+        <width>291</width>
         <height>20</height>
        </rect>
       </property>
@@ -4233,11 +4233,11 @@ Si vous hésitez, trouvez du conseil. </string>
        <number>1</number>
       </property>
      </widget>
-     <widget class="QLabel" name="lab_1000">
+     <widget class="QLabel" name="lab_1010">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>60</y>
+        <x>0</x>
+        <y>50</y>
         <width>131</width>
         <height>21</height>
        </rect>
@@ -4258,14 +4258,74 @@ Si vous hésitez, trouvez du conseil. </string>
        <string>Mode de traces</string>
       </property>
      </widget>
+     <widget class="QLabel" name="lab_1011">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>80</y>
+        <width>131</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Champ ID_PHY</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="fieldComboModePhyId">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>80</y>
+        <width>291</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Vous pouvez choisir le contenu du champ ID_PHY : &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Le premier choix remplit  ID_PHY avec une valeur PHY_numérique qui crée un attribut uniwque mais peu explicite&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Le deuxième choix permet de créer un champ  ID_PHY textuel qui est rempli par les valeurs de votre choix d'attribut lors du calcul Inter. Ce champ est libéré des caractères problématiques pour certaines librairies (le blanc et la cote sont remplacés par un &amp;quot;_&amp;quot;). Vos shapefiles et rasters seront nommés avec cette valeur libérée.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="accessibleDescription">
+       <string/>
+      </property>
+      <property name="editable">
+       <bool>true</bool>
+      </property>
+      <property name="currentIndex">
+       <number>-1</number>
+      </property>
+      <property name="minimumContentsLength">
+       <number>1</number>
+      </property>
+     </widget>
     </widget>
     <widget class="QGroupBox" name="groupBoxSegment">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>230</y>
+       <y>250</y>
        <width>491</width>
-       <height>101</height>
+       <height>131</height>
       </rect>
      </property>
      <property name="font">
@@ -4305,7 +4365,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <rect>
         <x>10</x>
         <y>70</y>
-        <width>151</width>
+        <width>121</width>
         <height>21</height>
        </rect>
       </property>
@@ -4399,7 +4459,7 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="geometry">
        <rect>
-        <x>420</x>
+        <x>390</x>
         <y>70</y>
         <width>51</width>
         <height>21</height>
@@ -4435,7 +4495,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <rect>
         <x>210</x>
         <y>70</y>
-        <width>201</width>
+        <width>181</width>
         <height>21</height>
        </rect>
       </property>
@@ -4574,10 +4634,10 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
      </widget>
     </widget>
-    <widget class="QLabel" name="label_1111">
+    <widget class="QLabel" name="label_1000">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>10</x>
        <y>30</y>
        <width>91</width>
        <height>21</height>
@@ -4626,38 +4686,6 @@ Si vous hésitez, trouvez du conseil. </string>
     <attribute name="title">
      <string>A propos</string>
     </attribute>
-    <widget class="QLabel" name="label_502">
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>60</y>
-       <width>311</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_507">
-     <property name="geometry">
-      <rect>
-       <x>150</x>
-       <y>224</y>
-       <width>311</width>
-       <height>50</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
     <widget class="QGroupBox" name="groupBox">
      <property name="geometry">
       <rect>
@@ -4672,6 +4700,70 @@ Si vous hésitez, trouvez du conseil. </string>
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="palette">
+      <palette>
+       <active>
+        <colorrole role="Base">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>115</red>
+           <green>210</green>
+           <blue>22</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Window">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>78</red>
+           <green>154</green>
+           <blue>6</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </active>
+       <inactive>
+        <colorrole role="Base">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>115</red>
+           <green>210</green>
+           <blue>22</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Window">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>78</red>
+           <green>154</green>
+           <blue>6</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </inactive>
+       <disabled>
+        <colorrole role="Base">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>78</red>
+           <green>154</green>
+           <blue>6</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Window">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>78</red>
+           <green>154</green>
+           <blue>6</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </disabled>
+      </palette>
      </property>
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;L'extension Physiocap pour QGIS est Open Source, sous licence GNU et en Common Creative.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Ce choix est lié à la grande importance de rester maître de ses données. Le capteur Physiocap vous permet de maîtriser vos mesures. Le Comité Champagne a fait le choix de l'ouverture en publiant en Common Creative l'ensemble des publications et outils traitant de Physiocap. jhemmi.eu s'engage dans cette même voie pour permettre une diffusion simple et efficace d'un outil de traitement des données brutes de Physiocap sous QGIS.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Mais Open Source et diffusé gratuitement par le biais de la distribution QGIS ne signifie pas &amp;quot;exempt de besoins&amp;quot;. &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;L'extension a besoin de votre aide&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;. Contribuez simplement à la hauteur du service rendu.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -4709,7 +4801,10 @@ Si vous hésitez, trouvez du conseil. </string>
        </rect>
       </property>
       <property name="toolTip">
-       <string/>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#00aa00;&quot;&gt;Vous pouvez agir et soutenir l'extension. Sa maintenance et ses évolutions dépendent de vous. Contribuez, maintenant.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
       </property>
       <property name="text">
        <string>Contribuez maintenant pour jhemmi.eu !</string>
@@ -4790,7 +4885,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="text">
-       <string>Version 3.1.2 INTRA GDAL</string>
+       <string>Version 3.1.3 INTRA GDAL</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_500">

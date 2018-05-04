@@ -44,7 +44,7 @@
 """
 from .Physiocap_tools import physiocap_message_box,\
         physiocap_log, physiocap_error, \
-        physiocap_PHY_nom_entite_sans_cote,  physiocap_nom_entite_avec_pb_caractere, \
+        physiocap_nom_entite_sans_pb_caractere,  physiocap_nom_entite_avec_pb_caractere, \
         physiocap_rename_existing_file, \
         physiocap_quelle_projection_demandee, \
         physiocap_get_layer_by_ID
@@ -191,7 +191,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
     def physiocap_creer_raster_iso( self, dialogue, choix_interpolation, 
                 nom_noeud_arbre, chemin_raster, chemin_iso,
                 nom_court_vignette, nom_vignette, nom_court_point, nom_point,
-                le_champ_choisi, le_choix_INTRA_continue, le_nom_entite):
+                le_champ_choisi, le_choix_INTRA_continue, le_nom_entite_libere):
         """ Creation du raster et Iso
         Cas Saga ou Gdal : appel des Processing (Traitement) correspondants
         """
@@ -223,7 +223,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
       
         # Trace des entités en entrée
         physiocap_log( self.tr( "=~= Nom ==>> {0} <<==").\
-            format(  le_nom_entite), leModeDeTrace)
+            format(  le_nom_entite_libere), leModeDeTrace)
 #        physiocap_log( self.tr( "Vignette (moyenne Inter) {0} et chemin à la vignette \n{1}").\
 #            format( nom_court_vignette, nom_vignette), TRACE_INTRA)
 #        physiocap_log( self.tr( "Point {0} et chemin aux points \n{1}").\
@@ -250,23 +250,24 @@ class PhysiocapIntra( QtWidgets.QDialog):
         distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
         laProjectionCRS, laProjectionTXT, EPSG_NUMBER = \
             physiocap_quelle_projection_demandee( dialogue)
-
+        
         # ###################
         # CRÉATION raster cible et temporaire
         # ###################
+        
         # Nom du raster cible avec le_champ_choisi
         nom_court_raster = nom_noeud_arbre + NOM_INTRA + SEPARATEUR_ + le_champ_choisi +  \
-            SEPARATEUR_ + physiocap_PHY_nom_entite_sans_cote( le_nom_entite) + EXT_CRS_RASTER
+            SEPARATEUR_ + le_nom_entite_libere + EXT_CRS_RASTER
          
         nom_court_isoligne = nom_noeud_arbre + NOM_INTRA  + SEPARATEUR_  + le_champ_choisi  + \
-            SEPARATEUR_ + "ISOLIGNE_" + physiocap_PHY_nom_entite_sans_cote( le_nom_entite) + EXT_CRS_SHP
+            SEPARATEUR_ + "ISOLIGNE_" + le_nom_entite_libere + EXT_CRS_SHP
  
         le_raster_possible = os.path.join( chemin_raster, nom_court_raster) 
         l_iso_possible = os.path.join( chemin_iso, nom_court_isoligne)
         if le_choix_INTRA_continue == 0:
             # CAS 0 : Arrêt si une interpolation existe
             if os.path.exists( le_raster_possible) or os.path.exists( l_iso_possible):
-                raise physiocap_exception_raster_ou_iso_existe_deja( le_champ_choisi + ' pour ' +  le_nom_entite)  
+                raise physiocap_exception_raster_ou_iso_existe_deja( le_champ_choisi + ' pour ' +  le_nom_entite_libere)  
             else:
                 # il faut creer les deux
                 nom_raster =  physiocap_rename_existing_file( le_raster_possible)
@@ -277,7 +278,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
             # on vérifie si le raster existe déjà
             if os.path.exists( le_raster_possible) and os.path.exists( l_iso_possible):
                 physiocap_log( self.tr( "=~= Interpolation pour {0} existe déjà. Pas de nouveau calcul").\
-                    format(  le_nom_entite), leModeDeTrace)
+                    format(  le_nom_entite_libere), leModeDeTrace)
                 return "PAS NOUVEAU", le_raster_possible, nom_court_raster, l_iso_possible, nom_court_isoligne
             else:
                 if os.path.exists( le_raster_possible) or os.path.exists( l_iso_possible):
@@ -292,7 +293,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     else:
                         physiocap_log( self.tr( "=~= pas l'iso "), leModeDeTrace)
                         
-                    raise physiocap_exception_raster_sans_iso( le_champ_choisi  + ' pour jhjh ' +  le_nom_entite)
+                    raise physiocap_exception_raster_sans_iso( le_champ_choisi  + ' pour ' +  le_nom_entite_libere)
                 else:
                     # il faut creer les deux
                     nom_raster =  physiocap_rename_existing_file( le_raster_possible)
@@ -301,7 +302,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
 #        elif le_choix_INTRA_continue == 2:
 #            # CAS 2 : Recreer de nouvelle instance  
         else:
-            raise physiocap_exception_no_choix_raster_iso( le_nom_entite)
+            raise physiocap_exception_no_choix_raster_iso( le_nom_entite_libere)
             
         # Création d'un raster temporaire
         try:
@@ -333,8 +334,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
             orientation = 0
             #passage = 0 
             ellipse_orientee = 0
-            # Si le le_nom_entite contient une cote on ne rentre pas 
-            mon_expression = "\"{0}\" = '{1}'".format( CHAMP_NOM_ID, physiocap_PHY_nom_entite_sans_cote( le_nom_entite))                
+            mon_expression = "\"{0}\" = '{1}'".format( CHAMP_NOM_ID, le_nom_entite_libere)                
             try:
                 physiocap_log( self.tr( "avant Expression ==>{0}<===").\
                     format( mon_expression), TRACE_INTRA)
@@ -349,7 +349,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     break
             except:
                 physiocap_log( self.tr( "Exception durant recherche orientation & passage pour {0}").\
-                format( le_nom_entite), TRACE_INTRA)
+                format( le_nom_entite_libere), TRACE_INTRA)
                 raise                
 
             # Cas sans orientation retrouvé
@@ -360,7 +360,8 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 format(  orientation, ellipse_orientee,  rayonDoubleIntra,  deuxieme_rayon), leModeDeTrace)     
      
         
-        #TODO: Verifier si inutile supprimer les controles Sous Windows :attraper les exceptions processing SAGA ascii        
+        #TODO: Verifier si inutile supprimer les controles Sous Windows :attraper les exceptions processing SAGA ascii
+#        le_nom_entite_libere !        
 #        try:
 #            # Gérer le cas de la valeur d'un champ à part
 #            if platform.system() == 'Windows':            
@@ -1067,21 +1068,31 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         un_nom = NOM_CHAMP_ID + SEPARATEUR_ + str(id_contour)
                         pass
 
-                    if physiocap_nom_entite_avec_pb_caractere( un_nom,  choix_interpolation):
-                        # ASSERT un nom contient un caractère non supporté par GDAL
+                    # ###################
+                    # Préparation du nom de l'entité pour les fichiers
+                    # ###################        
+                    if ( dialogue.fieldComboModePhyId.currentIndex() == 0):
+                        le_nom_entite_libere = un_nom
+                    else:
+                        # Prepare un nom sans cote (requete dans gdal et nommage dans gdal)
+                        le_nom_entite_libere = physiocap_nom_entite_sans_pb_caractere( un_nom) 
+
+                    if physiocap_nom_entite_avec_pb_caractere( le_nom_entite_libere,  choix_interpolation):
+                        # ASSERT le_nom_entite_libere ne plus contient un caractère non supporté par GDAL
                         physiocap_log ( self.tr( "=~= {0} Pas d'interpolation de {1}>>>>").\
                         format( PHYSIOCAP_UNI, un_nom), leModeDeTrace)
-                        raise physiocap_exception_probleme_caractere_librairie( un_nom)
+                        raise physiocap_exception_probleme_caractere_librairie( le_nom_entite_libere)
+                        
                     physiocap_log ( self.tr( "=~= {0} Début d'interpolation de {1} index {2} >>>>").\
                         format( PHYSIOCAP_UNI, un_nom,  id_contour), leModeDeTrace)
 
                     # Nom du Shape moyenne 
-                    nom_court_vignette = nom_noeud_arbre + NOM_MOYENNE + physiocap_PHY_nom_entite_sans_cote(un_nom) +  EXT_CRS_SHP     
+                    nom_court_vignette = nom_noeud_arbre + NOM_MOYENNE + le_nom_entite_libere +  EXT_CRS_SHP     
                     # Attention j'ai enleve physiocap_rename_existing_file(
                     nom_vignette = os.path.join( chemin_vignettes, nom_court_vignette)        
                                 
                     # Nom point 
-                    nom_court_point = nom_noeud_arbre + NOM_POINTS + SEPARATEUR_ + physiocap_PHY_nom_entite_sans_cote(un_nom) + EXT_CRS_SHP     
+                    nom_court_point = nom_noeud_arbre + NOM_POINTS + SEPARATEUR_ + le_nom_entite_libere + EXT_CRS_SHP     
                     # Attention j'ai enleve physiocap_rename_existing_file(
                     nom_point = os.path.join( chemin_vignettes, nom_court_point)                    
                     #physiocap_log( "=~= Vignette court : " +  nom_court_vignette , TRACE_INTRA)  
@@ -1089,11 +1100,11 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     # Verifier si le point et la vignette existent
                     if not (os.path.exists( nom_vignette)):
                         physiocap_log( self.tr( "=~= {0} Vignette {1} absente : pas d'interpolation").\
-                            format( PHYSIOCAP_WARNING, un_nom ), leModeDeTrace)
+                            format( PHYSIOCAP_WARNING, le_nom_entite_libere ), leModeDeTrace)
                         continue
                     if not (os.path.exists( nom_point)):
                         physiocap_log( self.tr( "=~= {0} Points de {1} absents : pas d'interpolation").\
-                            format( PHYSIOCAP_WARNING, un_nom ), leModeDeTrace)
+                            format( PHYSIOCAP_WARNING, le_nom_entite_libere ), leModeDeTrace)
                         continue
                     else:
                         contour_avec_point = contour_avec_point + 1
@@ -1124,7 +1135,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                             self.physiocap_creer_raster_iso( dialogue, choix_interpolation, 
                             nom_noeud_arbre, chemin_raster, chemin_iso,
                             nom_court_vignette, nom_vignette, nom_court_point, nom_point,
-                            le_champ_choisi, le_choix_INTRA_continue, un_nom)
+                            le_champ_choisi, le_choix_INTRA_continue, le_nom_entite_libere)
                     except physiocap_exception_windows_value_ascii as e:
                         aText = self.tr( "La valeur {0} a ").\
                             format( e)
@@ -1169,7 +1180,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                                 afficheRaster = "YES"
                                 if nouveau == "NOUVEAUX":
                                     physiocap_log ( self.tr( "=~= Affichage résultat d'interpolation de {0} <<<<").\
-                                        format( un_nom), "OGR")
+                                        format( le_nom_entite_libere), "OGR")
                                     physiocap_affiche_raster_iso( \
                                     nom_raster_final, nom_court_raster, le_template_raster, afficheRaster,
                                     nom_iso_final, nom_court_isoligne, le_template_isolignes, afficheIso,

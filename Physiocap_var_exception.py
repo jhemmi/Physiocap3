@@ -55,6 +55,7 @@ TRACE_TOUT = "Traces complètes"
 TRACE_MINI = "Traces minimales"
 TRACE_PAS  = "Pas de trace"
 MODE_TRACE = [ TRACE_TOUT,  TRACE_MINI, TRACE_PAS]
+MODE_PHY_ID = [ "PHY_ID vaut PHY_numérique",  "PHY_ID est un texte sans blanc, sans cote"]
 TRACE_INTRA  = "Intra"
 TRACE_TOOLS  = "Tools"
 TRACE_MIN_MAX  = "Min-Max"
@@ -177,7 +178,7 @@ PARAMETER["false_northing",4200000],UNIT["Meter",1]]'
 # CHAMP pour nommer les entités 
 CHAMP_NOM_PHY = "NOM_PHY"
 CHAMP_NOM_ID = "ID_PHY"
-# KO sous winwods NOM_CHAMP_ID = PHYSIOCAP_UNI + "_ID"
+# KO sous windows NOM_CHAMP_ID = PHYSIOCAP_UNI + "_ID"
 NOM_CHAMP_ID = "PHY_ID"
 
 # Champ des INFO DES SEGMENT FILTRE

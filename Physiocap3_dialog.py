@@ -92,11 +92,26 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         else:
             self.fieldComboModeTrace.clear( )
             self.fieldComboModeTrace.addItems( MODE_TRACE )
-            # Retrouver le mode de trace de  settings
+            # Retrouver le mode de trace dans  settings
             leModeDeTrace = self.settings.value("Physiocap/leModeTrace", TRACE_TOUT)
             for idx, modeTrace in enumerate( MODE_TRACE):
                 if ( modeTrace == leModeDeTrace):
                     self.fieldComboModeTrace.setCurrentIndex( idx)
+
+        # Remplissage du mode PHY_ID        
+        self.fieldComboModePhyId.setCurrentIndex( 0)
+        if len( MODE_PHY_ID) == 0:
+            self.fieldComboModePhyId.clear( )
+            physiocap_error( self, self.tr( "Pas de liste des modes PHY_ID pré défini"))
+        else:
+            self.fieldComboModePhyId.clear( )
+            self.fieldComboModePhyId.addItems( MODE_PHY_ID )
+            # Retrouver le mode de PHY_ID   dans  settings
+            leModePhyId = self.settings.value("Physiocap/leModePhyId", TRACE_TOUT)
+            for idx, modePhy in enumerate( MODE_PHY_ID):
+                if ( modePhy == leModePhyId):
+                    self.fieldComboModePhyId.setCurrentIndex( idx)
+
 
         
         #physiocap_log( "Répertoire de QGIS : " +  self.gis_dir, leModeDeTrace)
@@ -1281,6 +1296,24 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                
         return
         
+    def memoriser_expert(self):
+        """ Mémoriser les choix d'expert """        
+        # THEMATIQUES
+        self.settings.setValue("Physiocap/leDirThematiques", self.fieldComboThematiques.currentText())
+        self.settings.setValue("Physiocap/leChoixDeThematiques", self.fieldComboThematiques.currentIndex())
+
+        self.settings.setValue("Physiocap/leModeTrace", self.fieldComboModeTrace.currentText())
+        self.settings.setValue("Physiocap/leModePhyId", self.fieldComboModePhyId.currentText())
+        
+        # Cas détail segment
+        self.settings.setValue("Physiocap/vitesse_mini_segment", float( self.doubleSpinBoxVitesseMiniSegment.value()))        
+        self.settings.setValue("Physiocap/vitesse_maxi_segment", float( self.doubleSpinBoxVitesseMaxiSegment.value()))        
+        self.settings.setValue("Physiocap/nombre_mini_points", int( self.spinBoxNombreMiniPointsConsecutifs.value()))
+        self.settings.setValue("Physiocap/derive_max_segment", int( self.spinBoxDeriveMaxSegment.value()))
+        self.settings.setValue("Physiocap/pas_de_la_derive", int( self.spinBoxPasDeDerive.value()))
+        self.settings.setValue("Physiocap/pdop_max_segment", float( self.doubleSpinBoxPdopMaxSegment.value()))
+
+    
     def memoriser_affichages(self):
         """ Mémoriser les choix d'affichage """        
         # Sauver les affichages cas généraux
@@ -1319,9 +1352,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.settings.setValue("Physiocap/leChoixShapeBiomasse", self.fieldComboShapeBiomasse.currentIndex())
         self.settings.setValue("Physiocap/leChoixShapeVitesse", self.fieldComboShapeVitesse.currentIndex())
         
-        # THEMATIQUES
-        self.settings.setValue("Physiocap/leDirThematiques", self.fieldComboThematiques.currentText())
-        self.settings.setValue("Physiocap/leChoixDeThematiques", self.fieldComboThematiques.currentIndex())
+
         # Filtrage
         self.settings.setValue("Physiocap/themeDiametre", self.lineEditThematiqueDiametre.text())
         self.settings.setValue("Physiocap/themeSarment", self.lineEditThematiqueSarment.text())
@@ -1489,8 +1520,9 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
 
-        # Memorisation des saisies et les affichage
+        # Memorisation des saisies et expert et les affichages
         self.memoriser_affichages()
+        self.memoriser_expert()
         self.memoriser_saisies_inter_intra_parcelles()
             
         try:
@@ -1650,6 +1682,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.ButtonInter.setEnabled( False)
         # Memorisation des saisies
         self.memoriser_affichages()
+        self.memoriser_expert()
         self.memoriser_saisies_inter_intra_parcelles()
             
         try:
@@ -1808,6 +1841,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Todo : V3 prefixe Slot et nommage SLOT_Bouton_Cancel      
         # On sauve les saisies
         self.memoriser_affichages()
+        self.memoriser_expert()
         self.memoriser_saisies_inter_intra_parcelles()
         QDialog.reject( self)
                 
@@ -1873,15 +1907,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.settings.setValue("Physiocap/mindiam", int( self.spinBoxMinDiametre.value()))
         self.settings.setValue("Physiocap/maxdiam", int( self.spinBoxMaxDiametre.value()))
 
-        # Cas détail segment
-        self.settings.setValue("Physiocap/vitesse_mini_segment", float( self.doubleSpinBoxVitesseMiniSegment.value()))        
-        self.settings.setValue("Physiocap/vitesse_maxi_segment", float( self.doubleSpinBoxVitesseMaxiSegment.value()))        
-        self.settings.setValue("Physiocap/nombre_mini_points", int( self.spinBoxNombreMiniPointsConsecutifs.value()))
-        self.settings.setValue("Physiocap/derive_max_segment", int( self.spinBoxDeriveMaxSegment.value()))
-        self.settings.setValue("Physiocap/pas_de_la_derive", int( self.spinBoxPasDeDerive.value()))
-        self.settings.setValue("Physiocap/pdop_max_segment", float( self.doubleSpinBoxPdopMaxSegment.value()))
-
-        self.settings.setValue("Physiocap/leModeTrace", self.fieldComboModeTrace.currentText())
   
         # Cas détail vignoble
         details = "NO"
@@ -1906,6 +1931,9 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
 
         # On sauve les affichages
         self.memoriser_affichages()
+        self.memoriser_expert()
+        self.memoriser_saisies_inter_intra_parcelles()
+
                     
         # ########################################
         # Gestion de capture des erreurs Physiocap
