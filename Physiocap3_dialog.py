@@ -507,6 +507,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.checkBoxHistogramme.setChecked( Qt.Unchecked)
         # Pas d'histo avant calcul
         self.label_histo_sarment.setPixmap( QPixmap( FICHIER_HISTO_NON_CALCULE))
+        self.label_histo_vitesse.setPixmap( QPixmap( FICHIER_HISTO_NON_CALCULE))
         self.label_histo_diametre_avant.setPixmap( QPixmap( FICHIER_HISTO_NON_CALCULE))
         self.label_histo_diametre_apres.setPixmap( QPixmap( FICHIER_HISTO_NON_CALCULE))
         

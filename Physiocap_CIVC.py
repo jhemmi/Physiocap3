@@ -530,7 +530,7 @@ def physiocap_assert_csv(self, src, err):
         return 0
           
 # Fonction pour créer les fichiers histogrammes    
-def physiocap_fichier_histo( self, src, histo_diametre, histo_nbsarment, err):
+def physiocap_fichier_histo( self, src, histo_diametre, histo_nbsarment, histo_vitesse,  err):
     """Fonction de traitement. Creation des fichiers pour réaliser les histogrammes
     Lit et traite ligne brute par ligne brute le fichier source (src).
     Les résultats est écrit au fur et à mesure dans histo_diametre ou histo_nbsarment
@@ -557,6 +557,7 @@ def physiocap_fichier_histo( self, src, histo_diametre, histo_nbsarment, err):
             diamsF = [i for i in diams if i > 2 and i < 28 ] # on filtre les diams > diamsF correspond aux diams filtrés entre 2 et 28       
             if comptage==NB_VIRGULES and len(diamsF)>0 : # si le nombre de diamètre après filtrage != 0 alors mesures
                 if XY[7] != 0:
+                    histo_vitesse.write("%f%s" %(XY[7],";"))                
                     nbsarm = len(diamsF)/(XY[7]*1000/3600) #8eme donnée du GPS est la vitesse. Dernier terme : distance entre les sarments
                 else:
                     nbsarm = 0
@@ -570,7 +571,7 @@ def physiocap_fichier_histo( self, src, histo_diametre, histo_nbsarment, err):
             err.write( str( msg) ) # on écrit la ligne dans le fichier ERREUR
             pass # on mange l'exception
 
-def physiocap_tracer_histo(src, name, min=0, max =28, labelx = "Lab X", labely = "Lab Y", titre = "Titre", bins = 100):
+def physiocap_tracer_histo(src, name, min=0, max =28, labelx = "Lab X", labely = "Lab Y", titre = "Titre"):
     """Fonction de traitement.
     Lit et traite ligne brute par ligne brute le fichier source (src).
     Le résultat est écrit au fur et à mesure dans le
@@ -583,7 +584,8 @@ def physiocap_tracer_histo(src, name, min=0, max =28, labelx = "Lab X", labely =
     #nb_valeur = len(XY)
     #physiocap_log( "Histo min %d et nombre de valeurs : %d " % (min, nb_valeur), TRACE_TOOLS)
     classes = np.linspace(min, max, max+1)
-    plt.hist(XY,bins=classes,normed=1, facecolor='green', alpha=0.75) 
+    #physiocap_log( "Histo liste {0} ".format( XY), TRACE_TOOLS)
+    plt.hist( XY, bins=classes, normed=1, facecolor='green', alpha=0.75) 
     plt.xlabel(labelx)
     plt.ylabel(labely)
     plt.title(titre)

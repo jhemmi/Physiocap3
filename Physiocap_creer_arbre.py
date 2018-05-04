@@ -268,9 +268,14 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         nom_data_histo_diametre, data_histo_diametre = physiocap_open_file( nom_court_fichier_diametre, 
             chemin_textes)
         
-        # Appel fonction de creation de fichier
+        # Ouverture du fichier des sarments     
         nom_court_fichier_sarment = "nbsarm" + SUFFIXE_BRUT_CSV
         nom_data_histo_sarment, data_histo_sarment = physiocap_open_file( nom_court_fichier_sarment, 
+            chemin_textes)
+
+        # Ouverture du fichier des vitesses     
+        nom_court_fichier_vitesse = "vitesse" + SUFFIXE_BRUT_CSV
+        nom_data_histo_vitesse, data_histo_vitesse = physiocap_open_file( nom_court_fichier_vitesse, 
             chemin_textes)
 
         # Todo: ? Supprimer le fichier erreur
@@ -306,11 +311,12 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         if histogrammes == "YES":
             #################
             physiocap_fichier_histo( self, csv_concat, data_histo_diametre,    
-                        data_histo_sarment, erreur)
+                        data_histo_sarment, data_histo_vitesse,  erreur)
             #################
         # Fermerture des fichiers
         data_histo_diametre.close()
         data_histo_sarment.close()
+        data_histo_vitesse.close()
         csv_concat.close()
         erreur.close()
  
@@ -374,19 +380,25 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             except:
                 raise physiocap_exception_rep( REPERTOIRE_HISTOS)
 
-        # TODO: si version 4 ne pas tracer les histo ici        
+        # Si version 4 ne pas tracer les histo ici        
         if histogrammes == "YES":
             # creation d'un histo
             nom_data_histo_sarment, data_histo_sarment = physiocap_open_file( nom_court_fichier_sarment, chemin_textes, 'r')
             nom_histo_sarment, histo_sarment = physiocap_open_file( FICHIER_HISTO_SARMENT, chemin_histos)
             name = nom_histo_sarment
-            physiocap_tracer_histo( data_histo_sarment, name, 0, 50, "SARMENT au m", "FREQUENCE en %", "HISTOGRAMME NBSARM AVANT TRAITEMENT")
+            physiocap_tracer_histo( data_histo_sarment, name, 0, 50, "SARMENT au m", "FREQUENCE", "HISTOGRAMME NBSARM AVANT TRAITEMENT")
             data_histo_sarment.close()
             
+            nom_data_histo_vitesse, data_histo_vitesse = physiocap_open_file( nom_court_fichier_vitesse, chemin_textes, 'r')
+            nom_histo_vitesse, histo_vitesse = physiocap_open_file( FICHIER_HISTO_VITESSE, chemin_histos)
+            name = nom_histo_vitesse
+            physiocap_tracer_histo( data_histo_vitesse, name, 0, 15, "VITESSE en km/h", "FREQUENCE", "HISTOGRAMME VITESSE AVANT TRAITEMENT")
+            data_histo_vitesse.close()  
+
             nom_data_histo_diametre, data_histo_diametre = physiocap_open_file( nom_court_fichier_diametre, chemin_textes, 'r')
             nom_histo_diametre, histo_diametre = physiocap_open_file( FICHIER_HISTO_DIAMETRE, chemin_histos)
             name = nom_histo_diametre
-            physiocap_tracer_histo( data_histo_diametre, name, 0, 30, "DIAMETRE en mm", "FREQUENCE en %", "HISTOGRAMME DIAMETRE AVANT TRAITEMENT")
+            physiocap_tracer_histo( data_histo_diametre, name, 0, 30, "DIAMETRE en mm", "FREQUENCE", "HISTOGRAMME DIAMETRE AVANT TRAITEMENT")
             data_histo_diametre.close()        
             
             #physiocap_log( self.tr( "Fin de la création des histogrammes bruts"), leModeDeTrace)
@@ -459,7 +471,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             nom_histo_diametre_filtre, histo_diametre = physiocap_open_file( FICHIER_HISTO_DIAMETRE_FILTRE, chemin_histos)
 
             physiocap_tracer_histo( diametre_filtre, nom_histo_diametre_filtre, 0, 30, \
-                "DIAMETRE en mm", "FREQUENCE en %", "HISTOGRAMME DIAMETRE APRES TRAITEMENT")
+                "DIAMETRE en mm", "FREQUENCE", "HISTOGRAMME DIAMETRE APRES TRAITEMENT")
             diametre_filtre.close()        
             #physiocap_log( self.tr( "Fin de la création de l'histogramme filtré"), leModeDeTrace)
                                               
@@ -660,14 +672,15 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
                     
         # Mettre à jour les histogrammes dans fenetre resultat
         if histogrammes == "YES":
-            if ( dialogue.label_histo_sarment.setPixmap( QPixmap( nom_histo_sarment))):
-                physiocap_log( self.tr( "Physiocap histogramme sarment chargé"), leModeDeTrace)
+            dialogue.label_histo_sarment.setPixmap( QPixmap( nom_histo_sarment))
+            dialogue.label_histo_vitesse.setPixmap( QPixmap( nom_histo_vitesse))
             if ( dialogue.label_histo_diametre_avant.setPixmap( QPixmap( nom_histo_diametre))):
                 physiocap_log( self.tr( "Physiocap histogramme diamètre chargé"), leModeDeTrace)                
             if ( dialogue.label_histo_diametre_apres.setPixmap( QPixmap( nom_histo_diametre_filtre))):
                 physiocap_log( self.tr( "Physiocap histogramme diamètre filtré chargé"), leModeDeTrace)    
         else:
             dialogue.label_histo_sarment.setPixmap( QPixmap( FICHIER_HISTO_NON_CALCULE))
+            dialogue.label_histo_vitesse.setPixmap( QPixmap( FICHIER_HISTO_NON_CALCULE))
             dialogue.label_histo_diametre_avant.setPixmap( QPixmap( FICHIER_HISTO_NON_CALCULE))
             dialogue.label_histo_diametre_apres.setPixmap( QPixmap( FICHIER_HISTO_NON_CALCULE))
             physiocap_log( self.tr( "Physiocap pas d'histogramme calculé"), leModeDeTrace)    
