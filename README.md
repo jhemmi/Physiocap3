@@ -32,7 +32,7 @@ La documentation de la version 2 se trouve dans le Wiki
 https://github.com/jhemmi/QgisPhysiocapPlugin/wiki/Qgis-Physiocap-Plugin-usage-&-installation
 La documentation de la version 3 n'est pas encore disponible.
 
-La version 3.1.3-INTRA_GDAL est publiée dans le dépot github. Elle est déposéé sous QGIS 3 (accessible directement dans QGIS 3 depuis le Menu "Extension").
+La version 3.1.3-INTRA_GDAL est publiée dans le dépot github. Elle est aussi déposée sous QGIS 3 (accessible directement dans QGIS 3 depuis le Menu "Extension").
 
 **Attention, ce dépot GitHub contient la aussi dernière version en cours d'évolution (la 3.1.4 - Mai 2018 https://github.com/jhemmi/Physiocap3/releases) **
 
