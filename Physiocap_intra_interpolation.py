@@ -55,7 +55,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 from qgis.core import ( Qgis, QgsProject, QgsVectorLayer, \
     QgsLayerTreeGroup, QgsRasterLayer, QgsMessageLog,  \
-    QgsFeatureRequest, QgsExpression,  QgsProcessingOutputRasterLayer)
+    QgsFeatureRequest, QgsExpression, QgsProcessingFeedback, QgsProcessingOutputRasterLayer)
     
 def physiocap_affiche_raster_iso( nom_raster_final, nom_court_raster, le_template_raster, affiche_raster,
                     nom_iso_final, nom_court_isoligne, le_template_isolignes, affiche_iso,
@@ -146,6 +146,8 @@ class PhysiocapIntra( QtWidgets.QDialog):
         """
            
         import processing
+        mon_feedback = QgsProcessingFeedback()
+        
         lettre_algo = algo[0]
 
         physiocap_log( self.tr( "={0}= Parametres pour algo {1} de nom long {2}\n{3}".\
@@ -158,9 +160,9 @@ class PhysiocapIntra( QtWidgets.QDialog):
 ###                # no function prepare : algo_prepare = processing.prepare(algo, params_algo)        
 ###                physiocap_log( self.tr( "={0}= SAGA Préparé pour algo {1} de nom long {2}\n{3}".\
 ###                        format( lettre_algo, algo_court, algo , params_algo )), TRACE_INTRA) 
-                textes_sortie_algo = processing.run( algo, params_algo)        
+                textes_sortie_algo = processing.run( algo, params_algo, feedback=mon_feedback)        
             else:
-                textes_sortie_algo = processing.run( algo, params_algo)        
+                textes_sortie_algo = processing.run( algo, params_algo, feedback=mon_feedback)        
         except: # QgsProcessingException
             erreur_processing = self.tr("{0} Erreur durant création du produit par Processing de {1} nom long {2} : exception".\
                     format( PHYSIOCAP_STOP, algo_court,  algo ))
