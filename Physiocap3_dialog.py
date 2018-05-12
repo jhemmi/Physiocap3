@@ -206,6 +206,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.lineEditExpert.setText( mode_expert)
         self.groupBoxSegment.setEnabled( mode_expert == MODE_EXPERT)
         self.groupBoxThemaTrace.setEnabled( mode_expert == MODE_EXPERT)
+        self.groupBoxInterIntraExpert.setEnabled( mode_expert == MODE_EXPERT)
 
         # Nom du projet et des répertoires
         repertoire_brut = self.settings.value("Physiocap/repertoire",
@@ -1785,9 +1786,11 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         if self.lineEditExpert.text() == MODE_EXPERT:
             self.groupBoxSegment.setEnabled( set_quoi)
             self.groupBoxThemaTrace.setEnabled( set_quoi)
+            self.groupBoxInterIntraExpert.setEnabled( set_quoi)
         else:
             self.groupBoxSegment.setEnabled( False)
             self.groupBoxThemaTrace.setEnabled( False)
+            self.groupBoxInterIntraExpert.setEnabled( False)
             
         # appel des attributs INTRA
         self.slot_INTRA_maj_attributs_interpolables()

@@ -108,10 +108,10 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>0</x>
+       <x>10</x>
        <y>410</y>
-       <width>511</width>
-       <height>111</height>
+       <width>501</width>
+       <height>121</height>
       </rect>
      </property>
      <property name="sizePolicy">
@@ -119,6 +119,11 @@
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>1</pointsize>
+      </font>
      </property>
      <property name="toolTip">
       <string/>
@@ -136,7 +141,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>7</y>
+        <y>24</y>
         <width>281</width>
         <height>21</height>
        </rect>
@@ -147,6 +152,11 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Interrang (cm) - Ecartement entre rangs</string>
       </property>
@@ -155,10 +165,15 @@
       <property name="geometry">
        <rect>
         <x>280</x>
-        <y>9</y>
+        <y>26</y>
         <width>101</width>
         <height>21</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
       </property>
       <property name="minimum">
        <number>70</number>
@@ -177,7 +192,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>29</y>
+        <y>46</y>
         <width>291</width>
         <height>21</height>
        </rect>
@@ -188,6 +203,11 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Intercep (cm) - Ecartement entre ceps</string>
       </property>
@@ -196,10 +216,15 @@
       <property name="geometry">
        <rect>
         <x>280</x>
-        <y>30</y>
+        <y>47</y>
         <width>101</width>
         <height>21</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
       </property>
       <property name="minimum">
        <number>50</number>
@@ -218,7 +243,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>59</y>
+        <y>76</y>
         <width>291</width>
         <height>21</height>
        </rect>
@@ -229,6 +254,11 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Hauteur végétative (cm) - Haie folaire</string>
       </property>
@@ -237,10 +267,15 @@
       <property name="geometry">
        <rect>
         <x>280</x>
-        <y>57</y>
+        <y>74</y>
         <width>101</width>
         <height>21</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
       </property>
       <property name="minimum">
        <number>30</number>
@@ -259,7 +294,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>79</y>
+        <y>96</y>
         <width>221</width>
         <height>21</height>
        </rect>
@@ -270,6 +305,11 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Densité moyenne des sarments</string>
       </property>
@@ -278,10 +318,15 @@
       <property name="geometry">
        <rect>
         <x>280</x>
-        <y>80</y>
+        <y>97</y>
         <width>101</width>
         <height>21</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
       </property>
       <property name="toolTip">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Cette densité est utilisée dans le calcul de Biomasse en kg. La valeur 0,9 est une mesure moyenne dans la région Champagne. Mais la densité de vos bois dépend du cépage et des conditions météo.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : cette densité est un réel biais si vous comparez l'indice de biomasse à des pesées de bois de taille. Dans ce cas, prenez le temps de faire une mesure réelle de la densité de vos sarments, avant de préciser votre densité moyenne des sarments.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -306,10 +351,15 @@
       <property name="geometry">
        <rect>
         <x>410</x>
-        <y>9</y>
+        <y>26</y>
         <width>71</width>
         <height>21</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>Densité :</string>
@@ -322,10 +372,15 @@
       <property name="geometry">
        <rect>
         <x>400</x>
-        <y>27</y>
+        <y>44</y>
         <width>101</width>
         <height>28</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
       </property>
       <property name="inputMethodHints">
        <set>Qt::ImhDialableCharactersOnly</set>
@@ -341,10 +396,15 @@
       <property name="geometry">
        <rect>
         <x>410</x>
-        <y>53</y>
+        <y>70</y>
         <width>81</width>
         <height>21</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>en pied/ha</string>
@@ -365,6 +425,11 @@
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
      </property>
      <property name="toolTip">
       <string/>
@@ -396,6 +461,11 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
       <property name="toolTip">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit du système de coordonnées qui est utilisé lors de la création de vos résultats d'analyse Physiocap.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Nous conseillons fortement d'utiliser le même systeme de coordonnées pour votre projet QGIS.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Les données créées par l'extension sont suffixées L93 ou GPS.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce 1 : si vous hésitez, choisissez L93.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
@@ -417,6 +487,7 @@
       </property>
       <property name="font">
        <font>
+        <pointsize>9</pointsize>
         <italic>false</italic>
         <stylestrategy>PreferDefault</stylestrategy>
        </font>
@@ -445,6 +516,7 @@
       </property>
       <property name="font">
        <font>
+        <pointsize>9</pointsize>
         <stylestrategy>PreferDefault</stylestrategy>
        </font>
       </property>
@@ -485,6 +557,11 @@
          <height>26</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Ouvrir la liste de vos répertoires avec le bouton &amp;quot;...&amp;quot;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Vous devez sélectionner le répertoire où se trouvent les mesures brutes de votre capture Physiocap (répertoire qui contient les fichiers MID issus de votre clé USB).&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;L'extension crée des entités dans des sous répertoires et n'altèrent jamais vos données brutes.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
@@ -497,6 +574,11 @@
          <width>41</width>
          <height>20</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
        </property>
        <property name="text">
         <string>...</string>
@@ -538,6 +620,11 @@
          <height>20</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>...</string>
        </property>
@@ -564,6 +651,11 @@
          <height>26</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Ouvrir la liste de vos répertoires cibles avec le bouton &amp;quot;...&amp;quot;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Vous pouvez sélectionner le répertoire où se trouveront les données après filtratage par l'Extension Physiocap.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Par défaut, il s'agit du répertoire qui contient les fichiers MID.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;L'extension crée des entités dans des sous répertoires et n'altèrent jamais vos données brutes.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
@@ -579,6 +671,11 @@
          <width>271</width>
          <height>26</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
        </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit du nom qui identifie votre session de travail. Ce nom sert de répertoire de base pour les données produites par l'extension Physiocap. Il sert aussi de préfixe pour les données créées.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : Choisir un nom court, décrivant clairement votre jeu de données.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous lancez plusieurs itérations (bouton OK), ce nom se completera du suffixe (1) puis (2) jusqu'à (n). Le plus grand numéro correspond à la dernière itération.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -610,6 +707,12 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
        </property>
        <property name="text">
         <string>Projet Physiocap (suffixe du répertoire et préfixes des fichiers générés)</string>
@@ -673,7 +776,7 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>17</y>
+         <y>20</y>
          <width>321</width>
          <height>21</height>
         </rect>
@@ -684,6 +787,11 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Nombre maximal de sarments au mètre</string>
        </property>
@@ -692,10 +800,15 @@
        <property name="geometry">
         <rect>
          <x>370</x>
-         <y>17</y>
+         <y>20</y>
          <width>81</width>
          <height>21</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
        </property>
        <property name="toolTip">
         <string/>
@@ -717,10 +830,15 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>70</y>
+         <y>73</y>
          <width>70</width>
          <height>21</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
        </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Ce filtre peut permettre d'exclure des &amp;quot;mesures&amp;quot; qui pourraient être des entres-coeur et non des sarments. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -742,7 +860,7 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>47</y>
+         <y>50</y>
          <width>421</width>
          <height>21</height>
         </rect>
@@ -753,6 +871,11 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Tailles d'exclusion des mesures  de sarments (en mm)</string>
        </property>
@@ -761,7 +884,7 @@
        <property name="geometry">
         <rect>
          <x>110</x>
-         <y>70</y>
+         <y>73</y>
          <width>251</width>
          <height>21</height>
         </rect>
@@ -772,6 +895,11 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>&lt;=Diamètre de sarments retenus &lt; </string>
        </property>
@@ -779,11 +907,16 @@
       <widget class="QSpinBox" name="spinBoxMaxDiametre">
        <property name="geometry">
         <rect>
-         <x>300</x>
-         <y>70</y>
+         <x>370</x>
+         <y>73</y>
          <width>70</width>
          <height>21</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
        </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Ce filtre peut permettre d'exclure des &amp;quot;mesures&amp;quot; qui pourraient être des piquets et non des sarments. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -820,6 +953,11 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Format des couches générées</string>
       </property>
@@ -835,6 +973,11 @@
         <width>231</width>
         <height>20</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
       </property>
       <property name="toolTip">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Cette version de l'extension ne propose que le format ESRI Shapefile.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -874,9 +1017,9 @@
      <property name="font">
       <font>
        <pointsize>11</pointsize>
-       <weight>50</weight>
+       <weight>75</weight>
        <italic>true</italic>
-       <bold>false</bold>
+       <bold>true</bold>
       </font>
      </property>
      <property name="toolTip">
@@ -902,7 +1045,7 @@
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>530</y>
+       <y>550</y>
        <width>211</width>
        <height>31</height>
       </rect>
@@ -927,7 +1070,7 @@
      <property name="geometry">
       <rect>
        <x>270</x>
-       <y>530</y>
+       <y>550</y>
        <width>191</width>
        <height>31</height>
       </rect>
@@ -1121,15 +1264,25 @@
         <height>25</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
      </widget>
      <widget class="QComboBox" name="comboBoxPolygone">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>20</y>
-        <width>231</width>
+        <y>30</y>
+        <width>261</width>
         <height>25</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
       </property>
      </widget>
      <widget class="QLabel" name="lab_61">
@@ -1192,6 +1345,11 @@
         <width>211</width>
         <height>24</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
       </property>
       <property name="toolTip">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit du champ de votre contour qui identifie chacune de vos parcelles. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Attention : Les champs possibles doivent avec une valeur différente pour chaque parcelle.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1319,6 +1477,7 @@
       </property>
       <property name="font">
        <font>
+        <pointsize>9</pointsize>
         <weight>75</weight>
         <bold>true</bold>
        </font>
@@ -1381,7 +1540,7 @@
      </property>
      <property name="font">
       <font>
-       <pointsize>11</pointsize>
+       <pointsize>9</pointsize>
        <weight>50</weight>
        <bold>false</bold>
       </font>
@@ -1460,7 +1619,7 @@ Si vous hésitez, trouvez du conseil. </string>
       <string notr="true">QLineEdit { margin: 4px } rgb(255, 170, 127)</string>
      </property>
      <property name="title">
-      <string>   Choisir le champ à interpoler </string>
+      <string>  Choisir le champ à interpoler </string>
      </property>
      <widget class="QLabel" name="lab_75">
       <property name="geometry">
@@ -1479,7 +1638,7 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="font">
        <font>
-        <pointsize>10</pointsize>
+        <pointsize>11</pointsize>
         <weight>75</weight>
         <bold>true</bold>
        </font>
@@ -1506,6 +1665,11 @@ Si vous hésitez, trouvez du conseil. </string>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Taille du pixel (unité de carte)</string>
       </property>
@@ -1524,6 +1688,11 @@ Si vous hésitez, trouvez du conseil. </string>
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>Valeur maximale</string>
@@ -1546,7 +1715,7 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="font">
        <font>
-        <pointsize>10</pointsize>
+        <pointsize>11</pointsize>
         <weight>75</weight>
         <bold>true</bold>
        </font>
@@ -1563,6 +1732,11 @@ Si vous hésitez, trouvez du conseil. </string>
         <width>101</width>
         <height>21</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
       </property>
       <property name="minimum">
        <number>5</number>
@@ -1592,6 +1766,11 @@ Si vous hésitez, trouvez du conseil. </string>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Ecartement des isolignes</string>
       </property>
@@ -1605,7 +1784,7 @@ Si vous hésitez, trouvez du conseil. </string>
         <x>0</x>
         <y>20</y>
         <width>191</width>
-        <height>20</height>
+        <height>21</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -1613,6 +1792,11 @@ Si vous hésitez, trouvez du conseil. </string>
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
       </property>
       <property name="toolTip">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1626,6 +1810,11 @@ Si vous hésitez, trouvez du conseil. </string>
         <width>121</width>
         <height>21</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
       </property>
       <property name="toolTip">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Selon votre choix de système de coordonnés, la correspondance à 1 mètre varie. Elle vaut 0,5 en L93 et 0,000009 en WGS84&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1664,6 +1853,11 @@ Si vous hésitez, trouvez du conseil. </string>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Valeur minimale</string>
       </property>
@@ -1676,6 +1870,11 @@ Si vous hésitez, trouvez du conseil. </string>
         <width>101</width>
         <height>21</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
       </property>
       <property name="minimum">
        <number>0</number>
@@ -1705,6 +1904,11 @@ Si vous hésitez, trouvez du conseil. </string>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Nombre d'isolignes</string>
       </property>
@@ -1717,6 +1921,11 @@ Si vous hésitez, trouvez du conseil. </string>
         <width>101</width>
         <height>21</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
       </property>
       <property name="minimum">
        <number>1</number>
@@ -1751,7 +1960,7 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="font">
        <font>
-        <pointsize>9</pointsize>
+        <pointsize>8</pointsize>
         <italic>true</italic>
        </font>
       </property>
@@ -1773,6 +1982,11 @@ Si vous hésitez, trouvez du conseil. </string>
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>Rayon d'interpolation (unite de carte)</string>
@@ -1823,6 +2037,11 @@ Si vous hésitez, trouvez du conseil. </string>
         <height>21</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
       <property name="decimals">
        <number>7</number>
       </property>
@@ -1847,7 +2066,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <rect>
         <x>10</x>
         <y>279</y>
-        <width>271</width>
+        <width>311</width>
         <height>21</height>
        </rect>
       </property>
@@ -1856,6 +2075,13 @@ Si vous hésitez, trouvez du conseil. </string>
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
       </property>
       <property name="text">
        <string>Méthode d'aide au calcul des isolignes</string>
@@ -1879,6 +2105,11 @@ Si vous hésitez, trouvez du conseil. </string>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
       <property name="editable">
        <bool>true</bool>
       </property>
@@ -1897,6 +2128,11 @@ Si vous hésitez, trouvez du conseil. </string>
         <width>101</width>
         <height>21</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
       </property>
       <property name="minimum">
        <number>1</number>
@@ -1925,6 +2161,11 @@ Si vous hésitez, trouvez du conseil. </string>
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
       </property>
       <property name="toolTip">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Etat d'avancement du dernier calcul Inter ou Intra&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1990,6 +2231,7 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="font">
        <font>
+        <pointsize>9</pointsize>
         <weight>75</weight>
         <bold>true</bold>
        </font>
@@ -2012,6 +2254,11 @@ Si vous hésitez, trouvez du conseil. </string>
         <width>121</width>
         <height>21</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
       </property>
       <property name="toolTip">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Choix supplémentaire nécessaire à GDAL ou QGIS &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -2050,31 +2297,15 @@ Si vous hésitez, trouvez du conseil. </string>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Multiplicateur pour le rayon de l'ellipse</string>
       </property>
      </widget>
-    </widget>
-    <widget class="QCheckBox" name="checkBoxConsolidation">
-     <property name="geometry">
-      <rect>
-       <x>300</x>
-       <y>33</y>
-       <width>221</width>
-       <height>26</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>9</pointsize>
-      </font>
-     </property>
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous souhaitez faire des modifications dans les Shapefiles, vous pouvez choisir cette option pour réaliser les traitements Inter et Intra sur cette seule donnée consolidée.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Sans cette optioni vous trouvez comme shapefile de Points uniquement les &amp;quot;Diamètre en mm&amp;quot; de vos différents projet Physiocap.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : La modification pour Consolidation est à faire avec des actions QGIS standard. Avant de cocher cette option, lire la documentation de Consolidation dans le &lt;/span&gt;&lt;a href=&quot;https://github.com/jhemmi/QgisPhysiocapPlugin/wiki/Utilisation-de-la-consolidation-de-plusieurs-shapefiles&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Wiki de l'extension Physiocap dans Github&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="text">
-      <string>Uniquement CONSOLIDATION</string>
-     </property>
     </widget>
     <widget class="QGroupBox" name="groupBoxArret">
      <property name="geometry">
@@ -2133,9 +2364,9 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="font">
        <font>
-        <pointsize>10</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
         <underline>false</underline>
        </font>
       </property>
@@ -2176,7 +2407,7 @@ Si vous hésitez, trouvez du conseil. </string>
      </property>
      <property name="font">
       <font>
-       <pointsize>10</pointsize>
+       <pointsize>11</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -2185,7 +2416,7 @@ Si vous hésitez, trouvez du conseil. </string>
       <bool>true</bool>
      </property>
      <property name="title">
-      <string>Choisir la méthode d'interpolation</string>
+      <string>  Choisir la méthode d'interpolation</string>
      </property>
      <widget class="QRadioButton" name="radioButtonGDAL">
       <property name="geometry">
@@ -2195,6 +2426,13 @@ Si vous hésitez, trouvez du conseil. </string>
         <width>71</width>
         <height>26</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
       </property>
       <property name="toolTip">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;GDAL permet une interpolation dans une ellipse qui tient compte de l'orientation des rangs. Cette possibilité n'est disponible qu'avec les attributs et vecteurs en Version 3.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Avec cette interpolation, seul l'écartement  entre les isolignes est réglable.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -2221,6 +2459,11 @@ Si vous hésitez, trouvez du conseil. </string>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -2236,6 +2479,13 @@ Si vous hésitez, trouvez du conseil. </string>
         <width>71</width>
         <height>26</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
       </property>
       <property name="toolTip">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Saga n'est pas encore accessible avec la Version 3&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -4152,13 +4402,14 @@ Si vous hésitez, trouvez du conseil. </string>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>90</y>
+       <y>180</y>
        <width>491</width>
        <height>131</height>
       </rect>
      </property>
      <property name="font">
       <font>
+       <pointsize>11</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -4236,7 +4487,7 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QLabel" name="lab_1010">
       <property name="geometry">
        <rect>
-        <x>0</x>
+        <x>10</x>
         <y>50</y>
         <width>131</width>
         <height>21</height>
@@ -4250,8 +4501,9 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="font">
        <font>
-        <weight>75</weight>
-        <bold>true</bold>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
        </font>
       </property>
       <property name="text">
@@ -4261,7 +4513,7 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QLabel" name="lab_1011">
       <property name="geometry">
        <rect>
-        <x>0</x>
+        <x>10</x>
         <y>80</y>
         <width>131</width>
         <height>21</height>
@@ -4275,8 +4527,9 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="font">
        <font>
-        <weight>75</weight>
-        <bold>true</bold>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
        </font>
       </property>
       <property name="text">
@@ -4323,14 +4576,14 @@ Si vous hésitez, trouvez du conseil. </string>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>250</y>
+       <y>320</y>
        <width>491</width>
        <height>131</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>9</pointsize>
+       <pointsize>11</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -4377,6 +4630,7 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="font">
        <font>
+        <pointsize>9</pointsize>
         <weight>50</weight>
         <bold>false</bold>
        </font>
@@ -4507,6 +4761,7 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="font">
        <font>
+        <pointsize>9</pointsize>
         <weight>50</weight>
         <bold>false</bold>
        </font>
@@ -4532,6 +4787,7 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="font">
        <font>
+        <pointsize>9</pointsize>
         <weight>50</weight>
         <bold>false</bold>
        </font>
@@ -4574,9 +4830,9 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QLabel" name="lab_1043">
       <property name="geometry">
        <rect>
-        <x>110</x>
+        <x>100</x>
         <y>20</y>
-        <width>251</width>
+        <width>211</width>
         <height>21</height>
        </rect>
       </property>
@@ -4588,6 +4844,7 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="font">
        <font>
+        <pointsize>9</pointsize>
         <weight>50</weight>
         <bold>false</bold>
        </font>
@@ -4645,6 +4902,7 @@ Si vous hésitez, trouvez du conseil. </string>
      </property>
      <property name="font">
       <font>
+       <pointsize>11</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -4680,6 +4938,49 @@ Si vous hésitez, trouvez du conseil. </string>
      <property name="dragEnabled">
       <bool>true</bool>
      </property>
+    </widget>
+    <widget class="QGroupBox" name="groupBoxInterIntraExpert">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>90</y>
+       <width>491</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="title">
+      <string>Inter - Intra</string>
+     </property>
+     <widget class="QCheckBox" name="checkBoxConsolidation">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>221</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous souhaitez faire des modifications dans les Shapefiles, vous pouvez choisir cette option pour réaliser les traitements Inter et Intra sur cette seule donnée consolidée.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Sans cette optioni vous trouvez comme shapefile de Points uniquement les &amp;quot;Diamètre en mm&amp;quot; de vos différents projet Physiocap.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : La modification pour Consolidation est à faire avec des actions QGIS standard. Avant de cocher cette option, lire la documentation de Consolidation dans le &lt;/span&gt;&lt;a href=&quot;https://github.com/jhemmi/QgisPhysiocapPlugin/wiki/Utilisation-de-la-consolidation-de-plusieurs-shapefiles&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Wiki de l'extension Physiocap dans Github&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="text">
+       <string>Uniquement CONSOLIDATION</string>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="tabAide">
@@ -4782,6 +5083,7 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="font">
        <font>
+        <pointsize>11</pointsize>
         <weight>75</weight>
         <italic>true</italic>
         <bold>true</bold>
@@ -4794,11 +5096,16 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QPushButton" name="buttonContribuer">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>30</x>
         <y>220</y>
-        <width>451</width>
-        <height>62</height>
+        <width>401</width>
+        <height>41</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+       </font>
       </property>
       <property name="toolTip">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#00aa00;&quot;&gt;Vous pouvez agir et soutenir l'extension. Sa maintenance et ses évolutions dépendent de vous. Contribuez, maintenant.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -4808,6 +5115,12 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="text">
        <string>Contribuez maintenant pour jhemmi.eu !</string>
+      </property>
+      <property name="default">
+       <bool>false</bool>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QLabel" name="label_506">
@@ -4881,11 +5194,13 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="font">
        <font>
-        <pointsize>8</pointsize>
+        <pointsize>9</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
        </font>
       </property>
       <property name="text">
-       <string>Version 3.1.4</string>
+       <string>Version 3.1.5 SAGA Beta</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_500">
@@ -4896,6 +5211,11 @@ Si vous hésitez, trouvez du conseil. </string>
         <width>201</width>
         <height>21</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>Extension Physiocap pour Qgis</string>
@@ -5207,7 +5527,7 @@ Si vous hésitez, trouvez du conseil. </string>
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Cantarell'; font-size:10pt;&quot;&gt;Utilisez le bouton &lt;/span&gt;&lt;span style=&quot; font-family:'Cantarell'; font-size:10pt; font-weight:600;&quot;&gt;Aide&lt;/span&gt;&lt;span style=&quot; font-family:'Cantarell'; font-size:10pt;&quot;&gt; pour accéder aux documentations, à la license et au suivi des évolutions sous le Wiki de l'extension. N'hésitez pas à y poster vos questions, proposition d'évolutions et retour de bugs.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Cantarell'; font-size:10pt;&quot;&gt;Utilisez le bouton &lt;/span&gt;&lt;span style=&quot; font-family:'Cantarell'; font-size:10pt; font-weight:600;&quot;&gt;Aide&lt;/span&gt;&lt;span style=&quot; font-family:'Cantarell'; font-size:10pt;&quot;&gt; pour accéder aux documentations, à la license et au suivi des évolutions sous le Wiki de l'extension. N'hésitez pas à y poster vos questions, proposition d'évolutions et retour de problèmes.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
    </widget>

@@ -95,7 +95,7 @@ def physiocap_fill_combo_poly_or_point( self, isRoot = None, node = None ):
     Remplit deux listes pour le comboxBox des vecteurs "inter Parcellaire"
     Rend aussi le nombre de poly et point retrouvé
     """
-    leModeDeTrace = self.fieldComboModeTrace.currentText() 
+    #leModeDeTrace = self.fieldComboModeTrace.currentText() 
     nombre_poly = 0
     nombre_point = 0
    
@@ -142,7 +142,6 @@ def physiocap_fill_combo_poly_or_point( self, isRoot = None, node = None ):
                     ( child.parent().name() == CONSOLIDATION))):
                     #physiocap_log( "- layer: " + child.name() + "  ID: " + child.layerId(), TRACE_TOOLS)) 
                     node_layer = noeud_en_cours + SEPARATEUR_NOEUD + child.layerId()
-                    # A_TESTER : physiocap_log( "- group: type node_layer " + str( type( node_layer)), TRACE_TOOLS))
                     self.comboBoxPoints.addItem( node_layer)
                     nombre_point = nombre_point + 1
             elif ( type_layer == "Polygon"):
@@ -1068,8 +1067,8 @@ class PhysiocapInter( QtWidgets.QDialog):
         les_infos_segment = []
         info_segment_en_cours = {} # Conteneur avec le nom des champs
 
-        ligne_precedente = None
-        ligne_courante = None
+#        ligne_precedente = None
+#        ligne_courante = None
         
         # ITERATION PAR CONTOUR : Tri OK
         for un_contour in vecteur_poly.getFeatures(QgsFeatureRequest().addOrderBy( leChampPoly)):
@@ -1175,8 +1174,8 @@ class PhysiocapInter( QtWidgets.QDialog):
                 dialogue.checkBoxInterSegmentBrise.isChecked() ):
                 # Préfiltre dans un rectangle
                 # Récupération des SEGMENTS qui concernent ce contour
-                ligne_precedente = None
-                ligne_courante = None
+#                ligne_precedente = None
+#                ligne_courante = None
                 for un_segment in vecteur_segment.getFeatures():
 #                    physiocap_log( "La geom du segment {1} est de type {0}". \
 #                        format( un_segment.geometry().wkbType(), i_segment ), leModeDeTrace)

@@ -11,10 +11,10 @@ nom_raster_temp = getTempFilename( "sdat")
 #raster_temp = QgsProcessingOutputRasterLayer( nom_raster_temp)
 #
 IDW_SAGA = { 'SHAPES' : '/data/GIS/DATA/DATA_PHY/vecteur_point.shp', 
-    'FIELD' : 'SARM', 'DW_WEIGHTING' : 1,      'DW_IDW_POWER' : 2, 'DW_IDW_OFFSET' : False, 
+    'FIELD' : 'DIAM', 'DW_WEIGHTING' : 1,      'DW_IDW_POWER' : 2, 'DW_IDW_OFFSET' : False, 
     'DW_BANDWIDTH' : 1, 'SEARCH_POINTS_ALL' : 0,
     'SEARCH_RANGE' : 0, 'SEARCH_RADIUS' : 10, 
-    'SEARCH_POINTS_MIN' : 1, 'SEARCH_POINTS_MAX' : 20, 'SEARCH_DIRECTION' : 0, 
+    'SEARCH_POINTS_MIN' : 1, 'SEARCH_POINTS_MAX' : 10, 'SEARCH_DIRECTION' : 0, 
     'OUTPUT_EXTENT' : info_extent, 'TARGET_USER_SIZE' : 1, 'TARGET_DEFINITION' : 0, 'TARGET_USER_FITS' : 0, 
     'TARGET_TEMPLATE' : None, 'TARGET_OUT_GRID' : nom_raster_temp }
 #'TARGET_OUT_GRID' : 'D:/GIS/DATA/TARGET_OUT_GRID_NEW.sdat'}
