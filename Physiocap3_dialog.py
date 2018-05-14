@@ -44,7 +44,7 @@
 
 from .Physiocap_tools import physiocap_message_box, \
         physiocap_log_for_error, physiocap_log, physiocap_error, \
-        physiocap_quelle_projection_demandee, \
+        physiocap_quelle_projection_et_lib_demandee, \
         physiocap_get_layer_by_name,  physiocap_get_layer_by_ID
 
 from .Physiocap_creer_arbre import PhysiocapFiltrer
@@ -225,6 +225,12 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.checkBoxConsolidation.setChecked( Qt.Checked)
         else:
             self.checkBoxConsolidation.setChecked( Qt.Unchecked)
+    
+        # Saga to TIFF par defaut
+        if (self.settings.value("Physiocap/SagaTIFF") == "NO"):
+            self.checkBoxSagaTIFF.setChecked( Qt.Unchecked)
+        else:
+            self.checkBoxSagaTIFF.setChecked( Qt.Checked)
         
             
         # Choisir radioButtonL93 ou radioButtonGPS
@@ -1499,7 +1505,11 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         if self.checkBoxConsolidation.isChecked():
             consolidation = "YES"
         self.settings.setValue("Physiocap/consolidation", consolidation )
-            
+        # Cas SagaTIFF
+        sagaTIFF = "NO"
+        if self.checkBoxSagaTIFF.isChecked():
+            sagaTIFF = "YES"
+        self.settings.setValue("Physiocap/SagaTIFF", sagaTIFF )
 
         # Cas du choix SAGA / GDAL
         LIB = "DO NOT KNOW"
@@ -1551,6 +1561,21 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             aText = aText + self.tr( "créer une nouvelle instance de projet Physiocap")
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
+        except physiocap_exception_iso_manquant as e:
+            physiocap_log_for_error( self)
+            aText = self.tr( "L'interpolation n'a pas créé d'isoligne pour {0}. ").\
+                format( e)
+            aText = aText + self.tr( "Vérifiez vos paramètres min, max, écartement d'isoligne")
+            aText = aText + self.tr( "\nVous pouvez contacter le support avec vos traces et données brutes")
+            physiocap_error( self, aText, "CRITICAL")
+            return physiocap_message_box( self, aText, "information" )
+        except physiocap_exception_raster_manquant as e:
+            physiocap_log_for_error( self)
+            aText = self.tr( "L'interpolation n'a pas créé d'image raster pour {0}. ").\
+                format( e)
+            aText = aText + self.tr( "\nVous pouvez contacter le support avec vos traces et données brutes")
+            physiocap_error( self, aText, "CRITICAL")
+            return physiocap_message_box( self, aText, "information" )                
         except physiocap_exception_raster_ou_iso_existe_deja as e:
             physiocap_log_for_error( self)
             aText = self.tr( "Les interpolations {0} existent déjà. ").\
@@ -1900,11 +1925,16 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         if self.checkBoxConsolidation.isChecked():
             consolidation = "YES"
         self.settings.setValue("Physiocap/consolidation", consolidation )
+        # Cas SagaTIFF
+        sagaTIFF = "NO"
+        if self.checkBoxSagaTIFF.isChecked():
+            sagaTIFF = "YES"
+        self.settings.setValue("Physiocap/SagaTIFF", sagaTIFF )
             
         # Recuperer le CRS choisi, les extensions et le calculateur de distance
         distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
         laProjectionCRS, laProjectionTXT, EPSG_NUMBER = \
-            physiocap_quelle_projection_demandee( self)
+            physiocap_quelle_projection_et_lib_demandee( self)
         self.settings.setValue("Physiocap/laProjection", laProjectionTXT)
         
         # Trop tot self.settings.setValue("Physiocap/dernier_repertoire", self.lineEditDernierProjet.text() )

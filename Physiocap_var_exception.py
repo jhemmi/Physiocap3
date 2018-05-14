@@ -298,5 +298,9 @@ class physiocap_exception_probleme_caractere_librairie( physiocap_exception):
     pass
 class physiocap_exception_choix_iso_impossible( physiocap_exception):
     pass
+class physiocap_exception_iso_manquant( physiocap_exception):
+    pass
+class physiocap_exception_raster_manquant( physiocap_exception):
+    pass
 class physiocap_exception_raster_ou_iso_existe_deja( physiocap_exception):
     pass

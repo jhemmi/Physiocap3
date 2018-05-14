@@ -46,7 +46,7 @@ from .Physiocap_tools import physiocap_message_box,\
         physiocap_log, physiocap_error, \
         physiocap_nom_entite_sans_pb_caractere,  physiocap_nom_entite_avec_pb_caractere, \
         physiocap_rename_existing_file, \
-        physiocap_quelle_projection_demandee, \
+        physiocap_quelle_projection_et_lib_demandee, \
         physiocap_get_layer_by_ID
 
 from .Physiocap_var_exception import *
@@ -67,12 +67,22 @@ def physiocap_affiche_raster_iso( nom_raster_final, nom_court_raster, le_templat
     physiocap_log ( "= Dans affichage iso final  {0}".format( nom_iso_final), TRACE_INTRA)
   
     if ( nom_raster_final != ""):
-        intra_raster = QgsRasterLayer( nom_raster_final, 
-            nom_court_raster)
-        if ( nom_iso_final != ""):
-            intra_isoligne = QgsVectorLayer( nom_iso_final, 
-                nom_court_isoligne, 'ogr')
+        if os.path.exists( nom_raster_final):           
+            intra_raster = QgsRasterLayer( nom_raster_final, nom_court_raster)
+            if ( nom_iso_final != "") :
+                if os.path.exists( nom_iso_final):           
+                    intra_isoligne = QgsVectorLayer( nom_iso_final, 
+                        nom_court_isoligne, 'ogr')
+                else:
+                    physiocap_log( "{0} ne retrouve pas votre isoligne pour {1}".\
+                        format( PHYSIOCAP_UNI, nom_court_isoligne), TRACE_INTRA)
+                    raise physiocap_exception_iso_manquant( nom_court_isoligne)  
     
+        else:
+            physiocap_log( "{0} ne retrouve pas votre raster pour {1}".\
+                format( PHYSIOCAP_UNI, nom_court_raster), TRACE_INTRA)
+            raise physiocap_exception_raster_manquant( nom_court_raster)     
+            
         if vignette_group_intra != None:
             if (( affiche_iso == "YES") and ( nom_iso_final != "")):
                 mon_projet.addMapLayer( intra_isoligne, False)
@@ -172,10 +182,6 @@ class PhysiocapIntra( QtWidgets.QDialog):
         produit_algo = None
         try:
             produit_algo = textes_sortie_algo[ nom_produit_algo]
-#            physiocap_log( "={0}= Texte en sortie \n===>>{1}<<====". \
-#                format( lettre_algo, textes_sortie_algo[ nom_produit_algo]), TRACE_INTRA)
-#            physiocap_log( "={0}= Type en sortie \n===>>{1}<<====". \
-#                format( lettre_algo, type( textes_sortie_algo[ nom_produit_algo])), TRACE_INTRA)
         except:
             erreur_processing = self.tr("{0} Erreur durant analyse du rendu de produit de {1} : texte produit {2}".\
                     format( PHYSIOCAP_STOP, algo_court,  textes_sortie_algo ))
@@ -183,7 +189,6 @@ class PhysiocapIntra( QtWidgets.QDialog):
             physiocap_log( erreur_processing, leModeDeTrace)
             raise physiocap_exception_interpolation( nom_point)
   
-        #TODO: Tester la cohérence ? selon un type attendu
         physiocap_log( "={0}= Produit en sortie de {1}\n{2}".\
                         format( lettre_algo, algo_court, produit_algo), TRACE_INTRA)
         return produit_algo
@@ -252,7 +257,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
         # Recuperer le CRS choisi, les extensions et le calculateur de distance
         distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
         laProjectionCRS, laProjectionTXT, EPSG_NUMBER = \
-            physiocap_quelle_projection_demandee( dialogue)
+            physiocap_quelle_projection_et_lib_demandee( dialogue)
         
         # ###################
         # CRÉATION raster cible et temporaire
@@ -316,6 +321,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 # on crée un repertoire temporaire 
                 nom_dir_temp = getTempDirInTempFolder()
                 nom_raster_temp = os.path.join( nom_dir_temp, "TMP_RASTER_SAGA" + EXTENSION_RASTER_SAGA)
+                nom_raster_temp_clip = os.path.join( nom_dir_temp, "TMP_RASTER_SAGA_CLIP" + EXTENSION_RASTER_SAGA)
             else:
                 # cas GDAL (ou QGIS) : tiff
                 nom_raster_temp = getTempFilename( EXTENSION_RASTER_SANS_POINT)                
@@ -323,16 +329,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
             physiocap_log( self.tr( "Exception durant nommage temporaire {0} et chemin \n{1}").\
             format( "TMP_RASTER", nom_raster_temp), TRACE_INTRA)
             raise
-        # TODO: block inutile ? sous gdal aussi ?
-#        try:
-#            raster_temp = QgsProcessingOutputRasterLayer( nom_raster_temp)
-#            physiocap_log( self.tr( "Création raster {0} et chemin \n{1}").\
-#            format( raster_temp.description(), raster_temp.name()), TRACE_INTRA)
-#        except:
-#            physiocap_log( self.tr( "Exception durant création raster {0} et chemin \n{1}").\
-#            format( "TMP_RASTER", nom_raster_temp), TRACE_INTRA)
-#            raise
-        
+      
         # Récuperer pour GDAL orientation et Passage
         if choix_interpolation == "GDAL":
             orientation = 0
@@ -386,16 +383,10 @@ class PhysiocapIntra( QtWidgets.QDialog):
 #            raise physiocap_exception_windows_saga_ascii( nom_isoligne)  
 
         # Initialisation avant Interpolation
+        nom_raster_produit = ""
+        nom_raster_clippe = ""
         nom_raster_final = ""
-#        raster_dans_poly = ""
-#        iso_dans_poly = ""
-        nom_iso_final = ""
-        # Et pour la SAGA
-#        iso_dans_poly_brut = ""
-#        nom_iso_sans_ELEV = ""
-#        iso_dans_poly_plus = ""
-#        nom_iso_avec_ELEV = ""
-        
+        nom_iso_final = ""        
         # Récuperer Extent du polygone en cours
         ex = vignette_vector.extent()
         xmin, xmax, ymin, ymax = ex.xMinimum(),ex.xMaximum(), ex.yMinimum(), ex.yMaximum()
@@ -454,7 +445,12 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 IDW_SAGA, "TARGET_OUT_GRID")      
 
             QgsMessageLog.logMessage( "PHYSIOCAP : Avant clip SAGA", "Processing", Qgis.Warning)
-                                            
+
+            # Cas TIFF on garde le nom final du tiff pour le step suivant
+            if dialogue.checkBoxSagaTIFF.isChecked():
+                nom_clippe = nom_raster_temp_clip    
+            else:
+                nom_clippe = nom_raster
             # On passe ETAPE CLIP si nom_raster_produit existe
             if ( nom_raster_produit != ""):
                 # KO 0 : nom_raster_produit
@@ -463,9 +459,9 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 le_raster_temp = QgsRasterLayer( nom_raster_produit, "Raster_SAGA_temporaire")                
                 CLIP_SAGA = { 'INPUT' : le_raster_temp,
                     'POLYGONS' : nom_vignette,
-                    'OUTPUT' : nom_raster }
+                    'OUTPUT' : nom_clippe }
                 
-                nom_raster_final = self.physiocap_appel_processing(dialogue, nom_point, \
+                nom_raster_clippe = self.physiocap_appel_processing(dialogue, nom_point, \
                 "CLIP_SAGA", "saga:cliprasterwithpolygon", \
                 CLIP_SAGA, "OUTPUT")                    
 #####                raster_dans_poly = processing.runalg("saga:clipgridwithpolygon",
@@ -475,7 +471,27 @@ class PhysiocapIntra( QtWidgets.QDialog):
 
                 le_raster_temp = None
 
-            QgsMessageLog.logMessage( "PHYSIOCAP : Avant isolignes SAGA", "Processing", Qgis.Warning)
+            if ( nom_raster_clippe != ""):
+                if dialogue.checkBoxSagaTIFF.isChecked():
+                    # GDAL translate pour créer le TIFF
+                    le_raster_translate = QgsRasterLayer( nom_raster_clippe, "Raster_Translate_temporaire")                
+                    QgsMessageLog.logMessage( "PHYSIOCAP : Avant GDAL translate pour le TIFF", "Processing", Qgis.Warning)
+                    TRANSLATE_TIFF = { 'INPUT' : le_raster_translate,
+                        'NODATA':0,
+                        'COPY_SUBDATASETS':False,
+                        'OPTIONS':'',
+                        'DATA_TYPE':6,
+                        'OUTPUT' : nom_raster }
+                    nom_raster_final = self.physiocap_appel_processing(dialogue, nom_point, \
+                        "TRANSLATE_TIFF", "gdal:translate", \
+                        TRANSLATE_TIFF, "OUTPUT")
+                    le_raster_translate = None
+                else:
+                    # Cas non tiff
+                    nom_raster_final = nom_raster_clippe
+            
+            QgsMessageLog.logMessage( "PHYSIOCAP : Avant isolignes SAGA {0}".\
+                format( nom_raster_final), "Processing", Qgis.Warning)
                                             
             # On passe ISO si nom_raster_final existe
             if ( nom_raster_final != ""):
@@ -496,74 +512,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     ISO_SAGA, "CONTOUR")
                 
                 le_raster_final = None
-#####            
-#####                if (( iso_dans_poly_brut != None) and ( str( list( iso_dans_poly_brut)).find( "CONTOUR") != -1)):
-#####                    if iso_dans_poly_brut[ 'CONTOUR'] != None:
-#####                        nom_iso_sans_ELEV = iso_dans_poly_brut[ 'CONTOUR']
-#####                        physiocap_log( self.tr("=~= Iso sans LEVEL : contourlinesfromgrid\n{0}").\
-#####                            format( nom_iso_sans_ELEV), TRACE_INTRA)
-#####                    else:
-#####                        physiocap_error( self, self.tr( "=~= Problème bloquant durant {0} partie-{1}").\
-#####                            format("contourlinesfromgrid","B"))
-#####                        raise physiocap_exception_interpolation( nom_point)
-#####                else:
-#####                    physiocap_error( self, self.tr( "=~= Problème bloquant durant {0} partie-{1}").\
-#####                        format("contourlinesfromgrid","A"))
-#####                    raise physiocap_exception_interpolation( nom_point)
-#####
-#####                # On passe ETAPE FIELD si nom_iso_sans_ELEV existe
-#####                if ( nom_iso_sans_ELEV != ""):                              
-#####                    iso_dans_poly_plus = processing.runalg("qgis:addfieldtoattributestable", \
-#####                        nom_iso_sans_ELEV, \
-#####                        "ELEV", 1, 15, 2 , None)
-##### 
-#####                if (( iso_dans_poly_plus != None) and ( str( list( iso_dans_poly_plus)).find( "OUTPUT_LAYER") != -1)):
-#####                    if iso_dans_poly_plus[ 'OUTPUT_LAYER'] != None:
-#####                        nom_iso_avec_ELEV = iso_dans_poly_plus[ 'OUTPUT_LAYER']
-#####                        physiocap_log( self.tr("=~= Iso avec LEVEL ajouté : addfieldtoattributestable\n{0}").\
-#####                            format( nom_iso_avec_ELEV), TRACE_INTRA)
-#####                    else:
-#####                        physiocap_error( self, self.tr( "=~= Problème bloquant durant {0} partie-{1}").\
-#####                            format("addfieldtoattributestable","B"))
-#####                        raise physiocap_exception_interpolation( nom_point)
-#####                else:
-#####                    physiocap_error( self, self.tr( "=~= Problème bloquant durant {0} partie-{1}").\
-#####                        format("addfieldtoattributestable","A"))
-#####                    raise physiocap_exception_interpolation( nom_point)
-#####
-#####                # On passe ETAPE CALCULATOR si nom_iso_final existe
-#####                if ( nom_iso_avec_ELEV != ""):                              
-#####                    # Retrouver le nom de l'attribut créé
-#####                    intra_iso_modifie = QgsVectorLayer( nom_iso_avec_ELEV, 
-#####                            "Ne pas voir serait mieux", 'ogr')
-#####                    fields = intra_iso_modifie.pendingFields()
-#####                    field_probable = fields[1]
-#####                    field_name = field_probable.name()
-#####                    # A_TESTER: sans str et à suivre ensuite
-#####                    field_formule = '"' + str( field_name) + '"'  
-#####                    physiocap_log( "=~= Isolignes formule : " + str( field_formule), TRACE_INTRA)                    
-#####                    QgsMessageLog.logMessage( "PHYSIOCAP : Avant calculator ", "Processing", Qgis.Warning)
-#####                    # Le remplacer par "ELEV", en fait on le copie dans "ELEV"
-#####                    iso_dans_poly = processing.runalg("qgis:fieldcalculator", \
-#####                        nom_iso_avec_ELEV, "ELEV", 0, 15, 2, False, field_formule , nom_isoligne)
-#####
-#####                if (( iso_dans_poly != None) and ( str( list( iso_dans_poly)).find( "OUTPUT_LAYER") != -1)):
-#####                    if iso_dans_poly[ 'OUTPUT_LAYER'] != None:
-#####                        nom_iso_final = iso_dans_poly[ 'OUTPUT_LAYER']
-#####                        physiocap_log( self.tr("=~= Iso final : fieldcalculator\n{0}").\
-#####                            format( nom_iso_final), TRACE_INTRA)
-#####                    else:
-#####                        physiocap_error( self, self.tr( "=~= Problème bloquant durant {0} partie-{1}").\
-#####                            format("fieldcalculator","B"))
-#####                        raise physiocap_exception_interpolation( nom_point)
-#####                else:
-#####                    physiocap_error( self, self.tr( "=~= Problème bloquant durant {0} partie-{1}").\
-#####                        format("fieldcalculator","A"))
-#####                    raise physiocap_exception_interpolation( nom_point)
-#####            else:
-#####                physiocap_error( self, self.tr( "=~= Problème bloquant durant {0} partie-{1}").\
-#####                    format("clipgridwithpolygon","0"))
-#####                raise physiocap_exception_interpolation( nom_point)
+
             physiocap_log( self.tr( "=~= Interpolation SAGA - Fin iso - {0}").\
                 format( nom_iso_final), TRACE_INTRA)   
                 
@@ -639,8 +588,8 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 ISO_GDAL = {'INPUT':nom_raster,
                     'BAND' : 1,
                     'INTERVAL' : isoInterlignes,
-                    'FIELD_NAME' : 'ELEV',
-                    'CREATE_3D' : False, 'IGNORE_NODATA' : False, 'NODATA' : 0, 'OFFSET' : 0,
+                    'FIELD_NAME' : 'Z',
+                    'CREATE_3D' : True, 'IGNORE_NODATA' : False, 'NODATA' : 0, 'OFFSET' : 0,
                     'OUTPUT' : nom_isoligne }
 
                 nom_iso_final = self.physiocap_appel_processing( dialogue, nom_point, \
@@ -656,15 +605,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
     def physiocap_interpolation_IntraParcelles( self, dialogue):
         """Interpolation des données de points intra parcellaires"""
         NOM_PROJET = dialogue.lineEditProjet.text()
-        leModeDeTrace = dialogue.fieldComboModeTrace.currentText() 
-    
-#        if LE_MODE_PROD == "NO":
-#            pass
-#        else:
-#            aText = self.tr( "Pas d'interpolation disponible avec Physiocap 3. Interpolez avec les versions QGIS 2.14 et l'extension 1.8.3.")
-#            physiocap_error( self, aText)
-#            return physiocap_message_box( dialogue, aText, "information")
-#            
+        leModeDeTrace = dialogue.fieldComboModeTrace.currentText()     
         version_3 = "NO"
         if dialogue.checkBoxV3.isChecked():
             version_3 = "YES"
@@ -710,13 +651,13 @@ class PhysiocapIntra( QtWidgets.QDialog):
         # Vérifier disponibilité de processing (on attend d'etre dans Intra)
         try :
             import processing
-            try:
-                from processing.core.Processing import Processing
-                Processing.initialize()
-            except:
-                physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
-                    format( PHYSIOCAP_UNI, self.tr("Traitement")), leModeDeTrace)
-                raise physiocap_exception_no_processing( "Pas d'extension Traitement - initialize")               
+#            try:
+#                from processing.core.Processing import Processing
+#                Processing.initialize()
+#            except:
+#                physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
+#                    format( PHYSIOCAP_UNI, self.tr("Traitement")), leModeDeTrace)
+#                raise physiocap_exception_no_processing( "Pas d'extension Traitement - initialize")               
             versionGDAL = processing.tools.raster.gdal.__version__
             versionSAGA = processing.algs.saga.SagaUtils.getInstalledVersion()
         except ImportError:
@@ -724,23 +665,10 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 format( PHYSIOCAP_UNI, self.tr("Traitement")), leModeDeTrace)
             raise physiocap_exception_no_processing( "Pas d'extension Traitement")
         except AttributeError:
-            # Todo : Vérifier syntaxe en Win 32 bits et attraper cette erreur
+            # TODO: Vérifier syntaxe en Win 32 bits et attraper cette erreur
             physiocap_log( self.tr( "{0} nécessite SAGA version 2.3.1 à 2.3.2").\
                 format( PHYSIOCAP_UNI), leModeDeTrace)
-            # TODO install saga LINUX
-            machine = platform.system()
-            if (machine == "Linux"):
-                physiocap_log ( self.tr( "= On force l'utilisation de Gdal : "), leModeDeTrace)
-                dialogue.radioButtonSAGA.setEnabled( False)
-                dialogue.radioButtonGDAL.setChecked(  Qt.Checked)
-                dialogue.radioButtonSAGA.setChecked(  Qt.Unchecked)
-                dialogue.spinBoxPower.setEnabled( False)
-                physiocap_message_box( dialogue,
-                    self.tr( "= Saga a une version incompatible : on force l'utilisation de Gdal" ),
-                    "information")
-                pass
-            else:
-                raise physiocap_exception_no_saga( "Erreur attribut")
+            raise physiocap_exception_no_saga( "Erreur attribut")
 
         physiocap_log ( self.tr( "= Version SAGA = %s" % ( versionSAGA)), TRACE_INTRA)
         physiocap_log ( self.tr( "= Version GDAL = %s" % ( versionGDAL)), TRACE_INTRA)
@@ -754,11 +682,9 @@ class PhysiocapIntra( QtWidgets.QDialog):
         # Appel une seule fois des vérification Processing dispo et choix de Librairie 
         choix_interpolation = self.quelle_librairie_interpolation( dialogue, \
                 versionSAGA, leModeDeTrace)
-   
         physiocap_log ( self.tr( "=~= Choix de la librairie d'interpolation : {0}".\
             format( choix_interpolation)), leModeDeTrace)
 
-       
         # Vérification de l'arbre
         mon_projet = QgsProject.instance()
         root = mon_projet.layerTreeRoot()        
@@ -789,19 +715,15 @@ class PhysiocapIntra( QtWidgets.QDialog):
         # Recuperer le CRS choisi, les extensions et le calculateur de distance
         distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
         laProjectionCRS, laProjectionTXT, EPSG_NUMBER = \
-            physiocap_quelle_projection_demandee( dialogue)
+            physiocap_quelle_projection_et_lib_demandee( dialogue)
 
         # Assert repertoire shapefile 
-        # A_TESTER: pourquoi ces unicode et le point virgule !
-        #chemin_shapes = os.path.dirname( unicode( vecteur_point.dataProvider().dataSourceUri() ) )
         nom_point_en_cours = vecteur_point.dataProvider().dataSourceUri()
         pos_fin_layer = nom_point_en_cours.rfind( "|layerid=")
         if ( pos_fin_layer != -1):
             nom_point_exact = nom_point_en_cours[:pos_fin_layer]
         else:
             nom_point_exact  = nom_point_exact
-        
-        #nom_point_en_cours = vecteur_point.name()
 
         chemin_shapes = os.path.dirname( nom_point_exact ) 
         chemin_projet = os.path.dirname( chemin_shapes)
@@ -872,8 +794,6 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 os.mkdir( chemin_iso)
             except:
                 raise physiocap_exception_rep( REPERTOIRE_ISO_V3)
-
-       
 
         ##################
         # Progress BAR 4%
@@ -1126,12 +1046,14 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     # ###################
                     # CRÉATION groupe INTRA
                     # ###################
+                    physiocap_log( "=~= Coutour numéro {0}".format( contour_avec_point), TRACE_INTRA)
                     if ( contour_avec_point == 1):
                         if un_groupe != None:
                             vignette_projet = nom_noeud_arbre + SEPARATEUR_ + le_champ_choisi + SEPARATEUR_ + VIGNETTES_INTRA 
                             vignette_existante = un_groupe.findGroup( vignette_projet)
                             if ( vignette_existante == None ):
                                 vignette_group_intra = un_groupe.addGroup( vignette_projet)
+                                physiocap_log( "=~= in vignette {0}".format( contour_avec_point), TRACE_INTRA)
                             else:
                                 if arret_groupe_intra == "YES":
                                     # Si vignette preexiste, on ne recommence pas
@@ -1190,10 +1112,10 @@ class PhysiocapIntra( QtWidgets.QDialog):
                             afficheRaster = "NO"
                             if ( dialogue.checkBoxIntraImages.isChecked()):
                                 afficheRaster = "YES"
-                                if nouveau == "NOUVEAUX":
-                                    physiocap_log ( self.tr( "=~= Affichage résultat d'interpolation de {0} <<<<").\
-                                        format( le_nom_entite_libere), "OGR")
-                                    physiocap_affiche_raster_iso( \
+                            if nouveau == "NOUVEAUX":
+                                physiocap_log ( self.tr( "=~= Affichage résultat d'interpolation de {0} <<<< vignette {1}").\
+                                    format( le_nom_entite_libere, vignette_group_intra ), "OGR")
+                                physiocap_affiche_raster_iso( \
                                     nom_raster_final, nom_court_raster, le_template_raster, afficheRaster,
                                     nom_iso_final, nom_court_isoligne, le_template_isolignes, afficheIso,
                                     vignette_group_intra, mon_projet)

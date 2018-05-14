@@ -257,7 +257,7 @@ def physiocap_get_layer_by_ID( layerID):
             format( ( str( layerID))), leModeTrace)
         return None
 
-def physiocap_quelle_projection_demandee( self):
+def physiocap_quelle_projection_et_lib_demandee( self):
     """ Selon la valeur cochée dans le radio de projection 
     positionne laProjection (en QgsCoordinateReferenceSystem, texte et nombre (epsg)
     les extensions EXTENSION_SHP, EXTENSION_PRJ et RASTER selon la demande SAGA
@@ -285,7 +285,10 @@ def physiocap_quelle_projection_demandee( self):
    
     # Cas du nom du raster 
     if self.radioButtonSAGA.isChecked():
-        EXTENSION_RASTER_COMPLET = SEPARATEUR_ + la_projection_TXT + EXTENSION_RASTER_SAGA
+        if self.checkBoxSagaTIFF.isChecked():
+            EXTENSION_RASTER_COMPLET = SEPARATEUR_ + la_projection_TXT + EXTENSION_RASTER
+        else:
+            EXTENSION_RASTER_COMPLET = SEPARATEUR_ + la_projection_TXT + EXTENSION_RASTER_SAGA            
     else:
         EXTENSION_RASTER_COMPLET = SEPARATEUR_ + la_projection_TXT + EXTENSION_RASTER
 

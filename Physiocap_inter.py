@@ -44,7 +44,7 @@
 from .Physiocap_tools import physiocap_message_box,\
         physiocap_log, physiocap_error, \
         physiocap_nom_entite_sans_pb_caractere, physiocap_rename_existing_file,  \
-        physiocap_quelle_projection_demandee, \
+        physiocap_quelle_projection_et_lib_demandee, \
         physiocap_create_projection_file, \
         physiocap_get_layer_by_URI,  physiocap_get_layer_by_ID
 
@@ -967,7 +967,7 @@ class PhysiocapInter( QtWidgets.QDialog):
         # Recuperer le CRS choisi, les extensions et le calculateur de distance
         distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
         laProjectionCRS, laProjectionTXT, EPSG_NUMBER = \
-            physiocap_quelle_projection_demandee( dialogue)
+            physiocap_quelle_projection_et_lib_demandee( dialogue)
 
         if (version_3 == "NO"):
             rep_vecteur = REPERTOIRE_SHAPEFILE
