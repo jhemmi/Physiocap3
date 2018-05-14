@@ -19,7 +19,7 @@ Cette version 3 apporte des nouveautés pour l'analyse qualitative des captures 
 
 Dans son module Inter, l'extension réalise une extraction des données filtrés à partir de votre contour de parcelles. Vous obtenez les moyennes Inter parcellaires pour faire un premier diagnostic de chaque entité agronomique.
 
-Cette version ne permet pas encore les interpolations et des calculs d'isolignes Intra parcellaire pour affiner l'analyse agronomique. Le module INTRA SAGA de V3 est prévu dans la prochaine version 3.1.6 (en cours de développement & test).
+Cette version permet les interpolations SAGA et GDAL (voir détail dans l'issue 11) et des calculs d'isolignes Intra parcellaire pour affiner l'analyse agronomique. 
 
 *"Physiocap" est déposé par le CIVC.*
 
@@ -32,8 +32,10 @@ La documentation de la version 2 se trouve dans le Wiki
 https://github.com/jhemmi/QgisPhysiocapPlugin/wiki/Qgis-Physiocap-Plugin-usage-&-installation
 La documentation de la version 3 n'est pas encore disponible.
 
-La version 3.1.4-INTRA_GDAL est publiée dans le dépot github. La version 3.1.3-INTRA_GDA est déposée sous QGIS 3 (accessible directement dans QGIS 3 depuis le Menu "Extension").
+La version 3.1.5-SAGA est publiée dans le dépot github. La version 3.1.3-INTRA_GDAL est déposée sous QGIS 3 (accessible directement dans QGIS 3 depuis le Menu "Extension").
 
-**Attention, ce dépot GitHub contient la aussi dernière version en cours d'évolution (la 3.1.5 - Mai 2018 https://github.com/jhemmi/Physiocap3/releases) **
+La version de QGIS 3.0.3 va sortir dans les derniers jours de mai. Attention, elle n'a pas été testé avec Physiocap3. Elle sera testée avec 3.1.6 LTR et l'extension sera alors déposé dans QGIS.
 
-**Warning, this GitHub repo contains last evolution version (Version  3.1.5 - Mai 2018 https://github.com/jhemmi/Physiocap3/releases) **
+**Attention, ce dépot GitHub contient la aussi dernière version en cours d'évolution (la 3.1.6 - Mai 2018 https://github.com/jhemmi/Physiocap3/releases) **
+
+**Warning, this GitHub repo contains last evolution version (Version  3.1.6 - Mai 2018 https://github.com/jhemmi/Physiocap3/releases) **
