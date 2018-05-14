@@ -1055,6 +1055,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                                 vignette_group_intra = un_groupe.addGroup( vignette_projet)
                                 physiocap_log( "=~= in vignette {0}".format( contour_avec_point), TRACE_INTRA)
                             else:
+                                vignette_group_intra = vignette_existante
                                 if arret_groupe_intra == "YES":
                                     # Si vignette preexiste, on ne recommence pas
                                     raise physiocap_exception_vignette_exists( vignette_projet)            
