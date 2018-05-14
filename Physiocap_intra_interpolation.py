@@ -1114,8 +1114,8 @@ class PhysiocapIntra( QtWidgets.QDialog):
                             if ( dialogue.checkBoxIntraImages.isChecked()):
                                 afficheRaster = "YES"
                             if nouveau == "NOUVEAUX":
-                                physiocap_log ( self.tr( "=~= Affichage résultat d'interpolation de {0} <<<< vignette {1}").\
-                                    format( le_nom_entite_libere, vignette_group_intra ), "OGR")
+#                                physiocap_log ( self.tr( "=~= Affichage résultat d'interpolation de {0} <<<< vignette {1}").\
+#                                    format( le_nom_entite_libere, vignette_group_intra ), "OGR")
                                 physiocap_affiche_raster_iso( \
                                     nom_raster_final, nom_court_raster, le_template_raster, afficheRaster,
                                     nom_iso_final, nom_court_isoligne, le_template_isolignes, afficheIso,
