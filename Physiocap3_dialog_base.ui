@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>543</width>
-    <height>704</height>
+    <width>539</width>
+    <height>699</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -61,7 +61,7 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>0</x>
      <y>10</y>
      <width>521</width>
      <height>661</height>
@@ -93,7 +93,7 @@
     <enum>QTabWidget::North</enum>
    </property>
    <property name="currentIndex">
-    <number>3</number>
+    <number>0</number>
    </property>
    <property name="movable">
     <bool>true</bool>
@@ -108,7 +108,7 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>0</x>
+       <x>5</x>
        <y>340</y>
        <width>501</width>
        <height>121</height>
@@ -417,7 +417,7 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>0</x>
+       <x>5</x>
        <y>320</y>
        <width>491</width>
        <height>21</height>
@@ -503,7 +503,7 @@
     <widget class="QGroupBox" name="Filtres">
      <property name="geometry">
       <rect>
-       <x>0</x>
+       <x>5</x>
        <y>200</y>
        <width>511</width>
        <height>101</height>
@@ -511,6 +511,7 @@
      </property>
      <property name="font">
       <font>
+       <pointsize>11</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -690,14 +691,15 @@
     <widget class="QGroupBox" name="groupBox_select">
      <property name="geometry">
       <rect>
-       <x>0</x>
-       <y>20</y>
+       <x>5</x>
+       <y>15</y>
        <width>511</width>
        <height>175</height>
       </rect>
      </property>
      <property name="font">
       <font>
+       <pointsize>11</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -759,6 +761,8 @@
       <property name="font">
        <font>
         <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
        </font>
       </property>
       <property name="toolTip">
@@ -797,8 +801,9 @@
       </property>
       <property name="font">
        <font>
-        <weight>75</weight>
-        <bold>true</bold>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
        </font>
       </property>
       <property name="text">
@@ -873,8 +878,8 @@
       </property>
       <property name="font">
        <font>
-        <weight>75</weight>
-        <bold>true</bold>
+        <weight>50</weight>
+        <bold>false</bold>
        </font>
       </property>
       <property name="text">
@@ -890,10 +895,10 @@
     <widget class="QTextEdit" name="textEditSynthese">
      <property name="geometry">
       <rect>
-       <x>0</x>
+       <x>5</x>
        <y>40</y>
        <width>511</width>
-       <height>631</height>
+       <height>581</height>
       </rect>
      </property>
      <property name="textInteractionFlags">
@@ -943,7 +948,7 @@
     <widget class="QLabel" name="label_histo_sarment">
      <property name="geometry">
       <rect>
-       <x>0</x>
+       <x>5</x>
        <y>50</y>
        <width>250</width>
        <height>250</height>
@@ -1007,7 +1012,7 @@
     <widget class="QLabel" name="label_histo_diametre_avant">
      <property name="geometry">
       <rect>
-       <x>0</x>
+       <x>5</x>
        <y>310</y>
        <width>250</width>
        <height>250</height>
@@ -1028,9 +1033,9 @@
     <widget class="QGroupBox" name="groupBoxInter">
      <property name="geometry">
       <rect>
-       <x>0</x>
+       <x>5</x>
        <y>50</y>
-       <width>511</width>
+       <width>505</width>
        <height>141</height>
       </rect>
      </property>
@@ -1106,6 +1111,8 @@
       <property name="font">
        <font>
         <pointsize>11</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
        </font>
       </property>
       <property name="text">
@@ -1129,6 +1136,12 @@
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
       </property>
       <property name="text">
        <string>Choisir le jeu de mesures</string>
@@ -1342,9 +1355,9 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>0</x>
+       <x>5</x>
        <y>260</y>
-       <width>511</width>
+       <width>509</width>
        <height>371</height>
       </rect>
      </property>
@@ -1537,9 +1550,9 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="geometry">
        <rect>
-        <x>0</x>
+        <x>10</x>
         <y>20</y>
-        <width>191</width>
+        <width>231</width>
         <height>21</height>
        </rect>
       </property>
@@ -2066,9 +2079,9 @@ Si vous hésitez, trouvez du conseil. </string>
     <widget class="QGroupBox" name="groupBoxArret">
      <property name="geometry">
       <rect>
-       <x>260</x>
+       <x>265</x>
        <y>200</y>
-       <width>251</width>
+       <width>249</width>
        <height>61</height>
       </rect>
      </property>
@@ -2155,7 +2168,7 @@ Si vous hésitez, trouvez du conseil. </string>
     <widget class="QGroupBox" name="groupBoxMethode">
      <property name="geometry">
       <rect>
-       <x>0</x>
+       <x>5</x>
        <y>198</y>
        <width>261</width>
        <height>63</height>
@@ -4741,6 +4754,9 @@ Si vous hésitez, trouvez du conseil. </string>
       <property name="text">
        <string>Interpolations SAGA au format TIFF</string>
       </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
      </widget>
     </widget>
     <widget class="QGroupBox" name="groupBox_3">
@@ -4812,6 +4828,8 @@ Si vous hésitez, trouvez du conseil. </string>
       <property name="font">
        <font>
         <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
        </font>
       </property>
       <property name="text">
@@ -4839,6 +4857,8 @@ Si vous hésitez, trouvez du conseil. </string>
       <property name="font">
        <font>
         <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
        </font>
       </property>
       <property name="toolTip">
@@ -4896,7 +4916,9 @@ Si vous hésitez, trouvez du conseil. </string>
       <property name="font">
        <font>
         <pointsize>9</pointsize>
+        <weight>50</weight>
         <italic>false</italic>
+        <bold>false</bold>
         <stylestrategy>PreferDefault</stylestrategy>
        </font>
       </property>
@@ -4925,6 +4947,8 @@ Si vous hésitez, trouvez du conseil. </string>
       <property name="font">
        <font>
         <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
         <stylestrategy>PreferDefault</stylestrategy>
        </font>
       </property>
