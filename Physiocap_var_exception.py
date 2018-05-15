@@ -55,7 +55,7 @@ TRACE_TOUT = "Traces complètes"
 TRACE_MINI = "Traces minimales"
 TRACE_PAS  = "Pas de trace"
 MODE_TRACE = [ TRACE_TOUT,  TRACE_MINI, TRACE_PAS]
-MODE_PHY_ID = [ "PHY_ID vaut PHY_numérique",  "PHY_ID est un texte sans blanc, sans cote"]
+MODE_PHY_ID = [ "ID_PHY vaut PHY_numérique",  "ID_PHY contient un texte sans blanc, sans cote"]
 TRACE_INTRA  = "Intra"
 TRACE_TOOLS  = "Tools"
 TRACE_MIN_MAX  = "Min-Max"
@@ -117,7 +117,11 @@ REPERTOIRE_SHAPEFILE_V3 = "Filtre"
 EXTENSION_CSV = ".csv"
 EXTENSION_SHP = ".shp"
 EXTENSION_PRJ = ".prj"
-EXTENSION_RASTER_SANS_POINT = "tiff"
+# A_TESTER: vrt sous Linux
+if MACHINE == "Linux":
+    EXTENSION_RASTER_SANS_POINT = "vrt"
+else:
+    EXTENSION_RASTER_SANS_POINT = "tiff"
 EXTENSION_RASTER = "." + EXTENSION_RASTER_SANS_POINT
 EXTENSION_RASTER_SAGA_SANS_POINT = "sdat"
 EXTENSION_RASTER_SAGA = "." + EXTENSION_RASTER_SAGA_SANS_POINT

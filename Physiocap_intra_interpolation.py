@@ -58,51 +58,7 @@ from qgis.core import ( Qgis, QgsProject, QgsVectorLayer, \
     QgsFeatureRequest, QgsExpression, QgsProcessingFeedback)
     
 
-def physiocap_affiche_raster_iso( nom_raster_final, nom_court_raster, le_template_raster, affiche_raster,
-                    nom_iso_final, nom_court_isoligne, le_template_isolignes, affiche_iso,
-                    vignette_group_intra, mon_projet):
-    """ Affichage du raster et Iso"""
-  
-#    physiocap_log ( "= Template raster {0}".format( le_template_raster), TRACE_INTRA)
-    physiocap_log ( "= Dans affichage iso final  {0}".format( nom_iso_final), TRACE_INTRA)
-  
-    if ( nom_raster_final != ""):
-        if os.path.exists( nom_raster_final):           
-            intra_raster = QgsRasterLayer( nom_raster_final, nom_court_raster)
-            if ( nom_iso_final != "") :
-                if os.path.exists( nom_iso_final):           
-                    intra_isoligne = QgsVectorLayer( nom_iso_final, 
-                        nom_court_isoligne, 'ogr')
-                else:
-                    physiocap_log( "{0} ne retrouve pas votre isoligne pour {1}".\
-                        format( PHYSIOCAP_UNI, nom_court_isoligne), TRACE_INTRA)
-                    raise physiocap_exception_iso_manquant( nom_court_isoligne)  
-    
-        else:
-            physiocap_log( "{0} ne retrouve pas votre raster pour {1}".\
-                format( PHYSIOCAP_UNI, nom_court_raster), TRACE_INTRA)
-            raise physiocap_exception_raster_manquant( nom_court_raster)     
-            
-        if vignette_group_intra != None:
-            if (( affiche_iso == "YES") and ( nom_iso_final != "")):
-                mon_projet.addMapLayer( intra_isoligne, False)
-                vignette_group_intra.addLayer( intra_isoligne)
-            if ( affiche_raster == "YES"): 
-                mon_projet.addMapLayer( intra_raster, False)
-                vignette_group_intra.addLayer( intra_raster)
-        else:
-            if (( affiche_iso == "YES") and ( nom_iso_final != "")):
-                mon_projet.addMapLayer( intra_isoligne)
-            if ( affiche_raster == "YES"): 
-                mon_projet.addMapLayer( intra_raster)
-    
-        if (( affiche_raster == "YES") and 
-            ( os.path.exists( le_template_raster))):
-            intra_raster.loadNamedStyle( le_template_raster)
-            intra_raster.setRefreshOnNotifyEnabled( True)
-        if (( affiche_iso == "YES") and ( nom_iso_final != "") and 
-            ( os.path.exists( le_template_isolignes))):
-            intra_isoligne.loadNamedStyle( le_template_isolignes)
+
 
 class PhysiocapIntra( QtWidgets.QDialog):
     """QGIS Pour voir les messages traduits."""
@@ -111,6 +67,53 @@ class PhysiocapIntra( QtWidgets.QDialog):
     def __init__(self, parent=None):
         """Class constructor."""
         super( PhysiocapIntra, self).__init__()
+        
+    def physiocap_affiche_raster_iso( self, dialogue, nom_raster_final, nom_court_raster, le_template_raster, affiche_raster,
+                    nom_iso_final, nom_court_isoligne, le_template_isolignes, affiche_iso,
+                    vignette_group_intra, mon_projet):
+        """ Affichage du raster et Iso"""
+        leModeDeTrace = dialogue.fieldComboModeTrace.currentText() 
+      
+        #physiocap_log ( "= Template raster {0}".format( le_template_raster), TRACE_INTRA)
+        physiocap_log ( "= Dans affichage iso final  {0}".format( nom_iso_final), TRACE_INTRA)
+      
+        if ( nom_raster_final != ""):
+            if os.path.exists( nom_raster_final):           
+                intra_raster = QgsRasterLayer( nom_raster_final, nom_court_raster)
+                if ( nom_iso_final != "") and affiche_iso == "YES":
+                    if os.path.exists( nom_iso_final):           
+                        intra_isoligne = QgsVectorLayer( nom_iso_final, 
+                            nom_court_isoligne, 'ogr')
+                    else:
+                        physiocap_log( "{0} ne retrouve pas votre isoligne pour {1}. \nVérifiez votre paramètrage pour isolignes".\
+                            format( PHYSIOCAP_UNI, nom_court_isoligne), leModeDeTrace)
+                        # Bloque tout pour cas particulier : raise physiocap_exception_iso_manquant( nom_court_isoligne)  
+                        affiche_iso = "NO"
+            else:
+                physiocap_log( "{0} ne retrouve pas votre raster pour {1}".\
+                    format( PHYSIOCAP_UNI, nom_court_raster), leModeDeTrace)
+                raise physiocap_exception_raster_manquant( nom_court_raster)     
+                
+            if vignette_group_intra != None:
+                if (( affiche_iso == "YES") and ( nom_iso_final != "")):
+                    mon_projet.addMapLayer( intra_isoligne, False)
+                    vignette_group_intra.addLayer( intra_isoligne)
+                if ( affiche_raster == "YES"): 
+                    mon_projet.addMapLayer( intra_raster, False)
+                    vignette_group_intra.addLayer( intra_raster)
+            else:
+                if (( affiche_iso == "YES") and ( nom_iso_final != "")):
+                    mon_projet.addMapLayer( intra_isoligne)
+                if ( affiche_raster == "YES"): 
+                    mon_projet.addMapLayer( intra_raster)
+        
+            if (( affiche_raster == "YES") and 
+                ( os.path.exists( le_template_raster))):
+                intra_raster.loadNamedStyle( le_template_raster)
+                intra_raster.setRefreshOnNotifyEnabled( True)
+            if (( affiche_iso == "YES") and ( nom_iso_final != "") and 
+                ( os.path.exists( le_template_isolignes))):
+                intra_isoligne.loadNamedStyle( le_template_isolignes)
         
     def quelle_librairie_interpolation(self, dialogue, versionSAGA, leModeDeTrace):
         """
@@ -975,7 +978,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     # Affichage dans panneau QGIS                           
                     if ( dialogue.checkBoxIntraUnSeul.isChecked()):
                         if nouveau == "NOUVEAUX":
-                            physiocap_affiche_raster_iso( \
+                            self.physiocap_affiche_raster_iso( dialogue, \
                                 nom_raster_final, nom_court_raster, le_template_raster, "YES",
                                 nom_iso_final, nom_court_isoligne, le_template_isolignes, "YES",
                                 vignette_group_intra, mon_projet)
@@ -1116,7 +1119,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                             if nouveau == "NOUVEAUX":
 #                                physiocap_log ( self.tr( "=~= Affichage résultat d'interpolation de {0} <<<< vignette {1}").\
 #                                    format( le_nom_entite_libere, vignette_group_intra ), "OGR")
-                                physiocap_affiche_raster_iso( \
+                                self.physiocap_affiche_raster_iso( dialogue, \
                                     nom_raster_final, nom_court_raster, le_template_raster, afficheRaster,
                                     nom_iso_final, nom_court_isoligne, le_template_isolignes, afficheIso,
                                     vignette_group_intra, mon_projet)
