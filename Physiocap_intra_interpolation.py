@@ -115,12 +115,14 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 ( os.path.exists( le_template_isolignes))):
                 intra_isoligne.loadNamedStyle( le_template_isolignes)
         
-    def quelle_librairie_interpolation(self, dialogue, versionSAGA, leModeDeTrace):
+    def quelle_librairie_interpolation(self, dialogue, versionSAGA):
         """
-        Traite des cas de choix et version SAGA QGIS ou GDAL avant appel des Processing (Traitement) correspondants
+        Traite le choix et la version SAGA QGIS ou GDAL avant appel des Processing (Traitement) correspondants
+        Attention ce choix peut être revu pour certains cas (SAGA n'accepte pas les caractere non ascii
         """        
         # Test version de SAGA, sinon annonce de l'utilisation de GDAL
         PROCESSING_INTERPOLATION = "INCONNU"
+        leModeDeTrace = dialogue.fieldComboModeTrace.currentText() 
         if dialogue.radioButtonSAGA.isChecked():
             if versionSAGA == None:
                 versionNum = -1
@@ -195,12 +197,14 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         format( lettre_algo, algo_court, produit_algo), TRACE_INTRA)
         return produit_algo
         
-    def physiocap_creer_raster_iso( self, dialogue, choix_interpolation, 
+    def physiocap_creer_raster_iso( self, dialogue, choix_interpolation, choix_force_interpolation, 
                 nom_noeud_arbre, chemin_raster, chemin_iso,
                 nom_court_vignette, nom_vignette, nom_court_point, nom_point,
                 le_champ_choisi, le_choix_INTRA_continue, le_nom_entite_libere):
         """ Creation du raster et Iso
         Cas Saga ou Gdal : appel des Processing (Traitement) correspondants
+            choix_interpolation est la librairie choisie et 
+            choix_force_interpolation est une librairie qui a été forcé
         """
         leModeDeTrace = dialogue.fieldComboModeTrace.currentText() 
      
@@ -233,20 +237,8 @@ class PhysiocapIntra( QtWidgets.QDialog):
         distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
         laProjectionCRS, laProjectionTXT, EPSG_NUMBER = \
             physiocap_quelle_projection_et_lib_demandee( dialogue)
-
-        # Contour du bug SAGA et caractères spéciaux
-        if nom_point != ascii( nom_point):
-            aText =  self.tr("=~= {0} ne peut pas dialoguer avec SAGA et des caractères non ascii.\n").\
-                    format( PHYSIOCAP_UNI)
-            aText = aText + self.tr( "L'interpolation de {0} est réalisée avec GDAL").\
-                    format( le_nom_entite_libere)
-            physiocap_log( aText, leModeDeTrace)
-            choix_interpolation = "GDAL" 
-#        else:
-#            aText = "{0} est identique à \n{1}".format( nom_point, ascii( nom_point))
-#            physiocap_log( aText, leModeDeTrace)
             
-        # Récupération des deux parametres d'Intra pour GDAL
+        # Récupération des deux parametres d'Intra pour GDAL demandé et non forcé
         rayonDoubleIntra = float ( dialogue.spinBoxDoubleRayon.value())
         if choix_interpolation == "GDAL":
             rayonMultiplieIntra = float ( dialogue.spinBoxMultiplieRayon.value())
@@ -330,7 +322,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
         # Création d'un raster temporaire
         try:
             from processing.tools.system import ( getTempDirInTempFolder, getTempFilename)
-            if choix_interpolation == "SAGA":
+            if choix_force_interpolation == "SAGA":
                 # on crée un repertoire temporaire 
                 nom_dir_temp = getTempDirInTempFolder()
                 nom_raster_temp = os.path.join( nom_dir_temp, "TMP_RASTER_SAGA" + EXTENSION_RASTER_SAGA)
@@ -368,33 +360,13 @@ class PhysiocapIntra( QtWidgets.QDialog):
 
             # Cas sans orientation retrouvé
             if  ellipse_orientee == 0:
-                deuxieme_rayon = rayonDoubleIntra
-
+                deuxieme_rayon = rayonDoubleIntra            
             physiocap_log( self.tr( "=~= Orientation du rang soit ellipse == {0} soit= {1} == {2}*{3} == ").\
                 format(  orientation, ellipse_orientee,  rayonDoubleIntra,  deuxieme_rayon), leModeDeTrace)     
-     
-        
-        #TODO: Verifier si inutile supprimer les controles Sous Windows :attraper les exceptions processing SAGA ascii
-#        le_nom_entite_libere !        
-#        try:
-#            # Gérer le cas de la valeur d'un champ à part
-#            if platform.system() == 'Windows':            
-#                physiocap_log( "Type de le_nom_entite " + str( type( le_nom_entite)), , TRACE_INTRA)
-#                le_nom_entite.decode("ascii")
-#        except UnicodeEncodeError:
-#            physiocap_log( self.tr( "{0} ne peut pas dialoguer avec Saga et des caractères non ascii").\
-#                format( PHYSIOCAP_UNI), TRACE_INTRA)
-#            raise physiocap_exception_windows_value_ascii( le_nom_entite)  
-#        
-#        try:
-#            if platform.system() == 'Windows':            
-#                unicode( nom_isoligne)
-#                physiocap_log( "Type de isoligne " + str( type( nom_isoligne)), TRACE_INTRA)
-#        excpt UnicodeEncodeError:
-#            physiocap_log( self.tr( "{0} ne peut pas dialoguer avec Saga et des caractères non ascii").\
-#                format( PHYSIOCAP_UNI), TRACE_INTRA)
-#            raise physiocap_exception_windows_saga_ascii( nom_isoligne)  
 
+        else: # cas GDAL forcé, on utilise pas l'ellipse
+            deuxieme_rayon = rayonDoubleIntra
+     
         # Initialisation avant Interpolation
         nom_raster_produit = ""
         nom_raster_clippe = ""
@@ -403,14 +375,14 @@ class PhysiocapIntra( QtWidgets.QDialog):
         # Récuperer Extent du polygone en cours
         ex = vignette_vector.extent()
         xmin, xmax, ymin, ymax = ex.xMinimum(),ex.xMaximum(), ex.yMinimum(), ex.yMaximum()
-        if choix_interpolation == "GDAL":
+        if choix_force_interpolation == "GDAL":
             info_extent = str(xmin) + "," + str(ymin) + "," + str(xmax) + "," + str(ymax)
         else: # SAGA !
             info_extent = str(xmin) + "," + str(xmax) + "," + str(ymin) + "," + str(ymax)
         #physiocap_log( "=~= Extent layer >>> " + info_extent + " <<<", leModeDeTrace)        
         info_extent_epsg = info_extent + " [EPSG:" + str( EPSG_NUMBER) + "]"
         
-        if choix_interpolation == "SAGA":
+        if choix_force_interpolation == "SAGA":
             # Appel SAGA : power à 2 fixe
             physiocap_log( self.tr( "=~= Interpolation SAGA dans {0}").\
                 format(  nom_court_raster), leModeDeTrace)
@@ -526,7 +498,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
             physiocap_log( self.tr( "=~= Interpolation SAGA - Fin iso - {0}").\
                 format( nom_iso_final), TRACE_INTRA)   
                 
-        elif choix_interpolation == "GDAL":
+        elif choix_force_interpolation == "GDAL":
             # Appel GDAL
             # Paramètres apres le champ
             # Power vaut 2 
@@ -571,27 +543,8 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     
                 nom_raster_final = self.physiocap_appel_processing( dialogue, nom_point, \
                 "CLIP_GDAL", "gdal:cliprasterbymasklayer", \
-                CLIP_GDAL, "OUTPUT")                 
-                
-#######                raster_dans_poly = processing.run( "gdal:cliprasterbymasklayer", param_cli)                    
-
-###            option_clip_raster = ""
-###            if ( EPSG_NUMBER == EPSG_NUMBER_L93 ):
-###                #physiocap_log( "=x= Projection à translater vers : " + str( EPSG_NUMBER) , TRACE_INTRA)
-###                #option_clip_raster = '-s_2015-12-09T16:17:46	1	PHYSIOCAP : Avant calculator 
-###                #srs "EPSG:' + str(EPSG_NUMBER_GPS) + '" -t_srs "EPSG:' + str(EPSG_NUMBER_L93) + '"'
-###                # A_TESTER: old était str(EPSG_NUMBER_L93)
-###                option_clip_raster = "-t_srs \"EPSG:" + EPSG_NUMBER_L93 + "\""
-
-
-###                    # Version à 7 arg
-###                    raster_dans_poly = processing.runalg("gdalogr:cliprasterbymasklayer",
-###                    nom_raster_temp,
-###                    nom_vignette,
-###                    "-9999",False,False,
-###                    option_clip_raster, 
-###                    nom_raster)
-###            
+                CLIP_GDAL, "OUTPUT")
+                         
             # On passe ETAPE ISO si nom_raster_final existe
             if ( nom_raster_final != ""):
                 # Isolignes
@@ -690,8 +643,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
         dialogue.progressBarIntra.setValue( 2)
         
         # Appel une seule fois des vérification Processing dispo et choix de Librairie 
-        choix_interpolation = self.quelle_librairie_interpolation( dialogue, \
-                versionSAGA, leModeDeTrace)
+        choix_interpolation = self.quelle_librairie_interpolation( dialogue, versionSAGA)
         physiocap_log ( self.tr( "=~= Choix de la librairie d'interpolation : {0}".\
             format( choix_interpolation)), leModeDeTrace)
 
@@ -889,7 +841,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
             # #####################
             # Cas d'une image seule
             # #####################
-            # TODO: Eviter ce calcul Intra et remplacer par un merge des tif et isolignes
+            # TODO: Selon la taille, éviter ce calcul Intra et remplacer par un merge des tif et isolignes
             if ( dialogue.checkBoxIntraUnSeul.isChecked() and 
                 choix_interpolation != "GDAL") :
                 contours_possibles = contours_possibles + 1
@@ -939,7 +891,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         
                         nouveau = "NON"
                         nouveau, nom_raster_final, nom_court_raster, nom_iso_final, nom_court_isoligne = \
-                            self.physiocap_creer_raster_iso( dialogue, choix_interpolation, 
+                            self.physiocap_creer_raster_iso( dialogue, choix_interpolation, choix_force_interpolation, 
                             nom_noeud_arbre, chemin_raster, chemin_iso,  
                             nom_court_vignette, nom_vignette, nom_court_point, nom_point,
                             le_champ_choisi, le_choix_INTRA_continue, le_nom_entite_libere) 
@@ -1010,6 +962,18 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         un_nom = NOM_CHAMP_ID + SEPARATEUR_ + str(id_contour)
                         pass
 
+                    # Contournement du bug SAGA et caractères spéciaux
+                    if nom_point != ascii( nom_point):
+                        aText =  self.tr("=~= {0} ne peut pas dialoguer avec SAGA et des caractères non ascii.\n").\
+                                format( PHYSIOCAP_UNI)
+                        aText = aText + self.tr( "L'interpolation de {0} doit être réalisée avec GDAL").\
+                                format( le_nom_entite_libere)
+                        physiocap_log( aText, leModeDeTrace)
+                        choix_definitif_interpolation = "GDAL" 
+                    else:
+                        choix_definitif_interpolation = choix_interpolation 
+
+
                     # ###################
                     # Préparation du nom de l'entité pour les fichiers
                     # ###################        
@@ -1019,7 +983,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         # Prepare un nom sans cote (requete dans gdal et nommage dans gdal)
                         le_nom_entite_libere = physiocap_nom_entite_sans_pb_caractere( un_nom) 
 
-                    if physiocap_nom_entite_avec_pb_caractere( le_nom_entite_libere,  choix_interpolation):
+                    if physiocap_nom_entite_avec_pb_caractere( le_nom_entite_libere,  choix_definitif_interpolation):
                         # ASSERT le_nom_entite_libere ne plus contient un caractère non supporté par GDAL
                         physiocap_log ( self.tr( "=~= {0} Pas d'interpolation de {1}>>>>").\
                         format( PHYSIOCAP_UNI, un_nom), leModeDeTrace)
@@ -1077,7 +1041,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
         ##            physiocap_log( "=~= Points CHAQUE - nom  : " + nom_point , TRACE_INTRA)
                         nouveau = "NON"
                         nouveau, nom_raster_final, nom_court_raster, nom_iso_final, nom_court_isoligne = \
-                            self.physiocap_creer_raster_iso( dialogue, choix_interpolation, 
+                            self.physiocap_creer_raster_iso( dialogue, choix_definitif_interpolation, 
                             nom_noeud_arbre, chemin_raster, chemin_iso,
                             nom_court_vignette, nom_vignette, nom_court_point, nom_point,
                             le_champ_choisi, le_choix_INTRA_continue, le_nom_entite_libere)
