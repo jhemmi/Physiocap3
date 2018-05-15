@@ -165,8 +165,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
         lettre_algo = algo[0]
 
         physiocap_log( self.tr( "={0}= Parametres pour algo {1} de nom long {2}\n{3}".\
-                        format( lettre_algo, algo_court, algo , params_algo )), TRACE_INTRA) 
-         
+                        format( lettre_algo, algo_court, algo , params_algo )), TRACE_INTRA)       
         textes_sortie_algo = {}
         try:
             if lettre_algo == "s":
@@ -204,34 +203,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
         Cas Saga ou Gdal : appel des Processing (Traitement) correspondants
         """
         leModeDeTrace = dialogue.fieldComboModeTrace.currentText() 
-
-        # Récupération des deux parametres d'Intra
-        rayonDoubleIntra = float ( dialogue.spinBoxDoubleRayon.value())
-        if choix_interpolation == "GDAL":
-            rayonMultiplieIntra = float ( dialogue.spinBoxMultiplieRayon.value())
-            if rayonMultiplieIntra > 0:
-                deuxieme_rayon = rayonDoubleIntra * rayonMultiplieIntra
-            else:
-                deuxieme_rayon = rayonDoubleIntra
-            physiocap_log( self.tr( "=~= Rayon saisi =>> {0} et rayon ellipse {1} ").\
-                format(  rayonDoubleIntra,  deuxieme_rayon), TRACE_INTRA)
-        else:
-            deuxieme_rayon = rayonDoubleIntra
-            
-        pixelIntra = float ( dialogue.spinBoxPixel.value())
-
-         # Pour isolignes
-        isoMin = float ( dialogue.spinBoxIsoMin.value())
-        isoMax = float ( dialogue.spinBoxIsoMax.value())
-        #isoNombreIso = float ( dialogue.spinBoxNombreIso.value())
-        isoInterlignes = float ( dialogue.spinBoxDistanceIso.value())
      
-#        # Parametres fixes
-#        angle = 0    # Pas utiliser
-#        val_nulle = 0 # Valeur nulle reste nulle
-#        float_32 = 5
-#        float_64 = 6
-      
         # Trace des entités en entrée
         physiocap_log( self.tr( "=~= Nom ==>> {0} <<==").\
             format(  le_nom_entite_libere), leModeDeTrace)
@@ -261,7 +233,45 @@ class PhysiocapIntra( QtWidgets.QDialog):
         distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
         laProjectionCRS, laProjectionTXT, EPSG_NUMBER = \
             physiocap_quelle_projection_et_lib_demandee( dialogue)
-        
+
+        # Contour du bug SAGA et caractères spéciaux
+        if nom_point != ascii( nom_point):
+            aText =  self.tr("=~= {0} ne peut pas dialoguer avec SAGA et des caractères non ascii.\n").\
+                    format( PHYSIOCAP_UNI)
+            aText = aText + self.tr( "L'interpolation de {0} est réalisée avec GDAL").\
+                    format( le_nom_entite_libere)
+            physiocap_log( aText, leModeDeTrace)
+            choix_interpolation = "GDAL" 
+#        else:
+#            aText = "{0} est identique à \n{1}".format( nom_point, ascii( nom_point))
+#            physiocap_log( aText, leModeDeTrace)
+            
+        # Récupération des deux parametres d'Intra pour GDAL
+        rayonDoubleIntra = float ( dialogue.spinBoxDoubleRayon.value())
+        if choix_interpolation == "GDAL":
+            rayonMultiplieIntra = float ( dialogue.spinBoxMultiplieRayon.value())
+            if rayonMultiplieIntra > 0:
+                deuxieme_rayon = rayonDoubleIntra * rayonMultiplieIntra
+            else:
+                deuxieme_rayon = rayonDoubleIntra
+            physiocap_log( self.tr( "=~= Rayon saisi =>> {0} et rayon ellipse {1} ").\
+                format(  rayonDoubleIntra,  deuxieme_rayon), TRACE_INTRA)
+        else:
+            deuxieme_rayon = rayonDoubleIntra
+            
+        pixelIntra = float ( dialogue.spinBoxPixel.value())
+
+         # Pour isolignes
+        isoMin = float ( dialogue.spinBoxIsoMin.value())
+        isoMax = float ( dialogue.spinBoxIsoMax.value())
+        #isoNombreIso = float ( dialogue.spinBoxNombreIso.value())
+        isoInterlignes = float ( dialogue.spinBoxDistanceIso.value())
+     
+#        # Parametres fixes
+#        val_nulle = 0 # Valeur nulle reste nulle
+#        float_32 = 5
+#        float_64 = 6
+            
         # ###################
         # CRÉATION raster cible et temporaire
         # ###################
@@ -314,8 +324,8 @@ class PhysiocapIntra( QtWidgets.QDialog):
 #            # CAS 2 : Recreer de nouvelle instance  
         else:
             raise physiocap_exception_no_choix_raster_iso( le_nom_entite_libere)
-        physiocap_log( self.tr( "Apres rename isoligne {0} et chemin vers isoligne\n{1}<<<===").\
-            format( nom_court_isoligne, nom_isoligne), TRACE_INTRA)
+#        physiocap_log( self.tr( "Apres rename isoligne {0} et chemin vers isoligne\n{1}<<<===").\
+#            format( nom_court_isoligne, nom_isoligne), TRACE_INTRA)
             
         # Création d'un raster temporaire
         try:
@@ -397,9 +407,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
             info_extent = str(xmin) + "," + str(ymin) + "," + str(xmax) + "," + str(ymax)
         else: # SAGA !
             info_extent = str(xmin) + "," + str(xmax) + "," + str(ymin) + "," + str(ymax)
-            
-        #physiocap_log( "=~= Extent layer >>> " + info_extent + " <<<", leModeDeTrace)
-        
+        #physiocap_log( "=~= Extent layer >>> " + info_extent + " <<<", leModeDeTrace)        
         info_extent_epsg = info_extent + " [EPSG:" + str( EPSG_NUMBER) + "]"
         
         if choix_interpolation == "SAGA":
@@ -422,7 +430,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     ### 'DW_BANDWIDTH' : 0, 
                     ### 'SEARCH_POINTS_MAX' : 20, 
                     # ????  ### 'TARGET_USER_SIZE' : 1.8, 
-                     
+                    
             IDW_SAGA = { 'SHAPES' : nom_point, 
                 'FIELD' : le_champ_choisi, 
                 'OUTPUT_EXTENT' : info_extent_epsg,
@@ -446,7 +454,6 @@ class PhysiocapIntra( QtWidgets.QDialog):
             nom_raster_produit = self.physiocap_appel_processing(dialogue, nom_point, \
                 "IDW_SAGA", "saga:inversedistanceweightedinterpolation", \
                 IDW_SAGA, "TARGET_OUT_GRID")      
-
             QgsMessageLog.logMessage( "PHYSIOCAP : Avant clip SAGA", "Processing", Qgis.Warning)
 
             # Cas TIFF on garde le nom final du tiff pour le step suivant
