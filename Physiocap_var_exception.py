@@ -46,7 +46,7 @@ else:
     LE_MODE_PROD = "YES"
     
 # TODO: à livraison : supprimer en Prod
-#LE_MODE_PROD = "NO"
+LE_MODE_PROD = "NO"
 
 # En prod CENTROIDES vaut NO
 CENTROIDES = "NO"  # CENTROIDES YES est pour voir les centroides dans la synthese
@@ -117,11 +117,11 @@ REPERTOIRE_SHAPEFILE_V3 = "Filtre"
 EXTENSION_CSV = ".csv"
 EXTENSION_SHP = ".shp"
 EXTENSION_PRJ = ".prj"
-# A_TESTER: vrt sous Linux
-if MACHINE == "Linux":
-    EXTENSION_RASTER_SANS_POINT = "vrt"
-else:
-    EXTENSION_RASTER_SANS_POINT = "tiff"
+# WARNING:_Pas d'affichage des VRTs sous Linux
+#if MACHINE == "Linux":
+#    EXTENSION_RASTER_SANS_POINT = "vrt"
+#else:
+EXTENSION_RASTER_SANS_POINT = "tiff"
 EXTENSION_RASTER = "." + EXTENSION_RASTER_SANS_POINT
 EXTENSION_RASTER_SAGA_SANS_POINT = "sdat"
 EXTENSION_RASTER_SAGA = "." + EXTENSION_RASTER_SAGA_SANS_POINT
