@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>539</width>
-    <height>699</height>
+    <height>719</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
    <property name="geometry">
     <rect>
      <x>270</x>
-     <y>670</y>
+     <y>680</y>
      <width>211</width>
      <height>31</height>
     </rect>
@@ -61,7 +61,7 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>0</x>
+     <x>10</x>
      <y>10</y>
      <width>521</width>
      <height>661</height>
@@ -93,7 +93,7 @@
     <enum>QTabWidget::North</enum>
    </property>
    <property name="currentIndex">
-    <number>4</number>
+    <number>3</number>
    </property>
    <property name="movable">
     <bool>true</bool>
@@ -4153,9 +4153,9 @@ Si vous hésitez, trouvez du conseil. </string>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>290</y>
+       <y>350</y>
        <width>491</width>
-       <height>111</height>
+       <height>71</height>
       </rect>
      </property>
      <property name="font">
@@ -4200,134 +4200,14 @@ Si vous hésitez, trouvez du conseil. </string>
        <number>1</number>
       </property>
      </widget>
-     <widget class="QComboBox" name="fieldComboModeTrace">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>150</x>
-        <y>55</y>
-        <width>291</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Vous pouvez choisir le mode de traces : &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Le mode &amp;quot;&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Traces complètes&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;&amp;quot; est le defaut et permet d'avoir un maximum de traces. C'est le mode le plus lent, nécessaire en cas de mise ou point ou de problème.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Le mode&amp;quot;&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Traces minimales&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;&amp;quot; garde une trace des début et fin de traitement.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Le mode &amp;quot;&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Pas de trace&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;&amp;quot; est le mode le plus rapide, mais plus aucun trace de vos traitement n'apparait. A utiliser, en cas de traitement de plusieurs dizaine de parcelles. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Dans ce dernier mode, on évite aussi la vérification des attributs uniques lors de l'affichage de vecteurs dans Intra.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-      <property name="accessibleDescription">
-       <string/>
-      </property>
-      <property name="editable">
-       <bool>true</bool>
-      </property>
-      <property name="currentIndex">
-       <number>-1</number>
-      </property>
-      <property name="minimumContentsLength">
-       <number>1</number>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lab_1010">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>55</y>
-        <width>131</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Mode de traces</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lab_1011">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>80</y>
-        <width>131</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Champ ID_PHY</string>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="fieldComboModePhyId">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>150</x>
-        <y>80</y>
-        <width>291</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Vous pouvez choisir le contenu du champ ID_PHY : &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Le premier choix remplit  ID_PHY avec une valeur PHY_numérique qui crée un attribut uniwque mais peu explicite&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Le deuxième choix permet de créer un champ  ID_PHY textuel qui est rempli par les valeurs de votre choix d'attribut lors du calcul Inter. Ce champ est libéré des caractères problématiques pour certaines librairies (le blanc et la cote sont remplacés par un &amp;quot;_&amp;quot;). Vos shapefiles et rasters seront nommés avec cette valeur libérée.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-      <property name="accessibleDescription">
-       <string/>
-      </property>
-      <property name="editable">
-       <bool>true</bool>
-      </property>
-      <property name="currentIndex">
-       <number>-1</number>
-      </property>
-      <property name="minimumContentsLength">
-       <number>1</number>
-      </property>
-     </widget>
+     <zorder>fieldComboThematiques</zorder>
+     <zorder>groupBox_3</zorder>
     </widget>
     <widget class="QGroupBox" name="groupBoxSegment">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>430</y>
+       <y>440</y>
        <width>491</width>
        <height>111</height>
       </rect>
@@ -4651,7 +4531,7 @@ Si vous hésitez, trouvez du conseil. </string>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>150</y>
+       <y>190</y>
        <width>211</width>
        <height>21</height>
       </rect>
@@ -4674,7 +4554,7 @@ Si vous hésitez, trouvez du conseil. </string>
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>170</y>
+       <y>210</y>
        <width>111</width>
        <height>26</height>
       </rect>
@@ -4705,7 +4585,7 @@ Si vous hésitez, trouvez du conseil. </string>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>210</y>
+       <y>250</y>
        <width>491</width>
        <height>71</height>
       </rect>
@@ -4744,6 +4624,9 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
      </widget>
      <widget class="QCheckBox" name="checkBoxSagaTIFF">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -4776,7 +4659,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <x>10</x>
        <y>10</y>
        <width>491</width>
-       <height>131</height>
+       <height>171</height>
       </rect>
      </property>
      <property name="font">
@@ -4973,6 +4856,67 @@ Si vous hésitez, trouvez du conseil. </string>
        <string>GPS - WGS84 - EPSG 4326</string>
       </property>
      </widget>
+     <widget class="QComboBox" name="fieldComboModeTrace">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>130</y>
+        <width>311</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Vous pouvez choisir le mode de traces : &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Le mode &amp;quot;&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Traces complètes&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;&amp;quot; est le defaut et permet d'avoir un maximum de traces. C'est le mode le plus lent, nécessaire en cas de mise ou point ou de problème.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Le mode&amp;quot;&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Traces minimales&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;&amp;quot; garde une trace des début et fin de traitement.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Le mode &amp;quot;&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Pas de trace&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;&amp;quot; est le mode le plus rapide, mais plus aucun trace de vos traitement n'apparait. A utiliser, en cas de traitement de plusieurs dizaine de parcelles. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Dans ce dernier mode, on évite aussi la vérification des attributs uniques lors de l'affichage de vecteurs dans Intra.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="accessibleDescription">
+       <string/>
+      </property>
+      <property name="editable">
+       <bool>true</bool>
+      </property>
+      <property name="currentIndex">
+       <number>-1</number>
+      </property>
+      <property name="minimumContentsLength">
+       <number>1</number>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lab_1010">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>130</y>
+        <width>131</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Mode de traces</string>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="tabAide">
@@ -4982,9 +4926,9 @@ Si vous hésitez, trouvez du conseil. </string>
     <widget class="QGroupBox" name="groupBox">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>0</x>
        <y>0</y>
-       <width>521</width>
+       <width>511</width>
        <height>467</height>
       </rect>
      </property>
@@ -5192,7 +5136,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="text">
-       <string>Version 3.1.5 SAGA</string>
+       <string>Version 3.1.5B SAGA</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_500">
@@ -5499,13 +5443,53 @@ Si vous hésitez, trouvez du conseil. </string>
       <string>Intra power</string>
      </property>
     </widget>
+    <widget class="QComboBox" name="fieldPbGdal">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>230</x>
+       <y>490</y>
+       <width>141</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit du champ de votre contour qui identifie chacune de vos parcelles. Dans la moyenne Inter Parcellaire, ce champ se nomme NOM_PHY. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Attention : seuls les champs ayant une valeur différente pour chaque parcelle sont proposés.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lab_44">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>490</y>
+       <width>191</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Id champ posant question à GDAL</string>
+     </property>
+    </widget>
     <widget class="QTextBrowser" name="textBrowserAide">
      <property name="geometry">
       <rect>
        <x>0</x>
        <y>500</y>
        <width>511</width>
-       <height>101</height>
+       <height>121</height>
       </rect>
      </property>
      <property name="sizePolicy">

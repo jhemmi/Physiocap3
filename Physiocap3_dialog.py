@@ -44,7 +44,7 @@
 
 from .Physiocap_tools import physiocap_message_box, \
         physiocap_log_for_error, physiocap_log, physiocap_error, \
-        physiocap_quelle_projection_et_lib_demandee, \
+        physiocap_quelle_projection_et_lib_demandee, physiocap_nom_entite_avec_pb_caractere, \
         physiocap_get_layer_by_name,  physiocap_get_layer_by_ID
 
 from .Physiocap_creer_arbre import PhysiocapFiltrer
@@ -98,22 +98,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 if ( modeTrace == leModeDeTrace):
                     self.fieldComboModeTrace.setCurrentIndex( idx)
 
-        # Remplissage du mode PHY_ID        
-        self.fieldComboModePhyId.setCurrentIndex( 0)
-        if len( MODE_PHY_ID) == 0:
-            self.fieldComboModePhyId.clear( )
-            physiocap_error( self, self.tr( "Pas de liste des modes PHY_ID pré défini"))
-        else:
-            self.fieldComboModePhyId.clear( )
-            self.fieldComboModePhyId.addItems( MODE_PHY_ID )
-            # Retrouver le mode de PHY_ID   dans  settings
-            leModePhyId = self.settings.value("Physiocap/leModePhyId", TRACE_TOUT)
-            for idx, modePhy in enumerate( MODE_PHY_ID):
-                if ( modePhy == leModePhyId):
-                    self.fieldComboModePhyId.setCurrentIndex( idx)
-
-
-        
+       
         #physiocap_log( "Répertoire de QGIS : " +  self.gis_dir, leModeDeTrace)
         physiocap_log( "Répertoire des plugins ou extensions : " +  self.plugins_dir, leModeDeTrace)
        
@@ -140,6 +125,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
        
         # Inter
         self.comboBoxPolygone.currentIndexChanged[int].connect( self.slot_INTER_maj_champ_poly_liste )
+        self.fieldComboContours.currentIndexChanged[int].connect( self.slot_INTER_change_champ_choisi )
         self.ButtonInter.pressed.connect(self.slot_INTER_moyennes_parcelles)
         self.ButtonInterRefresh.pressed.connect(self.slot_INTER_liste_parcelles)
         self.groupBoxInter.setEnabled( False)
@@ -866,17 +852,25 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 self.spinBoxIsoMax.setValue( int( max_attribut ))
                 self.spinBoxIsoMin.setValue( int( min_attribut ))
 
+    def slot_INTER_change_champ_choisi( self ):
+        """ Synchronise les 2 combox"""
+        position_choix = self.fieldComboContours.currentIndex()
+        self.fieldPbGdal.setCurrentIndex( position_choix)                              
+   
     def slot_INTER_maj_champ_poly_liste( self ):
         """ Create a list of fields having unique values for the current vector in fieldCombo Box"""
+        leModeDeTrace = self.fieldComboModeTrace.currentText()
         nom_complet_poly = self.comboBoxPolygone.currentText().split( SEPARATEUR_NOEUD)
         inputLayer = nom_complet_poly[0] 
-        leModeDeTrace = self.fieldComboModeTrace.currentText()
+
         self.fieldComboContours.clear()
+        self.fieldPbGdal.clear()
         #physiocap_log( "Dans recherche de champ : layer >> {0}<<". \
         #   format ( inputLayer), leModeDeTrace)
 
         layer = physiocap_get_layer_by_name( inputLayer)
         # Initialisation avec CHAMP_NOM_PHY = NOM_PHY
+        self.fieldPbGdal.addItem( "NO" )                                
         self.fieldComboContours.addItem( CHAMP_NOM_PHY)
         self.fieldComboContours.setCurrentIndex( 0)
         if layer is not None:
@@ -906,15 +900,21 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                             
                     # ne pas remettre NOM_PHY une deuxieme fois
                     if valeur_unique == "YES" and nom_champ != CHAMP_NOM_PHY:
+                        valeur_pb_GDAL = "NO"
+                        for val in liste_valeurs:
+                            if physiocap_nom_entite_avec_pb_caractere( val):
+                                valeur_pb_GDAL = "YES"
+                                break                        
+                        self.fieldPbGdal.addItem( valeur_pb_GDAL )                                
                         self.fieldComboContours.addItem( nom_champ )
                         if ( nom_champ == dernierAttribut):
                             self.fieldComboContours.setCurrentIndex( position_combo)
+                            self.fieldPbGdal.setCurrentIndex( position_combo)                              
                         position_combo = position_combo + 1
-            
+  
                 liste_valeurs={}
                 mon_provider = None
         else:
-            # TODO: Exception à traiter pas_de_layer
             physiocap_log( "Dans recherche des champs uniques : aucun layer", leModeDeTrace)            
                     
     def slot_INTER_INTRA_maj_points_choix( self ):
@@ -1311,7 +1311,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.settings.setValue("Physiocap/leChoixDeThematiques", self.fieldComboThematiques.currentIndex())
 
         self.settings.setValue("Physiocap/leModeTrace", self.fieldComboModeTrace.currentText())
-        self.settings.setValue("Physiocap/leModePhyId", self.fieldComboModePhyId.currentText())
         
         # Cas détail segment
         self.settings.setValue("Physiocap/vitesse_mini_segment", float( self.doubleSpinBoxVitesseMiniSegment.value()))        
@@ -1393,6 +1392,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.settings.setValue("Physiocap/interPoint", self.comboBoxPoints.currentText() )
         self.settings.setValue("Physiocap/interPoly", self.comboBoxPolygone.currentText() )
         self.settings.setValue("Physiocap/attributPoly", self.fieldComboContours.currentText())
+        self.settings.setValue("Physiocap/attributpbGDAL", self.fieldPbGdal.currentText())
 
         self.settings.setValue("Physiocap/attributIntra", self.fieldComboIntra.currentText())
         self.settings.setValue("Physiocap/continueIntra", self.fieldComboIntraContinue.currentIndex())

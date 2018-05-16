@@ -911,8 +911,9 @@ class PhysiocapInter( QtWidgets.QDialog):
         id_poly = nom_complet_poly[ 1] 
         vecteur_poly = physiocap_get_layer_by_ID( id_poly)
 
-        leChampPoly = dialogue.fieldComboContours.currentText()
-            
+        le_champ_choisi = dialogue.fieldComboContours.currentText()
+        champ_pb_gdal = dialogue.fieldPbGdal.currentText()
+
         # Pour les points
         nom_complet_point = dialogue.comboBoxPoints.currentText().split( SEPARATEUR_NOEUD)
         if ( len( nom_complet_point) != 2):
@@ -1071,10 +1072,10 @@ class PhysiocapInter( QtWidgets.QDialog):
 #        ligne_courante = None
         
         # ITERATION PAR CONTOUR : Tri OK
-        for un_contour in vecteur_poly.getFeatures(QgsFeatureRequest().addOrderBy( leChampPoly)):
+        for un_contour in vecteur_poly.getFeatures(QgsFeatureRequest().addOrderBy( le_champ_choisi)):
             id = id + 1
             try:
-                un_nom = un_contour[ leChampPoly] #get attribute of poly layer
+                un_nom = un_contour[ le_champ_choisi] #get attribute of poly layer
             except:
                 un_nom = NOM_CHAMP_ID + SEPARATEUR_ + str(id)
                 pass
@@ -1082,13 +1083,15 @@ class PhysiocapInter( QtWidgets.QDialog):
             physiocap_log ( self.tr( "{0} {1} Début Inter pour {2} >>>> ").\
                 format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI, un_nom), leModeDeTrace)
 
-            if ( dialogue.fieldComboModePhyId.currentIndex() == 0):
-                un_autre_ID = NOM_CHAMP_ID + SEPARATEUR_ + str(id)
+            # Selon cas vis à vis de gdal (controlé dans la fieldPbGdal lors de recherche des champs uniques
+            if champ_pb_gdal == "NO":          
                 un_nom_libere = un_nom
+                un_autre_ID = NOM_CHAMP_ID + SEPARATEUR_ + str(id)
             else:
                 # Prepare un nom sans cote (requete dans gdal et nommage dans gdal)
-                un_autre_ID = physiocap_nom_entite_sans_pb_caractere( un_nom) # pour unique deuxieme parametre str(id)
-                un_nom_libere = un_autre_ID
+                un_nom_libere = physiocap_nom_entite_sans_pb_caractere( un_nom) # pour unique deuxieme parametre str(id)
+                un_autre_ID = un_nom_libere
+                
             geom_poly = un_contour.geometry() #get geometry of poly layer
             geomWkbType = geom_poly.wkbType()
             geomWkbMultiType = QgsWkbTypes.multiType( geomWkbType) # multiple sous processing

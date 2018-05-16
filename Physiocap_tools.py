@@ -151,7 +151,7 @@ def physiocap_create_projection_file( prj_name,  laProjection):
     
 def  physiocap_nom_entite_sans_pb_caractere( un_nom,  mon_unique = 0):
     """Change la chaine un_nom selon qu'elle contient ou non le caractère ' ou blanc"""
-    ## Peut ne rien faire
+    ## Cela peut ne rien faire
     return un_nom.replace(" ",SEPARATEUR_).replace("\'", SEPARATEUR_)
     #return un_nom
 #    if un_nom.find('\'') < 0:
@@ -164,11 +164,16 @@ def  physiocap_nom_entite_sans_pb_caractere( un_nom,  mon_unique = 0):
      
 def  physiocap_nom_entite_avec_pb_caractere( un_nom, un_texte = "GDAL"):
     """rend True si la chaine un_nom contient un caractère ' problématique pour la librairie : un_texte"""
-    if un_texte == "GDAL":
+    if un_texte == "GDAL" and type(un_nom) == str:
         # Tester si une cote '
         if un_nom.find('\'') >= 0:
             return True
-    # fin c'est OK on a rien trouvé
+        if un_nom.find(' ') >= 0:
+            return True
+#    else:
+#        physiocap_log( "pb GDAL {0}".format( type(un_nom)), leModeTrace)
+#        
+    # On a rien trouvé
     return False
     
        

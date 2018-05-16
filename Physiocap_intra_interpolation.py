@@ -336,10 +336,9 @@ class PhysiocapIntra( QtWidgets.QDialog):
             raise
       
         # Récuperer pour GDAL orientation et Passage
+        orientation = 0
+        ellipse_orientee = 0
         if choix_interpolation == "GDAL":
-            orientation = 0
-            #passage = 0 
-            ellipse_orientee = 0
             mon_expression = "\"{0}\" = '{1}'".format( CHAMP_NOM_ID, le_nom_entite_libere)                
             try:
                 physiocap_log( self.tr( "avant Expression ==>{0}<===").\
@@ -350,7 +349,6 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     orientation = ma_moyenne[ "ORIENT_A"]
                     # en d° antihoraire et perpenpendiculaire
                     ellipse_orientee = 90 + (180 - orientation)
-                    #passage = ma_moyenne[ "PASSAGE"]
                     # on suppose un seul retour
                     break
             except:
@@ -597,7 +595,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
         vecteur_poly = physiocap_get_layer_by_ID( id_poly)
 
         # Pour attribut en cours d'interpolation
-        le_champ_poly = dialogue.fieldComboContours.currentText()
+        le_champ_choisi = dialogue.fieldComboContours.currentText()
             
         # Pour les points
         nom_complet_point = dialogue.comboBoxPoints.currentText().split( SEPARATEUR_NOEUD)
@@ -883,7 +881,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         # ###############
                         physiocap_log( self.tr( "=~=  Le contour : {0}").\
                             format( nom_vecteur_contour), TRACE_INTRA)
-                        if ( dialogue.fieldComboModePhyId.currentIndex() == 0):
+                        if ( dialogue.dialogue.fieldPbGdal.currentText() == "NO"):
                             le_nom_entite_libere = nom_vecteur_contour[:-4]
                         else:
                             # Prepare un nom sans cote (requete dans gdal et nommage dans gdal)
@@ -891,7 +889,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         
                         nouveau = "NON"
                         nouveau, nom_raster_final, nom_court_raster, nom_iso_final, nom_court_isoligne = \
-                            self.physiocap_creer_raster_iso( dialogue, choix_interpolation, choix_force_interpolation, 
+                            self.physiocap_creer_raster_iso( dialogue, choix_interpolation, choix_interpolation, 
                             nom_noeud_arbre, chemin_raster, chemin_iso,  
                             nom_court_vignette, nom_vignette, nom_court_point, nom_point,
                             le_champ_choisi, le_choix_INTRA_continue, le_nom_entite_libere) 
@@ -957,34 +955,35 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     id_contour = id_contour + 1
                     contours_possibles = contours_possibles + 1
                     try:
-                        un_nom = un_contour[ le_champ_poly] 
+                        un_nom = un_contour[ le_champ_choisi] 
                     except:
                         un_nom = NOM_CHAMP_ID + SEPARATEUR_ + str(id_contour)
                         pass
 
-                    # Contournement du bug SAGA et caractères spéciaux
-                    if nom_point != ascii( nom_point):
+                    # ###################
+                    # Contournement du bug SAGA et caractères spéciaux ==> Interpolation GDAL
+                    # ###################                    
+                    if un_nom != ascii( un_nom):
                         aText =  self.tr("=~= {0} ne peut pas dialoguer avec SAGA et des caractères non ascii.\n").\
                                 format( PHYSIOCAP_UNI)
                         aText = aText + self.tr( "L'interpolation de {0} doit être réalisée avec GDAL").\
-                                format( le_nom_entite_libere)
+                                format( un_nom)
                         physiocap_log( aText, leModeDeTrace)
                         choix_definitif_interpolation = "GDAL" 
                     else:
                         choix_definitif_interpolation = choix_interpolation 
 
-
                     # ###################
-                    # Préparation du nom de l'entité pour les fichiers
+                    # Préparation du nom de l'entité pour les cas GDAL
                     # ###################        
-                    if ( dialogue.fieldComboModePhyId.currentIndex() == 0):
-                        le_nom_entite_libere = un_nom
-                    else:
+                    if ( choix_definitif_interpolation == "GDAL" ):
                         # Prepare un nom sans cote (requete dans gdal et nommage dans gdal)
                         le_nom_entite_libere = physiocap_nom_entite_sans_pb_caractere( un_nom) 
+                    else:
+                        le_nom_entite_libere = un_nom
 
                     if physiocap_nom_entite_avec_pb_caractere( le_nom_entite_libere,  choix_definitif_interpolation):
-                        # ASSERT le_nom_entite_libere ne plus contient un caractère non supporté par GDAL
+                        # ASSERT le_nom_entite_libere contient un caractère non supporté par GDAL
                         physiocap_log ( self.tr( "=~= {0} Pas d'interpolation de {1}>>>>").\
                         format( PHYSIOCAP_UNI, un_nom), leModeDeTrace)
                         raise physiocap_exception_probleme_caractere_librairie( le_nom_entite_libere)
@@ -1041,7 +1040,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
         ##            physiocap_log( "=~= Points CHAQUE - nom  : " + nom_point , TRACE_INTRA)
                         nouveau = "NON"
                         nouveau, nom_raster_final, nom_court_raster, nom_iso_final, nom_court_isoligne = \
-                            self.physiocap_creer_raster_iso( dialogue, choix_definitif_interpolation, 
+                            self.physiocap_creer_raster_iso( dialogue, choix_interpolation, choix_definitif_interpolation, 
                             nom_noeud_arbre, chemin_raster, chemin_iso,
                             nom_court_vignette, nom_vignette, nom_court_point, nom_point,
                             le_champ_choisi, le_choix_INTRA_continue, le_nom_entite_libere)
