@@ -32,9 +32,9 @@ La documentation de la version 2 se trouve dans le Wiki
 https://github.com/jhemmi/QgisPhysiocapPlugin/wiki/Qgis-Physiocap-Plugin-usage-&-installation
 La documentation de la version 3 n'est pas encore disponible.
 
-La version 3.1.5-SAGA est publiée dans le dépot github. La version 3.1.3-INTRA_GDAL est déposée sous QGIS 3 (accessible directement dans QGIS 3 depuis le Menu "Extension").
+La version 3.1.6 B est publiée dans le dépot github. La version 3.1.3-INTRA_GDAL est déposée sous QGIS 3 (accessible directement dans QGIS 3 depuis le Menu "Extension").
 
-La version de QGIS 3.0.3 va sortir dans les derniers jours de mai. Attention, elle n'a pas été testé avec Physiocap3. Elle sera testée avec 3.1.6 LTR et l'extension sera alors déposé dans QGIS.
+La version de QGIS 3.0.3 va sortir dans les derniers jours de mai. Attention, elle n'a pas été testé avec Physiocap3. Elle sera testée avec 3.1.6 LTR et l'extension sera alors déposée dans QGIS.
 
 **Attention, ce dépot GitHub contient la aussi dernière version en cours d'évolution (la 3.1.6 - Mai 2018 https://github.com/jhemmi/Physiocap3/releases) **
 
