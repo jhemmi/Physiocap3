@@ -43,7 +43,7 @@
 ***************************************************************************/
 """
 from .Physiocap_tools import physiocap_message_box,\
-        physiocap_log, physiocap_error, \
+        physiocap_log, physiocap_error, physiocap_is_only_ascii, \
         physiocap_nom_entite_sans_pb_caractere,  physiocap_nom_entite_avec_pb_caractere, \
         physiocap_rename_existing_file, \
         physiocap_quelle_projection_et_lib_demandee, \
@@ -75,7 +75,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
         leModeDeTrace = dialogue.fieldComboModeTrace.currentText() 
       
         #physiocap_log ( "= Template raster {0}".format( le_template_raster), TRACE_INTRA)
-        physiocap_log ( "= Dans affichage iso final  {0}".format( nom_iso_final), TRACE_INTRA)
+        #physiocap_log ( "= Dans affichage iso final  {0}".format( nom_iso_final), TRACE_INTRA)
       
         if ( nom_raster_final != ""):
             if os.path.exists( nom_raster_final):           
@@ -85,13 +85,13 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         intra_isoligne = QgsVectorLayer( nom_iso_final, 
                             nom_court_isoligne, 'ogr')
                     else:
-                        physiocap_log( "{0} ne retrouve pas votre isoligne pour {1}. \nVérifiez votre paramètrage pour isolignes".\
-                            format( PHYSIOCAP_UNI, nom_court_isoligne), leModeDeTrace)
+                        physiocap_log( "=~= {2} {0} ne retrouve pas votre isoligne pour {1}. \nVérifiez votre paramètrage pour isolignes".\
+                            format( PHYSIOCAP_UNI, nom_court_isoligne, PHYSIOCAP_WARNING), leModeDeTrace)
                         # Bloque tout pour cas particulier : raise physiocap_exception_iso_manquant( nom_court_isoligne)  
                         affiche_iso = "NO"
             else:
-                physiocap_log( "{0} ne retrouve pas votre raster pour {1}".\
-                    format( PHYSIOCAP_UNI, nom_court_raster), leModeDeTrace)
+                physiocap_log( "=~= {2} {0} ne retrouve pas votre raster pour {1}".\
+                    format( PHYSIOCAP_UNI, nom_court_raster, PHYSIOCAP_WARNING), leModeDeTrace)
                 raise physiocap_exception_raster_manquant( nom_court_raster)     
                 
             if vignette_group_intra != None:
@@ -595,7 +595,8 @@ class PhysiocapIntra( QtWidgets.QDialog):
         vecteur_poly = physiocap_get_layer_by_ID( id_poly)
 
         # Pour attribut en cours d'interpolation
-        le_champ_choisi = dialogue.fieldComboContours.currentText()
+        le_champ_contour = dialogue.fieldComboContours.currentText()
+        champ_pb_gdal = dialogue.fieldPbGdal.currentText()
             
         # Pour les points
         nom_complet_point = dialogue.comboBoxPoints.currentText().split( SEPARATEUR_NOEUD)
@@ -777,7 +778,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
         
         for idx, le_champ_choisi in enumerate( les_champs_INTRA_choisis):
             # Pour chaque attribut à interpoler
-            physiocap_log( self.tr( "=~= {0} Champ == {1} est le {2} parmi {3} ==").\
+            physiocap_log( self.tr( "=~= {0} Champ choisi == {1} est le {2} parmi {3} ==").\
                 format( PHYSIOCAP_UNI, le_champ_choisi, idx+1, len( les_champs_INTRA_choisis)), leModeDeTrace)
 
             # Si plusieurs champs choisis : récupérer le parametres fixe présent Affichage
@@ -881,7 +882,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         # ###############
                         physiocap_log( self.tr( "=~=  Le contour : {0}").\
                             format( nom_vecteur_contour), TRACE_INTRA)
-                        if ( dialogue.dialogue.fieldPbGdal.currentText() == "NO"):
+                        if ( champ_pb_gdal == "NO"):
                             le_nom_entite_libere = nom_vecteur_contour[:-4]
                         else:
                             # Prepare un nom sans cote (requete dans gdal et nommage dans gdal)
@@ -955,7 +956,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     id_contour = id_contour + 1
                     contours_possibles = contours_possibles + 1
                     try:
-                        un_nom = un_contour[ le_champ_choisi] 
+                        un_nom = un_contour[ le_champ_contour] 
                     except:
                         un_nom = NOM_CHAMP_ID + SEPARATEUR_ + str(id_contour)
                         pass
@@ -963,20 +964,24 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     # ###################
                     # Contournement du bug SAGA et caractères spéciaux ==> Interpolation GDAL
                     # ###################                    
-                    if un_nom != ascii( un_nom):
-                        aText =  self.tr("=~= {0} ne peut pas dialoguer avec SAGA et des caractères non ascii.\n").\
-                                format( PHYSIOCAP_UNI)
-                        aText = aText + self.tr( "L'interpolation de {0} doit être réalisée avec GDAL").\
+                    # Ne tester que si SAGA
+                    if choix_interpolation == "SAGA" and not physiocap_is_only_ascii( un_nom):
+                        aText =  self.tr("=~= {0} {1} ne peut pas dialoguer avec SAGA et des caractères non ascii.\n").\
+                                format( PHYSIOCAP_WARNING, PHYSIOCAP_UNI)
+                        aText = aText + self.tr( "L'interpolation de {0} doit être réalisée par GDAL").\
                                 format( un_nom)
                         physiocap_log( aText, leModeDeTrace)
                         choix_definitif_interpolation = "GDAL" 
                     else:
+#                        aText = self.tr( "\nUn nom {0} est ascii compatible : {1}").\
+#                                format( un_nom,  physiocap_is_only_ascii( un_nom))
+#                        physiocap_log( aText, leModeDeTrace)
                         choix_definitif_interpolation = choix_interpolation 
 
                     # ###################
-                    # Préparation du nom de l'entité pour les cas GDAL
+                    # Préparation du nom de l'entité pour les cas GDAL si besoin (comme pour INTER)
                     # ###################        
-                    if ( choix_definitif_interpolation == "GDAL" ):
+                    if ( champ_pb_gdal == "YES"):
                         # Prepare un nom sans cote (requete dans gdal et nommage dans gdal)
                         le_nom_entite_libere = physiocap_nom_entite_sans_pb_caractere( un_nom) 
                     else:
@@ -1026,7 +1031,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                             vignette_existante = un_groupe.findGroup( vignette_projet)
                             if ( vignette_existante == None ):
                                 vignette_group_intra = un_groupe.addGroup( vignette_projet)
-                                physiocap_log( "=~= in vignette {0}".format( contour_avec_point), TRACE_INTRA)
+                                #physiocap_log( "=~= in vignette {0}".format( contour_avec_point), TRACE_INTRA)
                             else:
                                 vignette_group_intra = vignette_existante
                                 if arret_groupe_intra == "YES":

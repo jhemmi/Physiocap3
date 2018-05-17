@@ -911,7 +911,7 @@ class PhysiocapInter( QtWidgets.QDialog):
         id_poly = nom_complet_poly[ 1] 
         vecteur_poly = physiocap_get_layer_by_ID( id_poly)
 
-        le_champ_choisi = dialogue.fieldComboContours.currentText()
+        le_champ_contour = dialogue.fieldComboContours.currentText()
         champ_pb_gdal = dialogue.fieldPbGdal.currentText()
 
         # Pour les points
@@ -1072,10 +1072,10 @@ class PhysiocapInter( QtWidgets.QDialog):
 #        ligne_courante = None
         
         # ITERATION PAR CONTOUR : Tri OK
-        for un_contour in vecteur_poly.getFeatures(QgsFeatureRequest().addOrderBy( le_champ_choisi)):
+        for un_contour in vecteur_poly.getFeatures(QgsFeatureRequest().addOrderBy( le_champ_contour)):
             id = id + 1
             try:
-                un_nom = un_contour[ le_champ_choisi] #get attribute of poly layer
+                un_nom = un_contour[ le_champ_contour] #get attribute of poly layer
             except:
                 un_nom = NOM_CHAMP_ID + SEPARATEUR_ + str(id)
                 pass

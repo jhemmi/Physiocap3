@@ -5487,7 +5487,7 @@ Si vous hésitez, trouvez du conseil. </string>
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>500</y>
+       <y>480</y>
        <width>511</width>
        <height>121</height>
       </rect>

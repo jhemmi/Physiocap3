@@ -127,7 +127,24 @@ def physiocap_error( self, aText, level ="WARNING"):
 def physiocap_write_in_synthese( self, aText):
     """Write a text in the results list"""
     self.textEditSynthese.insertPlainText( aText)   
-    
+  
+def physiocap_is_only_ascii(s):
+    if isinstance( s, unicode):
+        physiocap_log( "physiocap_is_only_ascii {0}".format( "Cas unicode"), leModeTrace)
+        try:
+            s.encode('ascii')
+            physiocap_log( "physiocap_is_only_ascii {0} : resultat OK {1}".format( "apres encode", s.encode('ascii')), leModeTrace)
+        except UnicodeEncodeError:
+            physiocap_log( "physiocap_is_only_ascii {0}".format( "dans exception"), leModeTrace)
+            return False
+    else:
+        physiocap_log( "physiocap_is_only_ascii {0}".format( "Non unicode"), leModeTrace)
+        try:
+            s.decode('ascii')
+        except UnicodeDecodeError:
+            return False
+    return True
+
 def physiocap_is_int_number(s):
     try:
         int(s)
