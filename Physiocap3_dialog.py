@@ -133,16 +133,17 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Intra        
         self.comboBoxPoints.currentIndexChanged[int].connect( self.slot_INTER_INTRA_maj_points_choix )
         self.fieldComboIntra.currentIndexChanged[int].connect( self.slot_INTRA_min_max_champ )
-        self.fieldComboIntraDIAM.currentIndexChanged[int].connect( self.slot_INTRA_DIAM_min_max_fixe )
-        self.fieldComboIntraSARM.currentIndexChanged[int].connect( self.slot_INTRA_SARM_min_max_fixe )
-        self.fieldComboIntraBIOM.currentIndexChanged[int].connect( self.slot_INTRA_BIOM_min_max_fixe )
-#WARNING: Appel recursif infini problématique : il faut trouver un autre refresh : 
-#                       choix details vignoble
-#                       choix calcul io 
-#                       ? refresh contour
-#        self.fieldComboIntraDIAM.currentIndexChanged[int].connect( self.slot_INTRA_interpolation_parcelles )
-#        self.fieldComboIntraSARM.currentIndexChanged[int].connect( self.slot_INTRA_interpolation_parcelles )
-#        self.fieldComboIntraBIOM.currentIndexChanged[int].connect( self.slot_INTRA_interpolation_parcelles )
+        self.spinBoxIsoMin_Fixe_DIAM.valueChanged.connect( self.slot_INTRA_DIAM_min_max_fixe )
+        self.spinBoxIsoMax_Fixe_DIAM.valueChanged.connect( self.slot_INTRA_DIAM_min_max_fixe )
+        self.spinBoxIsoMin_Fixe_SARM.valueChanged.connect( self.slot_INTRA_SARM_min_max_fixe )
+        self.spinBoxIsoMax_Fixe_BIOM.valueChanged.connect( self.slot_INTRA_BIOM_min_max_fixe )
+        self.spinBoxIsoMin_Fixe_SARM.valueChanged.connect( self.slot_INTRA_SARM_min_max_fixe )
+        self.spinBoxIsoMax_Fixe_BIOM.valueChanged.connect( self.slot_INTRA_BIOM_min_max_fixe )
+        # attention aux appel recursif infini : on a fait 2 maj_attributs ... 
+        self.fieldComboIntraDIAM.currentIndexChanged[int].connect( self.slot_INTRA_maj_attributs_interpolables)
+        self.fieldComboIntraSARM.currentIndexChanged[int].connect( self.slot_INTRA_maj_attributs_interpolables)
+        self.fieldComboIntraBIOM.currentIndexChanged[int].connect( self.slot_INTRA_maj_attributs_interpolables)
+
         self.ButtonIntra.pressed.connect(self.slot_INTRA_interpolation_parcelles)
         self.groupBoxIntra.setEnabled( False)
         self.groupBoxArret.setEnabled( False)
@@ -152,9 +153,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Affichage
         self.fieldComboAideIso.currentIndexChanged[int].connect( self.slot_INTRA_bascule_aide_iso )
                
-        # Slot pour les contours
-        # self.toolButtonContours.pressed.connect( self.lecture_shape_contours )   
-              
         physiocap_log( self.tr( "Votre machine tourne sous QGIS {0} et {1} ").\
             format( Qgis.QGIS_VERSION, MACHINE), TRACE_TOOLS)        
 ##        physiocap_log( self.tr( "Test 1 et 2 : {0} <===> {1} ").\
@@ -665,9 +663,11 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Alerte GPS
         self.radioButtonGPS.toggled.connect( self.slot_GPS_alert)
  
-        # Remplissage de la liste de ATTRIBUTS_INTRA etc... 
-        self.slot_INTRA_maj_attributs_interpolables()
-        
+        # Remplissage de la liste de ATTRIBUTS_INTRA 
+        self.slot_INTRA_maj_attributs_interpolables( "INIT")
+        self.slot_INTRA_maj_triplet_interpolables()
+        # la box arret-continue
+        self.slot_INTRA_box_arret()
 
         # Auteurs : Icone
         self.label_jhemmi.setPixmap( QPixmap( os.path.join( REPERTOIRE_HELP, 
@@ -763,12 +763,12 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         if len( decoupage) > 2:
             # Cas pour plusieurs interpolations
             if ( choix_aide_calcul != 2):
-                physiocap_log("Attribut pour Intra à découper {0}. {1} force le choix le la méthode de calcul des isolignes ".\
-                    format( decoupage,  PHYSIOCAP_UNI) , leModeDeTrace)
+                physiocap_log("{0} Attribut pour Intra à enchainer {1}. {2} force le choix le la méthode de calcul des isolignes ".\
+                    format( PHYSIOCAP_WARNING, decoupage,  PHYSIOCAP_UNI) , TRACE_MIN_MAX)
                 self.fieldComboAideIso.setCurrentIndex( 2)   
             else:
-                physiocap_log("Attribut pour Intra à découper {0}.".\
-                    format( decoupage) , leModeDeTrace)                
+                physiocap_log("{0} Trois attributs pour Intra à enchainer {1}.".\
+                    format( PHYSIOCAP_INFO, decoupage) , TRACE_MIN_MAX)                
             self.spinBoxIsoMin.setValue( -999999)
             self.spinBoxIsoMax.setValue( int( self.spinBoxIsoMax_Fixe_DIAM.value()))
             self.spinBoxIsoMin.setValue( int( self.spinBoxIsoMin_Fixe_DIAM.value()))
@@ -794,7 +794,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 self.spinBoxDistanceIso.setValue( int( self.spinBoxIsoDistance_Fixe_SARM.value()))
                 self.slot_INTRA_bascule_aide_iso()
                 return
-            elif nom_attribut == self.fieldComboIntraBIOM.currentText():
+            elif nom_attribut == troisieme_attribut:
                 self.spinBoxIsoMin.setValue( -999999)
                 self.spinBoxIsoMax.setValue( int( self.spinBoxIsoMax_Fixe_BIOM.value()))
                 self.spinBoxIsoMin.setValue( int( self.spinBoxIsoMin_Fixe_BIOM.value()))
@@ -802,17 +802,12 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 self.slot_INTRA_bascule_aide_iso()
                 return
             else:
-                aText = self.tr( "L'attribut {0} n'est pas l'un des trois champs à interpoler dont les choix sont fixés dans l'onglet Affichage. ").\
-                format( nom_attribut)
-                aText = aText + \
-                    self.tr( "Cette interpolation n'est possible quand modifiant votre méthode d'aide au calcul des isolignes. ")
-                aText = aText + \
-                    self.tr( "Vous pouvez aussi changer d'attribut à interpoler.")
-                physiocap_error( self, aText, "CRITICAL")
-                # Bloquer la possibilité de lancer intra
-                self.ButtonIntra.setEnabled( False)
-                return physiocap_message_box( self, aText, "information")
-                #raise physiocap_exception_choix_iso_impossible( nom_attribut)
+                aText = self.tr( "{0} L'attribut {1} n'est pas l'un des trois champs à interpoler dont les choix sont fixés dans l'onglet Affichage. ").\
+                format( PHYSIOCAP_WARNING, nom_attribut)
+                aText = aText + self.tr( "La méthode d'aide au calcul des isolignes est forcée à \n")
+                aText = aText + "\"Nombre d'isolignes permet le calcul de l'écartement des isolignes\""
+                self.fieldComboAideIso.setCurrentIndex( 0)   
+                physiocap_log( aText , leModeDeTrace)
         else:
             # Cas pour une seul interpolation
 #            self.spinBoxIsoMin.setEnabled( True)
@@ -847,7 +842,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 
                 monProvider = None
                 physiocap_log("Min et max de > {0} < sont {1} =~= {2}". \
-                    format( nom_attribut, min_attribut,  max_attribut) , leModeDeTrace)
+                    format( nom_attribut, min_attribut,  max_attribut) , TRACE_MIN_MAX)
                 self.spinBoxIsoMin.setValue( -9999999)
                 self.spinBoxIsoMax.setValue( int( max_attribut ))
                 self.spinBoxIsoMin.setValue( int( min_attribut ))
@@ -1021,7 +1016,16 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         
         # Mise à jour du commentaire pour le rayon
         self.slot_INTRA_rayon_selon_SCR_LIB()
-            
+        
+#    def slot_INTRA_maj_interpolable( self):
+#        """ Recherche à chaud à mattre à jour le triplet"""
+#        #aText = self.tr( "{0} vous demande de fermer l'extension et quitter QGIS pour prendre en compte le changement").\
+#        aText = self.tr( "{0} changement box interpolation").\
+#            format( PHYSIOCAP_UNI)
+#        aText = aText + self.tr( " d'attibut fixe")
+#        physiocap_message_box( self, aText, "information")
+#        self.slot_INTRA_maj_attributs_interpolables( "DYNAMIQUE")
+#        
     def slot_AIDE_contrib_alert( self):
         """ 
         Toute les x utilisations, rappeler à l'utilisateur qu'il est bien de contribuer
@@ -1116,88 +1120,178 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.spinBoxIsoMax.setEnabled( True)
             self.spinBoxDistanceIso.setEnabled( False)
             self.spinBoxNombreIso.setEnabled( True)
+            self.slot_INTRA_iso_distance()
         if ( self.fieldComboAideIso.currentIndex() == 1):
             self.spinBoxIsoMin.setEnabled( True)
             self.spinBoxIsoMax.setEnabled( True)
             self.spinBoxDistanceIso.setEnabled( True)
             self.spinBoxNombreIso.setEnabled( False)        
+            self.slot_INTRA_iso_distance()
         if ( self.fieldComboAideIso.currentIndex() == 2):
             self.spinBoxIsoMin.setEnabled( False)
             self.spinBoxIsoMax.setEnabled( False)
             self.spinBoxDistanceIso.setEnabled( False)
             self.spinBoxNombreIso.setEnabled( False)
-            #self.slot_INTRA_interpolation_parcelles()
-            
-
-    def slot_INTRA_maj_attributs_interpolables( self):
-        """ Créer la liste des attributs interpolable
-        Cette liste provient de ATTRIBUTS_INTRA et si details ATTRIBUTS_INTRA_DETAILS
-        mais aussi du choix dans préférence affichage (le triplet d'interpolation fixé)
-        On crée en même temps la liste des attributs possible dans pour le choix du triplet
-        qui se nomme DIAM puis SARM puis BIOM mais peut contenir n'importe quelle valeur
-        """
-        ATTR_LISTE=[]
-        ATTR_LISTE_TRIPLET=[]
+        return
         
-        # Mettre à jour les choix dans settings 
-        leChoixDiam = self.fieldComboIntraDIAM.currentText()
-        if leChoixDiam == None or leChoixDiam == "":
-            leChoixDiam = "xx"
-        self.settings.setValue("Physiocap/attributIntraFixe_1", leChoixDiam)
-        leChoixSarm = self.fieldComboIntraSARM.currentText()
-        if leChoixSarm == None or leChoixSarm == "":
-            leChoixSarm = "xx"        
-        self.settings.setValue("Physiocap/attributIntraFixe_2", leChoixSarm)
-        leChoixBiom = self.fieldComboIntraBIOM.currentText()
-        if leChoixBiom == None or leChoixBiom == "":
-            leChoixBiom = "xx"
-        self.settings.setValue("Physiocap/attributIntraFixe_3", leChoixBiom)
+#    def OLD_INTRA_maj_attributs_interpolables( self, MAJ_TRIPLET = "NO"):
+#        """ Créer la liste des attributs interpolable
+#        Cette liste provient de ATTRIBUTS_INTRA et si details ATTRIBUTS_INTRA_DETAILS
+#        mais aussi du choix dans préférence affichage (le triplet d'interpolation fixé)
+#        SI MAJ_TRIPLET est à YES, on crée en même temps la liste des attributs possible dans pour le choix du triplet
+#        qui se nomme DIAM puis SARM puis BIOM mais peut contenir n'importe quelle valeur
+#        """
+#        ATTR_LISTE=[]
+#        ATTR_LISTE_TRIPLET=[]
+#
+#        if (len( ATTRIBUTS_INTRA) == 0) and  MAJ_TRIPLET == "YES":
+#            self.fieldComboIntra.clear()
+#            self.fieldComboIntraDIAM.clear()
+#            self.fieldComboIntraSARM.clear()
+#            self.fieldComboIntraBIOM.clear()
+#            physiocap_error( self, self.tr( "Pas de liste des attributs pour Intra pré défini"))
+#            return
+#        
+#        if MAJ_TRIPLET == "DYNAMIQUE":
+#            leChoixDiam = self.fieldComboIntraDIAM.currentText()
+#            leChoixSarm = self.fieldComboIntraSARM.currentText()
+#            leChoixBiom = self.fieldComboIntraBIOM.currentText()
+#            leChoixIntra = self.fieldComboIntra.currentText()
+#        else:
+#            # Récupérer les choix dans settings 
+#            leChoixDiam = self.settings.value("Physiocap/attributIntraFixe_1", "x1")
+#            leChoixSarm = self.settings.value("Physiocap/attributIntraFixe_2", "x2")
+#            leChoixBiom = self.settings.value("Physiocap/attributIntraFixe_3", "x3")
+#            # Retrouver les choix intra précedent (dans intra ou dans préference)
+#            leChoixIntra = self.settings.value("Physiocap/attributIntra", "xx") 
+#        # Ajout des trois entités choisies dans affichage intra
+#        if ( leChoixDiam != "x1" or leChoixSarm != "x2" or leChoixBiom != "x3"):
+#            attribut_triple = leChoixDiam + SEPARATEUR_NOEUD + leChoixSarm + \
+#                    SEPARATEUR_NOEUD + leChoixBiom
+#            ATTR_LISTE.append( attribut_triple)
+#
+#        # Ajout des attributs standard 
+#        ATTR_LISTE = ATTR_LISTE + ATTRIBUTS_INTRA
+#        ATTR_LISTE_TRIPLET = ATTRIBUTS_INTRA
+#
+#        if self.checkBoxV3.isChecked() and ( self.settings.value("Physiocap/expert", "As-tu contribué ?") == MODE_EXPERT):     
+#            # Ajout d'un nouvelle liste d'attribut interpolable
+#            ATTR_LISTE = ATTR_LISTE + ATTRIBUTS_V3_INTRA
+#            ATTR_LISTE_TRIPLET = ATTR_LISTE_TRIPLET + ATTRIBUTS_V3_INTRA
+#        
+#        # Cas de details ATTRIBUTS_INTRA_DETAIL
+#        if (self.settings.value("Physiocap/details") == "YES"):
+#            ATTR_LISTE = ATTR_LISTE + ATTRIBUTS_INTRA_DETAILS
+#            ATTR_LISTE_TRIPLET = ATTR_LISTE_TRIPLET + ATTRIBUTS_INTRA_DETAILS
+#
+#        
+#        physiocap_log( self.tr( "Liste des attributs pour Intra {0}".format( ATTR_LISTE)))
+#            
+#        self.fieldComboIntra.clear()
+#        self.fieldComboIntra.addItems( ATTR_LISTE)
+#        physiocap_log( self.tr( "apres de liste des attributs pour Intra {0}".format( ATTR_LISTE_TRIPLET)))
+#        if MAJ_TRIPLET == "YES":
+#            self.fieldComboIntraDIAM.clear()
+#            self.fieldComboIntraDIAM.addItems( ATTR_LISTE_TRIPLET)
+#            self.fieldComboIntraSARM.clear()
+#            self.fieldComboIntraSARM.addItems( ATTR_LISTE_TRIPLET)
+#            self.fieldComboIntraBIOM.clear()
+#            self.fieldComboIntraBIOM.addItems( ATTR_LISTE_TRIPLET)
+#            self.fieldComboIntraDIAM.setCurrentIndex( 0)   
+#            self.fieldComboIntraSARM.setCurrentIndex( 1)   
+#            self.fieldComboIntraBIOM.setCurrentIndex( 2) 
+#
+#        # Ne pas rester à 0 dans le premier cas
+#        if len( ATTR_LISTE) > 1:
+#            self.fieldComboIntra.setCurrentIndex( 1)
+#        # Se souvenir du choix inital
+#        j=0
+#        for monAttribut in ATTR_LISTE:
+#            if ( monAttribut == leChoixIntra):
+#                self.fieldComboIntra.setCurrentIndex( j)
+#            j = j+1
+#            
+#        if MAJ_TRIPLET == "YES":
+#            i=0
+#            for monAttribut in ATTR_LISTE_TRIPLET:        
+#                if ( monAttribut == leChoixDiam):
+#                    self.fieldComboIntraDIAM.setCurrentIndex( i)
+#                if ( monAttribut == leChoixSarm):
+#                    self.fieldComboIntraSARM.setCurrentIndex( i)
+#                if ( monAttribut == leChoixBiom):
+#                    self.fieldComboIntraBIOM.setCurrentIndex( i)
+#                i=i+1
+#            
+#        if self.checkBoxV3.isChecked():
+#            self.groupBoxArret.setEnabled( True)
+#            if (self.settings.value("Physiocap/groupStop", "YES") == "YES"):
+#                self.checkBoxArret.setChecked( Qt.Checked)
+#            else:
+#                self.checkBoxArret.setChecked( Qt.Unchecked)
+#            self.fieldComboIntraContinue.clear()
+#            self.fieldComboIntraContinue.addItems( ATTR_CONTINUE)        
+#            k=0
+#            idx = 0
+#            LeChoixContinue = self.fieldComboIntraContinue.currentText()
+#            for monChoix in ATTR_CONTINUE:        
+#                if ( monChoix == LeChoixContinue):
+#                    self.fieldComboIntraContinue.setCurrentIndex( k)
+#                    idx = k
+#                k = k+1
+#            self.settings.setValue("Physiocap/continueIntra", idx)
+#        else:
+#            self.groupBoxArret.setEnabled( False)
+#            self.checkBoxArret.setChecked( Qt.Checked)
+#            self.settings.setValue("Physiocap/groupStop", "YES")
+#            self.fieldComboIntraContinue.clear()
+#            self.fieldComboIntraContinue.addItems( ATTR_CONTINUE)        
+#            self.fieldComboIntraContinue.setCurrentIndex( 0)
+#            self.settings.setValue("Physiocap/continueIntra", 0)
+#
+#        return
 
+    def slot_INTRA_maj_attributs_interpolables( self,  ORIGINE_TRIPLET):
+        """ Créer la liste des attributs interpolable
+        Cette liste provient de ATTRIBUTS_INTRA et si details ATTRIBUTS_INTRA_DETAILS et gere le cas V3"""
+        leModeDeTrace = self.fieldComboModeTrace.currentText()
+        ATTR_LISTE=[]
 
-        if len( ATTRIBUTS_INTRA) == 0:
+        if (len( ATTRIBUTS_INTRA) == 0):
             self.fieldComboIntra.clear()
-            self.fieldComboIntraDIAM.clear()
-            self.fieldComboIntraSARM.clear()
-            self.fieldComboIntraBIOM.clear()
             physiocap_error( self, self.tr( "Pas de liste des attributs pour Intra pré défini"))
             return
-
-        #self.fieldComboIntra.setCurrentIndex( 0)   
-
-
-        # Retrouver les choix intra précedent (dans intra ou dans préference)
-        leChoixIntra = self.settings.value("Physiocap/attributIntra", "xx") 
+        
+        if ORIGINE_TRIPLET == "INIT":
+            # Récupérer les choix dans settings pour le cas initalial
+            leChoixDiam = self.settings.value("Physiocap/attributIntraFixe_1", "x1")
+            leChoixSarm = self.settings.value("Physiocap/attributIntraFixe_2", "x2")
+            leChoixBiom = self.settings.value("Physiocap/attributIntraFixe_3", "x3")
+            # Retrouver les choix intra précedent (dans intra ou dans préference)        
+            leChoixIntra = self.settings.value("Physiocap/attributIntra", "xx") 
+        else:    # pour les autres cas dont le slot lors d'un changement dans le triplet
+            leChoixDiam = self.fieldComboIntraDIAM.currentText()
+            leChoixSarm = self.fieldComboIntraSARM.currentText()
+            leChoixBiom = self.fieldComboIntraBIOM.currentText()
+            leChoixIntra = self.fieldComboIntra.currentText()
         # Ajout des trois entités choisies dans affichage intra
-        if ( leChoixDiam != "xx" and leChoixSarm != "xx" and leChoixBiom != "xx"):
+        if ( leChoixDiam != "x1" or leChoixSarm != "x2" or leChoixBiom != "x3"):
             attribut_triple = leChoixDiam + SEPARATEUR_NOEUD + leChoixSarm + \
                     SEPARATEUR_NOEUD + leChoixBiom
             ATTR_LISTE.append( attribut_triple)
 
         # Ajout des attributs standard 
         ATTR_LISTE = ATTR_LISTE + ATTRIBUTS_INTRA
-        ATTR_LISTE_TRIPLET = ATTRIBUTS_INTRA
 
         if self.checkBoxV3.isChecked() and ( self.settings.value("Physiocap/expert", "As-tu contribué ?") == MODE_EXPERT):     
             # Ajout d'un nouvelle liste d'attribut interpolable
             ATTR_LISTE = ATTR_LISTE + ATTRIBUTS_V3_INTRA
-            ATTR_LISTE_TRIPLET = ATTR_LISTE_TRIPLET + ATTRIBUTS_V3_INTRA
         
         # Cas de details ATTRIBUTS_INTRA_DETAIL
-        if (self.settings.value("Physiocap/details") == "YES"):
+        if self.checkBoxInfoVignoble.isChecked():
             ATTR_LISTE = ATTR_LISTE + ATTRIBUTS_INTRA_DETAILS
-            ATTR_LISTE_TRIPLET = ATTR_LISTE_TRIPLET + ATTRIBUTS_INTRA_DETAILS
-            
+
         self.fieldComboIntra.clear()
         self.fieldComboIntra.addItems( ATTR_LISTE)
-        self.fieldComboIntraDIAM.clear()
-        self.fieldComboIntraDIAM.addItems( ATTR_LISTE_TRIPLET)
-        self.fieldComboIntraSARM.clear()
-        self.fieldComboIntraSARM.addItems( ATTR_LISTE_TRIPLET)
-        self.fieldComboIntraBIOM.clear()
-        self.fieldComboIntraBIOM.addItems( ATTR_LISTE_TRIPLET)
-        self.fieldComboIntraDIAM.setCurrentIndex( 0)   
-        self.fieldComboIntraSARM.setCurrentIndex( 1)   
-        self.fieldComboIntraBIOM.setCurrentIndex( 2) 
 
         # Ne pas rester à 0 dans le premier cas
         if len( ATTR_LISTE) > 1:
@@ -1208,16 +1302,12 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             if ( monAttribut == leChoixIntra):
                 self.fieldComboIntra.setCurrentIndex( j)
             j = j+1
-            
-        i=0
-        for monAttribut in ATTR_LISTE_TRIPLET:        
-            if ( monAttribut == leChoixDiam):
-                self.fieldComboIntraDIAM.setCurrentIndex( i)
-            if ( monAttribut == leChoixSarm):
-                self.fieldComboIntraSARM.setCurrentIndex( i)
-            if ( monAttribut == leChoixBiom):
-                self.fieldComboIntraBIOM.setCurrentIndex( i)
-            i=i+1
+        
+        self.fieldPbGdal.setEnabled( False)
+        return
+        
+    def slot_INTRA_box_arret( self):
+        """ Initialise la box arret / continue"""
 
         if self.checkBoxV3.isChecked():
             self.groupBoxArret.setEnabled( True)
@@ -1245,6 +1335,60 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.fieldComboIntraContinue.setCurrentIndex( 0)
             self.settings.setValue("Physiocap/continueIntra", 0)
 
+        return
+
+        
+    def slot_INTRA_maj_triplet_interpolables( self):
+        """ Créer la liste du triplet d'attributs interpolable
+        on cherche dans settings et la liste des attributs possible dans pour le choix du triplet
+        qui se nomme DIAM puis SARM puis BIOM mais peut contenir n'importe quelle valeur
+        """
+        ATTR_LISTE_TRIPLET=[]
+
+        if (len( ATTRIBUTS_INTRA) == 0):
+            self.fieldComboIntraDIAM.clear()
+            self.fieldComboIntraSARM.clear()
+            self.fieldComboIntraBIOM.clear()
+            physiocap_error( self, self.tr( "Pas de liste des attributs pour Intra pré défini"))
+            return
+        
+        # Récupérer les choix dans settings 
+        leChoixDiam = self.settings.value("Physiocap/attributIntraFixe_1", "x1")
+        leChoixSarm = self.settings.value("Physiocap/attributIntraFixe_2", "x2")
+        leChoixBiom = self.settings.value("Physiocap/attributIntraFixe_3", "x3")
+
+        # Ajout des attributs standard 
+        ATTR_LISTE_TRIPLET = ATTRIBUTS_INTRA
+
+        if self.checkBoxV3.isChecked() and ( self.settings.value("Physiocap/expert", "As-tu contribué ?") == MODE_EXPERT):     
+            # Ajout d'un nouvelle liste d'attribut interpolable
+            ATTR_LISTE_TRIPLET = ATTR_LISTE_TRIPLET + ATTRIBUTS_V3_INTRA
+        
+        # Cas de details ATTRIBUTS_INTRA_DETAIL
+        if self.checkBoxInfoVignoble.isChecked():
+            ATTR_LISTE_TRIPLET = ATTR_LISTE_TRIPLET + ATTRIBUTS_INTRA_DETAILS
+            
+        self.fieldComboIntraDIAM.clear()
+        self.fieldComboIntraDIAM.addItems( ATTR_LISTE_TRIPLET)
+        self.fieldComboIntraSARM.clear()
+        self.fieldComboIntraSARM.addItems( ATTR_LISTE_TRIPLET)
+        self.fieldComboIntraBIOM.clear()
+        self.fieldComboIntraBIOM.addItems( ATTR_LISTE_TRIPLET)
+        self.fieldComboIntraDIAM.setCurrentIndex( 0)   
+        self.fieldComboIntraSARM.setCurrentIndex( 1)   
+        self.fieldComboIntraBIOM.setCurrentIndex( 2) 
+
+        i=0
+        for monAttribut in ATTR_LISTE_TRIPLET:        
+            if ( monAttribut == leChoixDiam):
+                self.fieldComboIntraDIAM.setCurrentIndex( i)
+            if ( monAttribut == leChoixSarm):
+                self.fieldComboIntraSARM.setCurrentIndex( i)
+            if ( monAttribut == leChoixBiom):
+                self.fieldComboIntraBIOM.setCurrentIndex( i)
+            i=i+1
+            
+        return
 
     def slot_INTRA_iso_distance( self):
         """ 
@@ -1818,8 +1962,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.groupBoxInterIntraExpert.setEnabled( False)
             
         # appel des attributs INTRA
-        self.slot_INTRA_maj_attributs_interpolables()
-
+        self.slot_INTRA_maj_attributs_interpolables( "DYNAMIQUE")
+        self.slot_INTRA_maj_triplet_interpolables()
 
         if set_quoi == True:            # Forcer LE CHOIX DU SEGMENT BRISÉ
             physiocap_log( self.tr( "{0} passe en Format V3 et force le choix du segment brisé.").\
@@ -1838,12 +1982,14 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         """ Changement de demande pour les details vignoble : 
         on grise le groupe Vignoble
         """ 
+        # appel des attributs INTRA
+        self.slot_INTRA_maj_attributs_interpolables( "DYNAMIQUE")
+        self.slot_INTRA_maj_triplet_interpolables()
         if self.checkBoxInfoVignoble.isChecked():
             self.Vignoble.setEnabled( True)
         else:
-            self.Vignoble.setEnabled( False)         
-        self.slot_INTRA_interpolation_parcelles()
-        
+            self.Vignoble.setEnabled( False)    
+            
     def slot_calcul_densite( self):
         # Densité pied /ha
 

@@ -58,7 +58,7 @@ MODE_TRACE = [ TRACE_TOUT,  TRACE_MINI, TRACE_PAS]
 MODE_PHY_ID = [ "ID_PHY vaut PHY_numérique",  "ID_PHY contient un texte sans blanc, sans cote"]
 TRACE_INTRA  = "Intra"
 TRACE_TOOLS  = "Tools"
-TRACE_MIN_MAX  = "Min-Max"
+TRACE_MIN_MAX  = "Min-Max-Iso"
 TRACE_SEGMENT  = "Segment"
 TRACE_SEGMENT_DECOUPES  = "Découpe"
 TRACE_PG  = "POSTGRES"
@@ -117,11 +117,11 @@ REPERTOIRE_SHAPEFILE_V3 = "Filtre"
 EXTENSION_CSV = ".csv"
 EXTENSION_SHP = ".shp"
 EXTENSION_PRJ = ".prj"
-# WARNING:_Pas d'affichage des VRTs sous Linux
-if MACHINE == "Linux":
-    EXTENSION_RASTER_SANS_POINT = "png"
-else:
-    EXTENSION_RASTER_SANS_POINT = "tiff"
+# WARNING:_Pas d'affichage des VRT Pas de creation de png sous Linux
+#if MACHINE == "Linux":
+#    EXTENSION_RASTER_SANS_POINT = "png"
+#else:
+EXTENSION_RASTER_SANS_POINT = "tiff"
 EXTENSION_RASTER = "." + EXTENSION_RASTER_SANS_POINT
 EXTENSION_RASTER_SAGA_SANS_POINT = "sdat"
 EXTENSION_RASTER_SAGA = "." + EXTENSION_RASTER_SAGA_SANS_POINT
@@ -299,8 +299,6 @@ class physiocap_exception_raster_sans_iso( physiocap_exception):
 class physiocap_exception_no_choix_raster_iso( physiocap_exception):
     pass
 class physiocap_exception_probleme_caractere_librairie( physiocap_exception):
-    pass
-class physiocap_exception_choix_iso_impossible( physiocap_exception):
     pass
 class physiocap_exception_iso_manquant( physiocap_exception):
     pass

@@ -1171,7 +1171,7 @@
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit du champ de votre contour qui identifie chacune de vos parcelles. Dans la moyenne Inter Parcellaire, ce champ se nomme NOM_PHY. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Attention : seuls les champs ayant une valeur différente pour chaque parcelle sont proposés.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit du champ de votre contour qui identifie chacune de vos parcelles. Dans la moyenne Inter Parcellaire, ce champ se nomme NOM_PHY&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vos contours ne contiennent pas de champ unique ou que vous ne connaissez pas les champs de vos contours, vous pouvez choisir NOM_PHY qui sera crée pa l'extension pour identifier chaque parcelles de vos contours. L'attribut aura des valeurs PHY_1, PHY-2 ...&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Attention : seuls les champs ayant une valeur différente pour chaque parcelle sont proposés.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
      </widget>
      <widget class="QLabel" name="lab_65">
@@ -2216,7 +2216,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <string>GDAL</string>
       </property>
       <property name="checked">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QRadioButton" name="radioButtonSAGA">
@@ -2245,7 +2245,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <string>SAGA</string>
       </property>
       <property name="checked">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
      </widget>
     </widget>
@@ -2961,7 +2961,7 @@ Si vous hésitez, trouvez du conseil. </string>
       </font>
      </property>
      <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Les styles décrivent la thématique d'affichage de chaque couche : symbologie et libéllés. Un modèle de styles est livré avec l'extension. Ces styles sont adaptés à un cas général. Il est possible de les modifier avec vos propres choix.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Attention : ne modifier ce répertoire que si vous connaissez bien l'utilisation des styles (thématiques ou template) dans QGIS.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Vous pourrez ensuite paramétrer vos propres styles pour créer des constrastes de couleur plus marqués ou adapter les bornes min et max à vos valeurs ...&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Vous pouvez aussi modifier les noms de styles proposés par l'extension. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Fixez les isolignes pour 3 attributs et vous pourrez ensuite enchainer l'interpolation de ces 3 attributs en un seul calcul.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="statusTip">
       <string/>
@@ -4201,7 +4201,7 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
      </widget>
      <zorder>fieldComboThematiques</zorder>
-     <zorder>groupBox_3</zorder>
+     <zorder>groupBoxExpertOuvert</zorder>
     </widget>
     <widget class="QGroupBox" name="groupBoxSegment">
      <property name="geometry">
@@ -4625,7 +4625,7 @@ Si vous hésitez, trouvez du conseil. </string>
      </widget>
      <widget class="QCheckBox" name="checkBoxSagaTIFF">
       <property name="enabled">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="geometry">
        <rect>
@@ -4653,7 +4653,7 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
      </widget>
     </widget>
-    <widget class="QGroupBox" name="groupBox_3">
+    <widget class="QGroupBox" name="groupBoxExpertOuvert">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -5136,7 +5136,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="text">
-       <string>Version 3.1.5B SAGA</string>
+       <string>Version 3.1.6 SAGA</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_500">

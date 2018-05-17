@@ -271,10 +271,8 @@ class PhysiocapIntra( QtWidgets.QDialog):
         # Nom du raster cible avec le_champ_choisi
         nom_court_raster = nom_noeud_arbre + NOM_INTRA + SEPARATEUR_ + le_champ_choisi +  \
             SEPARATEUR_ + le_nom_entite_libere + EXT_CRS_RASTER
-         
         nom_court_isoligne = nom_noeud_arbre + NOM_INTRA  + SEPARATEUR_  + le_champ_choisi  + \
             SEPARATEUR_ + "ISOLIGNE_" + le_nom_entite_libere + EXT_CRS_SHP
- 
         le_raster_possible = os.path.join( chemin_raster, nom_court_raster) 
         l_iso_possible = os.path.join( chemin_iso, nom_court_isoligne)
         if le_choix_INTRA_continue == 0:
@@ -293,27 +291,23 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 physiocap_log( self.tr( "=~= Interpolation pour {0} existe déjà. Pas de nouveau calcul").\
                     format(  le_nom_entite_libere), leModeDeTrace)
                 return "PAS NOUVEAU", le_raster_possible, nom_court_raster, l_iso_possible, nom_court_isoligne
-            else:
-                if os.path.exists( le_raster_possible) or os.path.exists( l_iso_possible):
-                    if os.path.exists( le_raster_possible):
-                        physiocap_log( self.tr( "=~= raster existe {0}").\
-                            format( le_raster_possible), leModeDeTrace)
-                    else:
-                        physiocap_log( self.tr( "=~= pas de raster "), leModeDeTrace)
-                    if os.path.exists( l_iso_possible):
-                        physiocap_log( self.tr( "=~= l'iso existe {0}").\
-                            format( l_iso_possible), leModeDeTrace)
-                    else:
-                        physiocap_log( self.tr( "=~= pas l'iso "), leModeDeTrace)
-                        
-                    raise physiocap_exception_raster_sans_iso( le_champ_choisi  + ' pour ' +  le_nom_entite_libere)
+            elif os.path.exists( le_raster_possible) or os.path.exists( l_iso_possible):
+                # Il existe un seul des deux fichiers
+                physiocap_log( self.tr( "=~= Une partie de l'interpolation pour {0} existe déjà : nouveau calcul").\
+                    format(  le_nom_entite_libere), leModeDeTrace)
+                if os.path.exists( le_raster_possible):
+                    nom_raster = physiocap_rename_existing_file( le_raster_possible)
+                    nom_isoligne =  l_iso_possible
+                elif os.path.exists( l_iso_possible):
+                    nom_raster = le_raster_possible
+                    nom_isoligne =  physiocap_rename_existing_file( l_iso_possible)
                 else:
-                    # il faut creer les deux
-                    nom_raster =  physiocap_rename_existing_file( le_raster_possible)
-                    nom_isoligne =  l_iso_possible # ? utile physiocap_rename_existing_file()        
-                    #nom_isoligne =  physiocap_rename_existing_file( l_iso_possible) # utile physiocap_rename_existing_file()        
-#        elif le_choix_INTRA_continue == 2:
-#            # CAS 2 : Recreer de nouvelle instance  
+                    # Cas impossible ?
+                    raise physiocap_exception_raster_sans_iso( le_champ_choisi  + ' pour ' +  le_nom_entite_libere)
+            else:
+                # il faut creer les deux
+                nom_raster = le_raster_possible
+                nom_isoligne =  l_iso_possible       
         else:
             raise physiocap_exception_no_choix_raster_iso( le_nom_entite_libere)
 #        physiocap_log( self.tr( "Apres rename isoligne {0} et chemin vers isoligne\n{1}<<<===").\
