@@ -192,7 +192,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.groupBoxThemaTrace.setEnabled( mode_expert == MODE_EXPERT)
         self.groupBoxInterIntraExpert.setEnabled( mode_expert == MODE_EXPERT)
 
-        # Nom du projet et des répertoires
+        # Nom de la session et des répertoires
         repertoire_brut = self.settings.value("Physiocap/repertoire",
             REPERTOIRE_DONNEES_BRUTES)
         self.lineEditDirectoryPhysiocap.setText( repertoire_brut )
@@ -836,7 +836,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                     aText = self.tr( "L'attribut {0} n'existe pas dans les données à disposition.").\
                     format( nom_attribut)
                     aText = aText + \
-                        self.tr( "Cette interpolation n'est pas possible. Recréer un nouveau projet Physiocap.")
+                        self.tr( "Cette interpolation n'est pas possible. Recréer une nouvelle session Physiocap.")
                     physiocap_error( self, aText, "CRITICAL")
                     return physiocap_message_box( self, aText, "information")
                 
@@ -878,12 +878,13 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 map_champ = mon_provider.fieldNameMap()
                 for mon_champ in mon_provider.fields():
                     nom_champ = mon_champ.name()
+                    liste_valeurs = mon_provider.uniqueValues( map_champ[ nom_champ])
+
                     if leModeDeTrace == TRACE_PAS:
                         # Raccourci si aucun trace, on suppose toutes les valeurs sont uniques
                         valeur_unique = "YES" 
                     else:
                         # Vérifier si les valeurs du field name sont toutes uniques
-                        liste_valeurs = mon_provider.uniqueValues( map_champ[ nom_champ])
     #                    physiocap_log( "Unique : field >> {0} \n {1}<<". \
     #                        format ( nom_champ,  liste_valeurs), leModeDeTrace)
                         if nombre_ligne == len( liste_valeurs):
@@ -923,7 +924,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             version_3 = "YES"
         
         #projet = nom_complet_point[0]
-        # Chercher dans arbre si le projet Inter existe
+        # Chercher dans arbre si la session Inter existe
         diametre = nom_complet_point[1] 
         layer = physiocap_get_layer_by_ID( diametre)
         if layer is not None:
@@ -1671,7 +1672,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         nom_complet_point = self.comboBoxPoints.currentText().split( SEPARATEUR_NOEUD)
         if ( len( nom_complet_point) != 2):
             aText = self.tr( "Le shape de points n'est pas choisi. ")
-            aText = aText + self.tr( "Créer une nouvelle instance de projet - bouton Filtrer les données brutes - ")
+            aText = aText + self.tr( "Créer une nouvelle session Physiocap - bouton Filtrer les données brutes - ")
             aText = aText + self.tr( "avant de faire votre calcul de Moyenne Inter puis Intra Parcellaire")   
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
@@ -1702,7 +1703,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             aText = aText + self.tr( "Vous ne pouvez pas redemander ce calcul d'interpolation :\n")
             aText = aText + self.tr( "- Vous pouvez détruire le groupe dans le panneau des couches\n- ou ") 
             aText = aText + self.tr( 'décocher le choix "Arrêt si groupe existe"  \n- ou ') 
-            aText = aText + self.tr( "créer une nouvelle instance de projet Physiocap")
+            aText = aText + self.tr( "créer une nouvelle session Physiocap.")
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
         except physiocap_exception_iso_manquant as e:
@@ -1729,12 +1730,12 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             aText = aText + self.tr( "détruire les raster et isolignes de {0}\n- ou ").\
                 format( e) 
             aText = aText + self.tr( 'modifier le choix "Arrêt si une interpolation existe" \n- ou ') 
-            aText = aText + self.tr( "créer une nouvelle instance de projet Physiocap")
+            aText = aText + self.tr( "créer une nouvelle session Physiocap.")
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
         except physiocap_exception_points_invalid as e:
             physiocap_log_for_error( self)
-            aText = self.tr( "Le fichier de points du projet (champ{0}) ne contient pas les attributs attendus").\
+            aText = self.tr( "Le fichier de points ne contient pas les attributs attendus (champ{0})").\
                 format( e)
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
@@ -1773,16 +1774,16 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             physiocap_log_for_error( self)
             aText = self.tr( "Le polygone de contour {0} n'est pas retrouvé. ").\
                 format( e)
-            aText = aText + self.tr( "Une incohérence entre le projet Physiocap et ses données vous oblige à ")
-            aText = aText + self.tr( "créer une nouvelle instance de projet Physiocap")
+            aText = aText + self.tr( "Une incohérence entre la session Physiocap et ses données vous oblige à ")
+            aText = aText + self.tr( "créer une nouvelle session Physiocap")
             physiocap_error( self, aText)
             return physiocap_message_box( self, aText, "information") 
         except physiocap_exception_project_point_incoherence as e:
             physiocap_log_for_error( self)
             aText = self.tr( "La couche de point {0} n'est pas retrouvé. ").\
                 format( e)
-            aText = aText + self.tr( "Une incohérence entre le projet Physiocap et ses données vous oblige à ")
-            aText = aText + self.tr( "créer une nouvelle instance de projet Physiocap")
+            aText = aText + self.tr( "Une incohérence entre la session Physiocap et ses données vous oblige à ")
+            aText = aText + self.tr( "créer une nouvelle session Physiocap ")
             physiocap_error( self, aText)
             return physiocap_message_box( self, aText, "information")  
         except physiocap_exception_windows_saga_ascii as e:
@@ -1790,7 +1791,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             aText = self.tr( "Le projet, le champ ou une valeur de champ {0} ont ").\
                 format( e)
             aText = aText + self.tr( "des caractères (non ascii) incompatibles avec l'interpolation SAGA.")
-            aText = aText + self.tr( "\nErreur bloquante sous Windows qui nécessite de créer une nouvelle instance du projet ")
+            aText = aText + self.tr( "\nErreur bloquante sous Windows qui nécessite de créer une nouvelle session Physiocap")
             aText = aText + self.tr( " et du contour avec seulement des caractères ascii (non accentuées).")
             physiocap_error( self, aText, "CRITICAL")        
         except physiocap_exception_attribut_multiple_incoherent as e:
@@ -1798,14 +1799,14 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             aText = self.tr( "Les attributs fixes pour les isolignes de {0} sont incohérents.").\
                 format( e)
             aText = aText + self.tr( "des caractères (non ascii) incompatibles avec l'interpolation SAGA.")
-            aText = aText + self.tr( "\nErreur bloquante sous Windows qui nécessite de créer une nouvelle instance du projet ")
+            aText = aText + self.tr( "\nErreur bloquante sous Windows qui nécessite de créer une nouvelle session Physiocap")
             aText = aText + self.tr( " et du contour avec seulement des caractères ascii (non accentuées).")
             physiocap_error( self, aText, "CRITICAL")        
         except physiocap_exception_raster_sans_iso as e:
             physiocap_log_for_error( self)
             aText = self.tr( "Le raster {0} existe sans isoligne correspondante (ou inversement). La situation n'est pas prévu et ").\
                 format( e)
-            aText = aText + self.tr( "nécessite de créer une nouvelle instance de projet Physiocap")
+            aText = aText + self.tr( "nécessite de créer une nouvelle session Physiocap ")
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )    
         except physiocap_exception_no_choix_raster_iso as e:
@@ -1844,7 +1845,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         nom_complet_point = self.comboBoxPoints.currentText().split( SEPARATEUR_NOEUD)
         if ( len( nom_complet_point) != 2):
             aText = self.tr( "Le shape de points n'est pas choisi. ")
-            aText = aText + self.tr( "Créer une nouvelle instance de projet - bouton Filtrer les données brutes - ")
+            aText = aText + self.tr( "Créer une nouvelle session Physiocap - bouton Filtrer les données brutes - ")
             aText = aText + self.tr( "avant de faire votre calcul de Moyenne Inter Parcellaire")
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
@@ -1873,12 +1874,12 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             physiocap_log(aText1, leModeDeTrace,  "information")
             physiocap_log_for_error( self)
             aText = aText1 + self.tr( "Vous ne pouvez pas redemander ce calcul Inter : vous devez détruire le groupe ") 
-            aText = aText + self.tr( "ou créer une nouvelle instance du projet Physiocap")
+            aText = aText + self.tr( "ou créer une nouvelle session Physiocap")
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
         except physiocap_exception_points_invalid as e:
             physiocap_log_for_error( self)
-            aText = self.tr( "La couche de points du projet {0} ne contient pas les attributs attendus. ").\
+            aText = self.tr( "La couche de points de la session {0} ne contient pas les attributs attendus. ").\
                 format( e)
             aText = aText + self.tr( "Lancez le traitement initial - bouton Filtrer les données brutes - avant de faire votre ")
             aText = aText + self.tr( "calcul de Moyenne Inter Parcellaire" )
@@ -1886,7 +1887,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             return physiocap_message_box( self, aText, "information" )
         except physiocap_exception_segment_invalid as e:
             physiocap_log_for_error( self)
-            aText = self.tr( "La couche de segment brisé du projet {0} ne contient pas les attributs attendus. ").\
+            aText = self.tr( "La couche de segment brisé de la session {0} ne contient pas les attributs attendus. ").\
                 format( e)
             aText = aText + self.tr( "Lancez le traitement initial - bouton Filtrer les données brutes - avant de faire votre ")
             aText = aText + self.tr( "calcul de Moyenne Inter Parcellaire" )
@@ -2029,16 +2030,16 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         leModeDeTrace = self.fieldComboModeTrace.currentText()
         repertoire_data = self.lineEditDirectoryPhysiocap.text()
         if ((repertoire_data == "") or ( not os.path.exists( repertoire_data))):
-            aText = self.tr( "Pas de répertoire de données brutes spécifié")
+            aText = self.tr( "Pas de répertoire de données brutes choisi")
             physiocap_error( self, aText)
             return physiocap_message_box( self, aText)
         repertoire_cible = self.lineEditDirectoryFiltre.text()
         if ((repertoire_cible == "") or ( not os.path.exists( repertoire_cible))):
-            aText = self.tr( "Pas de répertoire de données cibles spécifié")
+            aText = self.tr( "Pas de répertoire de données cibles choisi")
             physiocap_error( self, aText)
             return physiocap_message_box( self, aText)
         if self.lineEditProjet.text() == "":
-            aText = self.tr( "Pas de nom de projet spécifié")
+            aText = self.tr( "Pas de nom de session Physiocap choisi")
             physiocap_error( self, aText)
             return physiocap_message_box( self, aText)                 
         # Remettre vide le textEditSynthese

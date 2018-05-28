@@ -113,7 +113,8 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 intra_raster.setRefreshOnNotifyEnabled( True)
             if (( affiche_iso == "YES") and ( nom_iso_final != "") and 
                 ( os.path.exists( le_template_isolignes))):
-                intra_isoligne.loadNamedStyle( le_template_isolignes)
+                if MACHINE == "Linux":   # JHJH Bypass Bug 19045 QGIS et 13 extension
+                    intra_isoligne.loadNamedStyle( le_template_isolignes)
         
     def quelle_librairie_interpolation(self, dialogue, versionSAGA):
         """
@@ -645,9 +646,9 @@ class PhysiocapIntra( QtWidgets.QDialog):
         root = mon_projet.layerTreeRoot()        
         un_groupe = root.findGroup( nom_noeud_arbre)
         if ( not isinstance( un_groupe, QgsLayerTreeGroup)):
-            aText = self.tr( "Le projet {0} n'existe pas. ").\
+            aText = self.tr( "La session {0} n'existe pas dans l'onglet des couches. ").\
                 format(  nom_noeud_arbre)
-            aText = aText + self.tr( "Créer une nouvelle instance de projet - bouton Filtrer les données brutes puis Inter - ")
+            aText = aText + self.tr( "Créer une nouvelle session Physiocap - bouton Filtrer les données brutes puis Inter - ")
             aText = aText + self.tr( "avant de faire votre interpolation Intra Parcellaire")
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( dialogue, aText, "information" )            
@@ -655,14 +656,14 @@ class PhysiocapIntra( QtWidgets.QDialog):
         # Vérification 
         if ( vecteur_point == None) or ( not vecteur_point.isValid()):
             aText = self.tr( "Le jeu de points choisi n'est pas valide. ")
-            aText = aText + self.tr( "Créer une nouvelle instance de projet - bouton Filtrer les données brutes puis Inter - ")
+            aText = aText + self.tr( "Créer une nouvelle session Physiocap - bouton Filtrer les données brutes puis Inter - ")
             aText = aText + self.tr( "avant de faire votre interpolation Intra Parcellaire")
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( dialogue, aText, "information" )  
 
         if ( vecteur_poly == None) or ( not vecteur_poly.isValid()):
             aText = self.tr( "Le contour choisi n'est pas valide. ")
-            aText = aText + self.tr( "Créer une nouvelle instance de projet - bouton Filtrer les données brutes puis Inter - ")
+            aText = aText + self.tr( "Créer une nouvelle session Physiocap - bouton Filtrer les données brutes puis Inter - ")
             aText = aText + self.tr( "avant de faire votre interpolation Intra Parcellaire")
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( dialogue, aText, "information" ) 

@@ -884,12 +884,13 @@
       </property>
       <property name="font">
        <font>
+        <pointsize>9</pointsize>
         <weight>50</weight>
         <bold>false</bold>
        </font>
       </property>
       <property name="text">
-       <string>Projet Physiocap (nom du répertoire et préfixes des données générées)</string>
+       <string>Session Physiocap (nom du répertoire et préfixes des données générées)</string>
       </property>
      </widget>
     </widget>
@@ -4200,8 +4201,6 @@ Si vous hésitez, trouvez du conseil. </string>
        <number>1</number>
       </property>
      </widget>
-     <zorder>fieldComboThematiques</zorder>
-     <zorder>groupBoxExpertOuvert</zorder>
     </widget>
     <widget class="QGroupBox" name="groupBoxSegment">
      <property name="geometry">
@@ -4555,7 +4554,7 @@ Si vous hésitez, trouvez du conseil. </string>
       <rect>
        <x>20</x>
        <y>210</y>
-       <width>111</width>
+       <width>161</width>
        <height>26</height>
       </rect>
      </property>
@@ -4572,7 +4571,7 @@ Si vous hésitez, trouvez du conseil. </string>
       <set>Qt::ImhDialableCharactersOnly</set>
      </property>
      <property name="text">
-      <string>As-tu contribué ?</string>
+      <string>Avez-vous contribué ?</string>
      </property>
      <property name="maxLength">
       <number>50</number>

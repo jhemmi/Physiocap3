@@ -134,7 +134,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         dialogue.settings= QSettings( PHYSIOCAP_NOM, PHYSIOCAP_NOM_3)
         dialogue.settings.setValue("Physiocap/dernier_repertoire", chemin_base_projet) 
         
-        physiocap_log( self.tr( "{0} {1} Début du traitement pour le projet Physiocap {2}").\
+        physiocap_log( self.tr( "{0} {1} Début du traitement pour la session Physiocap {2}").\
                 format( PHYSIOCAP_2_ETOILES , PHYSIOCAP_UNI, chemin_base_projet), leModeDeTrace)
         physiocap_log( self.tr( "Paramètres pour filtrer les diamètres min : {0} max : {1}").\
             format( str( mindiam), str( maxdiam)), leModeDeTrace)

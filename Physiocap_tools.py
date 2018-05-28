@@ -89,7 +89,7 @@ def physiocap_log( aText, modeTrace = TRACE_PAS,  level = "INFO"):
         format( PHYSIOCAP_UNI)
     if modeTrace == TRACE_PAS:
         #QgsMessageLog.logMessage( "Pas de trace : " + aText,  journal_nom, Qgis.Info)
-        pass
+        return
     elif modeTrace == TRACE_MINI:
         # On monte warning et message debut et fin
 #        if level == "WARNING" or level == Qgis.Warning :
@@ -116,7 +116,8 @@ def physiocap_log( aText, modeTrace = TRACE_PAS,  level = "INFO"):
         else:
             # Cas général
             QgsMessageLog.logMessage( aText, journal_nom, Qgis.Info)
-           
+    return
+    
 def physiocap_error( self, aText, level ="WARNING"):
     """Send a text to the Physiocap error
     Call Class Tools For translation"""
@@ -195,7 +196,7 @@ def  physiocap_nom_entite_avec_pb_caractere( un_nom, un_texte = "GDAL"):
     
        
 def physiocap_get_layer_by_URI( layerURI ):
-    """Rend le layer affiché dans le projet 
+    """Rend le layer affiché dans le projet QGIS
     qui répond à l'URI layerURI"""
     root = QgsProject.instance().layerTreeRoot()
     ids = root.findLayerIds()              
@@ -229,7 +230,7 @@ def physiocap_get_layer_by_URI( layerURI ):
 
 
 def physiocap_get_layer_by_name( layerName ):
-    """Rend le layer affiché dans le projet  
+    """Rend le layer affiché dans le projet QGIS 
     qui est affiché sous le nom layerName"""
     root = QgsProject.instance().layerTreeRoot()
     ids = root.findLayerIds()        
@@ -296,7 +297,7 @@ def physiocap_quelle_projection_et_lib_demandee( self):
         la_projection_TXT = PROJECTION_L93
 
     la_projection_CRS = QgsCoordinateReferenceSystem.fromEpsgId( mon_EPSG_number)
-    # TODO: Récuperer le CRS du projet et le compare au choix
+    # TODO: Récuperer le CRS du projet QGIS et le compare au choix
 #    laProjection_str = str( la_projection_CRS.postgisSrid())
 #    if la_projection_CRS.isValid():
 #        physiocap_log("Projection {0} des shapefiles est demandée : {1} est un EPSG valide".\

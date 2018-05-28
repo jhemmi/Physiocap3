@@ -918,7 +918,7 @@ class PhysiocapInter( QtWidgets.QDialog):
         nom_complet_point = dialogue.comboBoxPoints.currentText().split( SEPARATEUR_NOEUD)
         if ( len( nom_complet_point) != 2):
             aText = self.tr( "Le shape de points n'est pas choisi. ")
-            aText = aText + self.tr( "Créer une nouvelle instance de projet - bouton Filtrer les données brutes - ")
+            aText = aText + self.tr( "Créer une nouvelle session Physiocap - bouton Filtrer les données brutes - ")
             aText = aText + self.tr( "avant de faire votre calcul de Moyenne Inter Parcellaire")
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( dialogue, aText, "information" )
@@ -931,9 +931,9 @@ class PhysiocapInter( QtWidgets.QDialog):
         root = mon_projet.layerTreeRoot()
         un_groupe = root.findGroup( nom_noeud_arbre)
         if ( not isinstance( un_groupe, QgsLayerTreeGroup)):
-            aText = self.tr( "Le projet {0} n'existe pas. ").\
+            aText = self.tr( "La session {0} n'existe pas dans l'onglet des couches. ").\
                 format( nom_noeud_arbre)
-            aText = aText + self.tr( "Créer une nouvelle instance de projet - bouton Filtrer les données brutes - ")
+            aText = aText + self.tr( "Créer une nouvelle session Physiocap - bouton Filtrer les données brutes - ")
             aText = aText + self.tr( "avant de faire votre calcul de Moyenne Inter Parcellaire")
             if (consolidation == "YES"):
                 aText = aText + self.tr( "Cas de consolidation : le groupe {0} doit exister. ").\
@@ -944,14 +944,14 @@ class PhysiocapInter( QtWidgets.QDialog):
         # Vérification 
         if ( vecteur_point == None) or ( not vecteur_point.isValid()):
             aText = self.tr( "Le jeu de points choisi n'est pas valide. ")
-            aText = aText + self.tr( "Créer une nouvelle instance de projet - bouton Filtrer les données brutes - ")
+            aText = aText + self.tr( "Créer une nouvelle session Physiocap - bouton Filtrer les données brutes - ")
             aText = aText + self.tr( "avant de faire votre calcul de Moyenne Inter Parcellaire")
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( dialogue, aText, "information" )  
 
         if ( vecteur_poly == None) or ( not vecteur_poly.isValid()):
             aText = self.tr( "Le contour choisi n'est pas valide. ")
-            aText = aText + self.tr( "Créer une nouvelle instance de projet - bouton Filtrer les données brutes - ")
+            aText = aText + self.tr( "Créer une nouvelle session Physiocap - bouton Filtrer les données brutes - ")
             aText = aText + self.tr( "avant de faire votre calcul de Moyenne Inter Parcellaire")
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( dialogue, aText, "information" ) 
@@ -1022,7 +1022,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                 vecteur_pas_mesure = physiocap_get_layer_by_URI( nom_vecteur_pas_mesure)
                 if ( vecteur_pas_mesure == None) or ( not vecteur_pas_mesure.isValid()):
                     aText = self.tr( "La couche des points sans mesure n'est pas disponible ou valide. ")
-                    aText = aText + self.tr( "Créer une nouvelle instance de projet - bouton Filtrer les données brutes - ")
+                    aText = aText + self.tr( "Créer une nouvelle session Physiocap - bouton Filtrer les données brutes - ")
                     aText = aText + self.tr( "en cochant le Format version 3 ")
                     aText = aText + self.tr( "avant de faire votre calcul de Moyenne Inter Parcellaire")
                     physiocap_error( self, aText, "CRITICAL")
@@ -1035,7 +1035,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                     physiocap_log( "Nom du vecteur segment {0} type vecteur {1}". \
                         format(nom_vecteur_segment, vecteur_segment), leModeDeTrace)
                     aText = self.tr( "La couche des segments brisés n'est pas disponible ou valide. ")
-                    aText = aText + self.tr( "Créer une nouvelle instance de projet - bouton Filtrer les données brutes - ")
+                    aText = aText + self.tr( "Créer une nouvelle session Physiocap - bouton Filtrer les données brutes - ")
                     aText = aText + self.tr( "en cochant le Format version 3 ")
                     aText = aText + self.tr( "avant de faire votre calcul de Moyenne Inter Parcellaire")
                     physiocap_error( self, aText, "CRITICAL")
