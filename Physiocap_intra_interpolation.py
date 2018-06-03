@@ -113,8 +113,8 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 intra_raster.setRefreshOnNotifyEnabled( True)
             if (( affiche_iso == "YES") and ( nom_iso_final != "") and 
                 ( os.path.exists( le_template_isolignes))):
-                if MACHINE == "Linux":   # JHJH Bypass Bug 19045 QGIS et 13 extension
-                    intra_isoligne.loadNamedStyle( le_template_isolignes)
+#                if MACHINE == "Linux":   # JHJH Bypass Bug 19045 QGIS et 13 extension
+                intra_isoligne.loadNamedStyle( le_template_isolignes)
         
     def quelle_librairie_interpolation(self, dialogue, versionSAGA):
         """

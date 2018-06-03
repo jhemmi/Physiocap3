@@ -120,8 +120,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.checkBoxInterSegment.stateChanged.connect( self.slot_bascule_segment)
         self.checkBoxInterSegmentBrise.stateChanged.connect( self.slot_bascule_segment_brise)
 
-        onglet_params = self.tr("{0} Params").format( PHYSIOCAP_UNI)
-        self.tabWidgetPhysiocap.setTabText(0, onglet_params)
+#        onglet_params = self.tr("{0} Params").format( PHYSIOCAP_UNI)
+#        self.tabWidgetPhysiocap.setTabText(0, onglet_params)
        
         # Inter
         self.comboBoxPolygone.currentIndexChanged[int].connect( self.slot_INTER_maj_champ_poly_liste )
