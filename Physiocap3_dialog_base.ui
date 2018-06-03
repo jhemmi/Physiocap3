@@ -84,7 +84,7 @@
     <string/>
    </property>
    <property name="whatsThis">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Usage des onglets de l'extension Physiocap :&lt;/p&gt;&lt;p&gt;- Filtre pour les paramétres utilisés lors du filtre de données brutes&lt;/p&gt;&lt;p&gt;- Synthèse donne une lecture synthétiques de l'analyse de vos données brutes&lt;/p&gt;&lt;p&gt;- Histos permet de visualiser les sarments, vitesses et diamètres bruts et les diamètres filtrés&lt;/p&gt;&lt;p&gt;- Parcelles pour des calculs de moyennes INTER parcellaires puis une interpolation INTRA&lt;/p&gt;&lt;p&gt;- Affichages permet de choisir les couches affichées et leurs styles ( difinissant le coloriage, les légendes, les libellés ...)&lt;/p&gt;&lt;p&gt;- Expert accède aux paramétrages avancés (niveau de détail d'affichage des journaux, règles de calculs des segments et paramétrage du répertoire des thématiques). L'utilisateur classique n'a pa besoin d'accéder à ces paramètres. L'accès est limité et nécessite de contacter le support de l'extention (jean@jhemmi.eu)&lt;/p&gt;&lt;p&gt;- A Propos précise la version, la liste des contributeurs et les liens pour plus d'informations&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Usage des onglets de l'extension Physiocap :&lt;/p&gt;&lt;p&gt;- Filtre pour les paramétres utilisés lors du filtrage de données brutes&lt;/p&gt;&lt;p&gt;- Synthèse donne une lecture synthétique de l'analyse de vos données brutes&lt;/p&gt;&lt;p&gt;- Histos permet de visualiser les sarments, vitesses et diamètres bruts et les diamètres filtrés&lt;/p&gt;&lt;p&gt;- Parcelles pour des calculs de moyennes INTER parcellaires puis une interpolation INTRA&lt;/p&gt;&lt;p&gt;- Affichages permet de choisir les couches affichées et leurs styles ( définissant le coloriage, les légendes, les libellés ...)&lt;/p&gt;&lt;p&gt;- Expert accède aux paramétrages avancés (niveau de détail d'affichage des journaux, règles de calculs des segments et paramétrage du répertoire des thématiques). L'utilisateur classique n'a pa besoin d'accéder à ces paramètres. L'accès est limité et nécessite de contribuer puis de contacter le support de l'extention (jean@jhemmi.eu)&lt;/p&gt;&lt;p&gt;- A Propos précise la version, la liste des contributeurs et les liens pour plus d'informations&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="accessibleDescription">
     <string/>
@@ -710,9 +710,9 @@
      <widget class="QLineEdit" name="lineEditDirectoryPhysiocap">
       <property name="geometry">
        <rect>
-        <x>0</x>
+        <x>10</x>
         <y>23</y>
-        <width>451</width>
+        <width>441</width>
         <height>22</height>
        </rect>
       </property>
@@ -768,7 +768,7 @@
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous souhaitez regrouper des données MID de plusieurs sous répertoires, cochez la case &amp;quot;Recherche des MIDs dans les sous répertoires&amp;quot;.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : vous pouvez regrouper toutes les données brutes d'une campagne, d'un cépage ou d'un secteur dans un même arbre de données. Choisissez un nom de projet Physiocap explicitant le regroupement. L'extension Physiocap les traitera avec un même paramétrage.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous souhaitez regrouper des données MID de plusieurs sous répertoires, cochez la case &amp;quot;Recherche des MIDs dans les sous répertoires&amp;quot;.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : vous pouvez regrouper toutes les données brutes d'une campagne, d'un cépage ou d'un secteur dans un même arbre de données. Choisissez un nom de session Physiocap explicitant le regroupement. L'extension Physiocap les traitera avec un même paramétrage.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="text">
        <string>Recherche des MIDs dans les sous-répertoires</string>
@@ -795,7 +795,7 @@
      <widget class="QLabel" name="lab_10">
       <property name="geometry">
        <rect>
-        <x>0</x>
+        <x>10</x>
         <y>73</y>
         <width>501</width>
         <height>21</height>
@@ -815,9 +815,9 @@
      <widget class="QLineEdit" name="lineEditDirectoryFiltre">
       <property name="geometry">
        <rect>
-        <x>0</x>
+        <x>10</x>
         <y>93</y>
-        <width>451</width>
+        <width>441</width>
         <height>22</height>
        </rect>
       </property>
@@ -829,7 +829,7 @@
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Ouvrir la liste de vos répertoires cibles avec le bouton &amp;quot;...&amp;quot;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Vous pouvez sélectionner le répertoire où se trouveront les données après filtratage par l'Extension Physiocap.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Par défaut, il s'agit du répertoire qui contient les fichiers MID.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;L'extension crée des entités dans des sous répertoires et n'altèrent jamais vos données brutes.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Ouvrir la liste de vos répertoires cibles avec le bouton &amp;quot;...&amp;quot;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Vous pouvez sélectionner le répertoire où se trouveront les données après filtrage par l'Extension Physiocap.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Par défaut, il s'agit du répertoire qui contient les fichiers MID.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;L'extension crée des entités dans des sous répertoires et n'altère jamais vos données brutes.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="lineEditProjet">
@@ -838,7 +838,7 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>0</x>
+        <x>10</x>
         <y>144</y>
         <width>271</width>
         <height>22</height>
@@ -852,7 +852,7 @@
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit du nom qui identifie votre session de travail. Ce nom sert de répertoire de base pour les données produites par l'extension Physiocap. Il sert aussi de préfixe pour les données créées.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : Choisir un nom court, décrivant clairement votre jeu de données.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous lancez plusieurs itérations (bouton OK), ce nom se completera du suffixe (1) puis (2) jusqu'à (n). Le plus grand numéro correspond à la dernière itération.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit du nom qui identifie votre session de travail. Ce nom sert de répertoire de base pour les données produites par l'extension Physiocap. Il sert aussi de préfixe pour les données créées.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : Choisir un nom court, décrivant clairement votre jeu de données.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous lancez plusieurs itérations (bouton OK), ce nom se completera du suffixe [1] puis [2]  jusqu'à [n] . Le plus grand numéro correspond à la dernière itération.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="inputMethodHints">
        <set>Qt::ImhDialableCharactersOnly</set>
@@ -870,7 +870,7 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>0</x>
+        <x>10</x>
         <y>124</y>
         <width>511</width>
         <height>21</height>
@@ -1716,34 +1716,6 @@ Si vous hésitez, trouvez du conseil. </string>
        <number>4</number>
       </property>
      </widget>
-     <widget class="QLabel" name="lab_78">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>90</y>
-        <width>481</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>8</pointsize>
-        <italic>true</italic>
-       </font>
-      </property>
-      <property name="text">
-       <string>Correspondance à 1 mètre, 0,5 en L93 et  0.000009 en WGS84</string>
-      </property>
-     </widget>
      <widget class="QLabel" name="lab_84">
       <property name="geometry">
        <rect>
@@ -2013,7 +1985,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Déclenchez le calcul d'interpolation Intra parcellaire pour le champ à interpoler choisi.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Déclenchez le calcul d'interpolation Intra parcellaire pour le (ou les) champ(s) à interpoler que vous avez choisi(s).&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="autoFillBackground">
        <bool>true</bool>
@@ -2037,7 +2009,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Choix supplémentaire nécessaire à GDAL ou QGIS &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Choix supplémentaire nécessaire à GDAL qui indique combien d'équivalent du rayon d'interpolation vous voulez scruter perpendicairement aux rangs (la forme de l'ellipse)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="inputMethodHints">
        <set>Qt::ImhNone</set>
@@ -2117,7 +2089,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </sizepolicy>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string/>
       </property>
      </widget>
      <widget class="QLabel" name="lab_71">
@@ -2211,7 +2183,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;GDAL permet une interpolation dans une ellipse qui tient compte de l'orientation des rangs. Cette possibilité n'est disponible qu'avec les attributs et vecteurs en Version 3.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Avec cette interpolation, seul l'écartement  entre les isolignes est réglable.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;GDAL permet une interpolation dans une ellipse qui tient compte de l'orientation des rangs. Cette possibilité n'est disponible qu'avec les attributs et vecteurs en version 3.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Avec cette interpolation, seul l'écartement entre les isolignes est réglable.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="text">
        <string>GDAL</string>
@@ -3186,7 +3158,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial.  Vous pouvez fixer le paramétrages des isolignes. Pour activer ces choix, il faur aussi dans l'onglet Parcelle choisir ce mode de calcul des isolignes. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="editable">
        <bool>true</bool>
@@ -3334,7 +3306,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial.  Vous pouvez fixer le paramétrages des isolignes. Pour activer ces choix, il faur aussi dans l'onglet Parcelle choisir ce mode de calcul des isolignes. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="editable">
        <bool>true</bool>
@@ -3427,7 +3399,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial.  Vous pouvez fixer le paramétrages des isolignes. Pour activer ces choix, il faur aussi dans l'onglet Parcelle choisir ce mode de calcul des isolignes. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="editable">
        <bool>true</bool>
@@ -4189,7 +4161,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Par défaut, le répertoire des styles est celui livré avec l'extension (modeleQgis\Physiocap3).&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous choisissez le répertoire des modèles de QGIS (QGIS3\profiles\default\project_templates\Physiocap3), vous pourrez alors prendre la maîtrise de vos styles. Vous devez après avoir choisi cette option:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Fermer l'extension Physiocap puis QGIS&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Copiez les modèles vers ce répertoire&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Vous pourrez modifier ces modèles (les écraser depuis les propriétés de chaque couche) puis changer leurs noms&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Pour revenir en arrière (vous perdrez vos nommages spécifiques), choisir à nouveau le répertoire des thématiques du plugin.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Par défaut, le répertoire des styles est celui livré avec l'extension (modeleQgis\Physiocap3).&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous choisissez le répertoire des modèles de QGIS (QGIS3\profiles\default\project_templates\Physiocap3), vous pourrez gérer vos propres styles. Vous devez après avoir choisi cette option :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Fermer l'extension Physiocap puis QGIS&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Copiez les modèles vers ce répertoire&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Vous pourrez modifier ces modèles (les écraser depuis les propriétés de chaque couche) puis changer leurs noms&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Pour revenir en arrière (vous perdrez vos nommages spécifiques), choisir à nouveau le répertoire des thématiques du plugin.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="editable">
        <bool>true</bool>
@@ -4219,7 +4191,7 @@ Si vous hésitez, trouvez du conseil. </string>
       </font>
      </property>
      <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt; font-weight:600; color:#00aa00;&quot;&gt;Nouveauté de la V3 : voici la description des seuils utilisés pour créer les segments de points contigus et cohérents &lt;/span&gt;&lt;span style=&quot; font-size:9pt; color:#00aa00;&quot;&gt;Ces segments permettent de visualiser et d'analyser la qualité de l'acquisition GPS. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt; color:#00aa00;&quot;&gt;Physiocap 3 apporte la nouvelle notion de segments de points qui se suivent en restant cohérents. Par contre, les &lt;/span&gt;&lt;span style=&quot; font-size:9pt; font-weight:600; color:#00aa00;&quot;&gt;filtres pour nettoyer les points bruts restent inchangé et n'utilisent pas ces seuils pour les segments&lt;/span&gt;&lt;span style=&quot; font-size:9pt; color:#00aa00;&quot;&gt;. Ce sont les points filtrés qui servent au calcul pour les moyennes Inter et les interpolations Intra.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt; color:#00aa00;&quot;&gt;Quatre seuils sont utilisés pour créer les segments. Les deux premiers sont des minima et les deux derniers des maxima&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt; color:#00aa00;&quot;&gt;- les points cohérents ont une vitesse supérieure à une &amp;quot;Vitesse minimale&amp;quot; et inférieure à la &amp;quot;Vitesse Maximale&amp;quot;. Les arrets, passages en tournières, pannes sont ainsi isolés et considérés comme non cohérents pour l'analyse.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt; color:#00aa00;&quot;&gt;- le segment reste contigu car il garde un nombre de points supérieur au &amp;quot;Nombre minimum de points&amp;quot;. On évite de garder des segments très courts (un point correspond à une seconde) : le segment est toujours une séquence de capture visualisable.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt; color:#00aa00;&quot;&gt;- la position de chaque point est comparée à une position théorique (calculée à partir de la vitesse donnée par le GPS du point précédent). Le pourcentage de dérive est la distance en % entre le nouveau point réel et la position théorique attendue. Le dépassement de &amp;quot;la dérive maximale&amp;quot; indique le début d'une déviation de la capture GPS. Ces points ne sont pas conservés dans le segment cohérent.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt; color:#00aa00;&quot;&gt;- le point est considéré cohérent quand la valeur de précision d'altitude (pdop : un indicateur de qualité de la mesure GPS) est inférieur au maximum. On identifie ainsi le début des déviations de la capture GPS.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt; color:#00aa00;&quot;&gt;Ces deux derniers découpages de segment permettent d'écarter les points dont la valeur GPS est douteuse. Les informations de &amp;quot;distance au point précédent&amp;quot; et &amp;quot;% de dérive&amp;quot; sont stockés dans les vecteurs de points (shapefile) dans deux nouveaux attributs (DISTANCE et DERIVE). On peut ainsi retrouver et repérer les captures incohérentes (dans les tables d'attributs ou par superposition des points et des segments : les points qui ne sont pas sur les segments sont incohérents ou non contigus).&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt; color:#00aa00;&quot;&gt;Plus d'informations sous le wiki sous https://github.com/jhemmi/Physiocap3/wiki&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt; font-weight:600; color:#00aa00;&quot;&gt;Nouveauté de la V3 : voici la description des seuils utilisés pour créer les segments de points contigus et cohérents &lt;/span&gt;&lt;span style=&quot; font-size:9pt; color:#00aa00;&quot;&gt;Ces segments permettent de visualiser et d'analyser la qualité de l'acquisition GPS. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt; color:#00aa00;&quot;&gt;Physiocap 3 apporte la nouvelle notion de segments de points qui se suivent en restant cohérents. Par contre, les &lt;/span&gt;&lt;span style=&quot; font-size:9pt; font-weight:600; color:#00aa00;&quot;&gt;filtres pour nettoyer les points bruts restent inchangés et n'utilisent pas ces seuils pour les segments&lt;/span&gt;&lt;span style=&quot; font-size:9pt; color:#00aa00;&quot;&gt;. Ce sont les points filtrés qui servent au calcul pour les moyennes Inter et les interpolations Intra.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt; color:#00aa00;&quot;&gt;Quatre seuils sont utilisés pour créer les segments. Les deux premiers sont des minima et les deux derniers des maxima&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt; color:#00aa00;&quot;&gt;- les points cohérents ont une vitesse supérieure à une &amp;quot;Vitesse minimale&amp;quot; et inférieure à la &amp;quot;Vitesse Maximale&amp;quot;. Les arrets, passages en tournières, pannes sont ainsi isolés et considérés comme non cohérents pour l'analyse.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt; color:#00aa00;&quot;&gt;- le segment reste contigu car il garde un nombre de points supérieur au &amp;quot;Nombre minimum de points&amp;quot;. On évite de garder des segments très courts (un point correspond à une seconde) : le segment est toujours une séquence de capture visualisable.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt; color:#00aa00;&quot;&gt;- la position de chaque point est comparée à une position théorique (calculée à partir de la vitesse donnée par le GPS du point précédent). Le pourcentage de dérive est la distance en % entre le nouveau point réel et la position théorique attendue. Le dépassement de &amp;quot;la dérive maximale&amp;quot; indique le début d'une déviation de la capture GPS. Ces points ne sont pas conservés dans le segment cohérent.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt; color:#00aa00;&quot;&gt;- le point est considéré cohérent quand la valeur de précision d'altitude (pdop : un indicateur de qualité de la mesure GPS) est inférieur au maximum. On identifie ainsi le début des déviations de la capture GPS.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt; color:#00aa00;&quot;&gt;Ces deux derniers découpages de segment permettent d'écarter les points dont la valeur GPS est douteuse. Les informations de &amp;quot;distance au point précédent&amp;quot; et &amp;quot;% de dérive&amp;quot; sont stockées dans les vecteurs de points (shapefile) dans deux nouveaux attributs (DISTANCE et DERIVE). On peut ainsi retrouver et repérer les captures incohérentes (dans les tables d'attributs ou par superposition des points et des segments : les points qui ne sont pas sur les segments sont incohérents ou non contigus).&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt; color:#00aa00;&quot;&gt;Plus d'informations sous le wiki sous https://github.com/jhemmi/Physiocap3/wiki&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="title">
       <string>Seuils pour les segments de points contigüs cohérents</string>
@@ -4694,7 +4666,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Nouveautés de la V3 : &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;attributs, vecteur des POINTS_0_SEUL ou points sans captures de sarments et 3D.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Voici la description des 6 nouveaux attributs présent dans les vecteur de points :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Altitude est la valeur de l'altitude donnée par le GPS. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Pdop est un indicateur qualitatif de la qualité de la capture GPS. * &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Distance est la distance d'une point avec le point précédent. *&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Dérive est le pourcentage de déviation entre le point et le point théorique prévu à partir du point précédent. *&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Azimuth est l'orientation entre le point et son précédent. Il est un indicateur de la précision du GPS (ou de rang courbe (;)).&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Nbsart le nombre total de sarments filtrés. Ne pas confondre avec Nbsarm qui est le nombre de sarments filtrés au m linéaire.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Au niveau des vecteurs de segment par contour, on retrouve l'azimuth et la longueur de chaque segment.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Plus globalement il apparaît pour chaque attribut dans les vecteurs de moyennes, l'écart type et la médiane (préfixes respectifs EC_ et M_). &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Les points sans mesure sont des indicateurs de la qualité de la mesure ou du nombres de pieds manquant mesurés. Après filtrer, la thématique &amp;quot;Filtrer pas de mesure&amp;quot; est la plus facile analyse de la qualité de capture. Les points rouge autour du contour permette de valider la qualité de vos contours. Les points rouges dans la parcelle montre une éventuelle zone avec plus de points sans mesure. La densité par ha des points sans mesures donne un autre format de l'indicateur visuel.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Pour l'&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;utilisation de la 3D (nouveauté de QGIS3)&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;, les attributs suivant rentrent dans la composante Z des vecteurs de points. Les vecteurs de points deviennent des 2.5D :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- DIAM (Diamètre moyen) pour les POINTS_SANS_0&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- VITESSE pour les POINTS_AVEC_0&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;L'extension voit apparaître des thématiques 3D pour visualiser en 3D ces attributs. Elles ne sont pas choisies par défaut. La visualisation 2D reste le défaut.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : Vous pouvez rester au format des données de l'extension Physiocap 1.8.x, c'est à dire que vos shapefile et cvs restent sans :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;- les nouveaux attributs de qualification de vos captures (altitude, pdop, distance, derive, azimuth, nbsart)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;- segments de captures contigus et cohérentes.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Vous pouvez ainsi vérifier la non régression de l'extension Physiocap 3, mais ce mode n'est resté actif que pour re-traiter des données anciennes. Nous vous conseillons de passer aux format V3 pour utiliser les nouveaux attributs, les nouveaux vecteurs et la 3D.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Les vecteurs arrivant avec Physiocap 3&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt; sont décrits dans l'onglet Expert et sur le wiki https://github.com/jhemmi/Physiocap3/wiki&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Nouveautés de la V3 : &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;attributs, vecteur des POINTS_0_SEUL ou points sans captures de sarments et 3D.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Voici la description des 6 nouveaux attributs présents dans les vecteur de points :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Altitude est la valeur de l'altitude donnée par le GPS. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Pdop est un indicateur qualitatif de la capture GPS. * &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Distance est la distance entre un point et le point précédent. *&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Dérive est le pourcentage de déviation entre le point et le point théorique prévu à partir du point précédent. *&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Azimuth est l'orientation entre le point et son précédent. Il est un indicateur de la précision du GPS (ou de rang courbe (;)).&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Nbsart le nombre total de sarments filtrés. Ne pas confondre avec Nbsarm qui est le nombre de sarments filtrés au m linéaire.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Au niveau des vecteurs de segment par contour, on retrouve l'azimuth et la longueur de chaque segment.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Plus globalement il apparaît pour chaque attribut dans les vecteurs de moyennes, l'écart type et la médiane (préfixes respectifs EC_ et M_). &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Les points sans mesure sont des indicateurs de la qualité de la mesure ou du nombres de pieds manquant mesurés. Après filtrer, la thématique &amp;quot;Filtrer pas de mesure&amp;quot; est la plus facile analyse de la qualité de capture. Les points rouge autour du contour permette de valider la qualité de vos contours. Les points rouges dans la parcelle montre une éventuelle zone avec plus de points sans mesure. La densité par ha des points sans mesures donne un autre format de l'indicateur visuel.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Pour l'&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;utilisation de la 3D (nouveauté de QGIS3)&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;, les attributs suivant rentrent dans la composante Z des vecteurs de points. Les vecteurs de points deviennent des 2.5D :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- DIAM (Diamètre moyen) pour les POINTS_SANS_0&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- VITESSE pour les POINTS_AVEC_0&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;L'extension voit apparaître des thématiques 3D pour visualiser en 3D ces attributs. Elles ne sont pas choisies par défaut. La visualisation 2D reste le défaut.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : Vous pouvez rester au format des données de l'extension Physiocap 1.8.x, c'est à dire que vos shapefile et cvs restent sans :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;- les nouveaux attributs de qualification de vos captures (altitude, pdop, distance, derive, azimuth, nbsart)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;- segments de captures contigus et cohérentes.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Vous pouvez ainsi vérifier la non régression de l'extension Physiocap 3, mais ce mode n'est resté actif que pour re-traiter des données anciennes. Nous vous conseillons de passer aux format V3 pour utiliser les nouveaux attributs, les nouveaux vecteurs et la 3D.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Les vecteurs arrivant avec Physiocap 3&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt; sont décrits dans l'onglet Expert et sur le wiki https://github.com/jhemmi/Physiocap3/wiki&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="text">
        <string>Attributs et vecteurs V3</string>
@@ -5031,9 +5003,9 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QPushButton" name="buttonContribuer">
       <property name="geometry">
        <rect>
-        <x>30</x>
+        <x>10</x>
         <y>220</y>
-        <width>401</width>
+        <width>481</width>
         <height>41</height>
        </rect>
       </property>
