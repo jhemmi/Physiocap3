@@ -261,6 +261,9 @@ def physiocap_csv_vers_shapefile( self, progress_barre, donnee_3D ,  csv_name, s
     if version_3 == "YES":
         writer = QgsVectorFileWriter( shape_name, "utf-8", les_champs, 
             QgsWkbTypes.PointZ, laProjectionCRS , "ESRI Shapefile")
+        if ( self.fieldComboFormats.currentText() == GEOPACKAGE_NOM):
+            # TODO Fabriquer le nom du geopackage à partir du nom du shapefiles            
+            physiocap_log( "Le nom du geopackage : {0}".format( shape_name),  TRACE_TOOLS)
     else:
         writer = QgsVectorFileWriter( shape_name, "utf-8", les_champs, 
             QgsWkbTypes.Point, laProjectionCRS , "ESRI Shapefile")        

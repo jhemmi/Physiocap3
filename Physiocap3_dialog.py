@@ -1953,7 +1953,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.checkBoxInterSegment.setEnabled( set_quoi)
         self.checkBoxInterSegmentBrise.setEnabled( set_quoi)
         
-        if self.lineEditExpert.text() == MODE_EXPERT:
+        if (self.lineEditExpert.text() == MODE_EXPERT):
             self.groupBoxSegment.setEnabled( set_quoi)
             self.groupBoxThemaTrace.setEnabled( set_quoi)
             self.groupBoxInterIntraExpert.setEnabled( set_quoi)

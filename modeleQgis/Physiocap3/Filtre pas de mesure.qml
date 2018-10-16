@@ -1,114 +1,114 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis simplifyAlgorithm="0" simplifyMaxScale="1" readOnly="0" maxScale="0" hasScaleBasedVisibilityFlag="0" version="2.99.0-Master" simplifyDrawingTol="1" simplifyLocal="1" mincale="1e+8" simplifyDrawingHints="0">
-  <renderer-v2 enableorderby="0" attr="VITESSE" graduatedMethod="GraduatedColor" forceraster="0" symbollevels="0" type="graduatedSymbol">
+<qgis version="3.0.3-Girona" labelsEnabled="0" simplifyAlgorithm="0" minScale="0" simplifyLocal="1" readOnly="0" maxScale="0" simplifyMaxScale="1" simplifyDrawingTol="1" simplifyDrawingHints="0" hasScaleBasedVisibilityFlag="0">
+  <renderer-v2 type="graduatedSymbol" forceraster="0" enableorderby="0" attr="VITESSE" graduatedMethod="GraduatedColor" symbollevels="0">
     <ranges>
-      <range symbol="0" upper="2.000000000000000" render="true" label=" inf à 2 km/h" lower="0.000000000000000"/>
-      <range symbol="1" upper="1000.000000000000000" render="true" label=" inf à 2 km/h" lower="2.000000000000000"/>
+      <range label=" inf à 2 km/h" render="true" lower="0.000000000000000" symbol="0" upper="2.000000000000000"/>
+      <range label=" sup à 2 km/h" render="true" lower="2.000000000000000" symbol="1" upper="1000.000000000000000"/>
     </ranges>
     <symbols>
-      <symbol name="0" alpha="1" type="marker" clip_to_extent="1">
-        <layer enabled="1" locked="0" pass="0" class="SimpleMarker">
-          <prop v="0" k="angle"/>
-          <prop v="34,255,27,255" k="color"/>
-          <prop v="1" k="horizontal_anchor_point"/>
-          <prop v="bevel" k="joinstyle"/>
-          <prop v="circle" k="name"/>
-          <prop v="0,0" k="offset"/>
-          <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
-          <prop v="MM" k="offset_unit"/>
-          <prop v="0,0,0,255" k="outline_color"/>
-          <prop v="solid" k="outline_style"/>
-          <prop v="0" k="outline_width"/>
-          <prop v="3x:0,0,0,0,0,0" k="outline_width_map_unit_scale"/>
-          <prop v="MM" k="outline_width_unit"/>
-          <prop v="diameter" k="scale_method"/>
-          <prop v="2" k="size"/>
-          <prop v="3x:0,0,0,0,0,0" k="size_map_unit_scale"/>
-          <prop v="MM" k="size_unit"/>
-          <prop v="1" k="vertical_anchor_point"/>
+      <symbol type="marker" name="0" alpha="1" clip_to_extent="1">
+        <layer class="SimpleMarker" enabled="1" locked="0" pass="0">
+          <prop k="angle" v="0"/>
+          <prop k="color" v="34,255,27,255"/>
+          <prop k="horizontal_anchor_point" v="1"/>
+          <prop k="joinstyle" v="bevel"/>
+          <prop k="name" v="circle"/>
+          <prop k="offset" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="outline_color" v="0,0,0,255"/>
+          <prop k="outline_style" v="solid"/>
+          <prop k="outline_width" v="0"/>
+          <prop k="outline_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="outline_width_unit" v="MM"/>
+          <prop k="scale_method" v="diameter"/>
+          <prop k="size" v="2"/>
+          <prop k="size_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="size_unit" v="MM"/>
+          <prop k="vertical_anchor_point" v="1"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option name="name" value="" type="QString"/>
+              <Option type="QString" name="name" value=""/>
               <Option name="properties"/>
-              <Option name="type" value="collection" type="QString"/>
+              <Option type="QString" name="type" value="collection"/>
             </Option>
           </data_defined_properties>
         </layer>
       </symbol>
-      <symbol name="1" alpha="1" type="marker" clip_to_extent="1">
-        <layer enabled="1" locked="0" pass="0" class="SimpleMarker">
-          <prop v="0" k="angle"/>
-          <prop v="255,0,0,255" k="color"/>
-          <prop v="1" k="horizontal_anchor_point"/>
-          <prop v="bevel" k="joinstyle"/>
-          <prop v="circle" k="name"/>
-          <prop v="0,0" k="offset"/>
-          <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
-          <prop v="MM" k="offset_unit"/>
-          <prop v="0,0,0,255" k="outline_color"/>
-          <prop v="solid" k="outline_style"/>
-          <prop v="0" k="outline_width"/>
-          <prop v="3x:0,0,0,0,0,0" k="outline_width_map_unit_scale"/>
-          <prop v="MM" k="outline_width_unit"/>
-          <prop v="diameter" k="scale_method"/>
-          <prop v="2" k="size"/>
-          <prop v="3x:0,0,0,0,0,0" k="size_map_unit_scale"/>
-          <prop v="MM" k="size_unit"/>
-          <prop v="1" k="vertical_anchor_point"/>
+      <symbol type="marker" name="1" alpha="1" clip_to_extent="1">
+        <layer class="SimpleMarker" enabled="1" locked="0" pass="0">
+          <prop k="angle" v="0"/>
+          <prop k="color" v="255,0,0,255"/>
+          <prop k="horizontal_anchor_point" v="1"/>
+          <prop k="joinstyle" v="bevel"/>
+          <prop k="name" v="circle"/>
+          <prop k="offset" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="outline_color" v="0,0,0,255"/>
+          <prop k="outline_style" v="solid"/>
+          <prop k="outline_width" v="0"/>
+          <prop k="outline_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="outline_width_unit" v="MM"/>
+          <prop k="scale_method" v="diameter"/>
+          <prop k="size" v="2"/>
+          <prop k="size_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="size_unit" v="MM"/>
+          <prop k="vertical_anchor_point" v="1"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option name="name" value="" type="QString"/>
+              <Option type="QString" name="name" value=""/>
               <Option name="properties"/>
-              <Option name="type" value="collection" type="QString"/>
+              <Option type="QString" name="type" value="collection"/>
             </Option>
           </data_defined_properties>
         </layer>
       </symbol>
     </symbols>
     <source-symbol>
-      <symbol name="0" alpha="1" type="marker" clip_to_extent="1">
-        <layer enabled="1" locked="0" pass="0" class="SimpleMarker">
-          <prop v="0" k="angle"/>
-          <prop v="126,228,150,255" k="color"/>
-          <prop v="1" k="horizontal_anchor_point"/>
-          <prop v="bevel" k="joinstyle"/>
-          <prop v="circle" k="name"/>
-          <prop v="0,0" k="offset"/>
-          <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
-          <prop v="MM" k="offset_unit"/>
-          <prop v="0,0,0,255" k="outline_color"/>
-          <prop v="solid" k="outline_style"/>
-          <prop v="0" k="outline_width"/>
-          <prop v="3x:0,0,0,0,0,0" k="outline_width_map_unit_scale"/>
-          <prop v="MM" k="outline_width_unit"/>
-          <prop v="diameter" k="scale_method"/>
-          <prop v="2" k="size"/>
-          <prop v="3x:0,0,0,0,0,0" k="size_map_unit_scale"/>
-          <prop v="MM" k="size_unit"/>
-          <prop v="1" k="vertical_anchor_point"/>
+      <symbol type="marker" name="0" alpha="1" clip_to_extent="1">
+        <layer class="SimpleMarker" enabled="1" locked="0" pass="0">
+          <prop k="angle" v="0"/>
+          <prop k="color" v="126,228,150,255"/>
+          <prop k="horizontal_anchor_point" v="1"/>
+          <prop k="joinstyle" v="bevel"/>
+          <prop k="name" v="circle"/>
+          <prop k="offset" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="outline_color" v="0,0,0,255"/>
+          <prop k="outline_style" v="solid"/>
+          <prop k="outline_width" v="0"/>
+          <prop k="outline_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="outline_width_unit" v="MM"/>
+          <prop k="scale_method" v="diameter"/>
+          <prop k="size" v="2"/>
+          <prop k="size_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="size_unit" v="MM"/>
+          <prop k="vertical_anchor_point" v="1"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option name="name" value="" type="QString"/>
+              <Option type="QString" name="name" value=""/>
               <Option name="properties"/>
-              <Option name="type" value="collection" type="QString"/>
+              <Option type="QString" name="type" value="collection"/>
             </Option>
           </data_defined_properties>
         </layer>
       </symbol>
     </source-symbol>
-    <colorramp name="[source]" type="gradient">
-      <prop v="34,255,27,255" k="color1"/>
-      <prop v="255,0,0,255" k="color2"/>
-      <prop v="0" k="discrete"/>
-      <prop v="gradient" k="rampType"/>
+    <colorramp type="gradient" name="[source]">
+      <prop k="color1" v="34,255,27,255"/>
+      <prop k="color2" v="255,0,0,255"/>
+      <prop k="discrete" v="0"/>
+      <prop k="rampType" v="gradient"/>
     </colorramp>
     <mode name="jenks"/>
     <rotation/>
     <sizescale/>
-    <labelformat format=" %1 - %2 " decimalplaces="1" trimtrailingzeroes="false"/>
+    <labelformat decimalplaces="1" format=" %1 - %2 " trimtrailingzeroes="false"/>
   </renderer-v2>
   <customproperties>
-    <property value="0" key="embeddedWidgets/count"/>
+    <property key="embeddedWidgets/count" value="0"/>
     <property key="variableNames"/>
     <property key="variableValues"/>
   </customproperties>
@@ -116,16 +116,17 @@
   <featureBlendMode>0</featureBlendMode>
   <layerOpacity>1</layerOpacity>
   <SingleCategoryDiagramRenderer diagramType="Histogram" attributeLegend="1">
-    <DiagramCategory height="15" enabled="0" sizeType="MM" rotationOffset="270" labelPlacementMethod="XHeight" sizeScale="3x:0,0,0,0,0,0" penWidth="0" opacity="1" minimumSize="0" lineSizeScale="3x:0,0,0,0,0,0" scaleDependency="Area" scaleBasedVisibility="0" lineSizeType="MM" penColor="#000000" penAlpha="255" minScaleDenominator="0" width="15" diagramOrientation="Up" maxScaleDenominator="1e+8" barWidth="5" backgroundColor="#ffffff" backgroundAlpha="255">
+    <DiagramCategory barWidth="5" rotationOffset="270" penColor="#000000" penAlpha="255" enabled="0" width="15" scaleBasedVisibility="0" lineSizeScale="3x:0,0,0,0,0,0" sizeType="MM" sizeScale="3x:0,0,0,0,0,0" opacity="1" lineSizeType="MM" scaleDependency="Area" diagramOrientation="Up" height="15" penWidth="0" minimumSize="0" minScaleDenominator="0" labelPlacementMethod="XHeight" backgroundColor="#ffffff" maxScaleDenominator="1e+8" backgroundAlpha="255">
       <fontProperties description="Ubuntu,11,-1,5,50,0,0,0,0,0" style=""/>
+      <attribute label="" field="" color="#000000"/>
     </DiagramCategory>
   </SingleCategoryDiagramRenderer>
-  <DiagramLayerSettings placement="0" priority="0" obstacle="0" zIndex="0" linePlacementFlags="18" showAll="1" dist="0">
+  <DiagramLayerSettings priority="0" obstacle="0" showAll="1" placement="0" dist="0" zIndex="0" linePlacementFlags="18">
     <properties>
       <Option type="Map">
-        <Option name="name" value="" type="QString"/>
+        <Option type="QString" name="name" value=""/>
         <Option name="properties"/>
-        <Option name="type" value="collection" type="QString"/>
+        <Option type="QString" name="type" value="collection"/>
       </Option>
     </properties>
   </DiagramLayerSettings>
@@ -158,6 +159,13 @@
         </config>
       </editWidget>
     </field>
+    <field name="PDOP">
+      <editWidget type="TextEdit">
+        <config>
+          <Option/>
+        </config>
+      </editWidget>
+    </field>
     <field name="DISTANCE">
       <editWidget type="Range">
         <config>
@@ -167,6 +175,20 @@
     </field>
     <field name="DERIVE">
       <editWidget type="Range">
+        <config>
+          <Option/>
+        </config>
+      </editWidget>
+    </field>
+    <field name="AZIMUTH">
+      <editWidget type="TextEdit">
+        <config>
+          <Option/>
+        </config>
+      </editWidget>
+    </field>
+    <field name="NBSART">
+      <editWidget type="TextEdit">
         <config>
           <Option/>
         </config>
@@ -193,128 +215,83 @@
         </config>
       </editWidget>
     </field>
-    <field name="NBSARMM2">
-      <editWidget type="Range">
-        <config>
-          <Option/>
-        </config>
-      </editWidget>
-    </field>
-    <field name="NBSARCEP">
-      <editWidget type="Range">
-        <config>
-          <Option/>
-        </config>
-      </editWidget>
-    </field>
-    <field name="BIOMM2">
-      <editWidget type="Range">
-        <config>
-          <Option/>
-        </config>
-      </editWidget>
-    </field>
-    <field name="BIOMGM2">
-      <editWidget type="Range">
-        <config>
-          <Option/>
-        </config>
-      </editWidget>
-    </field>
-    <field name="BIOMGCEP">
-      <editWidget type="Range">
-        <config>
-          <Option/>
-        </config>
-      </editWidget>
-    </field>
   </fieldConfiguration>
   <aliases>
     <alias name="" field="GID" index="0"/>
     <alias name="" field="DATE" index="1"/>
     <alias name="" field="VITESSE" index="2"/>
     <alias name="" field="ALTITUDE" index="3"/>
-    <alias name="" field="DISTANCE" index="4"/>
-    <alias name="" field="DERIVE" index="5"/>
-    <alias name="" field="NBSARM" index="6"/>
-    <alias name="" field="DIAM" index="7"/>
-    <alias name="" field="BIOM" index="8"/>
-    <alias name="" field="NBSARMM2" index="9"/>
-    <alias name="" field="NBSARCEP" index="10"/>
-    <alias name="" field="BIOMM2" index="11"/>
-    <alias name="" field="BIOMGM2" index="12"/>
-    <alias name="" field="BIOMGCEP" index="13"/>
+    <alias name="" field="PDOP" index="4"/>
+    <alias name="" field="DISTANCE" index="5"/>
+    <alias name="" field="DERIVE" index="6"/>
+    <alias name="" field="AZIMUTH" index="7"/>
+    <alias name="" field="NBSART" index="8"/>
+    <alias name="" field="NBSARM" index="9"/>
+    <alias name="" field="DIAM" index="10"/>
+    <alias name="" field="BIOM" index="11"/>
   </aliases>
   <excludeAttributesWMS/>
   <excludeAttributesWFS/>
   <defaults>
-    <default applyOnUpdate="0" field="GID" expression=""/>
-    <default applyOnUpdate="0" field="DATE" expression=""/>
-    <default applyOnUpdate="0" field="VITESSE" expression=""/>
-    <default applyOnUpdate="0" field="ALTITUDE" expression=""/>
-    <default applyOnUpdate="0" field="DISTANCE" expression=""/>
-    <default applyOnUpdate="0" field="DERIVE" expression=""/>
-    <default applyOnUpdate="0" field="NBSARM" expression=""/>
-    <default applyOnUpdate="0" field="DIAM" expression=""/>
-    <default applyOnUpdate="0" field="BIOM" expression=""/>
-    <default applyOnUpdate="0" field="NBSARMM2" expression=""/>
-    <default applyOnUpdate="0" field="NBSARCEP" expression=""/>
-    <default applyOnUpdate="0" field="BIOMM2" expression=""/>
-    <default applyOnUpdate="0" field="BIOMGM2" expression=""/>
-    <default applyOnUpdate="0" field="BIOMGCEP" expression=""/>
+    <default expression="" field="GID" applyOnUpdate="0"/>
+    <default expression="" field="DATE" applyOnUpdate="0"/>
+    <default expression="" field="VITESSE" applyOnUpdate="0"/>
+    <default expression="" field="ALTITUDE" applyOnUpdate="0"/>
+    <default expression="" field="PDOP" applyOnUpdate="0"/>
+    <default expression="" field="DISTANCE" applyOnUpdate="0"/>
+    <default expression="" field="DERIVE" applyOnUpdate="0"/>
+    <default expression="" field="AZIMUTH" applyOnUpdate="0"/>
+    <default expression="" field="NBSART" applyOnUpdate="0"/>
+    <default expression="" field="NBSARM" applyOnUpdate="0"/>
+    <default expression="" field="DIAM" applyOnUpdate="0"/>
+    <default expression="" field="BIOM" applyOnUpdate="0"/>
   </defaults>
   <constraints>
-    <constraint unique_strength="0" notnull_strength="0" field="GID" exp_strength="0" constraints="0"/>
-    <constraint unique_strength="0" notnull_strength="0" field="DATE" exp_strength="0" constraints="0"/>
-    <constraint unique_strength="0" notnull_strength="0" field="VITESSE" exp_strength="0" constraints="0"/>
-    <constraint unique_strength="0" notnull_strength="0" field="ALTITUDE" exp_strength="0" constraints="0"/>
-    <constraint unique_strength="0" notnull_strength="0" field="DISTANCE" exp_strength="0" constraints="0"/>
-    <constraint unique_strength="0" notnull_strength="0" field="DERIVE" exp_strength="0" constraints="0"/>
-    <constraint unique_strength="0" notnull_strength="0" field="NBSARM" exp_strength="0" constraints="0"/>
-    <constraint unique_strength="0" notnull_strength="0" field="DIAM" exp_strength="0" constraints="0"/>
-    <constraint unique_strength="0" notnull_strength="0" field="BIOM" exp_strength="0" constraints="0"/>
-    <constraint unique_strength="0" notnull_strength="0" field="NBSARMM2" exp_strength="0" constraints="0"/>
-    <constraint unique_strength="0" notnull_strength="0" field="NBSARCEP" exp_strength="0" constraints="0"/>
-    <constraint unique_strength="0" notnull_strength="0" field="BIOMM2" exp_strength="0" constraints="0"/>
-    <constraint unique_strength="0" notnull_strength="0" field="BIOMGM2" exp_strength="0" constraints="0"/>
-    <constraint unique_strength="0" notnull_strength="0" field="BIOMGCEP" exp_strength="0" constraints="0"/>
+    <constraint constraints="0" exp_strength="0" unique_strength="0" field="GID" notnull_strength="0"/>
+    <constraint constraints="0" exp_strength="0" unique_strength="0" field="DATE" notnull_strength="0"/>
+    <constraint constraints="0" exp_strength="0" unique_strength="0" field="VITESSE" notnull_strength="0"/>
+    <constraint constraints="0" exp_strength="0" unique_strength="0" field="ALTITUDE" notnull_strength="0"/>
+    <constraint constraints="0" exp_strength="0" unique_strength="0" field="PDOP" notnull_strength="0"/>
+    <constraint constraints="0" exp_strength="0" unique_strength="0" field="DISTANCE" notnull_strength="0"/>
+    <constraint constraints="0" exp_strength="0" unique_strength="0" field="DERIVE" notnull_strength="0"/>
+    <constraint constraints="0" exp_strength="0" unique_strength="0" field="AZIMUTH" notnull_strength="0"/>
+    <constraint constraints="0" exp_strength="0" unique_strength="0" field="NBSART" notnull_strength="0"/>
+    <constraint constraints="0" exp_strength="0" unique_strength="0" field="NBSARM" notnull_strength="0"/>
+    <constraint constraints="0" exp_strength="0" unique_strength="0" field="DIAM" notnull_strength="0"/>
+    <constraint constraints="0" exp_strength="0" unique_strength="0" field="BIOM" notnull_strength="0"/>
   </constraints>
   <constraintExpressions>
-    <constraint field="GID" exp="" desc=""/>
-    <constraint field="DATE" exp="" desc=""/>
-    <constraint field="VITESSE" exp="" desc=""/>
-    <constraint field="ALTITUDE" exp="" desc=""/>
-    <constraint field="DISTANCE" exp="" desc=""/>
-    <constraint field="DERIVE" exp="" desc=""/>
-    <constraint field="NBSARM" exp="" desc=""/>
-    <constraint field="DIAM" exp="" desc=""/>
-    <constraint field="BIOM" exp="" desc=""/>
-    <constraint field="NBSARMM2" exp="" desc=""/>
-    <constraint field="NBSARCEP" exp="" desc=""/>
-    <constraint field="BIOMM2" exp="" desc=""/>
-    <constraint field="BIOMGM2" exp="" desc=""/>
-    <constraint field="BIOMGCEP" exp="" desc=""/>
+    <constraint desc="" exp="" field="GID"/>
+    <constraint desc="" exp="" field="DATE"/>
+    <constraint desc="" exp="" field="VITESSE"/>
+    <constraint desc="" exp="" field="ALTITUDE"/>
+    <constraint desc="" exp="" field="PDOP"/>
+    <constraint desc="" exp="" field="DISTANCE"/>
+    <constraint desc="" exp="" field="DERIVE"/>
+    <constraint desc="" exp="" field="AZIMUTH"/>
+    <constraint desc="" exp="" field="NBSART"/>
+    <constraint desc="" exp="" field="NBSARM"/>
+    <constraint desc="" exp="" field="DIAM"/>
+    <constraint desc="" exp="" field="BIOM"/>
   </constraintExpressions>
   <attributeactions>
-    <defaultAction value="{00000000-0000-0000-0000-000000000000}" key="Canvas"/>
+    <defaultAction key="Canvas" value="{00000000-0000-0000-0000-000000000000}"/>
   </attributeactions>
   <attributetableconfig sortExpression="" actionWidgetStyle="dropDown" sortOrder="0">
     <columns>
-      <column name="GID" hidden="0" width="-1" type="field"/>
-      <column name="DATE" hidden="0" width="-1" type="field"/>
-      <column name="VITESSE" hidden="0" width="-1" type="field"/>
-      <column name="ALTITUDE" hidden="0" width="-1" type="field"/>
-      <column name="DISTANCE" hidden="0" width="-1" type="field"/>
-      <column name="DERIVE" hidden="0" width="-1" type="field"/>
-      <column name="NBSARM" hidden="0" width="-1" type="field"/>
-      <column name="DIAM" hidden="0" width="-1" type="field"/>
-      <column name="BIOM" hidden="0" width="-1" type="field"/>
-      <column name="NBSARMM2" hidden="0" width="-1" type="field"/>
-      <column name="NBSARCEP" hidden="0" width="-1" type="field"/>
-      <column name="BIOMM2" hidden="0" width="-1" type="field"/>
-      <column name="BIOMGM2" hidden="0" width="-1" type="field"/>
-      <column name="BIOMGCEP" hidden="0" width="-1" type="field"/>
-      <column hidden="1" width="-1" type="actions"/>
+      <column type="field" name="GID" hidden="0" width="-1"/>
+      <column type="field" name="DATE" hidden="0" width="-1"/>
+      <column type="field" name="VITESSE" hidden="0" width="-1"/>
+      <column type="field" name="ALTITUDE" hidden="0" width="-1"/>
+      <column type="field" name="DISTANCE" hidden="0" width="-1"/>
+      <column type="field" name="DERIVE" hidden="0" width="-1"/>
+      <column type="field" name="NBSARM" hidden="0" width="-1"/>
+      <column type="field" name="DIAM" hidden="0" width="-1"/>
+      <column type="field" name="BIOM" hidden="0" width="-1"/>
+      <column type="actions" hidden="1" width="-1"/>
+      <column type="field" name="PDOP" hidden="0" width="-1"/>
+      <column type="field" name="AZIMUTH" hidden="0" width="-1"/>
+      <column type="field" name="NBSART" hidden="0" width="-1"/>
     </columns>
   </attributetableconfig>
   <editform></editform>
@@ -340,6 +317,34 @@ def my_form_open(dialog, layer, feature):
 ]]></editforminitcode>
   <featformsuppress>0</featformsuppress>
   <editorlayout>generatedlayout</editorlayout>
+  <editable>
+    <field name="ALTITUDE" editable="1"/>
+    <field name="AZIMUTH" editable="1"/>
+    <field name="BIOM" editable="1"/>
+    <field name="DATE" editable="1"/>
+    <field name="DERIVE" editable="1"/>
+    <field name="DIAM" editable="1"/>
+    <field name="DISTANCE" editable="1"/>
+    <field name="GID" editable="1"/>
+    <field name="NBSARM" editable="1"/>
+    <field name="NBSART" editable="1"/>
+    <field name="PDOP" editable="1"/>
+    <field name="VITESSE" editable="1"/>
+  </editable>
+  <labelOnTop>
+    <field labelOnTop="0" name="ALTITUDE"/>
+    <field labelOnTop="0" name="AZIMUTH"/>
+    <field labelOnTop="0" name="BIOM"/>
+    <field labelOnTop="0" name="DATE"/>
+    <field labelOnTop="0" name="DERIVE"/>
+    <field labelOnTop="0" name="DIAM"/>
+    <field labelOnTop="0" name="DISTANCE"/>
+    <field labelOnTop="0" name="GID"/>
+    <field labelOnTop="0" name="NBSARM"/>
+    <field labelOnTop="0" name="NBSART"/>
+    <field labelOnTop="0" name="PDOP"/>
+    <field labelOnTop="0" name="VITESSE"/>
+  </labelOnTop>
   <widgets/>
   <conditionalstyles>
     <rowstyles/>

@@ -93,7 +93,7 @@
     <enum>QTabWidget::North</enum>
    </property>
    <property name="currentIndex">
-    <number>3</number>
+    <number>6</number>
    </property>
    <property name="movable">
     <bool>true</bool>
@@ -142,7 +142,7 @@
        <rect>
         <x>10</x>
         <y>25</y>
-        <width>281</width>
+        <width>251</width>
         <height>21</height>
        </rect>
       </property>
@@ -179,7 +179,7 @@
        <number>70</number>
       </property>
       <property name="maximum">
-       <number>450</number>
+       <number>500</number>
       </property>
       <property name="singleStep">
        <number>5</number>
@@ -193,7 +193,7 @@
        <rect>
         <x>10</x>
         <y>46</y>
-        <width>291</width>
+        <width>261</width>
         <height>21</height>
        </rect>
       </property>
@@ -230,7 +230,7 @@
        <number>50</number>
       </property>
       <property name="maximum">
-       <number>190</number>
+       <number>250</number>
       </property>
       <property name="singleStep">
        <number>5</number>
@@ -4588,7 +4588,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous souhaitez faire des modifications dans les Shapefiles, vous pouvez choisir cette option pour réaliser les traitements Inter et Intra sur cette seule donnée consolidée.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Sans cette optioni vous trouvez comme shapefile de Points uniquement les &amp;quot;Diamètre en mm&amp;quot; de vos différents projet Physiocap.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : La modification pour Consolidation est à faire avec des actions QGIS standard. Avant de cocher cette option, lire la documentation de Consolidation dans le &lt;/span&gt;&lt;a href=&quot;https://github.com/jhemmi/QgisPhysiocapPlugin/wiki/Utilisation-de-la-consolidation-de-plusieurs-shapefiles&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Wiki de l'extension Physiocap dans Github&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous souhaitez faire des modifications dans  vecteurs de points, vous pouvez choisir cette option pour pouvoir traiter Inter et Intra sur votre donnée consolidée.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : La modification pour Consolidation est à faire avec des actions QGIS standard. Avant de cocher cette option, lire la documentation de Consolidation dans le &lt;/span&gt;&lt;a href=&quot;https://github.com/jhemmi/QgisPhysiocapPlugin/wiki/Utilisation-de-la-consolidation-de-plusieurs-shapefiles&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Wiki de l'extension Physiocap dans Github&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="text">
        <string>Uniquement CONSOLIDATION</string>
@@ -4614,7 +4614,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous souhaitez faire des modifications dans les Shapefiles, vous pouvez choisir cette option pour réaliser les traitements Inter et Intra sur cette seule donnée consolidée.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Sans cette optioni vous trouvez comme shapefile de Points uniquement les &amp;quot;Diamètre en mm&amp;quot; de vos différents projet Physiocap.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : La modification pour Consolidation est à faire avec des actions QGIS standard. Avant de cocher cette option, lire la documentation de Consolidation dans le &lt;/span&gt;&lt;a href=&quot;https://github.com/jhemmi/QgisPhysiocapPlugin/wiki/Utilisation-de-la-consolidation-de-plusieurs-shapefiles&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Wiki de l'extension Physiocap dans Github&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous souhaitez créer des interpolation en tiif plutôt qu'en sdat (format de SAGA).&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="text">
        <string>Interpolations SAGA au format TIFF</string>
@@ -5107,7 +5107,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="text">
-       <string>Version 3.1.6 LTR</string>
+       <string>Version 3.1.7 GPKG-beta</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_500">

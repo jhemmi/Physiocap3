@@ -74,19 +74,21 @@ PHYSIOCAP_2_ETOILES = "**"
 PHYSIOCAP_2_EGALS = "=="
 PHYSIOCAP_LOG_ERREUR = PHYSIOCAP_WARNING + " " + PHYSIOCAP_UNI + " Erreurs"
 
-MODE_EXPERT = "J'ai contribué"
-# Test de robustesse de la gestion des unicodes
+         # Test de robustesse de la gestion des unicodes
 PHYSIOCAP_TEST1 = "ȧƈƈḗƞŧḗḓ ŧḗẋŧ ƒǿř ŧḗşŧīƞɠ"
 PHYSIOCAP_TEST2 = "ℛℯα∂α♭ℓℯ ♭ʊ☂ η☺т Ѧ$☾ℐℐ"
 PHYSIOCAP_TEST3 = "¡ooʇ ןnɟǝsn sı uʍop-ǝpısdn"
 PHYSIOCAP_TEST4 = "Moët"
+MODE_EXPERT  = "J'ai contribué"
 POSTGRES_NOM = "postgres"
+GEOPACKAGE_NOM = "GéoPackage"
+GEOPACKAGE_ID = "GPKG"
 
 SEPARATEUR_ ="_"
 NOM_PROJET = "PHY" + SEPARATEUR_ # + PHYSIOCAP_TEST4 + SEPARATEUR_
 
-FORMAT_VECTEUR = [ "ESRI Shapefile"] # POSTGRES_NOM] # "memory"]
-FORMAT_VECTEUR_V3 = [ "ESRI Shapefile"] #,  "memory"] # POSTGRES_NOM] # "memory"]
+FORMAT_VECTEUR = [ "ESRI Shapefile"] #,  POSTGRES_NOM] # "memory"]
+FORMAT_VECTEUR_V3 = [ "ESRI Shapefile",  GEOPACKAGE_NOM] #,  "memory"] # POSTGRES_NOM] # "memory"]
 
 # Répertoires des sources et de concaténation en fichiers texte
 FICHIER_RESULTAT = "resultat.txt"
