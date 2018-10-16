@@ -41,21 +41,13 @@
 """
 
 from .Physiocap_tools import ( physiocap_log, physiocap_error, \
-    physiocap_quelle_projection_et_lib_demandee, \
-    physiocap_create_projection_file) 
+    physiocap_quelle_projection_et_lib_demandee, physiocap_segment_vers_vecteur ) 
 from .Physiocap_var_exception import *
 
-from PyQt5.QtCore import QVariant
-from qgis.core import (QgsFields, QgsField, \
-        QgsFeature, QgsGeometry, QgsCoordinateReferenceSystem,  QgsCoordinateTransform,  \
-        QgsPointXY,  QgsVectorFileWriter, QgsMessageLog, QgsWkbTypes)
+#from PyQt5.QtCore import QVariant
+from qgis.core import ( QgsCoordinateReferenceSystem, QgsCoordinateTransform,  \
+        QgsPointXY, QgsMessageLog)
         
-#try :
-#    import csv
-#except ImportError:
-#    aText = "Erreur bloquante : module csv n'est pas accessible." 
-#    QgsMessageLog.logMessage( aText, "\u03D5 Erreurs", Qgis.Warning)
-
 try :
     import matplotlib.pyplot as plt
 except ImportError:
@@ -70,253 +62,8 @@ except ImportError:
     aText ="Erreur bloquante : module numpy n'est pas accessible" 
     QgsMessageLog.logMessage( aText, "\u03D5 Erreurs", Qgis.Warning)
 
-def physiocap_segment_vers_shapefile( self, nom_shape,  nom_prj,  segment,  info_segment, 
-        laProjectionCRS, laProjectionTXT, 
-        segment_simplifie="YES"):
-    """ Creation de shape file à partir des données de segment """
-    # Prepare les attributs
-    les_champs = QgsFields()
-    les_champs.append( QgsField("GID", QVariant.Int, "integer", 10))
-    les_champs.append( QgsField("GID_10", QVariant.Int, "integer", 10))
-    les_champs.append( QgsField("NB_POINTS", QVariant.Int, "integer", 10))
-    les_champs.append( QgsField("DATE_DEB", QVariant.String, "string", 25))
-    les_champs.append( QgsField("DATE_FIN", QVariant.String, "string", 25))
-    les_champs.append( QgsField("DERIVE", QVariant.Double, "double", 10,2))
-    les_champs.append( QgsField("GID_GARDE", QVariant.String, "varchar", 100))
-    les_champs.append( QgsField("GID_TROU", QVariant.String, "varchar", 100))
-#    
-    # Creation du Shape
-    writer = QgsVectorFileWriter( nom_shape, "utf-8", les_champs, 
-            QgsWkbTypes.MultiLineString, laProjectionCRS , 
-            "ESRI Shapefile")
-            
-    # Ecriture du shp
-    numero_ligne = 0
-    for un_segment  in segment:
-        feat = QgsFeature()
-        le_gid = info_segment[numero_ligne][NUM_SEG]
-        gid_modulo_10 = le_gid % 10
-        nombre = info_segment[numero_ligne][NOMBRE]
-        # GID gardé
-        gid_points_gardes = info_segment[numero_ligne][GID_GARDE]
-        nb_points_gardes = len( gid_points_gardes)
-        if  nb_points_gardes > 30:
-            str_gid_points_gardes = str( gid_points_gardes[0:2]) + "... " + \
-                str(nb_points_gardes) + " points gardés ..." + \
-                str( gid_points_gardes[nb_points_gardes-2:])
-        else:
-            str_gid_points_gardes  = str(  gid_points_gardes)
-        # GID manquants
-        gid_points_manquants = info_segment[numero_ligne][GID_TROU]
-        nb_points_manquants = len( gid_points_manquants)
-        if  nb_points_manquants > 30:
-            str_gid_points_manquants = str( gid_points_manquants[0:2]) + "... " + \
-                str(nb_points_manquants) + " points manquants ..." + \
-                str( gid_points_manquants[nb_points_manquants-2:])
-        else:
-            str_gid_points_manquants  = str(  gid_points_manquants)
-            
-        if (segment_simplifie == "YES"):   # Premier et dernier  
-            feat.setGeometry( QgsGeometry.fromPolylineXY( [ un_segment[0], un_segment[nombre-1]] )) #écrit la géométrie
-        else:  # Tous les poins
-            feat.setGeometry( QgsGeometry.fromPolylineXY( un_segment )) #écrit la géométrie            
-        feat.setAttributes([ le_gid, gid_modulo_10, nombre, 
-                                        info_segment[numero_ligne][DATE_DEBUT],    
-                                        info_segment[numero_ligne][DATE_FIN],
-                                        round( float( info_segment[numero_ligne][DERIVE]), 2), 
-                                        str_gid_points_gardes, str_gid_points_manquants
-                                    ])
-        numero_ligne = numero_ligne + 1
-        # Ecrit le feature
-        writer.addFeature( feat)
 
-    # PRJ file
-    physiocap_create_projection_file( nom_prj,  laProjectionTXT)
-
-    return
-
-#def physiocap_old_csv_vers_shapefile( self, progress_barre, extension_point ,  csv_name, nom_vecteur, prj_name, 
-#    laProjectionCRS, laProjectionTXT, 
-#    nom_fichier_synthese = "NO", details = "NO",  version_3 = "NO"):
-#    """ Creation de shape file à partir des données des CSV
-#    Si nom_fichier_synthese n'est pas "NO", on produit les moyennes dans le fichier 
-#    qui se nomme nom_fichier_synthese
-#    Selon la valeur de détails , on crée les 5 premiers ("NO") ou tous les attibuts ("YES")
-#    """
-#    leModeDeTrace = self.fieldComboModeTrace.currentText()
-#    #physiocap_log( "Le nom du csv : {0}".format( csv_name),  TRACE_TOOLS)
-#    
-#    # Préparation de la liste d'arguments
-#    gid, x,y,nbsarm,diam,biom,date_capture,vitesse= [],[],[],[],[],[],[],[]
-#    altitude, pdop,  distance,  derive =  [],[],[],[]
-#    azimuth, nbsart =  [],[]
-#    nbsarmm2,nbsarcep,biommm2,biomgm2,biomgcep=[],[],[],[],[]
-#    
-#    un_fic = open( csv_name, "r")
-#    lignes = un_fic.readlines()
-#    nombre_mesures = len( lignes)
-#    un_fic.close()
-#    progress_step = int( nombre_mesures / 19)
-#    barre = 1
-#    
-#    #Lecture des data dans le csv et stockage dans une liste
-#    with open(csv_name, "rt") as csvfile:
-#        try:
-#            r = csv.reader(csvfile, delimiter=";")
-#        except NameError:
-#            uText = "Erreur bloquante : module csv n'est pas accessible."
-#            physiocap_error( self, uText)
-#            return -1
-#
-#        for numrow, row in enumerate( r):
-#            #skip header
-#            if numrow > 0: 
-#                # Aavancer la barre de progression de 19 points
-#                if ( numrow > progress_step * barre):
-#                    barre = barre + 1
-#                    progress_barre = progress_barre + 1
-#                    self.progressBar.setValue( progress_barre)
-#                    
-#                if version_3 == "NO":
-#                    if ( laProjectionTXT == "L93"):
-#                        x.append(float(row[2]))
-#                        y.append(float(row[3]))
-#                    if ( laProjectionTXT == "GPS"):
-#                        x.append(float(row[0]))
-#                        y.append(float(row[1]))
-#                    nbsarm.append(float(row[4]))
-#                    diam.append(float(row[5]))
-#                    biom.append(float(row[6]))
-#                    # A_TESTER : sans str
-#                    date_capture.append(str(row[7]))
-#                    vitesse.append(float(row[8]))
-#                else: # Changement de position dans cvs
-#                    gid.append(float(row[0]))
-#                    if ( laProjectionTXT == "L93"):
-#                        x.append(float(row[3]))
-#                        y.append(float(row[4]))
-#                    if ( laProjectionTXT == "GPS"):
-#                        x.append(float(row[1]))
-#                        y.append(float(row[2]))
-#                    altitude.append(float(row[5]))
-#                    pdop.append(float(row[6]))
-#                    distance.append(float(row[7]))
-#                    derive.append(float(row[8]))
-#                    azimuth.append(float(row[9]))
-#                    nbsart.append(int(row[10]))
-#                    nbsarm.append(float(row[11]))
-#                    diam.append(float(row[12]))
-#                    biom.append(float(row[13]))
-#                    date_capture.append(str(row[14]))
-#                    vitesse.append(float(row[15]))
-#                    
-#                if details == "YES":
-#                    if version_3 == "NO":
-#                        # Niveau de detail demandé
-#                        # assert sur len row
-#                        if len(row) != 14:
-#                            return physiocap_error( self, "Le nombre de colonnes :" +
-#                                    str( len(row)) + 
-#                                    " du cvs ne permet pas le calcul détaillé")
-#                        nbsarmm2.append(float(row[9]))
-#                        nbsarcep.append(float(row[10]))
-#                        biommm2.append(float(row[11]))
-#                        biomgm2.append(float(row[12]))
-#                        biomgcep.append(float(row[13]))
-#                    else:
-#                        if len(row) != 21:
-#                            return physiocap_error( self, "Le nombre de colonnes :" +
-#                                    str( len(row)) + 
-#                                    " du cvs ne permet pas le calcul détaillé")
-#                        nbsarmm2.append(float(row[16]))
-#                        nbsarcep.append(float(row[17]))
-#                        biommm2.append(float(row[18]))
-#                        biomgm2.append(float(row[19]))
-#                        biomgcep.append(float(row[20]))                        
-#                
-#    # Prepare les attributs
-#    les_champs = QgsFields()
-#    # V1.0 Ajout du GID
-#    les_champs.append( QgsField("GID", QVariant.Int, "integer", 10))
-#    les_champs.append( QgsField("DATE", QVariant.String, "string", 25))
-#    les_champs.append( QgsField("VITESSE", QVariant.Double, "double", 10,2))
-#    if version_3 == "YES":
-#        les_champs.append( QgsField("ALTITUDE", QVariant.Double, "double", 10,2))
-#        les_champs.append( QgsField("PDOP", QVariant.Double, "double", 10,2))
-#        les_champs.append( QgsField("DISTANCE", QVariant.Double, "double", 10,2))
-#        les_champs.append( QgsField("DERIVE", QVariant.Double, "double", 10,1))
-#        les_champs.append( QgsField("AZIMUTH", QVariant.Double, "double", 10,1))
-#        les_champs.append( QgsField("NBSART",  QVariant.Int, "integer", 10))
-#    les_champs.append(QgsField("NBSARM",  QVariant.Double, "double", 10,2))
-#    les_champs.append(QgsField("DIAM",  QVariant.Double, "double", 10,2))
-#    les_champs.append(QgsField("BIOM", QVariant.Double,"double", 10,2)) 
-#    if details == "YES":
-#        # Niveau de detail demandé
-#        les_champs.append(QgsField("NBSARMM2", QVariant.Double,"double", 10,2))
-#        les_champs.append(QgsField("NBSARCEP", QVariant.Double,"double", 10,2))
-#        les_champs.append(QgsField("BIOMM2", QVariant.Double,"double", 10,2))
-#        les_champs.append(QgsField("BIOMGM2", QVariant.Double,"double", 10,2))
-#        les_champs.append(QgsField("BIOMGCEP", QVariant.Double,"double", 10,2))
-#
-#    # Creation du vecteur
-#    if version_3 == "YES":
-#        writer = QgsVectorFileWriter( nom_vecteur, "utf-8", les_champs, 
-#                QgsWkbTypes.PointZ, laProjectionCRS , SHAPEFILE_DRIVER)
-#    else:
-#        writer = QgsVectorFileWriter( nom_vecteur, "utf-8", les_champs, 
-#                QgsWkbTypes.Point, laProjectionCRS , SHAPEFILE_DRIVER)        
-##    physiocap_log( "Le writer : {0}".format(  writer),  TRACE_TOOLS)
-##    physiocap_log( "Le writer dir : {0}".format( dir( writer)),  TRACE_TOOLS)    # Ecriture du shp
-#    for numPoint,Xpoint in enumerate(x):
-#        feat = QgsFeature()
-#        if version_3 == "YES":
-#            # choix de la données dans Z
-#            val_3D = 0.0
-#            if extension_point == "SANS_0":
-#                val_3D = diam[numPoint]
-#            if extension_point == "AVEC_0":
-#                val_3D = altitude[numPoint]
-#            if extension_point == "O_SEUL":
-#                val_3D = vitesse[numPoint]                
-#            #écrit la géométrie avec le Z = diametre (ou altitude ou vitesse)
-#            feat.setGeometry( QgsGeometry(QgsPoint( 
-#                Xpoint, y[numPoint], val_3D))) 
-#        else:
-#            # TODO: test sans fromPointXY
-#            feat.setGeometry( QgsGeometry.fromPointXY(QgsPointXY( Xpoint,y[numPoint]))) #écrit la géométrie
-#        
-#        if details == "YES":
-#            if version_3 == "NO":
-#                # Ecrit tous les attributs
-#               feat.setAttributes( [ numPoint, date_capture[numPoint], vitesse[numPoint], 
-#                                    nbsarm[numPoint], diam[numPoint], biom[numPoint],
-#                                    nbsarmm2[numPoint], nbsarcep[numPoint], biommm2[numPoint], 
-#                                    biomgm2[numPoint], biomgcep[numPoint]
-#                                   ])
-#            else:
-#                feat.setAttributes( [ gid[numPoint], date_capture[numPoint], vitesse[numPoint], 
-#                                    altitude[numPoint], pdop[numPoint],  distance[numPoint],  derive [numPoint], 
-#                                    azimuth[numPoint], nbsart[numPoint],
-#                                    nbsarm[numPoint], diam[numPoint], biom[numPoint],
-#                                    nbsarmm2[numPoint], nbsarcep[numPoint], biommm2[numPoint], 
-#                                    biomgm2[numPoint], biomgcep[numPoint]
-#                                   ])                
-#        else: # sans les détails
-#            if version_3 == "NO":
-#                # Ecrit les 5 premiers attributs
-#                feat.setAttributes( [ numPoint, date_capture[numPoint], vitesse[numPoint], 
-#                                    nbsarm[numPoint], diam[numPoint], biom[numPoint]
-#                                    ])
-#            else:
-#                # Ecrit les 10 premiers attributs
-#                feat.setAttributes( [ gid[numPoint], date_capture[numPoint], vitesse[numPoint], 
-#                                    altitude[numPoint], pdop[numPoint], distance[numPoint],  derive[numPoint], 
-#                                    azimuth[numPoint], nbsart[numPoint],
-#                                    nbsarm[numPoint], diam[numPoint], biom[numPoint]
-#                                    ])                
-#        # Ecrit le feature
-#        writer.addFeature( feat)
-#        
+#### def physiocap_old_csv_vers_shapefile( self, progress_barre, extension_point ,  csv_name, nom_vecteur, prj_name,         
 #### Cas PG
 ####    if (self.fieldComboFormats.currentText() == POSTGRES_NOM ):
 ####        # Todo ; fonction physiocap_creer_PG_par_copie_vecteur( uri_nom, shape_modele)
@@ -383,56 +130,8 @@ def physiocap_segment_vers_shapefile( self, nom_shape,  nom_prj,  segment,  info
 ####            # Remettre le choix vers ESRI shape file
 ####            self.fieldComboFormats.setCurrentIndex( 0)   
 ####    else:
-# 
-#    # Create the PRJ file
-#    physiocap_create_projection_file( prj_name,  laProjectionTXT)
-# 
-# 
-#        
-#    # Création de la synthese
-#    if nom_fichier_synthese != "NO":
-#        # ASSERT Le fichier de synthese existe
-#        if not os.path.isfile( nom_fichier_synthese):
-#            uMsg ="Le fichier de synthese " + nom_fichier_synthese + "n'existe pas"
-#            physiocap_log( uMsg, leModeDeTrace)
-#            return physiocap_error( self, uMsg)
-#        
-#        # Ecriture des resulats
-#        fichier_synthese = open(nom_fichier_synthese, "a")
-#        try:
-#            fichier_synthese.write("\n\nSTATISTIQUES\n")
-#            fichier_synthese.write("Vitesse moyenne d'avancement km/h \n	mean : %0.1f \n" %np.mean(vitesse))
-#            if version_3 == "YES":
-#                fichier_synthese.write("Altitude moyenne GPS en m \n	mean : %0.1f\t std : %0.1f\n" \
-#                    %(np.mean(altitude), np.std(altitude)))
-#                fichier_synthese.write("Pdop  moyen du GPS \n	mean : %0.1f\t std : %0.1f\n" \
-#                    %(np.mean(pdop), np.std(pdop)))
-#                fichier_synthese.write("Distance moyenne entre point m \n	mean : %0.1f\t std : %0.1f\n" \
-#                    %(np.mean(distance), np.std(distance)))
-##                fichier_synthese.write("Dérive moyenne entre point % \n	mean : %0.1f\t std : %0.1f\n" \
-##                    %(np.mean(derive), np.std(derive)))
-#        except:
-#            msg = "Erreur bloquante durant premiers calculs de moyennes\n"
-#            physiocap_error( self, msg )
-#            return -1
-#        
-#        try:
-#            fichier_synthese.write("Section moyenne mm\n	mean : %0.1f \t std : %0.1f\n" %(np.mean(diam), np.std(diam)))
-#            fichier_synthese.write("Nombre de sarments au m \n	mean : %0.1f \t std : %0.1f\n" %(np.mean(nbsarm), np.std(nbsarm)))
-#            fichier_synthese.write("Biomasse en mm²/m linéaire \n	mean : %0.1f\t std : %0.1f\n" %(np.mean(biom), np.std(biom)))
-#            if details == "YES":
-#                fichier_synthese.write("Nombre de sarments au m² \n	 mean : %0.1f  \t std : %0.1f\n" %(np.mean(nbsarmm2), np.std(nbsarmm2)))
-#                fichier_synthese.write("Nombre de sarments par cep \n	mean : %0.1f \t\t std : %0.1f\n" %(np.mean(nbsarcep), np.std(nbsarcep)))
-#                fichier_synthese.write("Biomasse en mm²/m² \n	mean : %0.1f\t std : %0.1f\n" %(np.mean(biommm2), np.std(biommm2)))
-#                fichier_synthese.write("Biomasse en gramme/m² \n	mean : %0.1f\t std : %0.1f\n" %(np.mean(biomgm2), np.std(biomgm2)))
-#                fichier_synthese.write("Biomasse en gramme/cep \n	mean : %0.1f\t std : %0.1f\n" %(np.mean(biomgcep), np.std(biomgcep))) 
-#        except:
-#            msg = "Erreur bloquante durant deuxièmes calculs de moyennes\n"
-#            physiocap_error( self, msg )
-#            return -1
-#                    
-#        fichier_synthese.close()
-###
+
+#############################################################################""""
 ####    # TODO : Création des histogrammes 
 ####    try :
 ####        import processing
@@ -454,14 +153,7 @@ def physiocap_segment_vers_shapefile( self, nom_shape,  nom_prj,  segment,  info
 ####    physiocap_log( self.tr( "L'extension {1} est prete pour les histogrammes de {0}").\
 ####        format( PHYSIOCAP_UNI, self.tr("Traitement")), TRACE_TOOLS)    
 ###
-###    # Rendre la memoire 
-#    x,y,nbsarm,diam,biom,date_capture,vitesse= [],[],[],[],[],[],[]
-#    azimuth, nbsart =  [],[]
-#    altitude,  pdop,  distance,  derive =  [],[],[],[]
-#    nbsarmm2,nbsarcep,biommm2,biomgm2,biomgcep=[],[],[],[],[]
-#
-#    return 0
-    
+
 # Fonction pour vérifier le fichier csv de concatenation (projet_RAW.csv)   
 def physiocap_assert_csv(self, src, err):
     """Fonction d'assert. 
@@ -572,6 +264,7 @@ def physiocap_fichier_histo( self, src, histo_diametre, histo_nbsarment, histo_v
             # A_TESTER : sans str
             err.write( str( msg) ) # on écrit la ligne dans le fichier ERREUR
             pass # on mange l'exception
+    return
 
 def physiocap_tracer_histo(src, name, min=0, max =28, labelx = "Lab X", labely = "Lab Y", titre = "Titre"):
     """Fonction de traitement.
@@ -596,11 +289,22 @@ def physiocap_tracer_histo(src, name, min=0, max =28, labelx = "Lab X", labely =
     plt.savefig(name)
     plt.show( block = 'false')
     plt.close()
-    
+    return
+ 
+def physiocap_ferme_csv( csv_sans_0, csv_avec_0, csv_0_seul, diametre_filtre, erreur, csv_concat):
+    """ Fermeture des fichiers de filtration """
+    csv_sans_0.close()
+    csv_avec_0.close()
+    csv_0_seul.close()
+    diametre_filtre.close()
+    erreur.close()
+    # Fermerture du fichier source
+    csv_concat.close()   
+    return
 
 # Fonction de filtrage et traitement des données
 def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
-    nom_vecteur_segment,  nom_prj_segment, nom_vecteur_segment_details, nom_prj_segment_details,
+    nom_dir_segment, nom_session, chemin_session, 
     diametre_filtre, nom_fichier_synthese, err, 
     mindiam, maxdiam, max_sarments_metre, 
     segment_mini_vitesse,  segment_maxi_vitesse,  segment_mini_point, segment_max_pdop, 
@@ -628,9 +332,6 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
     if details == "NO" :
         titre = titre_sans_detail
     else:
-        # Assert details == "YES"
-        if details != "YES" : 
-            return physiocap_error( self, self.tr("Problème majeur dans le choix du détail du parcellaire"))
         #S'il existe des données parcellaire, le script travaille avec les données brutes et les données calculées
         titre = titre_sans_detail + titre_partie_details
     
@@ -993,8 +694,7 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
             physiocap_error( self, aMsg )
             err.write( aMsg) # on écrit la ligne dans le fichier ERREUR
             # Pour monter directement exception 
-            raise
-            return -1 # ce retour est géré comme une exception
+            raise physiocap_exception_err_csv( nom_court_csv_concat)
 
     if version_3 == "NO":
         pass
@@ -1024,15 +724,11 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
                 
         # Creer les lignes simplifiés ou brisés de ces segments et infos
         # A_TESTER: passer L93 ou GPS
-        physiocap_segment_vers_shapefile( self, nom_vecteur_segment,  nom_prj_segment, 
-            mes_lignes_sans_coupure,  info_lignes_sans_coupure, 
-            laProjectionCRS, laProjectionTXT)
-        physiocap_segment_vers_shapefile( self, nom_vecteur_segment_details, nom_prj_segment_details,
-            mes_lignes_sans_coupure,  info_lignes_sans_coupure, 
-            laProjectionCRS, laProjectionTXT, "BRISE")
+        vecteur_segment = physiocap_segment_vers_vecteur( self, chemin_session, nom_dir_segment,  nom_session, 
+            mes_lignes_sans_coupure,  info_lignes_sans_coupure, version_3)
+        vecteur_segment_brise = physiocap_segment_vers_vecteur( self, chemin_session, nom_dir_segment,  nom_session,
+            mes_lignes_sans_coupure,  info_lignes_sans_coupure, version_3,  "BRISE")
             
     physiocap_log( "{0} {1} Fin du filtrage OK des {2} lignes.". \
         format( PHYSIOCAP_INFO, PHYSIOCAP_UNI, str(numero_point - 1)), leModeDeTrace)
-    return 0
-
-
+    return vecteur_segment, vecteur_segment_brise

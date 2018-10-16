@@ -36,6 +36,8 @@ i18n/bak*
 Sauve_1.8*/
 modeleQgis/OLD/*
 modeleQgis/Parcours/*
+modeleGPKG/*.gpkg-shm
+modeleGPKG/*.gpkg-wal
 data/Projet_QGIS_test_Physiocap_3D.qgs
 ssl/
 scripts/
