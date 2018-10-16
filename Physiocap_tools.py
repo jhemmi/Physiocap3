@@ -43,8 +43,14 @@ from PyQt5.QtCore import QVariant
 from qgis.core import (Qgis, QgsDistanceArea, QgsProject, QgsMessageLog, \
         QgsMapLayer, QgsCoordinateReferenceSystem, QgsFields, QgsField, \
         QgsFeature, QgsGeometry, QgsPoint, QgsPointXY,  \
-        QgsVectorFileWriter,  QgsVectorLayerExporter, QgsVectorLayer,  QgsWkbTypes)
-from PyQt5.QtWidgets import QMessageBox  
+        QgsVectorFileWriter, QgsWkbTypes)
+from PyQt5.QtWidgets import QMessageBox
+
+try :
+    from osgeo import ogr
+except ImportError:
+    aText = "Erreur bloquante : module ogr n'est pas accessible." 
+    QgsMessageLog.logMessage( aText, "\u03D5 Erreurs", Qgis.Warning)
 
 try :
     import csv
@@ -562,7 +568,7 @@ def physiocap_segment_vers_vecteur( self, nom_shape,  nom_prj,  segment,  info_s
     # Creation du Shape
     writer = QgsVectorFileWriter( nom_shape, "utf-8", les_champs, 
             QgsWkbTypes.MultiLineString, laProjectionCRS , 
-            "ESRI Shapefile")
+            SHAPEFILE_DRIVER)
             
     # Ecriture du shp
     numero_ligne = 0
@@ -609,9 +615,8 @@ def physiocap_segment_vers_vecteur( self, nom_shape,  nom_prj,  segment,  info_s
 
     return
 
-def physiocap_csv_vers_vecteur( self, progress_barre, extension_point ,  
-    csv_name,  chemin_shapes, nom_court_vecteur, nom_court_prj, 
-    nom_gpkg,  laProjectionCRS, laProjectionTXT, 
+def physiocap_csv_vers_vecteur( self, progress_barre, extension_point,  
+    csv_name,  chemin_shapes, nom_court_vecteur, nom_gpkg,
     nom_fichier_synthese = "NO", details = "NO",  version_3 = "NO"):
     """ Creation de shape file à partir des données des CSV
     Si nom_fichier_synthese n'est pas "NO", on produit les moyennes dans le fichier 
@@ -619,10 +624,18 @@ def physiocap_csv_vers_vecteur( self, progress_barre, extension_point ,
     Selon la valeur de détails , on crée les 5 premiers ("NO") ou tous les attibuts ("YES")
     """
     leModeDeTrace = self.fieldComboModeTrace.currentText()
+    # Recuperer le CRS choisi, les extensions et le calculateur de distance
+    distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
+        laProjectionCRS, laProjectionTXT, EPSG_NUMBER = \
+            physiocap_quelle_projection_et_lib_demandee( self)        
     
-    nom_vecteur = os.path.join(chemin_shapes, nom_court_vecteur)
-    prj_name = os.path.join(chemin_shapes, nom_court_prj)
-        
+    nom_court_shapefile = nom_court_vecteur + EXT_CRS_SHP
+    nom_court_projection = nom_court_vecteur + EXT_CRS_PRJ
+
+    nom_vecteur = os.path.join(chemin_shapes, nom_court_shapefile)
+    prj_name = os.path.join(chemin_shapes, nom_court_projection)
+
+
     # Si le shape existe dejà il faut le détruire
     if os.path.isfile( nom_vecteur):
         # TODO : A_TESTER: je doute que ca marche : detruire plutot par une option de creation
@@ -719,8 +732,8 @@ def physiocap_csv_vers_vecteur( self, progress_barre, extension_point ,
                 
     # Prepare les attributs
     les_champs = QgsFields()
-    # V1.0 Ajout du GID puis fid pour GPKG
-    les_champs.append( QgsField("fid", QVariant.Int, "integer", 10))
+    # V1.0 Ajout du GID puis V3.1.8 pas fid si copie vers GPKG
+    # inconsistance les_champs.append( QgsField("fid", QVariant.Int, "integer", 10))
     les_champs.append( QgsField("GID", QVariant.Int, "integer", 10))
     les_champs.append( QgsField("DATE", QVariant.String, "string", 25))
     les_champs.append( QgsField("VITESSE", QVariant.Double, "double", 10,2))
@@ -745,12 +758,12 @@ def physiocap_csv_vers_vecteur( self, progress_barre, extension_point ,
     # Creation du vecteur
     if version_3 == "YES":
         writer = QgsVectorFileWriter( nom_vecteur, "utf-8", les_champs, 
-                QgsWkbTypes.PointZ, laProjectionCRS , SHAPEFILE_NOM)
+                QgsWkbTypes.PointZM, laProjectionCRS , SHAPEFILE_DRIVER)
     else:
         writer = QgsVectorFileWriter( nom_vecteur, "utf-8", les_champs, 
-                QgsWkbTypes.Point, laProjectionCRS , SHAPEFILE_NOM)
+                QgsWkbTypes.Point, laProjectionCRS , SHAPEFILE_DRIVER)
 
-#  bloque car on n'a pas creer de vecteur, mais un tuple
+#  Probleme n'a pas creer de vecteur, mais un tuple
 # CAS Géopackage
 ##    if self.fieldComboFormats.currentText() == GEOPACKAGE_NOM  and version_3 == "YES":
 ##        # Copie dans geopackage et remplace  nom_vecteur_sans_0
@@ -771,16 +784,17 @@ def physiocap_csv_vers_vecteur( self, progress_barre, extension_point ,
         feat = QgsFeature()
         if version_3 == "YES":
             # choix de la données dans Z
-            val_3D = 0.0
+            val_Z = 0.0
+            val_M = altitude[numPoint]
             if extension_point == EXTENSION_SANS_ZERO:
-                val_3D = diam[numPoint]
+                val_Z = diam[numPoint]
             if extension_point == EXTENSION_AVEC_ZERO:
-                val_3D = altitude[numPoint]
+                val_Z = derive[numPoint]
             if extension_point == EXTENSION_ZERO_SEUL:
-                val_3D = vitesse[numPoint]                
+                val_Z = vitesse[numPoint]                
             #écrit la géométrie avec le Z = diametre (ou altitude ou vitesse)
             feat.setGeometry( QgsGeometry(QgsPoint( 
-                Xpoint, y[numPoint], val_3D))) 
+                Xpoint, y[numPoint], val_Z, val_M))) 
         else:
             # TODO: test sans fromPointXY
             feat.setGeometry( QgsGeometry.fromPointXY(QgsPointXY( Xpoint,y[numPoint]))) #écrit la géométrie
@@ -794,7 +808,7 @@ def physiocap_csv_vers_vecteur( self, progress_barre, extension_point ,
                                     biomgm2[numPoint], biomgcep[numPoint]
                                    ])
             else:
-                feat.setAttributes( [ gid[numPoint], gid[numPoint], date_capture[numPoint], vitesse[numPoint], 
+                feat.setAttributes( [ gid[numPoint], date_capture[numPoint], vitesse[numPoint], 
                                     altitude[numPoint], pdop[numPoint],  distance[numPoint],  derive [numPoint], 
                                     azimuth[numPoint], nbsart[numPoint],
                                     nbsarm[numPoint], diam[numPoint], biom[numPoint],
@@ -809,7 +823,7 @@ def physiocap_csv_vers_vecteur( self, progress_barre, extension_point ,
                                     ])
             else:
                 # Ecrit les 10 premiers attributs
-                feat.setAttributes( [ gid[numPoint],  gid[numPoint], date_capture[numPoint], vitesse[numPoint], 
+                feat.setAttributes( [ gid[numPoint], date_capture[numPoint], vitesse[numPoint], 
                                     altitude[numPoint], pdop[numPoint], distance[numPoint],  derive[numPoint], 
                                     azimuth[numPoint], nbsart[numPoint],
                                     nbsarm[numPoint], diam[numPoint], biom[numPoint]
@@ -828,8 +842,19 @@ def physiocap_csv_vers_vecteur( self, progress_barre, extension_point ,
  
     nom_layer_cree = nom_vecteur
 
+    if self.fieldComboFormats.currentText() == GEOPACKAGE_NOM  and version_3 == "YES":
+        gpkg_nom_complet = nom_gpkg + SEPARATEUR_GPKG + nom_court_vecteur
+        physiocap_log( "Physiocap : Cerer gpkg  {0}".format( gpkg_nom_complet), TRACE_TOOLS)
+        mon_shape = ogr.Open( nom_vecteur)
+        mon_layer = mon_shape.GetLayerByIndex(0)
+        le_gpkg = ogr.Open( nom_gpkg,  True)
+        le_gpkg.CopyLayer( mon_layer,  nom_court_vecteur,  [])
+        # pour ecrire
+        le_gpkg = None
+        nom_layer_cree = gpkg_nom_complet
+        
 #    Ne crée que l'enveloppe mais ne copie pas les données
-# CAS Géopackage
+# CAS Géopackage par QgsVectorLayerExporter
 #    if self.fieldComboFormats.currentText() == GEOPACKAGE_NOM  and version_3 == "YES":
 #        # Copie dans geopackage et remplace  nom_vecteur_sans_0
 #        nom_court_gpkg = NOM_POINTS[1:] + extension_point
@@ -847,7 +872,7 @@ def physiocap_csv_vers_vecteur( self, progress_barre, extension_point ,
 #        
 
 #    Ne crée que l'enveloppe mais ne copie pas les données
-# CAS Géopackage
+# CAS Géopackage par QgsVectorFileWriter.writeAsVectorFormat
 #    if self.fieldComboFormats.currentText() == GEOPACKAGE_NOM  and version_3 == "YES":
 #        # Copie dans geopackage et remplace  nom_vecteur_sans_0
 #        nom_court_gpkg_sans_0 = NOM_POINTS[1:] + extension_point

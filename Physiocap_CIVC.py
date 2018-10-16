@@ -261,10 +261,10 @@ def physiocap_segment_vers_shapefile( self, nom_shape,  nom_prj,  segment,  info
 #    # Creation du vecteur
 #    if version_3 == "YES":
 #        writer = QgsVectorFileWriter( nom_vecteur, "utf-8", les_champs, 
-#                QgsWkbTypes.PointZ, laProjectionCRS , SHAPEFILE_NOM)
+#                QgsWkbTypes.PointZ, laProjectionCRS , SHAPEFILE_DRIVER)
 #    else:
 #        writer = QgsVectorFileWriter( nom_vecteur, "utf-8", les_champs, 
-#                QgsWkbTypes.Point, laProjectionCRS , SHAPEFILE_NOM)        
+#                QgsWkbTypes.Point, laProjectionCRS , SHAPEFILE_DRIVER)        
 ##    physiocap_log( "Le writer : {0}".format(  writer),  TRACE_TOOLS)
 ##    physiocap_log( "Le writer dir : {0}".format( dir( writer)),  TRACE_TOOLS)    # Ecriture du shp
 #    for numPoint,Xpoint in enumerate(x):

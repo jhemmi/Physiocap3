@@ -504,8 +504,6 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         # Création du GPKG pour les vecteurs de la session 
         nom_gpkg = None
         if Format_vecteur == GEOPACKAGE_NOM  and version_3 == "YES":
-            nom_shp_court = Nom_Session + EXTENSION_SHP
-            nom_shp_modele = os.path.join( REPERTOIRE_MODELE_GPKG, nom_shp_court )
             # toujours le nom de la session (non incrementé)
             nom_gpkg_court = Nom_Session + EXTENSION_GPKG
             nom_gpkg_modele = os.path.join( REPERTOIRE_MODELE_GPKG, MODELE_CONTOUR_GPKG )
@@ -525,9 +523,9 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             else:
                 # Creation
                 mon_nouveau_gpkg = ogr.GetDriverByName( GEOPACKAGE_DRIVER).CreateDataSource( nom_gpkg)
-                mon_shape = ogr.Open( nom_shp_modele)
+                mon_shape = ogr.Open( nom_gpkg_modele)
                 mon_layer = mon_shape.GetLayerByIndex(0)
-                mon_nouveau_gpkg.CopyLayer( mon_layer,  Nom_Session,  [])
+                mon_nouveau_gpkg.CopyLayer( mon_layer,  MODELE_CONTOUR_NOM,  [])
                 # pour ecrire
                 mon_nouveau_gpkg = None
               
@@ -539,20 +537,16 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
                 physiocap_error( self, uMsg)
                 raise physiocap_exception_no_gpkg( nom_gpkg) 
             
+        nom_base_vecteur = Nom_Session + NOM_POINTS
         # Création des vecteurs sans 0
-        # TODO : Integrer dans une boucle d'appel de physiocap_csv_vers_vecteur avec les trois extensions
         if (version_3 == "NO"):
-            nom_court_vecteur_sans_0 = Nom_Session + NOM_POINTS + EXT_CRS_SHP
-            nom_court_prj_sans_0 = Nom_Session + NOM_POINTS + EXT_CRS_PRJ
-        else: # Assert shapefile
-            nom_court_base_sans_0 = Nom_Session + NOM_POINTS + EXTENSION_SANS_ZERO
-            nom_court_vecteur_sans_0 = Nom_Session + NOM_POINTS + EXTENSION_SANS_ZERO + EXT_CRS_SHP
-            nom_court_prj_sans_0 = Nom_Session + NOM_POINTS + EXTENSION_SANS_ZERO + EXT_CRS_PRJ 
- 
+            nom_court_vecteur_sans_0 = nom_base_vecteur
+        else: 
+            nom_court_vecteur_sans_0 = nom_base_vecteur + EXTENSION_SANS_ZERO        
+             
         # cas sans 0, on demande la synthese en passant le nom du fichier
         nom_layer_sans_0 = physiocap_csv_vers_vecteur( dialogue, 45, EXTENSION_SANS_ZERO, 
-                nom_csv_sans_0,  chemin_shapes, nom_court_vecteur_sans_0, nom_court_prj_sans_0, 
-                nom_gpkg, laProjectionCRS, laProjectionTXT, 
+                nom_csv_sans_0,  chemin_shapes, nom_court_vecteur_sans_0,  nom_gpkg, 
                 nom_fichier_synthese, details, version_3)
  
         # Progress BAR 60 %
@@ -560,16 +554,12 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
 
         # Création des vecteurs avec 0
         if (version_3 == "NO"):
-            # Création des shapes avec 0
-            nom_court_vecteur_avec_0 = Nom_Session + NOM_POINTS + EXTENSION_AVEC_ZERO_V2 + EXT_CRS_SHP
-            nom_court_prj_avec_0 = Nom_Session + NOM_POINTS + EXTENSION_AVEC_ZERO_V2 + EXT_CRS_PRJ
+            nom_court_vecteur_avec_0 = nom_base_vecteur + EXTENSION_AVEC_ZERO_V2
         else:
-            nom_court_vecteur_avec_0 = Nom_Session + NOM_POINTS + EXTENSION_AVEC_ZERO + EXT_CRS_SHP
-            nom_court_prj_avec_0 = Nom_Session + NOM_POINTS + EXTENSION_AVEC_ZERO + EXT_CRS_PRJ
+            nom_court_vecteur_avec_0 =nom_base_vecteur + EXTENSION_AVEC_ZERO
         
         nom_layer_avec_0 = physiocap_csv_vers_vecteur( dialogue, 65, EXTENSION_AVEC_ZERO, 
-                nom_csv_avec_0,  chemin_shapes, nom_court_vecteur_avec_0, nom_court_prj_avec_0, 
-                nom_gpkg, laProjectionCRS, laProjectionTXT, 
+                nom_csv_avec_0,  chemin_shapes, nom_court_vecteur_avec_0, nom_gpkg, 
                 nom_fichier_synthese, details, version_3)
  
         # Progress BAR 
@@ -580,16 +570,13 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             pass
         else: # V3 seulement
             # Création des shapes avec seulement les 0
-            nom_court_vecteur_0_seul = Nom_Session + NOM_POINTS + EXTENSION_ZERO_SEUL + EXT_CRS_SHP
-            nom_court_prj_0_seul = Nom_Session + NOM_POINTS + EXTENSION_ZERO_SEUL + EXT_CRS_PRJ
-
+            nom_court_vecteur_0_seul = nom_base_vecteur + EXTENSION_ZERO_SEUL
             nom_layer_0_seul = physiocap_csv_vers_vecteur( dialogue, 85, EXTENSION_ZERO_SEUL, 
-                nom_csv_0_seul,  chemin_shapes, nom_court_vecteur_0_seul, nom_court_prj_0_seul, 
-                nom_gpkg, laProjectionCRS, laProjectionTXT, 
+                nom_csv_0_seul,  chemin_shapes, nom_court_vecteur_0_seul, nom_gpkg, 
                 nom_fichier_synthese, details, version_3) 
                 
         # Progress BAR 95%
-        dialogue.progressBar.setValue( 95)
+        dialogue.progressBar.setValue( 90)
         
         # Creer un groupe pour cette analyse
         # Attention il faut qgis > 2.4 metadata demande V2.4 mini
@@ -607,39 +594,6 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             qml_is = dialogue.lineEditThematiqueDiametre.text().strip('"') + EXTENSION_QML
             # Pas de choix du shape, car il faut pour Inter un diam sans 0
             SHAPE_A_AFFICHER.append( (nom_layer_sans_0, 'DIAMETRE mm', qml_is))
-            # Cas geopackage
-            if Format_vecteur == GEOPACKAGE_NOM  and version_3 == "YES":
-                #nom_court_gpkg = NOM_POINTS[1:] + EXTENSION_SANS_ZERO
-                mon_shape = ogr.Open( nom_layer_sans_0)
-                mon_layer = mon_shape.GetLayerByIndex(0)
-                mon_nouveau_gpkg = ogr.Open( nom_gpkg,  True)
-                mon_nouveau_gpkg.CopyLayer( mon_layer,  nom_court_base_sans_0,  [])
-                # pour ecrire
-                mon_nouveau_gpkg = None
-                nom_layer_cree = nom_gpkg + SEPARATEUR_GPKG + nom_court_base_sans_0
-                SHAPE_A_AFFICHER.append( (nom_layer_cree, 'GPKG_DIAMETRE mm', qml_is))
-            if Format_vecteur == GEOPACKAGE_NOM  and version_3 == "YES":
-                nom_base_court = Nom_Session + NOM_POINTS + EXTENSION_SANS_ZERO
-                nom_shp_court = nom_base_court + EXTENSION_SHP
-                nom_shp_modele2 = os.path.join( REPERTOIRE_MODELE_GPKG, nom_shp_court )
-                if not os.path.isfile( nom_shp_modele2):
-                    # Vérifier si GPKG existe bien
-                    uMsg = self.tr( "Erreur bloquante : problème lors de recherche de {0}").\
-                        format( nom_shp_modele2)
-                    physiocap_error( self, uMsg)
-                    raise physiocap_exception_no_gpkg( nom_shp_court) 
-                #nom_court_gpkg = NOM_POINTS[1:] + EXTENSION_SANS_ZERO
-                mon_shape2 = ogr.Open( nom_shp_modele2)
-                mon_layer2 = mon_shape2.GetLayerByIndex(0)
-                mon_nouveau_gpkg = ogr.Open( nom_gpkg,  True)
-                mon_nouveau_gpkg.CopyLayer( mon_layer2,  nom_base_court,  [])
-                # pour ecrire
-                mon_nouveau_gpkg = None
-                nom_layer_cree = nom_gpkg + SEPARATEUR_GPKG + nom_base_court
-                SHAPE_A_AFFICHER.append( (nom_layer_cree, 'EXISTE_DIAMETRE mm', qml_is))
-
-  
-            
         if dialogue.checkBoxSarment.isChecked():
             qml_is = dialogue.lineEditThematiqueSarment.text().strip('"') + EXTENSION_QML
             # Choix du shape à afficher
@@ -697,7 +651,6 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
 ##                    # Remettre le choix vers ESRI shape file
 ##                    dialogue.fieldComboFormats.setCurrentIndex( 0)
 
-            physiocap_log( "Physiocap : Afficher layer  {0}".format( shapename), TRACE_TOOLS)
             vector = QgsVectorLayer( shapename, titre, 'ogr')
             mon_projet.addMapLayer( vector, False)
             # Ajouter le vecteur dans un groupe

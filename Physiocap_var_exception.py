@@ -82,9 +82,9 @@ PHYSIOCAP_TEST4 = "Moët"
 MODE_EXPERT  = "J'ai contribué"
 POSTGRES_NOM = "postgres"
 GEOPACKAGE_NOM = "GéoPackage"
-GEOPACKAGE_DRIVER= "GPKG"
+GEOPACKAGE_DRIVER = "GPKG"
 SHAPEFILE_NOM = "ESRI Shapefile"
-SHAPEFILE_ID = "ESRI Shapefile"
+SHAPEFILE_DRIVER = "ESRI Shapefile"
 
 SEPARATEUR_ ="_"
 NOM_PROJET = "PHY" + SEPARATEUR_ # + PHYSIOCAP_TEST4 + SEPARATEUR_
@@ -110,9 +110,10 @@ REPERTOIRE_TEXTES = "fichiers_texte"
 REPERTOIRE_TEXTES_V3 = "csv"
 # Pour aide gpkg & histo
 REPERTOIRE_HELP = os.path.join( os.path.dirname(__file__),"help")
-REPERTOIRE_MODELE_GPKG = os.path.join( os.path.dirname(__file__),"modeleGpkg")
-MODELE_CONTOUR_GPKG="contour"+EXTENSION_GPKG
-MODELE_POINT_SHAPE="point"+EXTENSION_SHP
+REPERTOIRE_MODELE_GPKG = os.path.join( os.path.dirname(__file__),"modeleGPKG")
+MODELE_CONTOUR_NOM = "contour"
+MODELE_CONTOUR_GPKG = MODELE_CONTOUR_NOM + EXTENSION_GPKG
+#MODELE_POINT_SHAPE = "point" + EXTENSION_SHP
 #MODELE_POINT_GPKG="point"+EXTENSION_GPKG
 #MODELE_SEGMENT_GPKG="segment"+EXTENSION_GPKG
 

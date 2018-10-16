@@ -64,7 +64,7 @@ UI_FILES = Physiocap3_dialog_base.ui
 DATA = data
 DATA_FILES = $(DATA)/01021103.MID $(DATA)/01021103.ERC  \
 	$(DATA)/Contour_L93.shp $(DATA)/Contour_L93.shx \
-	$(DATA)/Contour_L93.dbf
+	$(DATA)/Contour_L93.dbf 
 EXTRAS = icon.png metadata.txt LICENSE README.md
 
 COMPILED_RESOURCE_FILES = resources_rc.py
@@ -81,13 +81,14 @@ HELP_FILES = $(HELP)/index.html $(HELP)/Histo_non_calcule.png \
     $(HELP)/jhemmi.eu.png $(HELP)/CIVC.jpg $(HELP)/Logo_IFV.png \
     $(HELP)/Logo_MHCS.png $(HELP)/Logo_VCP.png $(HELP)/Logo_TAITTINGER.png
     
-    
 CONF_TARGET = $(HOME)/.config/Physiocap/Physiocap3.conf
 CONF_MODEL = test/Physiocap3.conf
 CONF_SAVE = $(CONF_TARGET).sauve
 
 TEMPLATE = modeleQgis
 VERSION_TEMPLATE= Physiocap3
+
+GPKG = modeleGPKG
 
 PLUGIN_UPLOAD = $(c)/plugin_upload.py
 
@@ -146,6 +147,7 @@ deploy: compile doc transcompile
 	mkdir -p $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(HELP)
 	mkdir -p $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(TEMPLATE)
 	mkdir -p $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(TEMPLATE)/$(VERSION_TEMPLATE)
+	mkdir -p $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(GPKG)
 	cp -vf $(PY_FILES) $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)
 	@cp -vf $(UI_FILES) $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)
 	@cp -vf $(COMPILED_RESOURCE_FILES) $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)
@@ -155,6 +157,7 @@ deploy: compile doc transcompile
 	@cp -vf $(DATA_FILES) $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(DATA)
 	@cp -vf $(TEMPLATE)/$(VERSION_TEMPLATE)/*.qml $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(TEMPLATE)/$(VERSION_TEMPLATE)
 	@cp -vf $(TEMPLATE)/$(VERSION_TEMPLATE)/*.qml $(HOME)/$(QGISDIR)/project_templates/Physiocap3
+	@cp -vf $(GPKG)/*.gpkg $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(GPKG)
 	# Fin de la copie du plugin Physiocap3
 
 # The dclean target removes compiled python files from plugin directory

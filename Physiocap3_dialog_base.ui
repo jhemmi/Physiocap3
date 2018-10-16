@@ -5107,7 +5107,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="text">
-       <string>Version 3.1.8-beta</string>
+       <string>Version 3.1.8-beta-1</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_500">

@@ -317,7 +317,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.fieldComboShapeVitesse.addItem( self.tr("Sarments filtrés") )
         self.fieldComboShapeVitesse.addItem( self.tr("Points sans sarment") )
         if ( leChoixDeShape == -1):
-            self.fieldComboShapeVitesse.setCurrentIndex( 0)                
+            self.fieldComboShapeVitesse.setCurrentIndex( 1)                
         else:
             # Le combo a déjà été rempli, on retrouve le choix
             self.fieldComboShapeVitesse.setCurrentIndex( leChoixDeShape)
