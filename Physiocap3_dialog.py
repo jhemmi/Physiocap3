@@ -74,7 +74,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
-        self.plugin_dir = os.path.dirname(__file__)  
+        self.plugin_dir = os.path.dirname(__file__) 
         self.plugins_dir = os.path.dirname( self.plugin_dir)
         self.python_dir = os.path.dirname( self.plugins_dir)
         self.gis_dir = os.path.dirname( self.python_dir)
@@ -933,7 +933,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             chemin_shapes = "chemin vers shapeFile"
             if pro.name() != POSTGRES_NOM:
                 chemin_shapes = os.path.dirname( pro.dataSourceUri())  ;
-                chemin_projet = os.path.dirname(chemin_shapes)  ;
+                chemin_session = os.path.dirname(chemin_shapes)  ;
                 nom_shape = os.path.basename( pro.dataSourceUri())  ;
                 if ( not os.path.exists( chemin_shapes)):
                     raise physiocap_exception_rep( "chemin vers shapeFile")
@@ -943,14 +943,14 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                     consolidation = "YES"                
                 if (consolidation == "YES"):
                     pos_extension = nom_shape.rfind(".")
-                    nom_shape_sans_ext = nom_shape[:pos_extension]
-                    chemin_shape_et_nom = os.path.join( chemin_shapes, nom_shape_sans_ext)            
-                    chemin_inter = os.path.join( chemin_shape_et_nom, VIGNETTES_INTER)
+                    nom_vecteur_sans_ext = nom_shape[:pos_extension]
+                    chemin_vecteur_et_nom = os.path.join( chemin_shapes, nom_vecteur_sans_ext)            
+                    chemin_inter = os.path.join( chemin_vecteur_et_nom, VIGNETTES_INTER)
                 else:
                     if version_3 == "NO":
                         chemin_inter = os.path.join( chemin_shapes, VIGNETTES_INTER)
                     else:
-                        chemin_inter = os.path.join( chemin_projet, REPERTOIRE_INTER_V3)
+                        chemin_inter = os.path.join( chemin_session, REPERTOIRE_INTER_V3)
                 if (os.path.exists( chemin_inter)):
                     # On aiguille vers Intra
                     self.groupBoxIntra.setEnabled( True)

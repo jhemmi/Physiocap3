@@ -46,7 +46,7 @@ else:
     LE_MODE_PROD = "YES"
     
 # LIVRAISON : supprimer en Prod
-#LE_MODE_PROD = "NO"
+LE_MODE_PROD = "NO"
 
 # En prod CENTROIDES vaut NO
 CENTROIDES = "NO"  # CENTROIDES YES est pour voir les centroides dans la synthese
@@ -82,13 +82,15 @@ PHYSIOCAP_TEST4 = "Moët"
 MODE_EXPERT  = "J'ai contribué"
 POSTGRES_NOM = "postgres"
 GEOPACKAGE_NOM = "GéoPackage"
-GEOPACKAGE_ID = "GPKG"
+GEOPACKAGE_DRIVER= "GPKG"
+SHAPEFILE_NOM = "ESRI Shapefile"
+SHAPEFILE_ID = "ESRI Shapefile"
 
 SEPARATEUR_ ="_"
 NOM_PROJET = "PHY" + SEPARATEUR_ # + PHYSIOCAP_TEST4 + SEPARATEUR_
 
-FORMAT_VECTEUR = [ "ESRI Shapefile"] #,  POSTGRES_NOM] # "memory"]
-FORMAT_VECTEUR_V3 = [ "ESRI Shapefile",  GEOPACKAGE_NOM] #,  "memory"] # POSTGRES_NOM] # "memory"]
+FORMAT_VECTEUR = [ SHAPEFILE_NOM] #,  POSTGRES_NOM] # "memory"]
+FORMAT_VECTEUR_V3 = [ SHAPEFILE_NOM,  GEOPACKAGE_NOM] #,  "memory"] # POSTGRES_NOM] # "memory"]
 
 # Répertoires des sources et de concaténation en fichiers texte
 FICHIER_RESULTAT = "resultat.txt"
@@ -98,10 +100,21 @@ SUFFIXE_BRUT_CSV = SEPARATEUR_ + "RAW.csv"
 EXTENSION_MID = "*.MID"
 NB_VIRGULES = 58
 
+EXTENSION_CSV = ".csv"
+EXTENSION_SHP = ".shp"
+EXTENSION_PRJ = ".prj"
+EXTENSION_GPKG= ".gpkg"
+SEPARATEUR_GPKG= "|layername="
+
 REPERTOIRE_TEXTES = "fichiers_texte"
 REPERTOIRE_TEXTES_V3 = "csv"
-# Pour histo
+# Pour aide gpkg & histo
 REPERTOIRE_HELP = os.path.join( os.path.dirname(__file__),"help")
+REPERTOIRE_MODELE_GPKG = os.path.join( os.path.dirname(__file__),"modeleGpkg")
+MODELE_CONTOUR_GPKG="contour"+EXTENSION_GPKG
+MODELE_POINT_SHAPE="point"+EXTENSION_SHP
+#MODELE_POINT_GPKG="point"+EXTENSION_GPKG
+#MODELE_SEGMENT_GPKG="segment"+EXTENSION_GPKG
 
 FICHIER_HISTO_NON_CALCULE = os.path.join( REPERTOIRE_HELP, 
     "Histo_non_calcule.png")
@@ -116,9 +129,8 @@ FICHIER_HISTO_DIAMETRE_FILTRE = "histogramme_DIAM_FILTERED" +  SUFFIXE_HISTO
 REPERTOIRE_SHAPEFILE = "shapefile"
 REPERTOIRE_SHAPEFILE_V3 = "Filtre"
 
-EXTENSION_CSV = ".csv"
-EXTENSION_SHP = ".shp"
-EXTENSION_PRJ = ".prj"
+
+
 # WARNING:_Pas d'affichage des VRT Pas de creation de png sous Linux
 #if MACHINE == "Linux":
 #    EXTENSION_RASTER_SANS_POINT = "png"
@@ -130,10 +142,10 @@ EXTENSION_RASTER_SAGA = "." + EXTENSION_RASTER_SAGA_SANS_POINT
 
 EXTENSION_QML = ".qml"
 
-EXTENSION_POUR_ZERO_V2 = SEPARATEUR_ + "0"
+EXTENSION_AVEC_ZERO_V2 = SEPARATEUR_ + "0"
 # Nom plus explicite pour V3
 EXTENSION_SANS_ZERO= SEPARATEUR_ + "SANS_0"
-EXTENSION_POUR_ZERO = SEPARATEUR_ + "AVEC_0"
+EXTENSION_AVEC_ZERO = SEPARATEUR_ + "AVEC_0"
 EXTENSION_ZERO_SEUL = SEPARATEUR_ + "0_SEUL"
 
 # SRC trouve dans EPSG
@@ -257,6 +269,8 @@ class physiocap_exception_fic( physiocap_exception):
 class physiocap_exception_csv( physiocap_exception):
     pass
 class physiocap_exception_err_csv( physiocap_exception):
+    pass
+class physiocap_exception_no_gpkg( physiocap_exception):
     pass
 class physiocap_exception_trop_err_csv( physiocap_exception):
     pass

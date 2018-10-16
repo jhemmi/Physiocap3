@@ -42,9 +42,9 @@
 from .Physiocap_tools import physiocap_message_box, physiocap_question_box,\
         physiocap_log, physiocap_error, physiocap_write_in_synthese, \
         physiocap_rename_existing_file, physiocap_rename_create_dir, physiocap_open_file, \
-        physiocap_look_for_MID, physiocap_list_MID
+        physiocap_look_for_MID, physiocap_list_MID,  physiocap_csv_vers_vecteur
         
-from .Physiocap_CIVC import physiocap_csv_vers_shapefile, physiocap_assert_csv, \
+from .Physiocap_CIVC import physiocap_assert_csv, \
         physiocap_fichier_histo, physiocap_tracer_histo, physiocap_filtrer   
 
 from .Physiocap_inter import physiocap_fill_combo_poly_or_point
@@ -55,6 +55,8 @@ from PyQt5 import QtWidgets
 from PyQt5.QtCore import QSettings
 from PyQt5.QtGui import QPixmap
 from qgis.core import ( QgsProject, QgsVectorLayer)
+
+from osgeo import ogr
 
 import glob
 import shutil
@@ -78,7 +80,9 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         # Récupérer les paramètres saisies
         Repertoire_Donnees_Brutes = dialogue.lineEditDirectoryPhysiocap.text()
         Repertoire_Donnees_Cibles = dialogue.lineEditDirectoryFiltre.text()
-        Nom_Projet = dialogue.lineEditProjet.text()
+        Nom_Session = dialogue.lineEditProjet.text()
+        Format_vecteur =  dialogue.fieldComboFormats.currentText()
+
         mindiam = int( dialogue.spinBoxMinDiametre.value())
         maxdiam = int( dialogue.spinBoxMaxDiametre.value())
         max_sarments_metre = int( dialogue.spinBoxMaxSarmentsParMetre.value())
@@ -113,29 +117,29 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             densite = 1
             hauteur = 1
             
-        # Vérification de l'existance ou création du répertoire projet
-        chemin_projet = os.path.join(Repertoire_Donnees_Cibles, Nom_Projet)
-        if not (os.path.exists( chemin_projet)):
+        # Vérification de l'existance ou création du répertoire session
+        chemin_session = os.path.join(Repertoire_Donnees_Cibles, Nom_Session)
+        if not (os.path.exists( chemin_session)):
             try:
-                os.mkdir( chemin_projet)
+                os.mkdir( chemin_session)
             except:
-                raise physiocap_exception_rep( Nom_Projet)
+                raise physiocap_exception_rep( Nom_Session)
         else:
             # Le répertoire existant est renommé en (+1)
             try: 
-                chemin_projet = physiocap_rename_create_dir( chemin_projet)
+                chemin_session = physiocap_rename_create_dir( chemin_session)
             except:
-                raise physiocap_exception_rep( chemin_projet)
+                raise physiocap_exception_rep( chemin_session)
         
         
-        # Stocker dans la fenetre de synthese le nom du projet
-        chemin_base_projet = os.path.basename( chemin_projet)
-        dialogue.lineEditDernierProjet.setText( chemin_base_projet)
+        # Stocker dans la fenetre de synthese le nom de la session courante
+        chemin_base_session = os.path.basename( chemin_session)
+        dialogue.lineEditDernierProjet.setText( chemin_base_session)
         dialogue.settings= QSettings( PHYSIOCAP_NOM, PHYSIOCAP_NOM_3)
-        dialogue.settings.setValue("Physiocap/dernier_repertoire", chemin_base_projet) 
+        dialogue.settings.setValue("Physiocap/dernier_repertoire", chemin_base_session) 
         
         physiocap_log( self.tr( "{0} {1} Début du traitement pour la session Physiocap {2}").\
-                format( PHYSIOCAP_2_ETOILES , PHYSIOCAP_UNI, chemin_base_projet), leModeDeTrace)
+                format( PHYSIOCAP_2_ETOILES , PHYSIOCAP_UNI, chemin_base_session), leModeDeTrace)
         physiocap_log( self.tr( "Paramètres pour filtrer les diamètres min : {0} max : {1}").\
             format( str( mindiam), str( maxdiam)), leModeDeTrace)
                     
@@ -145,9 +149,9 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             
         # Verification de l'existance ou création du répertoire des sources MID et fichier csv
         if version_3 == "YES":
-            chemin_sources = os.path.join(chemin_projet, REPERTOIRE_SOURCE_V3)
+            chemin_sources = os.path.join(chemin_session, REPERTOIRE_SOURCE_V3)
         else:
-            chemin_sources = os.path.join(chemin_projet, REPERTOIRE_SOURCES)
+            chemin_sources = os.path.join(chemin_session, REPERTOIRE_SOURCES)
         if not (os.path.exists( chemin_sources)):
             try:
                 os.mkdir( chemin_sources)
@@ -155,7 +159,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
                 raise physiocap_exception_rep( REPERTOIRE_SOURCES)
                     
         # Fichier de concaténations CSV des résultats bruts        
-        nom_court_csv_concat = Nom_Projet + SUFFIXE_BRUT_CSV
+        nom_court_csv_concat = Nom_Session + SUFFIXE_BRUT_CSV
         try:
             nom_csv_concat, csv_concat = physiocap_open_file( nom_court_csv_concat, chemin_sources, "w")
         except physiocap_exception_fic:
@@ -213,14 +217,14 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             return physiocap_error( self, uMsg)
         
         # Création la première partie du fichier de synthèse
-        fichier_resultat_analyse = chemin_base_projet + SEPARATEUR_ + FICHIER_RESULTAT
-        nom_fichier_synthese, fichier_synthese = physiocap_open_file( fichier_resultat_analyse, chemin_projet , "w")
+        fichier_resultat_analyse = chemin_base_session + SEPARATEUR_ + FICHIER_RESULTAT
+        nom_fichier_synthese, fichier_synthese = physiocap_open_file( fichier_resultat_analyse, chemin_session , "w")
         fichier_synthese.write( "SYNTHESE PHYSIOCAP\n\n")
         fichier_synthese.write( "Générée le : ")
         a_time = time.strftime( "%d/%m/%y %H:%M\n",time.localtime())
         fichier_synthese.write( a_time)
         fichier_synthese.write( "Répertoire de base ")
-        fichier_synthese.write( chemin_base_projet)
+        fichier_synthese.write( chemin_base_session)
         fichier_synthese.write( "\n")
         if (version_3 == "NO"):
             fichier_synthese.write( "Nom des MID \t\t Date et heures\n=>Nb. Valeurs brutes\tVitesse km/h")
@@ -256,7 +260,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         else:
             rep_csv = REPERTOIRE_TEXTES_V3
         # Vérification de l'existance ou création du répertoire textes
-        chemin_textes = os.path.join(chemin_projet, rep_csv)
+        chemin_textes = os.path.join(chemin_session, rep_csv)
         if not (os.path.exists( chemin_textes)):
             try :
                 os.mkdir( chemin_textes)
@@ -327,53 +331,53 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             rep_vecteur = REPERTOIRE_SHAPEFILE
         else:
             rep_vecteur = REPERTOIRE_SHAPEFILE_V3
-        chemin_shapes = os.path.join(chemin_projet, rep_vecteur)
+        chemin_shapes = os.path.join(chemin_session, rep_vecteur)
         if not (os.path.exists( chemin_shapes)):
             try :
                 os.mkdir( chemin_shapes)
             except :
                 raise physiocap_exception_rep( rep_vecteur)
 
-        nom_court_shape_segment = Nom_Projet + NOM_SEGMENTS + EXT_CRS_SHP
+        nom_court_vecteur_segment = Nom_Session + NOM_SEGMENTS + EXT_CRS_SHP
         if (version_3 == "NO"):
-            nom_dir_shape_segment = os.path.join(chemin_projet, rep_vecteur)
+            nom_dir_vecteur_segment = os.path.join(chemin_session, rep_vecteur)
         else:
             # Création du dir des shapes de segments
-            nom_dir_shape_segment = os.path.join( chemin_shapes, REPERTOIRE_SEGMENT_V3)
+            nom_dir_vecteur_segment = os.path.join( chemin_shapes, REPERTOIRE_SEGMENT_V3)
             
-        if not (os.path.exists( nom_dir_shape_segment)):
+        if not (os.path.exists( nom_dir_vecteur_segment)):
             try :
-                os.mkdir( nom_dir_shape_segment)
+                os.mkdir( nom_dir_vecteur_segment)
             except :
                 raise physiocap_exception_rep( REPERTOIRE_SEGMENT_V3)
 
-        nom_shape_segment = os.path.join( nom_dir_shape_segment, nom_court_shape_segment)
-        nom_court_prj_segment = Nom_Projet + NOM_SEGMENTS + EXT_CRS_PRJ
-        nom_prj_segment = os.path.join( nom_dir_shape_segment, nom_court_prj_segment)
+        nom_vecteur_segment = os.path.join( nom_dir_vecteur_segment, nom_court_vecteur_segment)
+        nom_court_prj_segment = Nom_Session + NOM_SEGMENTS + EXT_CRS_PRJ
+        nom_prj_segment = os.path.join( nom_dir_vecteur_segment, nom_court_prj_segment)
         # Si le shape existe dejà il faut le détruire
-        if os.path.isfile( nom_shape_segment):
+        if os.path.isfile( nom_vecteur_segment):
             # A_TESTER: je doute que ca marche
             physiocap_log( self.tr( "Le shape file existant déjà, il est détruit."), leModeDeTrace)
-            os.remove( nom_shape_segment) 
+            os.remove( nom_vecteur_segment) 
 
-        nom_court_shape_segment_details = Nom_Projet + NOM_SEGMENTS_DETAILS + EXT_CRS_SHP
-        nom_shape_segment_details = os.path.join( nom_dir_shape_segment, nom_court_shape_segment_details)
-        nom_court_prj_segment_details = Nom_Projet + NOM_SEGMENTS_DETAILS + EXT_CRS_PRJ
-        nom_prj_segment_details = os.path.join( nom_dir_shape_segment, nom_court_prj_segment_details)
+        nom_court_vecteur_segment_details = Nom_Session + NOM_SEGMENTS_DETAILS + EXT_CRS_SHP
+        nom_vecteur_segment_details = os.path.join( nom_dir_vecteur_segment, nom_court_vecteur_segment_details)
+        nom_court_prj_segment_details = Nom_Session + NOM_SEGMENTS_DETAILS + EXT_CRS_PRJ
+        nom_prj_segment_details = os.path.join( nom_dir_vecteur_segment, nom_court_prj_segment_details)
         # Si le shape existe dejà il faut le détruire
-        if os.path.isfile( nom_shape_segment_details):
+        if os.path.isfile( nom_vecteur_segment_details):
             # A_TESTER: je doute que ca marche
             physiocap_log( self.tr( "Le shape file existant déjà, il est détruit."), leModeDeTrace)
-            os.remove( nom_shape_segment_details) 
+            os.remove( nom_vecteur_segment_details) 
 
         # Progress BAR 12 %
         dialogue.progressBar.setValue( 12)
         
         # Verification de l'existance 
         if version_3 == "YES":
-            chemin_histos = os.path.join(chemin_projet, REPERTOIRE_HISTO_V3)
+            chemin_histos = os.path.join(chemin_session, REPERTOIRE_HISTO_V3)
         else:
-            chemin_histos = os.path.join(chemin_projet, REPERTOIRE_HISTOS)
+            chemin_histos = os.path.join(chemin_session, REPERTOIRE_HISTOS)
         if not (os.path.exists( chemin_histos)):
             try:
                 os.mkdir( chemin_histos)
@@ -410,13 +414,13 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
                   
         # Création des csv
         if (version_3 == "NO"):
-            nom_court_csv_sans_0 = Nom_Projet + SEPARATEUR_ + "OUT.csv"
-            nom_court_csv_avec_0 = Nom_Projet + SEPARATEUR_ + "OUT0.csv"
-            nom_court_csv_0_seul = Nom_Projet + SEPARATEUR_ + "0SEUL.csv"
+            nom_court_csv_sans_0 = Nom_Session + SEPARATEUR_ + "OUT.csv"
+            nom_court_csv_avec_0 = Nom_Session + SEPARATEUR_ + "OUT0.csv"
+            nom_court_csv_0_seul = Nom_Session + SEPARATEUR_ + "0SEUL.csv"
         else:
-            nom_court_csv_sans_0 = Nom_Projet + EXTENSION_SANS_ZERO + EXTENSION_CSV
-            nom_court_csv_avec_0 = Nom_Projet + EXTENSION_POUR_ZERO + EXTENSION_CSV
-            nom_court_csv_0_seul = Nom_Projet + EXTENSION_ZERO_SEUL + EXTENSION_CSV
+            nom_court_csv_sans_0 = Nom_Session + EXTENSION_SANS_ZERO + EXTENSION_CSV
+            nom_court_csv_avec_0 = Nom_Session + EXTENSION_AVEC_ZERO + EXTENSION_CSV
+            nom_court_csv_0_seul  = Nom_Session + EXTENSION_ZERO_SEUL + EXTENSION_CSV
         
         nom_csv_sans_0, csv_sans_0 = physiocap_open_file( 
             nom_court_csv_sans_0, chemin_textes)
@@ -436,7 +440,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         # Filtrage des données Physiocap
         #################            
         retour_filtre = physiocap_filtrer( dialogue, csv_concat, csv_sans_0, csv_avec_0, csv_0_seul, 
-                    nom_shape_segment,  nom_prj_segment,  nom_shape_segment_details, nom_prj_segment_details,
+                    nom_vecteur_segment,  nom_prj_segment,  nom_vecteur_segment_details, nom_prj_segment_details,
                     diametre_filtre, nom_fichier_synthese, erreur, 
                     mindiam, maxdiam, max_sarments_metre, 
                     segment_mini_vitesse, segment_maxi_vitesse, segment_mini_point, segment_max_pdop, 
@@ -497,79 +501,93 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         # Progress BAR 42%
         dialogue.progressBar.setValue( 42)
 
-        
-        if (version_3 == "NO"):
-            # Création des shapes sans 0
-            nom_court_shape_sans_0 = Nom_Projet + NOM_POINTS + EXT_CRS_SHP
-            nom_court_prj_sans_0 = Nom_Projet + NOM_POINTS + EXT_CRS_PRJ
-        else:
-            nom_court_shape_sans_0 = Nom_Projet + NOM_POINTS + EXTENSION_SANS_ZERO + EXT_CRS_SHP
-            nom_court_prj_sans_0 = Nom_Projet + NOM_POINTS + EXTENSION_SANS_ZERO + EXT_CRS_PRJ            
-        nom_shape_sans_0 = os.path.join(chemin_shapes, nom_court_shape_sans_0)
-        nom_prj_sans_0 = os.path.join(chemin_shapes, nom_court_prj_sans_0)
-        # Si le shape existe dejà il faut le détruire
-        if os.path.isfile( nom_shape_sans_0):
-            # A_TESTER: je doute que ca marche
-            physiocap_log( self.tr( "Le shape file existant déjà, il est détruit."), leModeDeTrace)
-            os.remove( nom_shape_sans_0)            
-        # cas sans 0, on demande la synthese en passant le nom du fichier
-        retour = physiocap_csv_vers_shapefile( dialogue, 45, "SANS_0", nom_csv_sans_0, nom_shape_sans_0, 
-                nom_prj_sans_0, 
-                laProjectionCRS, laProjectionTXT, 
-                nom_fichier_synthese, details, version_3)
-        if retour != 0:
-            return physiocap_error( self, self.tr( \
-                "Erreur bloquante : problème lors de la création du shapefile {0}").\
-                format( str ( nom_court_shape_sans_0))) 
-
-        # Progress BAR 60 %
-        dialogue.progressBar.setValue( 58)
-
-        if (version_3 == "NO"):
-            # Création des shapes avec 0
-            nom_court_shape_avec_0 = Nom_Projet + NOM_POINTS + EXTENSION_POUR_ZERO_V2 + EXT_CRS_SHP
-            nom_court_prj_avec_0 = Nom_Projet + NOM_POINTS + EXTENSION_POUR_ZERO_V2 + EXT_CRS_PRJ
-        else:
-            nom_court_shape_avec_0 = Nom_Projet + NOM_POINTS + EXTENSION_POUR_ZERO + EXT_CRS_SHP
-            nom_court_prj_avec_0 = Nom_Projet + NOM_POINTS + EXTENSION_POUR_ZERO + EXT_CRS_PRJ
+        # Création du GPKG pour les vecteurs de la session 
+        nom_gpkg = None
+        if Format_vecteur == GEOPACKAGE_NOM  and version_3 == "YES":
+            nom_shp_court = Nom_Session + EXTENSION_SHP
+            nom_shp_modele = os.path.join( REPERTOIRE_MODELE_GPKG, nom_shp_court )
+            # toujours le nom de la session (non incrementé)
+            nom_gpkg_court = Nom_Session + EXTENSION_GPKG
+            nom_gpkg_modele = os.path.join( REPERTOIRE_MODELE_GPKG, MODELE_CONTOUR_GPKG )
+            nom_gpkg = os.path.join( chemin_session, nom_gpkg_court)
+            if not os.path.isfile( nom_gpkg_modele):
+                # Vérifier si GPKG modele n'existe pas
+                uMsg = self.tr( "Erreur bloquante : problème lors de recherche du géopackage modele {0}").\
+                    format( nom_gpkg_modele)
+                physiocap_error( self, uMsg)
+                raise physiocap_exception_no_gpkg( nom_gpkg_modele)
+            elif os.path.isfile( nom_gpkg):
+                # Vérifier si GPKG existe
+                uMsg = self.tr( "Erreur bloquante : problème car le géopackage {0} existe déjà").\
+                    format( nom_gpkg)
+                physiocap_error( self, uMsg)
+                raise physiocap_exception_no_gpkg( nom_gpkg)
+            else:
+                # Creation
+                mon_nouveau_gpkg = ogr.GetDriverByName( GEOPACKAGE_DRIVER).CreateDataSource( nom_gpkg)
+                mon_shape = ogr.Open( nom_shp_modele)
+                mon_layer = mon_shape.GetLayerByIndex(0)
+                mon_nouveau_gpkg.CopyLayer( mon_layer,  Nom_Session,  [])
+                # pour ecrire
+                mon_nouveau_gpkg = None
+              
+        if Format_vecteur == GEOPACKAGE_NOM  and version_3 == "YES":
+            if not os.path.isfile( nom_gpkg):
+                # Vérifier si GPKG existe bien
+                uMsg = self.tr( "Erreur bloquante : problème lors de recherche du géopackage {0}").\
+                    format( nom_gpkg)
+                physiocap_error( self, uMsg)
+                raise physiocap_exception_no_gpkg( nom_gpkg) 
             
-        nom_shape_avec_0 = os.path.join(chemin_shapes, nom_court_shape_avec_0)
-        nom_prj_avec_0 = os.path.join(chemin_shapes, nom_court_prj_avec_0)
-        # Si le shape existe dejà il faut le détruire
-        if os.path.isfile( nom_shape_avec_0):
-            physiocap_log( self.tr( "Le shape file existant déjà, il est détruit."), leModeDeTrace)
-            os.remove( nom_shape_avec_0) 
-        # cas avec 0, pas de demande de synthese
-        retour = physiocap_csv_vers_shapefile( dialogue, 60, "AVEC_0",  nom_csv_avec_0, nom_shape_avec_0, nom_prj_avec_0, 
-            laProjectionCRS, laProjectionTXT, "NO", details, version_3)
-        if retour != 0:
-            return physiocap_error( self, self.tr( \
-                "Erreur bloquante : problème lors de la création du shapefile {0}").\
-                format( str ( nom_court_shape_avec_0))) 
+        # Création des vecteurs sans 0
+        # TODO : Integrer dans une boucle d'appel de physiocap_csv_vers_vecteur avec les trois extensions
+        if (version_3 == "NO"):
+            nom_court_vecteur_sans_0 = Nom_Session + NOM_POINTS + EXT_CRS_SHP
+            nom_court_prj_sans_0 = Nom_Session + NOM_POINTS + EXT_CRS_PRJ
+        else: # Assert shapefile
+            nom_court_base_sans_0 = Nom_Session + NOM_POINTS + EXTENSION_SANS_ZERO
+            nom_court_vecteur_sans_0 = Nom_Session + NOM_POINTS + EXTENSION_SANS_ZERO + EXT_CRS_SHP
+            nom_court_prj_sans_0 = Nom_Session + NOM_POINTS + EXTENSION_SANS_ZERO + EXT_CRS_PRJ 
+ 
+        # cas sans 0, on demande la synthese en passant le nom du fichier
+        nom_layer_sans_0 = physiocap_csv_vers_vecteur( dialogue, 45, EXTENSION_SANS_ZERO, 
+                nom_csv_sans_0,  chemin_shapes, nom_court_vecteur_sans_0, nom_court_prj_sans_0, 
+                nom_gpkg, laProjectionCRS, laProjectionTXT, 
+                nom_fichier_synthese, details, version_3)
  
         # Progress BAR 60 %
-        dialogue.progressBar.setValue( 72)
+        dialogue.progressBar.setValue( 60)
 
+        # Création des vecteurs avec 0
+        if (version_3 == "NO"):
+            # Création des shapes avec 0
+            nom_court_vecteur_avec_0 = Nom_Session + NOM_POINTS + EXTENSION_AVEC_ZERO_V2 + EXT_CRS_SHP
+            nom_court_prj_avec_0 = Nom_Session + NOM_POINTS + EXTENSION_AVEC_ZERO_V2 + EXT_CRS_PRJ
+        else:
+            nom_court_vecteur_avec_0 = Nom_Session + NOM_POINTS + EXTENSION_AVEC_ZERO + EXT_CRS_SHP
+            nom_court_prj_avec_0 = Nom_Session + NOM_POINTS + EXTENSION_AVEC_ZERO + EXT_CRS_PRJ
+        
+        nom_layer_avec_0 = physiocap_csv_vers_vecteur( dialogue, 65, EXTENSION_AVEC_ZERO, 
+                nom_csv_avec_0,  chemin_shapes, nom_court_vecteur_avec_0, nom_court_prj_avec_0, 
+                nom_gpkg, laProjectionCRS, laProjectionTXT, 
+                nom_fichier_synthese, details, version_3)
+ 
+        # Progress BAR 
+        dialogue.progressBar.setValue( 80)
+
+        # Création des vecteurs O seul
         if (version_3 == "NO"):
             pass
-        else:        
+        else: # V3 seulement
             # Création des shapes avec seulement les 0
-            nom_court_shape_0_seul = Nom_Projet + NOM_POINTS + EXTENSION_ZERO_SEUL + EXT_CRS_SHP
-            nom_shape_0_seul = os.path.join(chemin_shapes, nom_court_shape_0_seul)
-            nom_court_prj_0_seul = Nom_Projet + NOM_POINTS + EXTENSION_ZERO_SEUL + EXT_CRS_PRJ
-            nom_prj_0_seul = os.path.join(chemin_shapes, nom_court_prj_0_seul)
-            # Si le shape existe dejà il faut le détruire
-            if os.path.isfile( nom_shape_0_seul):
-                physiocap_log( self.tr( "Le shape file existant déjà, il est détruit."), leModeDeTrace)
-                os.remove( nom_shape_0_seul) 
-            # cas 0 seulement, pas de demande de synthese
-            retour = physiocap_csv_vers_shapefile( dialogue, 75, "O_SEUL", nom_csv_0_seul, nom_shape_0_seul, nom_prj_0_seul, 
-                laProjectionCRS, laProjectionTXT, "NO", details, version_3)
-            if retour != 0:
-                return physiocap_error( self, self.tr( \
-                    "Erreur bloquante : problème lors de la création du shapefile {0}").\
-                    format( str ( nom_court_shape_0_seul))) 
-                                  
+            nom_court_vecteur_0_seul = Nom_Session + NOM_POINTS + EXTENSION_ZERO_SEUL + EXT_CRS_SHP
+            nom_court_prj_0_seul = Nom_Session + NOM_POINTS + EXTENSION_ZERO_SEUL + EXT_CRS_PRJ
+
+            nom_layer_0_seul = physiocap_csv_vers_vecteur( dialogue, 85, EXTENSION_ZERO_SEUL, 
+                nom_csv_0_seul,  chemin_shapes, nom_court_vecteur_0_seul, nom_court_prj_0_seul, 
+                nom_gpkg, laProjectionCRS, laProjectionTXT, 
+                nom_fichier_synthese, details, version_3) 
+                
         # Progress BAR 95%
         dialogue.progressBar.setValue( 95)
         
@@ -577,8 +595,8 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         # Attention il faut qgis > 2.4 metadata demande V2.4 mini
         mon_projet = QgsProject.instance()
         root = mon_projet.layerTreeRoot()
-        # Nommmer le groupe chemin_base_projet
-        sous_groupe = root.addGroup( chemin_base_projet)
+        # Nommmer le groupe chemin_base_session
+        sous_groupe = root.addGroup( chemin_base_session)
         
         # Récupérer des styles pour chaque shape
         dir_template = dialogue.fieldComboThematiques.currentText()
@@ -588,42 +606,73 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         if dialogue.checkBoxDiametre.isChecked():
             qml_is = dialogue.lineEditThematiqueDiametre.text().strip('"') + EXTENSION_QML
             # Pas de choix du shape, car il faut pour Inter un diam sans 0
-            SHAPE_A_AFFICHER.append( (nom_shape_sans_0, 'DIAMETRE mm', qml_is))
+            SHAPE_A_AFFICHER.append( (nom_layer_sans_0, 'DIAMETRE mm', qml_is))
+            # Cas geopackage
+            if Format_vecteur == GEOPACKAGE_NOM  and version_3 == "YES":
+                #nom_court_gpkg = NOM_POINTS[1:] + EXTENSION_SANS_ZERO
+                mon_shape = ogr.Open( nom_layer_sans_0)
+                mon_layer = mon_shape.GetLayerByIndex(0)
+                mon_nouveau_gpkg = ogr.Open( nom_gpkg,  True)
+                mon_nouveau_gpkg.CopyLayer( mon_layer,  nom_court_base_sans_0,  [])
+                # pour ecrire
+                mon_nouveau_gpkg = None
+                nom_layer_cree = nom_gpkg + SEPARATEUR_GPKG + nom_court_base_sans_0
+                SHAPE_A_AFFICHER.append( (nom_layer_cree, 'GPKG_DIAMETRE mm', qml_is))
+            if Format_vecteur == GEOPACKAGE_NOM  and version_3 == "YES":
+                nom_base_court = Nom_Session + NOM_POINTS + EXTENSION_SANS_ZERO
+                nom_shp_court = nom_base_court + EXTENSION_SHP
+                nom_shp_modele2 = os.path.join( REPERTOIRE_MODELE_GPKG, nom_shp_court )
+                if not os.path.isfile( nom_shp_modele2):
+                    # Vérifier si GPKG existe bien
+                    uMsg = self.tr( "Erreur bloquante : problème lors de recherche de {0}").\
+                        format( nom_shp_modele2)
+                    physiocap_error( self, uMsg)
+                    raise physiocap_exception_no_gpkg( nom_shp_court) 
+                #nom_court_gpkg = NOM_POINTS[1:] + EXTENSION_SANS_ZERO
+                mon_shape2 = ogr.Open( nom_shp_modele2)
+                mon_layer2 = mon_shape2.GetLayerByIndex(0)
+                mon_nouveau_gpkg = ogr.Open( nom_gpkg,  True)
+                mon_nouveau_gpkg.CopyLayer( mon_layer2,  nom_base_court,  [])
+                # pour ecrire
+                mon_nouveau_gpkg = None
+                nom_layer_cree = nom_gpkg + SEPARATEUR_GPKG + nom_base_court
+                SHAPE_A_AFFICHER.append( (nom_layer_cree, 'EXISTE_DIAMETRE mm', qml_is))
+
+  
+            
         if dialogue.checkBoxSarment.isChecked():
             qml_is = dialogue.lineEditThematiqueSarment.text().strip('"') + EXTENSION_QML
             # Choix du shape à afficher
             if ( dialogue.fieldComboShapeSarment.currentIndex() == 0):
-                SHAPE_A_AFFICHER.append( (nom_shape_sans_0, 'SARMENT par m', qml_is))
+                SHAPE_A_AFFICHER.append( (nom_layer_sans_0, 'SARMENT par m', qml_is))
             else:
-                SHAPE_A_AFFICHER.append( (nom_shape_avec_0, 'SARMENT par m', qml_is))
+                SHAPE_A_AFFICHER.append( (nom_layer_avec_0, 'SARMENT par m', qml_is))
         if dialogue.checkBoxBiomasse.isChecked():
             qml_is = dialogue.lineEditThematiqueBiomasse.text().strip('"') + EXTENSION_QML
             # Choix du shape à afficher
             if ( dialogue.fieldComboShapeBiomasse.currentIndex() == 0):
-                SHAPE_A_AFFICHER.append( (nom_shape_sans_0, 'BIOMASSE', qml_is))
+                SHAPE_A_AFFICHER.append( (nom_layer_sans_0, 'BIOMASSE', qml_is))
             else:
-                SHAPE_A_AFFICHER.append( (nom_shape_avec_0, 'BIOMASSE', qml_is))
+                SHAPE_A_AFFICHER.append( (nom_layer_avec_0, 'BIOMASSE', qml_is))
         if dialogue.checkBoxVitesse.isChecked():
             qml_is = dialogue.lineEditThematiqueVitesse.text().strip('"') + EXTENSION_QML
             # Choix du shape à afficher
             if ( dialogue.fieldComboShapeVitesse.currentIndex() == 0):
-                SHAPE_A_AFFICHER.append( (nom_shape_sans_0, 'VITESSE km/h', qml_is))
+                SHAPE_A_AFFICHER.append( (nom_layer_sans_0, 'VITESSE km/h', qml_is))
             else:
-                SHAPE_A_AFFICHER.append( (nom_shape_avec_0, 'VITESSE km/h', qml_is))       
+                SHAPE_A_AFFICHER.append( (nom_layer_avec_0, 'VITESSE km/h', qml_is))       
 
         if (version_3 != "NO") and dialogue.checkBoxPasMesure.isChecked():
             qml_is = dialogue.lineEditThematiquePasMesure.text().strip('"') + EXTENSION_QML
-            SHAPE_A_AFFICHER.append( (nom_shape_0_seul, 'PAS DE MESURE', qml_is))
+            SHAPE_A_AFFICHER.append( (nom_layer_0_seul, 'PAS DE MESURE', qml_is))
             
         if (version_3 != "NO") and dialogue.checkBoxSegment.isChecked():
             qml_is = dialogue.lineEditThematiqueSegment.text().strip('"') + EXTENSION_QML
-            # Pas de choix du shape, car il faut pour Inter un diam sans 0
-            SHAPE_A_AFFICHER.append( (nom_shape_segment, 'SEGMENT', qml_is))
+            SHAPE_A_AFFICHER.append( (nom_vecteur_segment, 'SEGMENT', qml_is))
 
         if (version_3 != "NO") and dialogue.checkBoxSegmentBrise.isChecked():
             qml_is = dialogue.lineEditThematiqueSegmentBrise.text().strip('"') + EXTENSION_QML
-            # Pas de choix du shape, car il faut pour Inter un diam sans 0
-            SHAPE_A_AFFICHER.append( (nom_shape_segment_details, 'SEGMENT BRISE', qml_is))
+            SHAPE_A_AFFICHER.append( (nom_vecteur_segment_details, 'SEGMENT BRISE', qml_is))
 
         for shapename, titre, un_template in SHAPE_A_AFFICHER:
 ##            if ( dialogue.fieldComboFormats.currentText() == POSTGRES_NOM ):
@@ -648,15 +697,14 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
 ##                    # Remettre le choix vers ESRI shape file
 ##                    dialogue.fieldComboFormats.setCurrentIndex( 0)
 
-            #physiocap_log( "Physiocap : Afficher layer ", leModeDeTrace)
+            physiocap_log( "Physiocap : Afficher layer  {0}".format( shapename), TRACE_TOOLS)
             vector = QgsVectorLayer( shapename, titre, 'ogr')
             mon_projet.addMapLayer( vector, False)
             # Ajouter le vecteur dans un groupe
-            # Not used vector_node = 
             sous_groupe.addLayer( vector)
             le_template = os.path.join( dir_template, un_template)
             if ( os.path.exists( le_template)):
-                #physiocap_log( "Physiocap le template : " + os.path.basename( le_template), leModeDeTrace)
+                #physiocap_log( "Physiocap le template : " + os.path.basename( le_template), TRACE_TOOLS)
                 vector.loadNamedStyle( le_template)
         
         # Fichier de synthese dans la fenetre resultats   
@@ -690,6 +738,6 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         dialogue.progressBar.setValue( 100)
         # Fin 
         physiocap_log( self.tr( "{0} {1} a affiché les couches demandées dans le groupe {2}").\
-            format( PHYSIOCAP_INFO , PHYSIOCAP_UNI, chemin_base_projet), leModeDeTrace)
+            format( PHYSIOCAP_INFO , PHYSIOCAP_UNI, chemin_base_session), leModeDeTrace)
         physiocap_fill_combo_poly_or_point( dialogue)
         return 0 

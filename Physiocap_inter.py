@@ -981,8 +981,8 @@ class PhysiocapInter( QtWidgets.QDialog):
         if ( pro.name() == POSTGRES_NOM):
             # On construit le chemin depuis data/projet...
             # Todo: WT PG : test non passé : repertoire_data = > repertoire_cible
-            chemin_projet = os.path.join( repertoire_cible, nom_noeud_arbre)
-            chemin_shapes = os.path.join( chemin_projet, rep_vecteur)
+            chemin_session = os.path.join( repertoire_cible, nom_noeud_arbre)
+            chemin_shapes = os.path.join( chemin_session, rep_vecteur)
             chemin_shapes_segment = os.path.join( chemin_shapes, REPERTOIRE_SEGMENT_V3)
         else:
             # Assert repertoire shapefile : c'est le repertoire qui contient le vecteur point
@@ -995,18 +995,18 @@ class PhysiocapInter( QtWidgets.QDialog):
             chemin_shapes_segment = os.path.join( chemin_shapes, REPERTOIRE_SEGMENT_V3)
             physiocap_log( "Nom du chemin shape {0} ". \
                         format(chemin_shapes_segment), leModeDeTrace)
-            chemin_projet = os.path.dirname( chemin_shapes)
+            chemin_session = os.path.dirname( chemin_shapes)
             shape_point_extension = os.path.basename( nom_vecteur_point)
             pos_extension = shape_point_extension.rfind(".")
             shape_point_sans_extension = shape_point_extension[:pos_extension]
         if ( not os.path.exists( chemin_shapes)):
             raise physiocap_exception_rep( chemin_shapes)
-        if  version_3 == "YES":
+        if  version_3 == "YES" and consolidation != "YES":
             if ( not os.path.exists( chemin_shapes_segment)):
                 raise physiocap_exception_rep( chemin_shapes_segment)
                     
         # TODO: où est le cas de consolidation 
-        if  version_3 == "YES":
+        if  version_3 == "YES" and consolidation != "YES":
             # On remplace la chaine finale du vecteur point par segment
             pos_diametre = nom_vecteur_point.rfind( NOM_POINTS + EXTENSION_SANS_ZERO + EXT_CRS_SHP)
 #            physiocap_log( "{0} retrouve le 'sans zero' à position {1}". \
@@ -1125,7 +1125,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                 les_pdop_sans_mesure = []
                 les_azimuths_sans_mesure = []
                 i_sans_mesure = 0
-            if  version_3 == "YES" and dialogue.checkBoxInterPasMesure.isChecked():
+            if  version_3 == "YES" and dialogue.checkBoxInterPasMesure.isChecked() and consolidation != "YES":
                 # Préfiltre dans un rectangle
                 # Récupération des POINT SANS MESURE qui concernent ce contour
                 for un_sans_mesure in vecteur_pas_mesure.getFeatures(QgsFeatureRequest().
@@ -1174,7 +1174,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                 les_nombres_points_restant = []
                 i_segment = 0
             if  version_3 == "YES" and ( dialogue.checkBoxInterSegment.isChecked() or \
-                dialogue.checkBoxInterSegmentBrise.isChecked() ):
+                dialogue.checkBoxInterSegmentBrise.isChecked() ) and consolidation != "YES":
                 # Préfiltre dans un rectangle
                 # Récupération des SEGMENTS qui concernent ce contour
 #                ligne_precedente = None
@@ -1502,15 +1502,15 @@ class PhysiocapInter( QtWidgets.QDialog):
                         
                     if (consolidation == "YES"):
                         # Rajout pour consolidation du nom du shape
-                        chemin_shape_nom_point = os.path.join( chemin_shapes, shape_point_sans_extension)
-                        if not (os.path.exists( chemin_shape_nom_point)):
-                            os.mkdir( chemin_shape_nom_point)                    
-                        chemin_vignettes = os.path.join( chemin_shape_nom_point, VIGNETTES_INTER)
+                        chemin_vecteur_nom_point = os.path.join( chemin_shapes, shape_point_sans_extension)
+                        if not (os.path.exists( chemin_vecteur_nom_point)):
+                            os.mkdir( chemin_vecteur_nom_point)                    
+                        chemin_vignettes = os.path.join( chemin_vecteur_nom_point, VIGNETTES_INTER)
                     else:
                         if version_3 == "NO":                
                             chemin_vignettes = os.path.join( chemin_shapes, VIGNETTES_INTER)
                         else:
-                            chemin_vignettes = os.path.join( chemin_projet , REPERTOIRE_INTER_V3)
+                            chemin_vignettes = os.path.join( chemin_session , REPERTOIRE_INTER_V3)
                             
                     if not (os.path.exists( chemin_vignettes)):
                         try:
@@ -1574,7 +1574,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                     les_biomgm2, les_biomgcep, les_biomm2, les_nbsarmm2, les_nbsarcep,
                     version_3, details)
                 
-                if  version_3 == "YES" and dialogue.checkBoxInterPasMesureDetails.isChecked():
+                if  version_3 == "YES" and dialogue.checkBoxInterPasMesureDetails.isChecked() and consolidation != "YES":
                     # ###################
                     # CRÉATION point sans mesure
                     # ###################
@@ -1589,7 +1589,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                         les_vitesses_sans_mesure, les_altitudes_sans_mesure, les_pdop_sans_mesure, 
                         les_azimuths_sans_mesure)
 
-                if  version_3 == "YES" and dialogue.checkBoxInterSegmentDetails.isChecked():
+                if  version_3 == "YES" and dialogue.checkBoxInterSegmentDetails.isChecked() and consolidation != "YES":
                     # ###################
                     # CRÉATION segment droit dans contour
                     # ###################
@@ -1603,7 +1603,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                         les_azimuths_segment,  les_longueurs_segment, les_distances_entre_segment,  
                         les_GID_segment, les_nombres_points_segment, les_nombres_points_restant)
 
-                if  version_3 == "YES" and dialogue.checkBoxInterSegmentBriseDetails.isChecked():
+                if  version_3 == "YES" and dialogue.checkBoxInterSegmentBriseDetails.isChecked() and consolidation != "YES":
                     # ###################
                     # CRÉATION segment  brisé dans contour
                     # ###################
@@ -1626,15 +1626,15 @@ class PhysiocapInter( QtWidgets.QDialog):
                 if dialogue.checkBoxInterPoints.isChecked():
                     SHAPE_POINTS_PAR_CONTOUR = "YES"
                 SHAPE_SANS_MESURE_PAR_CONTOUR = "NO"
-                if  version_3 == "YES" and dialogue.checkBoxInterPasMesureDetails.isChecked():
+                if  version_3 == "YES" and dialogue.checkBoxInterPasMesureDetails.isChecked() and consolidation != "YES":
                     SHAPE_SANS_MESURE_PAR_CONTOUR = "YES"
                     points_sans_mesure = QgsVectorLayer( nom_sans_mesure, nom_court_sans_mesure, 'ogr')
                 SHAPE_SEGMENT_PAR_CONTOUR = "NO"
-                if  version_3 == "YES" and dialogue.checkBoxInterSegmentDetails.isChecked():
+                if  version_3 == "YES" and dialogue.checkBoxInterSegmentDetails.isChecked() and consolidation != "YES":
                     SHAPE_SEGMENT_PAR_CONTOUR = "YES"
                     ligne_segment = QgsVectorLayer( nom_segment, nom_court_segment, 'ogr')
                 SHAPE_SEGMENT_BRISE_PAR_CONTOUR = "NO"
-                if  version_3 == "YES" and dialogue.checkBoxInterSegmentBriseDetails.isChecked():
+                if  version_3 == "YES" and dialogue.checkBoxInterSegmentBriseDetails.isChecked() and consolidation != "YES":
                     SHAPE_SEGMENT_BRISE_PAR_CONTOUR = "YES"
                     ligne_segment_brise = QgsVectorLayer( nom_segment_brise, nom_court_segment_brise, 'ogr')
                     
@@ -1680,11 +1680,11 @@ class PhysiocapInter( QtWidgets.QDialog):
                         mon_projet.addMapLayer( vignette_vector)
                     if SHAPE_POINTS_PAR_CONTOUR == "YES":
                         mon_projet.addMapLayer( points_vector)
-                    if  version_3 == "YES" and SHAPE_SANS_MESURE_PAR_CONTOUR == "YES":
+                    if  version_3 == "YES" and SHAPE_SANS_MESURE_PAR_CONTOUR == "YES" and consolidation != "YES":
                         mon_projet.addMapLayer( points_sans_mesure, False)
-                    if  version_3 == "YES" and SHAPE_SEGMENT_BRISE_PAR_CONTOUR == "YES":
+                    if  version_3 == "YES" and SHAPE_SEGMENT_BRISE_PAR_CONTOUR == "YES" and consolidation != "YES":
                         mon_projet.addMapLayer( ligne_segment_brise, False)
-                    if  version_3 == "YES" and SHAPE_SEGMENT_PAR_CONTOUR == "YES":
+                    if  version_3 == "YES" and SHAPE_SEGMENT_PAR_CONTOUR == "YES" and consolidation != "YES":
                         mon_projet.addMapLayer( ligne_segment, False)
 
                         
@@ -1695,13 +1695,13 @@ class PhysiocapInter( QtWidgets.QDialog):
                 if SHAPE_POINTS_PAR_CONTOUR == "YES":
                     if ( os.path.exists( le_template_point)):
                         points_vector.loadNamedStyle( le_template_point)
-                if  version_3 == "YES" and SHAPE_SANS_MESURE_PAR_CONTOUR == "YES":                   
+                if  version_3 == "YES" and SHAPE_SANS_MESURE_PAR_CONTOUR == "YES" and consolidation != "YES":                  
                     if ( os.path.exists( le_template_sans_mesure)):
                         points_sans_mesure.loadNamedStyle( le_template_sans_mesure)
-                if  version_3 == "YES" and SHAPE_SEGMENT_BRISE_PAR_CONTOUR == "YES":                   
+                if  version_3 == "YES" and SHAPE_SEGMENT_BRISE_PAR_CONTOUR == "YES" and consolidation != "YES":                  
                     if ( os.path.exists( le_template_segment_brise)):
                         ligne_segment_brise.loadNamedStyle( le_template_segment_brise)
-                if  version_3 == "YES" and SHAPE_SEGMENT_PAR_CONTOUR == "YES":                   
+                if  version_3 == "YES" and SHAPE_SEGMENT_PAR_CONTOUR == "YES" and consolidation != "YES":                  
                     if ( os.path.exists( le_template_segment)):
                         ligne_segment.loadNamedStyle( le_template_segment)
 

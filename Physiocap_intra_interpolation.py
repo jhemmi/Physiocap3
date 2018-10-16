@@ -682,7 +682,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
             nom_point_exact  = nom_point_exact
 
         chemin_shapes = os.path.dirname( nom_point_exact ) 
-        chemin_projet = os.path.dirname( chemin_shapes)
+        chemin_session = os.path.dirname( chemin_shapes)
         shape_point_extension = os.path.basename( nom_point_exact)
         pos_extension = shape_point_extension.rfind(".")
         shape_point_sans_extension = shape_point_extension[:pos_extension]
@@ -696,15 +696,15 @@ class PhysiocapIntra( QtWidgets.QDialog):
         # Test selon Consolidation
         if (consolidation == "YES"):
             # Rajout pour consolidation du nom du shape
-            chemin_shape_nom_point = os.path.join( chemin_shapes, shape_point_sans_extension)
-            if not (os.path.exists( chemin_shape_nom_point)):
-                os.mkdir( chemin_shape_nom_point)                    
-            chemin_vignettes = os.path.join( chemin_shape_nom_point, VIGNETTES_INTER)
+            chemin_vecteur_nom_point = os.path.join( chemin_shapes, shape_point_sans_extension)
+            if not (os.path.exists( chemin_vecteur_nom_point)):
+                os.mkdir( chemin_vecteur_nom_point)                    
+            chemin_vignettes = os.path.join( chemin_vecteur_nom_point, VIGNETTES_INTER)
         else:            
             if version_3 == "NO":                
                 chemin_vignettes = os.path.join( chemin_shapes, VIGNETTES_INTER)
             else:
-                chemin_vignettes = os.path.join( chemin_projet , REPERTOIRE_INTER_V3)
+                chemin_vignettes = os.path.join( chemin_session , REPERTOIRE_INTER_V3)
         # Assert repertoire vignette inter 
         if not (os.path.exists( chemin_vignettes)):
             raise physiocap_exception_rep( VIGNETTES_INTER)
@@ -723,14 +723,14 @@ class PhysiocapIntra( QtWidgets.QDialog):
         # Création du REP RASTER et ISOLIGNES
         # Test selon Consolidation
         if (consolidation == "YES"):
-            chemin_raster = os.path.join( chemin_shape_nom_point, REPERTOIRE_RASTERS)
+            chemin_raster = os.path.join( chemin_vecteur_nom_point, REPERTOIRE_RASTERS)
             chemin_iso = chemin_raster
         else:
             if version_3 == "NO":                
                 chemin_raster = os.path.join( chemin_shapes, REPERTOIRE_RASTERS)
                 chemin_iso = chemin_raster
             else:
-                chemin_intra =  os.path.join( chemin_projet , REPERTOIRE_INTRA_V3)
+                chemin_intra =  os.path.join( chemin_session , REPERTOIRE_INTRA_V3)
                 chemin_raster =  os.path.join( chemin_intra, REPERTOIRE_RASTER_V3)
                 chemin_iso =  os.path.join( chemin_intra, REPERTOIRE_ISO_V3)
 

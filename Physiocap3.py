@@ -69,7 +69,7 @@ class Physiocap3:
                 QCoreApplication.installTranslator(self.translator)
 
         # Create the dialog (after translation) and keep reference
-        self.dlg = Physiocap3Dialog()
+        self.dlg = Physiocap3Dialog ()
 
         # Declare instance attributes
         self.actions = []
