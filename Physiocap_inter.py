@@ -659,6 +659,7 @@ def physiocap_moyennes_tous_contours( laProjectionCRS, EPSG_NUMBER,
         les_champs.append( QgsField( "NBSART",QVariant.Int, "integer", 10))           
         les_champs.append( QgsField( "T_LONG_SEG", QVariant.Double, "double", 10,1))   
         les_champs.append( QgsField( "NBSARM_S",  QVariant.Double, "double", 10,2))
+        
         les_champs.append( QgsField( "NB_SEG", QVariant.Int, "integer", 10))           
         les_champs.append( QgsField( "LONG_S", QVariant.Double, "double", 10,1))   
         les_champs.append( QgsField( "M_LONG_S", QVariant.Double, "double", 10,1))   
@@ -956,7 +957,7 @@ class PhysiocapInter( QtWidgets.QDialog):
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( dialogue, aText, "information" ) 
 
-        # Verifier SRCs sont les même entre couches
+        # Vérifier SRCs sont les même entre couches
         crs_poly = vecteur_poly.crs().authid()
         crs_point = vecteur_point.crs().authid()
         if ( crs_poly != crs_point):
@@ -965,7 +966,7 @@ class PhysiocapInter( QtWidgets.QDialog):
             physiocap_error( self, mes)
             return physiocap_message_box( dialogue, mes,"information")
                   
-        # Recuperer le CRS choisi, les extensions et le calculateur de distance
+        # Récupérer le CRS choisi, les extensions et le calculateur de distance
         distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
         laProjectionCRS, laProjectionTXT, EPSG_NUMBER = \
             physiocap_quelle_projection_et_lib_demandee( dialogue)
@@ -976,24 +977,26 @@ class PhysiocapInter( QtWidgets.QDialog):
             rep_vecteur = REPERTOIRE_SHAPEFILE_V3
         
 
-        # Verification du repertoire shape
+        # Retrouver et vérifier le repertoire de la session et des vecteurs (ancien shapefile)
         pro = vecteur_point.dataProvider() 
         if ( pro.name() == POSTGRES_NOM):
             # On construit le chemin depuis data/projet...
-            # Todo: WT PG : test non passé : repertoire_data = > repertoire_cible
+            # Todo: WT PG : test non passé : pour une deuxieme session ...
             chemin_session = os.path.join( repertoire_cible, nom_noeud_arbre)
             chemin_shapes = os.path.join( chemin_session, rep_vecteur)
             chemin_shapes_segment = os.path.join( chemin_shapes, REPERTOIRE_SEGMENT_V3)
-        else:
+#        elif {Cas GeoPackage}
+#            # Retrouver le chemin de la session avec le géopackage choisi
+#            # Assert nom gpkg  == nom session et existe
+        else: # Cas de shapefiles
             # Assert repertoire shapefile : c'est le repertoire qui contient le vecteur point
             # Ca fonctionne pour consolidation
-            # A_TESTER: WINDOWS apres suppression des  deux : unicode( vecteur 
             nom_vecteur_point = vecteur_point.dataProvider().dataSourceUri()
             physiocap_log( "Nom du vecteur point {0} type vecteur point {1}". \
                         format(nom_vecteur_point, type(nom_vecteur_point)), leModeDeTrace)
             chemin_shapes = os.path.dirname( nom_vecteur_point)
             chemin_shapes_segment = os.path.join( chemin_shapes, REPERTOIRE_SEGMENT_V3)
-            physiocap_log( "Nom du chemin shape {0} ". \
+            physiocap_log( "Nom du chemin segment {0} ". \
                         format(chemin_shapes_segment), leModeDeTrace)
             chemin_session = os.path.dirname( chemin_shapes)
             shape_point_extension = os.path.basename( nom_vecteur_point)
@@ -1005,7 +1008,7 @@ class PhysiocapInter( QtWidgets.QDialog):
             if ( not os.path.exists( chemin_shapes_segment)):
                 raise physiocap_exception_rep( chemin_shapes_segment)
                     
-        # TODO: où est le cas de consolidation 
+        # CAS DE CONSOLIDATION ne traite pas les points sans mesure et les segments 
         if  version_3 == "YES" and consolidation != "YES":
             # On remplace la chaine finale du vecteur point par segment
             pos_diametre = nom_vecteur_point.rfind( NOM_POINTS + EXTENSION_SANS_ZERO + EXT_CRS_SHP)
@@ -1026,7 +1029,9 @@ class PhysiocapInter( QtWidgets.QDialog):
                     aText = aText + self.tr( "en cochant le Format version 3 ")
                     aText = aText + self.tr( "avant de faire votre calcul de Moyenne Inter Parcellaire")
                     physiocap_error( self, aText, "CRITICAL")
-                    return physiocap_message_box( dialogue, aText, "information" ) 
+                    return physiocap_message_box( dialogue, aText, "information" )
+                   
+            # TODO : CAS DE CONSOLIDATION OU GEOPACKGE 
             if ( dialogue.checkBoxInterSegment.isChecked() or \
                 dialogue.checkBoxInterSegmentBrise.isChecked() ):
                 nom_vecteur_segment = nom_base_segment + NOM_SEGMENTS_DETAILS + EXT_CRS_SHP

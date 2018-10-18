@@ -111,7 +111,7 @@ REPERTOIRE_TEXTES_V3 = "csv"
 # Pour aide gpkg & histo
 REPERTOIRE_HELP = os.path.join( os.path.dirname(__file__),"help")
 REPERTOIRE_MODELE_GPKG = os.path.join( os.path.dirname(__file__),"modeleGPKG")
-MODELE_CONTOUR_NOM = "contour"
+MODELE_CONTOUR_NOM = "contour" # "empty" semble KO 
 MODELE_CONTOUR_GPKG = MODELE_CONTOUR_NOM + EXTENSION_GPKG
 #MODELE_POINT_SHAPE = "point" + EXTENSION_SHP
 #MODELE_POINT_GPKG="point"+EXTENSION_GPKG
