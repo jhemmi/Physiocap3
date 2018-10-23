@@ -577,6 +577,7 @@ def physiocap_vecteur_vers_gpkg( self, chemin_session, nom_base_gpkg,
             mes_vecteurs = ogr.Open( nom_gpkg_modele)
             mon_vecteur = mes_vecteurs.GetLayerByIndex(0)
             mon_nouveau_gpkg.CopyLayer( mon_vecteur,  MODELE_CONTOUR_NOM,  [])
+            physiocap_log( "Physiocap : Création GPKG contour : {0}".format( nom_gpkg_modele), TRACE_TOOLS)
             # pour clore et ecrire le GPKG
             mon_nouveau_gpkg = None
       
