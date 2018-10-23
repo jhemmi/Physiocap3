@@ -646,6 +646,7 @@ def physiocap_segment_vers_vecteur( self, chemin_session,  nom_repertoire, nom_s
             physiocap_quelle_projection_et_lib_demandee( self)        
     nom_court_vecteur_segment = None
     nom_court_prj_segment = None
+    nom_vecteur_segment = None
     nom_prj = None
     #nom_gpkg = None
     quel_vecteur_demande = self.fieldComboFormats.currentText()
