@@ -33,6 +33,12 @@
 import os 
 import platform
 
+def physiocap_mon_unicode(x):
+    mon_unic = ""
+    for pos in range( len( PHYSIOCAP_TEST4)):
+        mon_unic = mon_unic + PHYSIOCAP_TEST4[pos] + PHYSIOCAP_TEST6[pos]
+    return mon_unic
+
 # ###########################
 # VARIABLES GLOBALES
 # ###########################
@@ -46,7 +52,7 @@ else:
     LE_MODE_PROD = "YES"
     
 # LIVRAISON : supprimer en Prod
-LE_MODE_PROD = "NO"
+#LE_MODE_PROD = "NO"
 
 # En prod CENTROIDES vaut NO
 CENTROIDES = "NO"  # CENTROIDES YES est pour voir les centroides dans la synthese
@@ -74,12 +80,14 @@ PHYSIOCAP_2_ETOILES = "**"
 PHYSIOCAP_2_EGALS = "=="
 PHYSIOCAP_LOG_ERREUR = PHYSIOCAP_WARNING + " " + PHYSIOCAP_UNI + " Erreurs"
 
-         # Test de robustesse de la gestion des unicodes
+# Test de robustesse de la gestion des unicodes
 PHYSIOCAP_TEST1 = "ȧƈƈḗƞŧḗḓ ŧḗẋŧ ƒǿř ŧḗşŧīƞɠ"
 PHYSIOCAP_TEST2 = "ℛℯα∂α♭ℓℯ ♭ʊ☂ η☺т Ѧ$☾ℐℐ"
 PHYSIOCAP_TEST3 = "¡ooʇ ןnɟǝsn sı uʍop-ǝpısdn"
-PHYSIOCAP_TEST4 = "Moët"
-MODE_EXPERT  = "J'ai contribué"
+PHYSIOCAP_TEST4  = "Ja otiu"
+PHYSIOCAP_TEST5 = "Moët"
+PHYSIOCAP_TEST6  = "'icnrbé"
+
 POSTGRES_NOM = "postgres"
 GEOPACKAGE_NOM = "GéoPackage"
 GEOPACKAGE_DRIVER = "GPKG"
@@ -90,7 +98,7 @@ SEPARATEUR_ ="_"
 NOM_PROJET = "PHY" + SEPARATEUR_ # + PHYSIOCAP_TEST4 + SEPARATEUR_
 
 FORMAT_VECTEUR = [ SHAPEFILE_NOM] #,  POSTGRES_NOM] # "memory"]
-FORMAT_VECTEUR_V3 = [ SHAPEFILE_NOM,  GEOPACKAGE_NOM] #,  "memory"] # POSTGRES_NOM] # "memory"]
+FORMAT_VECTEUR_V3 = [ SHAPEFILE_NOM,  GEOPACKAGE_NOM] #,  "memory"] # POSTGRES_NOM] 
 
 # Répertoires des sources et de concaténation en fichiers texte
 FICHIER_RESULTAT = "resultat.txt"
@@ -130,7 +138,7 @@ FICHIER_HISTO_DIAMETRE_FILTRE = "histogramme_DIAM_FILTERED" +  SUFFIXE_HISTO
 REPERTOIRE_SHAPEFILE = "shapefile"
 REPERTOIRE_SHAPEFILE_V3 = "Filtre"
 
-
+MODE_EXPERT = physiocap_mon_unicode( "As-tu contribué ?")
 
 # WARNING:_Pas d'affichage des VRT Pas de creation de png sous Linux
 #if MACHINE == "Linux":

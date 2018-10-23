@@ -151,6 +151,7 @@ def physiocap_write_in_synthese( self, aText):
     """Write a text in the results list"""
     self.textEditSynthese.insertPlainText( aText)   
   
+    
 def physiocap_is_only_ascii(s):
     if isinstance( s, unicode):
         physiocap_log( "physiocap_is_only_ascii {0}".format( "Cas unicode"), leModeTrace)
@@ -602,8 +603,8 @@ def physiocap_vecteur_vers_gpkg( self, chemin_session, nom_base_gpkg,
     le_gpkg = None
     
     # TODO: Détruire le GPKG intermediaire
+    os.remove( nom_vecteur)
     
-    return le_nom_gpkg_complete     
         
 #  AUTRE solution   Ne crée que l'enveloppe mais ne copie pas les données
 # CAS Géopackage par QgsVectorLayerExporter
@@ -636,6 +637,7 @@ def physiocap_vecteur_vers_gpkg( self, chemin_session, nom_base_gpkg,
 #        nom_layer_cree = nom_gpkg + SEPARATEUR_GPKG + nom_court_gpkg_sans_0
 #    else:
 #        nom_layer_cree = nom_vecteur    
+    return le_nom_gpkg_complete     
 
 def physiocap_segment_vers_vecteur( self, chemin_session,  nom_repertoire, nom_session,  segment,  info_segment, 
         version_3 = "NO",  segment_simplifie="YES"):
