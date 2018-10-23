@@ -273,6 +273,8 @@ class physiocap_exception_err_csv( physiocap_exception):
     pass
 class physiocap_exception_no_gpkg( physiocap_exception):
     pass
+class physiocap_exception_vecteur_type_inconnu( physiocap_exception):
+    pass
 class physiocap_exception_trop_err_csv( physiocap_exception):
     pass
 class physiocap_exception_mid( physiocap_exception):

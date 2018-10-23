@@ -43,7 +43,7 @@ from PyQt5.QtCore import QVariant
 from qgis.core import (Qgis, QgsDistanceArea, QgsProject, QgsMessageLog, \
         QgsMapLayer, QgsCoordinateReferenceSystem, QgsFields, QgsField, \
         QgsFeature, QgsGeometry, QgsPoint, QgsPointXY,  \
-        QgsVectorLayer, QgsVectorFileWriter, QgsWkbTypes)
+        QgsVectorFileWriter, QgsWkbTypes)
 from PyQt5.QtWidgets import QMessageBox
 
 try :
@@ -177,7 +177,7 @@ def physiocap_is_int_number(s):
  
 def physiocap_create_projection_file( prj_name,  laProjection):
     """Creer le fichier de projection du layer avec la description de EPSG"""
-    if (prj_name == ""):
+    if (prj_name == None) or (prj_name == ""):
         return
         
     prj = open(prj_name, "w")
@@ -552,9 +552,10 @@ def physiocap_list_MID( repertoire, MIDs, synthese="xx"):
     
 def physiocap_vecteur_vers_gpkg( self, chemin_session, nom_base_gpkg, 
         nom_court_vecteur = None, nom_vecteur = None):
-    """Création du GPKG pour les vecteurs de la session( le nom de base est le nom_session)
+    """Création du GPKG pour les vecteurs de la session (le nom de base est le nom_session)
     On cree un gpkg à partir du modele (vide)
-    si un vecteur est proposé, on complète le GPKG et on rend le nom de ce vecteur dans GPKG"""
+    si un vecteur est proposé, on complète le GPKG. On rend le nom du nouveau vecteur dans GPKG
+    sinon on crée un GPKG avec le modele de contour - qui se nomme nom_base_gpkg et on rend ce GPKG"""
 
     # Création du GPKG pour les vecteurs de la session 
     # toujours le nom de la session (non incrementé)
@@ -572,13 +573,13 @@ def physiocap_vecteur_vers_gpkg( self, chemin_session, nom_base_gpkg,
         else:
             # Creation
             mon_nouveau_gpkg = ogr.GetDriverByName( GEOPACKAGE_DRIVER).CreateDataSource( nom_gpkg)
-            mon_shape = ogr.Open( nom_gpkg_modele)
-            mon_layer = mon_shape.GetLayerByIndex(0)
-            mon_nouveau_gpkg.CopyLayer( mon_layer,  MODELE_CONTOUR_NOM,  [])
-            # pour ecrire
+            mes_vecteurs = ogr.Open( nom_gpkg_modele)
+            mon_vecteur = mes_vecteurs.GetLayerByIndex(0)
+            mon_nouveau_gpkg.CopyLayer( mon_vecteur,  MODELE_CONTOUR_NOM,  [])
+            # pour clore et ecrire le GPKG
             mon_nouveau_gpkg = None
       
-    # Assert
+    # Assert GPKG existe
     if not os.path.isfile( nom_gpkg):
         # Vérifier si GPKG existe bien
         uMsg = self.tr( "Erreur bloquante : problème lors de recherche du géopackage {0}").\
@@ -590,17 +591,18 @@ def physiocap_vecteur_vers_gpkg( self, chemin_session, nom_base_gpkg,
     if ( nom_court_vecteur == None) or ( nom_vecteur == None):
         return nom_gpkg
 
-    # Ajout du nouveau vecteur dans GPKG par copie OGR
+    # Ajout du nouveau vecteur dans GPKG sortie de la copie OGR
     le_nom_gpkg_complete = nom_gpkg + SEPARATEUR_GPKG + nom_court_vecteur
-    physiocap_log( "Physiocap : Créer GPKG  {0}".format( le_nom_gpkg_complete), TRACE_TOOLS)
+    physiocap_log( "Physiocap : Création GPKG  {0}".format( le_nom_gpkg_complete), TRACE_TOOLS)
     mon_shape = ogr.Open( nom_vecteur)
     mon_layer = mon_shape.GetLayerByIndex(0)
-    # TODO ajouter le scr sur le vecteur ou lors de copie
-    #physiocap_log( "Physiocap : avec le CRS  {0}".format( mon_layer.XXXXX), TRACE_TOOLS)
     le_gpkg = ogr.Open( nom_gpkg,  True)
     le_gpkg.CopyLayer( mon_layer,  nom_court_vecteur,  [])
     # pour ecrire
     le_gpkg = None
+    
+    # TODO: Détruire le GPKG intermediaire
+    
     return le_nom_gpkg_complete     
         
 #  AUTRE solution   Ne crée que l'enveloppe mais ne copie pas les données
@@ -642,24 +644,41 @@ def physiocap_segment_vers_vecteur( self, chemin_session,  nom_repertoire, nom_s
     distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
         laProjectionCRS, laProjectionTXT, EPSG_NUMBER = \
             physiocap_quelle_projection_et_lib_demandee( self)        
-
+    nom_court_vecteur_segment = None
+    nom_court_prj_segment = None
+    #nom_gpkg = None
+    quel_vecteur_demande = self.fieldComboFormats.currentText()
     if segment_simplifie == "YES":
-        nom_court_shape = nom_session + NOM_SEGMENTS
+        nom_court_vecteur = nom_session + NOM_SEGMENTS
     else:
-        nom_court_shape = nom_session + NOM_SEGMENTS + NOM_SEGMENTS_SUITE_DETAILS    
-    nom_court_vecteur_segment = nom_court_shape + EXT_CRS_SHP
-    nom_court_prj_segment = nom_court_shape + EXT_CRS_PRJ
-    nom_vecteur_segment = os.path.join( nom_repertoire, nom_court_vecteur_segment)
-    nom_prj = os.path.join( nom_repertoire, nom_court_prj_segment)
-    # Si le shape existe dejà il faut le détruire
-    if os.path.isfile( nom_vecteur_segment):
-        # A_TESTER: je doute que ca marche
-        physiocap_log( self.tr( "Le shape file existant déjà, il est détruit."), TRACE_TOOLS)
-        os.remove( nom_vecteur_segment) 
+        nom_court_vecteur = nom_session + NOM_SEGMENTS + NOM_SEGMENTS_SUITE_DETAILS    
+    if quel_vecteur_demande == SHAPEFILE_NOM: 
+        nom_court_vecteur_segment = nom_court_vecteur + EXT_CRS_SHP
+        nom_court_prj_segment = nom_court_vecteur + EXT_CRS_PRJ
+        nom_vecteur_segment = os.path.join( nom_repertoire, nom_court_vecteur_segment)
+        nom_prj = os.path.join( nom_repertoire, nom_court_prj_segment)
+        # Si le shape existe dejà il faut le détruire
+        if os.path.isfile( nom_vecteur_segment):
+            # A_TESTER: je doute que ca marche
+            physiocap_log( self.tr( "Le shape file existant déjà, il est détruit."), TRACE_TOOLS)
+            os.remove( nom_vecteur_segment) 
+    elif quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
+        # Assert GPKG existe : nom_gpkg = 
+        physiocap_vecteur_vers_gpkg( self, chemin_session, nom_session)
+        nom_court_gpkg_extension = nom_court_vecteur + EXTENSION_GPKG
+        nom_gpkg_intermediaire = os.path.join( chemin_session, nom_court_gpkg_extension)
+    else:
+        # Assert type vecteur supporté
+        raise physiocap_exception_vecteur_type_inconnu( quel_vecteur_demande)
+
+    # Assert GPKG existe
 
     # Prepare les attributs
     les_champs = QgsFields()
-    les_champs.append( QgsField("GID", QVariant.Int, "integer", 10))
+    if quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
+        les_champs.append( QgsField("fid", QVariant.Int, "integer", 10))
+    else:
+        les_champs.append( QgsField("GID", QVariant.Int, "integer", 10))
     les_champs.append( QgsField("GID_10", QVariant.Int, "integer", 10))
     les_champs.append( QgsField("NB_POINTS", QVariant.Int, "integer", 10))
     les_champs.append( QgsField("DATE_DEB", QVariant.String, "string", 25))
@@ -667,11 +686,15 @@ def physiocap_segment_vers_vecteur( self, chemin_session,  nom_repertoire, nom_s
     les_champs.append( QgsField("DERIVE", QVariant.Double, "double", 10,2))
     les_champs.append( QgsField("GID_GARDE", QVariant.String, "varchar", 100))
     les_champs.append( QgsField("GID_TROU", QVariant.String, "varchar", 100))
-#    
-    # Creation du Shape
-    writer = QgsVectorFileWriter( nom_vecteur_segment, "utf-8", les_champs, 
-            QgsWkbTypes.MultiLineString, laProjectionCRS , 
-            SHAPEFILE_DRIVER)
+
+    # Creation du vecteur
+    if quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
+        # CAS Géopackage
+        writer = QgsVectorFileWriter( nom_gpkg_intermediaire, "utf-8", les_champs, 
+            QgsWkbTypes.MultiLineString, laProjectionCRS, GEOPACKAGE_DRIVER)
+    else:    
+        writer = QgsVectorFileWriter( nom_vecteur_segment, "utf-8", les_champs, 
+            QgsWkbTypes.MultiLineString, laProjectionCRS, SHAPEFILE_DRIVER)
             
     # Ecriture du shp
     numero_ligne = 0
@@ -719,9 +742,9 @@ def physiocap_segment_vers_vecteur( self, chemin_session,  nom_repertoire, nom_s
 
     nom_layer_cree = nom_vecteur_segment
     # Cas geopackage
-    if self.fieldComboFormats.currentText() == GEOPACKAGE_NOM  and version_3 == "YES":
+    if quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
         nom_layer_cree = physiocap_vecteur_vers_gpkg( self, chemin_session, nom_session,  
-            nom_court_shape, nom_vecteur_segment )
+            nom_court_vecteur, nom_gpkg_intermediaire)
         
     return nom_layer_cree
 
@@ -739,22 +762,33 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
         laProjectionCRS, laProjectionTXT, EPSG_NUMBER = \
             physiocap_quelle_projection_et_lib_demandee( self)        
     
-    nom_court_shapefile = nom_court_vecteur + EXT_CRS_SHP
-    nom_court_projection = nom_court_vecteur + EXT_CRS_PRJ
+    # Initialisation
+    nom_vecteur = None
+    prj_name = None
+    #nom_gpkg = None
+    quel_vecteur_demande = self.fieldComboFormats.currentText()
+    if quel_vecteur_demande == SHAPEFILE_NOM:
+        nom_court_shapefile = nom_court_vecteur + EXT_CRS_SHP
+        nom_court_projection = nom_court_vecteur + EXT_CRS_PRJ
+        nom_vecteur = os.path.join(chemin_shapes, nom_court_shapefile)
+        prj_name = os.path.join(chemin_shapes, nom_court_projection)
+        # Si le shape existe dejà il faut le détruire
+        if os.path.isfile( nom_vecteur):
+            # TODO : A_TESTER: je doute que ca marche : detruire plutot par une option de creation
+            os.remove( nom_vecteur)            
+    elif quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
+        # Creer seulement le geopackage
+        #nom_gpkg = <<< Inutile
+        physiocap_vecteur_vers_gpkg( self, chemin_session, Nom_Session)
+        nom_court_gpkg = NOM_POINTS[1:] + extension_point
+        nom_court_gpkg_extension = nom_court_gpkg + EXTENSION_GPKG
+        nom_gpkg_intermediaire = os.path.join( chemin_session, nom_court_gpkg_extension)
+        #nom_gpkg_final = nom_gpkg + SEPARATEUR_GPKG + nom_court_gpkg
 
-    nom_vecteur = os.path.join(chemin_shapes, nom_court_shapefile)
-    prj_name = os.path.join(chemin_shapes, nom_court_projection)
-
-    # Creer seulement le geopackage
-    nom_gpkg = None
-    if self.fieldComboFormats.currentText() == GEOPACKAGE_NOM  and version_3 == "YES":
-        nom_gpkg = physiocap_vecteur_vers_gpkg( self, chemin_session, Nom_Session)
-        
-    # Si le shape existe dejà il faut le détruire
-    if os.path.isfile( nom_vecteur):
-        # TODO : A_TESTER: je doute que ca marche : detruire plutot par une option de creation
-        os.remove( nom_vecteur)            
- 
+    else:
+        # Assert type vecteur supporté
+        raise physiocap_exception_vecteur_type_inconnu( quel_vecteur_demande)
+    
     # Préparation de la liste d'arguments
     gid, x,y,nbsarm,diam,biom,date_capture,vitesse= [],[],[],[],[],[],[],[]
     altitude, pdop,  distance,  derive =  [],[],[],[]
@@ -846,8 +880,8 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
                 
     # Prepare les attributs
     les_champs = QgsFields()
-    # V1.0 Ajout du GID puis V3.1.8 pas fid si copie vers GPKG
-    if self.fieldComboFormats.currentText() == GEOPACKAGE_NOM  and version_3 == "YES":
+    # V1.0 Ajout du GID puis V3.1.8 pas fid si GPKG
+    if quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
         les_champs.append( QgsField("fid", QVariant.Int, "integer", 10))
     else:
         les_champs.append( QgsField("GID", QVariant.Int, "integer", 10))
@@ -871,21 +905,20 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
         les_champs.append(QgsField("BIOMGM2", QVariant.Double,"double", 10,2))
         les_champs.append(QgsField("BIOMGCEP", QVariant.Double,"double", 10,2))
 
-    # Creation du vecteur
-    if version_3 == "YES":
-        writer = QgsVectorFileWriter( nom_vecteur, "utf-8", les_champs, 
-                QgsWkbTypes.PointZM, laProjectionCRS , SHAPEFILE_DRIVER)
-    else:
-        writer = QgsVectorFileWriter( nom_vecteur, "utf-8", les_champs, 
-                QgsWkbTypes.Point, laProjectionCRS , SHAPEFILE_DRIVER)
 
-### CAS Géopackage
-    if self.fieldComboFormats.currentText() == GEOPACKAGE_NOM  and version_3 == "YES":
-        # Copie dans geopackage 
-        nom_court_gpkg = NOM_POINTS[1:] + extension_point
-        nom_gpkg_cree = nom_gpkg + SEPARATEUR_GPKG + nom_court_gpkg
-        writer_gpkg = QgsVectorFileWriter( nom_gpkg_cree, "utf-8", les_champs, 
+    # Creation du vecteur
+    if quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
+        # CAS Géopackage
+        writer = QgsVectorFileWriter( nom_gpkg_intermediaire, "utf-8", les_champs, 
                 QgsWkbTypes.PointZM, laProjectionCRS , GEOPACKAGE_DRIVER)
+    else:
+        if version_3 == "YES":
+            # Cas V3
+            writer = QgsVectorFileWriter( nom_vecteur, "utf-8", les_champs, 
+                    QgsWkbTypes.PointZM, laProjectionCRS , SHAPEFILE_DRIVER)
+        else:
+            writer = QgsVectorFileWriter( nom_vecteur, "utf-8", les_champs, 
+                    QgsWkbTypes.Point, laProjectionCRS , SHAPEFILE_DRIVER)
 
 ### CAS Géopackage BAD ne n'a pas creer de vecteur, mais un tuple
 ###    if self.fieldComboFormats.currentText() == GEOPACKAGE_NOM  and version_3 == "YES":
@@ -951,11 +984,8 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
                                     ])                
         # Ecrit le feature
         writer.addFeature( feat)
-        writer_gpkg.addFeature( feat)
-    #writer.flushBuffer()
+    # Fermer le vecteur
     writer = None
-    writer_gpkg = None
-    
 
     # Create the PRJ file
     physiocap_create_projection_file( prj_name,  laProjectionTXT)
@@ -964,15 +994,14 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
     progress_barre = progress_barre + 5
     self.progressBar.setValue( progress_barre)
  
-    nom_layer_cree = nom_vecteur
-    # Cas geopackage
-    if self.fieldComboFormats.currentText() == GEOPACKAGE_NOM  and version_3 == "YES":
-        nom_layer_cree = nom_gpkg_cree
-#### OK OGR   if self.fieldComboFormats.currentText() == GEOPACKAGE_NOM  and version_3 == "YES":
-####        nom_layer_cree = physiocap_vecteur_vers_gpkg( self, chemin_session, Nom_Session,
-####            nom_court_vecteur, nom_vecteur )
-####   
-
+    nom_layer_cree = None
+    # Cas geopackage il faut faire une copie du gpkg intermediaire
+    if quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
+        nom_layer_cree = physiocap_vecteur_vers_gpkg( self, chemin_session, Nom_Session,
+            nom_court_gpkg, nom_gpkg_intermediaire )
+    else:
+        nom_layer_cree = nom_vecteur
+        
     # Création de la synthese
     if nom_fichier_synthese != "NO":
         # ASSERT Le fichier de synthese existe
