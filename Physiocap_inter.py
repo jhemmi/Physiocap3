@@ -44,9 +44,9 @@
 from .Physiocap_tools import physiocap_message_box,\
         physiocap_log, physiocap_error, \
         physiocap_nom_entite_sans_pb_caractere, physiocap_rename_existing_file,  \
-        physiocap_quelle_projection_et_lib_demandee, \
-        physiocap_create_projection_file, \
+        physiocap_quelle_projection_et_lib_demandee, physiocap_create_projection_file, \
         physiocap_get_layer_by_URI,  physiocap_get_layer_by_ID
+        #physiocap_vecteur_vers_gpkg, \
 
 from .Physiocap_var_exception import *
 
@@ -589,7 +589,7 @@ def physiocap_point_un_contour( laProjectionCRS, EPSG_NUMBER, nom_point, nom_prj
             # On pose directement les 3D
             feat.setGeometry( QgsGeometry( QgsPoint( les_geoms_des_points[ i])))
         else:
-            # TODO: test sans fromPointXY
+            # A_TESTER: test sans fromPointXY
             feat.setGeometry( QgsGeometry.fromPointXY( les_geoms_des_points[ i])) #écrit la géométrie tel que lu dans shape contour
         if details == "YES":
             if version_3 == "YES":
@@ -918,7 +918,7 @@ class PhysiocapInter( QtWidgets.QDialog):
         # Pour les points
         nom_complet_point = dialogue.comboBoxPoints.currentText().split( SEPARATEUR_NOEUD)
         if ( len( nom_complet_point) != 2):
-            aText = self.tr( "Le shape de points n'est pas choisi. ")
+            aText = self.tr( "Le vecteur de points n'est pas choisi. ")
             aText = aText + self.tr( "Créer une nouvelle session Physiocap - bouton Filtrer les données brutes - ")
             aText = aText + self.tr( "avant de faire votre calcul de Moyenne Inter Parcellaire")
             physiocap_error( self, aText, "CRITICAL")
@@ -971,43 +971,59 @@ class PhysiocapInter( QtWidgets.QDialog):
         laProjectionCRS, laProjectionTXT, EPSG_NUMBER = \
             physiocap_quelle_projection_et_lib_demandee( dialogue)
 
-        if (version_3 == "NO"):
-            rep_vecteur = REPERTOIRE_SHAPEFILE
-        else:
-            rep_vecteur = REPERTOIRE_SHAPEFILE_V3
+##        if (version_3 == "NO"):
+##            rep_vecteur = REPERTOIRE_SHAPEFILE
+##        else:
+##            rep_vecteur = REPERTOIRE_SHAPEFILE_V3
+###        pro = vecteur_point.dataProvider() 
+###        if ( pro.name() == POSTGRES_NOM):
+###            # On construit le chemin depuis data/projet...
+###            # Todo: WT PG : test non passé : pour une deuxieme session ...
+###            chemin_session = os.path.join( repertoire_cible, nom_noeud_arbre)
+###            chemin_shapes = os.path.join( chemin_session, rep_vecteur)
+###            chemin_shapes_segment = os.path.join( chemin_shapes, REPERTOIRE_SEGMENT_V3)
         
-
-        # Retrouver et vérifier le repertoire de la session et des vecteurs (ancien shapefile)
-        pro = vecteur_point.dataProvider() 
-        if ( pro.name() == POSTGRES_NOM):
-            # On construit le chemin depuis data/projet...
-            # Todo: WT PG : test non passé : pour une deuxieme session ...
-            chemin_session = os.path.join( repertoire_cible, nom_noeud_arbre)
-            chemin_shapes = os.path.join( chemin_session, rep_vecteur)
-            chemin_shapes_segment = os.path.join( chemin_shapes, REPERTOIRE_SEGMENT_V3)
-#        elif {Cas GeoPackage}
-#            # Retrouver le chemin de la session avec le géopackage choisi
-#            # Assert nom gpkg  == nom session et existe
-        else: # Cas de shapefiles
+        quel_vecteur_demande = dialogue.fieldComboFormats.currentText()
+        nom_vecteur_point = vecteur_point.dataProvider().dataSourceUri()
+        physiocap_log( "Nom du vecteur point {0} type vecteur point {1}". \
+                format(nom_vecteur_point, type(nom_vecteur_point)), leModeDeTrace)
+        if quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
+            # Retrouver le chemin de la session avec le géopackage choisi
+            # TODO: JHJH GEOPACKAGE
+            chemin_session = os.path.dirname( nom_vecteur_point)
+            pos_extension = nom_vecteur_point.rfind(SEPARATEUR_GPKG)
+            nom_raccourci_gpkg = nom_vecteur_point[:pos_extension]
+            # Assert nom gpkg  == nom session et existe 
+            #nom_session = os.path.basename( nom_raccourci_gpkg)
+            #physiocap_vecteur_vers_gpkg( self, chemin_session, nom_session)
+            if not os.path.isfile( nom_raccourci_gpkg):
+                # Vérifier si GPKG existe bien
+                uMsg = self.tr( "Erreur bloquante : problème lors de recherche du géopackage {0}").\
+                    format( nom_raccourci_gpkg)
+                physiocap_error( self, uMsg)
+                raise physiocap_exception_no_gpkg( nom_raccourci_gpkg) 
+        
+        elif quel_vecteur_demande == SHAPEFILE_NOM:  # cas Shapefile
+            # Retrouver et vérifier le repertoire de la session et des vecteurs (ancien shapefile)
             # Assert repertoire shapefile : c'est le repertoire qui contient le vecteur point
             # Ca fonctionne pour consolidation
-            nom_vecteur_point = vecteur_point.dataProvider().dataSourceUri()
-            physiocap_log( "Nom du vecteur point {0} type vecteur point {1}". \
-                        format(nom_vecteur_point, type(nom_vecteur_point)), leModeDeTrace)
             chemin_shapes = os.path.dirname( nom_vecteur_point)
             chemin_shapes_segment = os.path.join( chemin_shapes, REPERTOIRE_SEGMENT_V3)
-            physiocap_log( "Nom du chemin segment {0} ". \
-                        format(chemin_shapes_segment), leModeDeTrace)
             chemin_session = os.path.dirname( chemin_shapes)
             shape_point_extension = os.path.basename( nom_vecteur_point)
             pos_extension = shape_point_extension.rfind(".")
             shape_point_sans_extension = shape_point_extension[:pos_extension]
-        if ( not os.path.exists( chemin_shapes)):
-            raise physiocap_exception_rep( chemin_shapes)
-        if  version_3 == "YES" and consolidation != "YES":
-            if ( not os.path.exists( chemin_shapes_segment)):
-                raise physiocap_exception_rep( chemin_shapes_segment)
-                    
+            if ( not os.path.exists( chemin_shapes)):
+                raise physiocap_exception_rep( chemin_shapes)
+            if  version_3 == "YES" and consolidation != "YES":
+                if ( not os.path.exists( chemin_shapes_segment)):
+                    raise physiocap_exception_rep( chemin_shapes_segment)
+        else: # Assert type vecteur supporté
+            raise physiocap_exception_vecteur_type_inconnu( quel_vecteur_demande)
+            
+        if ( not os.path.exists( chemin_session)):
+            raise physiocap_exception_rep( chemin_session)
+
         # CAS DE CONSOLIDATION ne traite pas les points sans mesure et les segments 
         if  version_3 == "YES" and consolidation != "YES":
             # On remplace la chaine finale du vecteur point par segment
@@ -1031,10 +1047,9 @@ class PhysiocapInter( QtWidgets.QDialog):
                     physiocap_error( self, aText, "CRITICAL")
                     return physiocap_message_box( dialogue, aText, "information" )
                    
-            # TODO : CAS DE CONSOLIDATION OU GEOPACKGE 
             if ( dialogue.checkBoxInterSegment.isChecked() or \
                 dialogue.checkBoxInterSegmentBrise.isChecked() ):
-                nom_vecteur_segment = nom_base_segment + NOM_SEGMENTS_DETAILS + EXT_CRS_SHP
+                nom_vecteur_segment = nom_base_segment + NOM_SEGMENTS + NOM_SEGMENTS_SUITE_DETAILS + EXT_CRS_SHP
                 vecteur_segment = physiocap_get_layer_by_URI( nom_vecteur_segment)
                 if ( vecteur_segment == None) or ( not vecteur_segment.isValid()):
                     physiocap_log( "Nom du vecteur segment {0} type vecteur {1}". \
@@ -1182,8 +1197,6 @@ class PhysiocapInter( QtWidgets.QDialog):
                 dialogue.checkBoxInterSegmentBrise.isChecked() ) and consolidation != "YES":
                 # Préfiltre dans un rectangle
                 # Récupération des SEGMENTS qui concernent ce contour
-#                ligne_precedente = None
-#                ligne_courante = None
                 for un_segment in vecteur_segment.getFeatures():
 #                    physiocap_log( "La geom du segment {1} est de type {0}". \
 #                        format( un_segment.geometry().wkbType(), i_segment ), leModeDeTrace)
@@ -1198,9 +1211,9 @@ class PhysiocapInter( QtWidgets.QDialog):
                         message = un_nom + " - PB multi segment" + str( i_segment) + " - "
                         raise physiocap_exception_segment_invalid( message)
                     les_points = les_multi_points[0]
-                    #nb_points = len( les_points)
-                    #physiocap_log( "== Pour le segment {0} le nombre de points {1}". \
-                    #    format( i_segment, nb_points), TRACE_SEGMENT)
+##                    nb_points = len( les_points)
+##                    physiocap_log( "== Pour le segment {0} le nombre de points {1}". \
+##                        format( i_segment, nb_points), TRACE_SEGMENT)
                     # On doit garder les points inter de ce segment 
                     for x_point,  y_point in les_points:
                         le_point = QgsPointXY(x_point, y_point)
@@ -1222,31 +1235,11 @@ class PhysiocapInter( QtWidgets.QDialog):
                             les_longueurs_segment.append( distancearea.measureLine( un_point, l_autre))
                             if ( i_segment > 1):
                                 les_distances_entre_segment.append(1)
-#                                if ligne_courante != None:
-#                                    ligne_precedente = ligne_courante 
-#                                    point_precedent =  ligne_precedente.centroid().asPoint()
-#                                else:
-#                                    point_precedent = None
-#                                ligne_courante = QgsGeometry.fromPolylineXY( [ un_point, l_autre] )
-#                                # Calcul de la distance entre ce segment et le segment précedent
-#                                # TODO Comparer a distance to nearest hub
-#                                # Valider aussi si pas trop de cas abérent avec les centoides
-#                                # Centroide du segment courant
-#                                point_actuel =  ligne_courante.centroid().asPoint()
-#                                if point_precedent != None:
-##                                    physiocap_log( "Type de point precedent {0} et point courant {1}". \
-##                                        format( point_precedent,  point_actuel), leModeDeTrace)
-#                                    # TODO: trouver un algo solide
-#                                    # ne prendre que les segments valides et long
-#                                    #les_distances_entre_segment.append( distancearea.measureLine( \
-#                                        point_actuel, point_precedent))                                                                
-#                                else:
-#                                    les_distances_entre_segment.append(1)
                             else:
 #                                physiocap_log( "Pas de calcul de distance : segment {0}". \
 #                                    format( i_segment))
-                                # TODO: Premier segment on ne sait pas 
-                                # prendre valeur dans detail vignoble spinBoxInterrangs
+                                # Premier segment on ne sait pas on force à 1m
+                                # A_TESTER: prendre valeur dans detail vignoble spinBoxInterrangs
                                 les_distances_entre_segment.append(1)
                             les_azimuths_segment.append( un_point.azimuth( l_autre))
                             les_dates_debut_segment.append( un_segment["DATE_DEB"])
@@ -1612,8 +1605,8 @@ class PhysiocapInter( QtWidgets.QDialog):
                     # ###################
                     # CRÉATION segment  brisé dans contour
                     # ###################
-                    nom_court_segment_brise = nom_noeud_arbre + NOM_SEGMENTS_DETAILS + SEPARATEUR_ + un_nom_libere + EXT_CRS_SHP     
-                    nnom_court_segment_brise_prj = nom_noeud_arbre + NOM_SEGMENTS_DETAILS + SEPARATEUR_ + un_nom_libere + EXT_CRS_PRJ     
+                    nom_court_segment_brise = nom_noeud_arbre + NOM_SEGMENTS + NOM_SEGMENTS_SUITE_DETAILS + SEPARATEUR_ + un_nom_libere + EXT_CRS_SHP     
+                    nnom_court_segment_brise_prj = nom_noeud_arbre + NOM_SEGMENTS + NOM_SEGMENTS_SUITE_DETAILS + SEPARATEUR_ + un_nom_libere + EXT_CRS_PRJ     
                     nom_segment_brise = physiocap_rename_existing_file( os.path.join( chemin_segments, nom_court_segment_brise))        
                     nom_segment_brise_prj = physiocap_rename_existing_file( os.path.join( chemin_segments, nnom_court_segment_brise_prj))        
                     
@@ -1643,10 +1636,8 @@ class PhysiocapInter( QtWidgets.QDialog):
                     SHAPE_SEGMENT_BRISE_PAR_CONTOUR = "YES"
                     ligne_segment_brise = QgsVectorLayer( nom_segment_brise, nom_court_segment_brise, 'ogr')
                     
-                # TODO: Vérifier le besoin de recuperer ces deux vecteurs
                 points_vector = QgsVectorLayer( nom_point, nom_court_point, 'ogr')
                 vignette_vector = QgsVectorLayer( nom_vignette, nom_court_vignette, 'ogr')
-          
                 
                 if vignette_group_inter != None:
                     if  SHAPE_MOYENNE_PAR_CONTOUR == "YES" or \

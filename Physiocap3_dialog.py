@@ -480,6 +480,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
 
         try :
             import matplotlib
+            matplotlib.path
         except ImportError:
             aText = self.tr( "Le module matplotlib n'est pas accessible. ")
             aText = aText + self.tr( "Vous ne pouvez pas visualiser les histogrammes ")
@@ -1254,7 +1255,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
     def slot_INTRA_maj_attributs_interpolables( self,  ORIGINE_TRIPLET):
         """ Créer la liste des attributs interpolable
         Cette liste provient de ATTRIBUTS_INTRA et si details ATTRIBUTS_INTRA_DETAILS et gere le cas V3"""
-        leModeDeTrace = self.fieldComboModeTrace.currentText()
+        #leModeDeTrace = self.fieldComboModeTrace.currentText()
         ATTR_LISTE=[]
 
         if (len( ATTRIBUTS_INTRA) == 0):
@@ -1451,7 +1452,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         
     def memoriser_expert(self):
         """ Mémoriser les choix d'expert """        
-        # THEMATIQUES
+        # THEMATIQUES text et index
         self.settings.setValue("Physiocap/leDirThematiques", self.fieldComboThematiques.currentText())
         self.settings.setValue("Physiocap/leChoixDeThematiques", self.fieldComboThematiques.currentIndex())
 
@@ -1691,9 +1692,9 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             physiocap_log_for_error( self)
             aText = self.tr( "Erreur bloquante lors de la création du répertoire : {0}").\
                 format( e)
-            aText = aText + self.tr( "Vous pouvez avoir un problème d'accès à vos répertoires (accès reseau ...). \n ")
-            aText = aText + self.tr( "Vous avez peut être commencé vos calculs en V2 et continuer en V3 (ou inversement). ")
-            aText = aText + self.tr( "Restez dans la même version pour l'ensemble des traitemetns dans un même projet.")
+            aText = aText + self.tr( "Vous pouvez avoir un problème d'accès à vos répertoires (accès réseau ...). \n ")
+            aText = aText + self.tr( "Peut-être avez-vous commencé vos calculs en V2 et continué en V3 (ou inversement). ")
+            aText = aText + self.tr( "Restez dans la même version pour l'ensemble des traitements dans une même session.")
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
         except physiocap_exception_vignette_exists as e:
@@ -1869,11 +1870,11 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
         except physiocap_exception_vignette_exists as e:
-            aText1 = self.tr( "Les moyennes InterParcellaires dans {0} existent déjà. ").\
+            aText = self.tr( "Les moyennes InterParcellaires dans {0} existent déjà. ").\
                 format( e)
             physiocap_log(aText1, leModeDeTrace,  "information")
             physiocap_log_for_error( self)
-            aText = aText1 + self.tr( "Vous ne pouvez pas redemander ce calcul Inter : vous devez détruire le groupe ") 
+            aText = aText + self.tr( "Vous ne pouvez pas redemander ce calcul Inter : vous devez détruire le groupe ") 
             aText = aText + self.tr( "ou créer une nouvelle session Physiocap")
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
@@ -2083,11 +2084,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         laProjectionCRS, laProjectionTXT, EPSG_NUMBER = \
             physiocap_quelle_projection_et_lib_demandee( self)
         self.settings.setValue("Physiocap/laProjection", laProjectionTXT)
-        
-        # Trop tot self.settings.setValue("Physiocap/dernier_repertoire", self.lineEditDernierProjet.text() )
         self.settings.setValue("Physiocap/mindiam", int( self.spinBoxMinDiametre.value()))
         self.settings.setValue("Physiocap/maxdiam", int( self.spinBoxMaxDiametre.value()))
-
   
         # Cas détail vignoble
         details = "NO"
@@ -2126,9 +2124,24 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 laProjectionCRS,  laProjectionTXT, 
                 EXT_CRS_SHP, EXT_CRS_PRJ,
                 details, TRACE_HISTO, recursif, version_3)
+
         except physiocap_exception_rep as e:
             physiocap_log_for_error( self)
             aText = self.tr( "Erreur bloquante lors de la création du répertoire : {0}").\
+                format( e)
+            physiocap_error( self, aText, "CRITICAL")
+            return physiocap_message_box( self, aText, "information" )
+
+        except physiocap_exception_fic as e:
+            physiocap_log_for_error( self)
+            aText = self.tr( "Erreur bloquante lors de la création du fichier : {0}").\
+                format( e)
+            physiocap_error( self, aText, "CRITICAL")
+            return physiocap_message_box( self, aText, "information" )
+
+        except physiocap_exception_csv as e:
+            physiocap_log_for_error( self)
+            aText = self.tr( "Erreur bloquante lors de la création du fichier csv : {0}").\
                 format( e)
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
@@ -2146,20 +2159,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 format( e)
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
-        
-        except physiocap_exception_fic as e:
-            physiocap_log_for_error( self)
-            aText = self.tr( "Erreur bloquante lors de la création du fichier : {0}").\
-                format( e)
-            physiocap_error( self, aText, "CRITICAL")
-            return physiocap_message_box( self, aText, "information" )
-
-        except physiocap_exception_csv as e:
-            physiocap_log_for_error( self)
-            aText = self.tr( "Erreur bloquante lors de la création du fichier csv : {0}").\
-                format( e)
-            physiocap_error( self, aText, "CRITICAL")
-            return physiocap_message_box( self, aText, "information" )
 
         except physiocap_exception_mid as e:
             physiocap_log_for_error( self)
@@ -2171,6 +2170,25 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         except physiocap_exception_no_mid:
             physiocap_log_for_error( self)
             aText = self.tr( "Erreur bloquante : aucun fichier MID à traiter")
+            physiocap_error( self, aText, "CRITICAL")
+            return physiocap_message_box( self, aText, "information" )
+    
+        except physiocap_exception_no_transform as e:
+            aMsg = "{0} Erreur bloquante durant tranformation CRS : pour la ligne brute numéro {1}". \
+                    format ( PHYSIOCAP_STOP,  e)
+            physiocap_error( self, aMsg, "CRITICAL" )
+            return physiocap_message_box( self, aText, "information" )
+            
+        except physiocap_exception_no_gpkg as e:
+            aMsg = self.tr( "Erreur bloquante : problème lors de recherche du géopackage {0}").\
+                format( e)
+            physiocap_error( self, aMsg, "CRITICAL")
+            return physiocap_message_box( self, aText, "information" )
+        
+        except physiocap_exception_vecteur_type_inconnu as e:
+            physiocap_log_for_error( self)
+            aText = self.tr( "Erreur bloquante : le format de vecteur {0} n'est pas supporté par l'extension").\
+                format( e)
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
 

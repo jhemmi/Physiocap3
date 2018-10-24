@@ -492,20 +492,18 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 format( nom_iso_final), TRACE_INTRA)   
                 
         elif choix_force_interpolation == "GDAL":
-            # Appel GDAL
-            # Paramètres apres le champ
-            # Power vaut 2 
-            # Lissage à 0 car ce lissage peut se faire dans les propriétés du raster
-            # Rayon identique 
-            # Max points à 20 (si non atteint, forcage à valeur 0    
-            # Min à 5 
-            # Angle à 0 (c'est l'angle de l'ellipse)
-            # TODO: trouver syntaxe où appeller gdalwarp directement 
-              # KO dans IDW
-            #option_outsize = "-outsize {0} {0}".format( pixelIntra)
+##            # Appel GDAL
+##            # Paramètres apres le champ
+##            # Power vaut 2 
+##            # Lissage à 0 car ce lissage peut se faire dans les propriétés du raster
+##            # Rayon identique 
+##            # Max points à 20 (si non atteint, forcage à valeur 0    
+##            # Min à 5 
+##            # Angle à 0 (c'est l'angle de l'ellipse)
+##            # KO dans IDW option_outsize = "-outsize {0} {0}".format( pixelIntra)
 ##            # KO pour idw et clip VOIR Avec \" ou ' et "
-            # KO pour idw et clip
-            # option_resolution = "-tr \"{0} {0}\"".format( pixelIntra)
+##            # KO pour idw et clip
+##            # option_resolution = "-tr \"{0} {0}\"".format( pixelIntra)
 
             # IDW GDAL
             IDW_GDAL = {'INPUT':nom_point,  'Z_FIELD' : le_champ_choisi, 
@@ -622,7 +620,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 format( PHYSIOCAP_UNI, self.tr("Traitement")), leModeDeTrace)
             raise physiocap_exception_no_processing( "Pas d'extension Traitement")
         except AttributeError:
-            # TODO: Vérifier syntaxe en Win 32 bits et attraper cette erreur
+            # A_TESTER: Vérifier syntaxe en Win 32 bits et attraper cette erreur
             physiocap_log( self.tr( "{0} nécessite SAGA version 2.3.1 à 2.3.2").\
                 format( PHYSIOCAP_UNI), leModeDeTrace)
             raise physiocap_exception_no_saga( "Erreur attribut")
@@ -835,7 +833,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
             # #####################
             # Cas d'une image seule
             # #####################
-            # TODO: Selon la taille, éviter ce calcul Intra et remplacer par un merge des tif et isolignes
+            # A_TESTER: Selon la taille, éviter ce calcul Intra et remplacer par un merge des tif et isolignes
             if ( dialogue.checkBoxIntraUnSeul.isChecked() and 
                 choix_interpolation != "GDAL") :
                 contours_possibles = contours_possibles + 1

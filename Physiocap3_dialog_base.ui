@@ -93,7 +93,7 @@
     <enum>QTabWidget::North</enum>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>3</number>
    </property>
    <property name="movable">
     <bool>true</bool>
@@ -2189,7 +2189,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <string>GDAL</string>
       </property>
       <property name="checked">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
      </widget>
      <widget class="QRadioButton" name="radioButtonSAGA">
@@ -2218,7 +2218,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <string>SAGA</string>
       </property>
       <property name="checked">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
      </widget>
     </widget>
@@ -5107,7 +5107,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="text">
-       <string>Version 3.1.8-beta-1</string>
+       <string>Version 3.2.0 Beta GPKG</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_500">

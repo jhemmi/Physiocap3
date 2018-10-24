@@ -324,29 +324,37 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
  
         # Progress BAR 10 %
         dialogue.progressBar.setValue( 10) 
-        # Verification de l'existance ou création du répertoire des SHAPEFILE
-        if (version_3 == "NO"):
-            rep_vecteur = REPERTOIRE_SHAPEFILE
-        else:
-            rep_vecteur = REPERTOIRE_SHAPEFILE_V3
-        chemin_shapes = os.path.join(chemin_session, rep_vecteur)
-        if not (os.path.exists( chemin_shapes)):
-            try :
-                os.mkdir( chemin_shapes)
-            except :
-                raise physiocap_exception_rep( rep_vecteur)
 
-        if (version_3 == "NO"):
-            nom_dir_vecteur_segment = os.path.join(chemin_session, rep_vecteur)
-        else:
-            # Création du dir des shapes de segments
-            nom_dir_vecteur_segment = os.path.join( chemin_shapes, REPERTOIRE_SEGMENT_V3)
-            
-        if not (os.path.exists( nom_dir_vecteur_segment)):
-            try :
-                os.mkdir( nom_dir_vecteur_segment)
-            except :
-                raise physiocap_exception_rep( REPERTOIRE_SEGMENT_V3)
+        quel_vecteur_demande = dialogue.fieldComboFormats.currentText()
+
+        physiocap_log( self.tr( "{0} Vecteurs demandés dans le format {1}").\
+                format( PHYSIOCAP_UNI, quel_vecteur_demande), leModeDeTrace)
+        chemin_shapes = None
+        nom_dir_vecteur_segment = None
+        if quel_vecteur_demande == SHAPEFILE_NOM:
+            # Verification de l'existance ou création du répertoire des SHAPEFILE
+            if (version_3 == "NO"):
+                rep_vecteur = REPERTOIRE_SHAPEFILE
+            else:
+                rep_vecteur = REPERTOIRE_SHAPEFILE_V3
+            chemin_shapes = os.path.join(chemin_session, rep_vecteur)
+            if not (os.path.exists( chemin_shapes)):
+                try :
+                    os.mkdir( chemin_shapes)
+                except :
+                    raise physiocap_exception_rep( rep_vecteur)
+
+            if (version_3 == "NO"):
+                nom_dir_vecteur_segment = os.path.join(chemin_session, rep_vecteur)
+            else:
+                # Création du dir des shapes de segments
+                nom_dir_vecteur_segment = os.path.join( chemin_shapes, REPERTOIRE_SEGMENT_V3)
+                
+            if not (os.path.exists( nom_dir_vecteur_segment)):
+                try :
+                    os.mkdir( nom_dir_vecteur_segment)
+                except :
+                    raise physiocap_exception_rep( REPERTOIRE_SEGMENT_V3)
 
         # Progress BAR 12 %
         dialogue.progressBar.setValue( 12)

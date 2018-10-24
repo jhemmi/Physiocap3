@@ -382,21 +382,18 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
             ### On utilise XY[0 et 1] puis Altitude XY[2] Pdop XY[5] et vitesse XY[7] 
             XY = [float(x) for x in result[1:9]]     
             
-            # Puis on transforme les WGS84 (du capteur) en L93 (certainement utile)
+            # Puis on transforme les WGS84 (du capteur) en L93 (probablement utile)
+            # TODO: d'autre EPSG ? et eviter cet appel dans la boucle
             crsDest = QgsCoordinateReferenceSystem.fromEpsgId( EPSG_NUMBER_L93)   # Lambert 93
             crsSrc = QgsCoordinateReferenceSystem.fromEpsgId( EPSG_NUMBER_GPS)  # WGS 84
             transformer = QgsCoordinateTransform()
             transformer.setSourceCrs( crsSrc)
             transformer.setDestinationCrs( crsDest)
             if not transformer.isValid():
-                aMsg = "Erreur bloquante durant transformation GPS vers L93 ligne numéro %d" %( numero_point)
-                physiocap_error( self, aMsg )
-                err.write( aMsg) # on écrit la ligne dans le fichier ERREUR
-                # TODO: monter une exception
-                break
+                # A_TESTER: monter une exception # plus d'appel de break
+                raise physiocap_exception_no_transform( numero_point)
             
             # On assure la tranformation par compatibilité du CVS en GPS et L93
-            # TODO d'autre EPSG ?
             point_L93 = transformer.transform( QgsPointXY( XY[0],XY[1]))
             XY_L93 = [ point_L93.x(), point_L93.y() ]
             # aMsg = "Transformation faite X {0} et Y {1}". \
@@ -419,7 +416,7 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
 
         # TODO: envisager de marquer les points à conserver (non filtré et dans un segment)
         # pour creer un 4eme csv POINTS_VALIDES
-        # ce qui est complique pour les segments courts que je ne connais pas encore
+        # ce qui reste compliqué pour les segments courts que je ne connais pas encore
         
         try:  # SEGMENT si V3
             # On regarde les points sans mesure avant SEGMENT
@@ -436,7 +433,7 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
                 # Stocker le premier point pour comparer au prochain tour    
                 # et la Date début
                 precedent = XY_projete    
-                # TODO: Mettre en Z la dérive
+                # TODO: Si passage en 3D mettre en Z la dérive
                 info_en_cours[ DATE_DEBUT] = result[0]
                 if len(diamsF) == 0:
                     # On ne STOCKE pas les points sans MESURE 
@@ -723,7 +720,6 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
 #                raise physiocap_exception_calcul_segment_invalid( "Date non présente")
                 
         # Creer les lignes simplifiés ou brisés de ces segments et infos
-        # A_TESTER: passer L93 ou GPS
         vecteur_segment = physiocap_segment_vers_vecteur( self, chemin_session, nom_dir_segment,  nom_session, 
             mes_lignes_sans_coupure,  info_lignes_sans_coupure, version_3)
         vecteur_segment_brise = physiocap_segment_vers_vecteur( self, chemin_session, nom_dir_segment,  nom_session,

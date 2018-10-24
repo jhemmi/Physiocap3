@@ -270,7 +270,7 @@ class physiocap_exception( BaseException):
         self.value = value
     def __str__(self):
         return repr(self.value)
-    
+# FILTRER    
 class physiocap_exception_rep( physiocap_exception):
     pass
 class physiocap_exception_fic( physiocap_exception):
@@ -279,32 +279,36 @@ class physiocap_exception_csv( physiocap_exception):
     pass
 class physiocap_exception_err_csv( physiocap_exception):
     pass
-class physiocap_exception_no_gpkg( physiocap_exception):
-    pass
-class physiocap_exception_vecteur_type_inconnu( physiocap_exception):
-    pass
 class physiocap_exception_trop_err_csv( physiocap_exception):
     pass
 class physiocap_exception_mid( physiocap_exception):
     pass
 class physiocap_exception_no_mid( physiocap_exception):
     pass
+class physiocap_exception_no_transform( physiocap_exception):
+    pass
+class physiocap_exception_no_gpkg( physiocap_exception):
+    pass
+class physiocap_exception_vecteur_type_inconnu( physiocap_exception):
+    pass
+class physiocap_exception_calcul_segment_invalid( physiocap_exception):
+    pass
 class physiocap_exception_stop_user( physiocap_exception):
     pass  
-class physiocap_exception_params( physiocap_exception):
-    pass
 
-# INTRA
-class physiocap_exception_interpolation( physiocap_exception):
-    pass
+#INTER
 class physiocap_exception_vignette_exists( physiocap_exception):
     pass
 class physiocap_exception_points_invalid( physiocap_exception):
     pass
-class physiocap_exception_calcul_segment_invalid( physiocap_exception):
-    pass
+
 class physiocap_exception_segment_invalid( physiocap_exception):
+    pass    
+    
+# INTRA
+class physiocap_exception_interpolation( physiocap_exception):
     pass
+
 class physiocap_exception_no_processing( physiocap_exception):
     pass
 class physiocap_exception_no_saga( physiocap_exception):

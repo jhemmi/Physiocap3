@@ -151,7 +151,6 @@ def physiocap_write_in_synthese( self, aText):
     """Write a text in the results list"""
     self.textEditSynthese.insertPlainText( aText)   
   
-    
 def physiocap_is_only_ascii(s):
     if isinstance( s, unicode):
         physiocap_log( "physiocap_is_only_ascii {0}".format( "Cas unicode"), leModeTrace)
@@ -219,7 +218,6 @@ def  physiocap_nom_entite_avec_pb_caractere( un_nom, un_texte = "GDAL"):
     # On a rien trouvé
     return False
     
-       
 def physiocap_get_layer_by_URI( layerURI ):
     """Rend le layer affiché dans le projet QGIS
     qui répond à l'URI layerURI"""
@@ -252,7 +250,6 @@ def physiocap_get_layer_by_URI( layerURI ):
             return None
     else:
         return None
-
 
 def physiocap_get_layer_by_name( layerName ):
     """Rend le layer affiché dans le projet QGIS 
@@ -322,7 +319,7 @@ def physiocap_quelle_projection_et_lib_demandee( self):
         la_projection_TXT = PROJECTION_L93
 
     la_projection_CRS = QgsCoordinateReferenceSystem.fromEpsgId( mon_EPSG_number)
-    # TODO: Récuperer le CRS du projet QGIS et le compare au choix
+    # A_TESTER: Récuperer le CRS du projet QGIS et le compare au choix
 #    laProjection_str = str( la_projection_CRS.postgisSrid())
 #    if la_projection_CRS.isValid():
 #        physiocap_log("Projection {0} des shapefiles est demandée : {1} est un EPSG valide".\
@@ -468,7 +465,7 @@ def physiocap_rename_create_dir( chemin):
 
 
 def physiocap_open_file( nom_court, chemin, type_ouverture="w"):
-    """ Créer ou detruit et re-crée un fichier"""
+    """ Crée ou detruit et re-crée un fichier"""
     # Fichier des diamètres     
     nom_fichier = os.path.join(chemin, nom_court)
     if ((type_ouverture == "w") and os.path.isfile( nom_fichier)):
@@ -602,8 +599,10 @@ def physiocap_vecteur_vers_gpkg( self, chemin_session, nom_base_gpkg,
     le_gpkg.CopyLayer( mon_layer,  nom_court_vecteur,  [])
     # pour ecrire
     le_gpkg = None
-    
-    # TODO: Détruire le GPKG intermediaire
+    # Sous windows lacher les vecteurs aussi
+    mon_layer = None
+    mon_shape = None
+    # Détruire le GPKG intermediaire
     os.remove( nom_vecteur)
     
         
@@ -779,7 +778,7 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
         prj_name = os.path.join(chemin_shapes, nom_court_projection)
         # Si le shape existe dejà il faut le détruire
         if os.path.isfile( nom_vecteur):
-            # TODO : A_TESTER: je doute que ca marche : detruire plutot par une option de creation
+            # A_TESTER: je doute que ca marche : detruire plutot par une option de creation
             os.remove( nom_vecteur)            
     elif quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
         # Creer seulement le geopackage
@@ -789,7 +788,6 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
         nom_court_gpkg_extension = nom_court_gpkg + EXTENSION_GPKG
         nom_gpkg_intermediaire = os.path.join( chemin_session, nom_court_gpkg_extension)
         #nom_gpkg_final = nom_gpkg + SEPARATEUR_GPKG + nom_court_gpkg
-
     else:
         # Assert type vecteur supporté
         raise physiocap_exception_vecteur_type_inconnu( quel_vecteur_demande)
@@ -955,7 +953,7 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
             feat.setGeometry( QgsGeometry(QgsPoint( 
                 Xpoint, y[numPoint], val_Z, val_M))) 
         else:
-            # TODO: test sans fromPointXY
+            # A_TESTER: test sans fromPointXY
             feat.setGeometry( QgsGeometry.fromPointXY(QgsPointXY( Xpoint,y[numPoint]))) #écrit la géométrie
         
         if details == "YES":
