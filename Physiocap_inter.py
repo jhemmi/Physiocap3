@@ -1002,7 +1002,9 @@ class PhysiocapInter( QtWidgets.QDialog):
                     format( nom_raccourci_gpkg)
                 physiocap_error( self, uMsg)
                 raise physiocap_exception_no_gpkg( nom_raccourci_gpkg) 
-        
+            
+            return physiocap_message_box( dialogue, 
+            self.tr( "== Géopackage n'est pas disponible pour les traitements inter-parcellaires"), "information")
         elif quel_vecteur_demande == SHAPEFILE_NOM:  # cas Shapefile
             # Retrouver et vérifier le repertoire de la session et des vecteurs (ancien shapefile)
             # Assert repertoire shapefile : c'est le repertoire qui contient le vecteur point

@@ -33,15 +33,15 @@
 import os 
 import platform
 
+# ###########################
+# VARIABLES GLOBALES DE PHYSIOCAP
+# ###########################
+
 def physiocap_mon_unicode(x):
     mon_unic = ""
-    for pos in range( len( PHYSIOCAP_TEST4)):
-        mon_unic = mon_unic + PHYSIOCAP_TEST4[pos] + PHYSIOCAP_TEST6[pos]
+    for pos in range( len( PHYSIOCAP_TEST3)):
+        mon_unic = mon_unic + PHYSIOCAP_TEST3[pos] + PHYSIOCAP_TEST6[pos]
     return mon_unic
-
-# ###########################
-# VARIABLES GLOBALES
-# ###########################
 
 # Ces variables sont nommées en Francais par compatibilité avec la version physiocap_V8
 # Pour reconnaitre si Windows ou Linux
@@ -52,7 +52,7 @@ else:
     LE_MODE_PROD = "YES"
     
 # LIVRAISON : supprimer en Prod
-LE_MODE_PROD = "NO"
+#LE_MODE_PROD = "NO"
 
 # En prod CENTROIDES vaut NO
 CENTROIDES = "NO"  # CENTROIDES YES est pour voir les centroides dans la synthese
@@ -83,8 +83,8 @@ PHYSIOCAP_LOG_ERREUR = PHYSIOCAP_WARNING + " " + PHYSIOCAP_UNI + " Erreurs"
 # Test de robustesse de la gestion des unicodes
 PHYSIOCAP_TEST1 = "ȧƈƈḗƞŧḗḓ ŧḗẋŧ ƒǿř ŧḗşŧīƞɠ"
 PHYSIOCAP_TEST2 = "ℛℯα∂α♭ℓℯ ♭ʊ☂ η☺т Ѧ$☾ℐℐ"
-PHYSIOCAP_TEST3 = "¡ooʇ ןnɟǝsn sı uʍop-ǝpısdn"
-PHYSIOCAP_TEST4  = "Ja otiu"
+PHYSIOCAP_TEST3  = "Ja otiu"
+PHYSIOCAP_TEST4 = "¡ooʇ ןnɟǝsn sı uʍop-ǝpısdn"
 PHYSIOCAP_TEST5 = "Moët"
 PHYSIOCAP_TEST6  = "'icnrbé"
 
@@ -301,14 +301,12 @@ class physiocap_exception_vignette_exists( physiocap_exception):
     pass
 class physiocap_exception_points_invalid( physiocap_exception):
     pass
-
 class physiocap_exception_segment_invalid( physiocap_exception):
     pass    
     
 # INTRA
 class physiocap_exception_interpolation( physiocap_exception):
     pass
-
 class physiocap_exception_no_processing( physiocap_exception):
     pass
 class physiocap_exception_no_saga( physiocap_exception):

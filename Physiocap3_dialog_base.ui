@@ -5093,9 +5093,9 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="geometry">
        <rect>
-        <x>310</x>
+        <x>290</x>
         <y>0</y>
-        <width>171</width>
+        <width>201</width>
         <height>20</height>
        </rect>
       </property>
@@ -5107,7 +5107,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="text">
-       <string>Version 3.2.0 Beta GPKG</string>
+       <string>Version 3.4.0 CONSOLIDATION</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_500">

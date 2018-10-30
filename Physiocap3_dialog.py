@@ -1894,6 +1894,20 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             aText = aText + self.tr( "calcul de Moyenne Inter Parcellaire" )
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
+        
+        # Nouveautés avec Geopackage
+        except physiocap_exception_no_gpkg as e:
+            aMsg = self.tr( "Erreur bloquante : problème lors de recherche du géopackage {0}").\
+                format( e)
+            physiocap_error( self, aMsg, "CRITICAL")
+            return physiocap_message_box( self, aText, "information" )
+        except physiocap_exception_vecteur_type_inconnu as e:
+            physiocap_log_for_error( self)
+            aText = self.tr( "Erreur bloquante : le format de vecteur {0} n'est pas supporté par l'extension").\
+                format( e)
+            physiocap_error( self, aText, "CRITICAL")
+            return physiocap_message_box( self, aText, "information" )
+
         except:
             raise
         finally:
@@ -2131,67 +2145,57 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 format( e)
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
-
         except physiocap_exception_fic as e:
             physiocap_log_for_error( self)
             aText = self.tr( "Erreur bloquante lors de la création du fichier : {0}").\
                 format( e)
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
-
         except physiocap_exception_csv as e:
             physiocap_log_for_error( self)
             aText = self.tr( "Erreur bloquante lors de la création du fichier csv : {0}").\
                 format( e)
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
-        
         except physiocap_exception_err_csv as e:
             physiocap_log_for_error( self)
             aText = self.tr( "Erreurs dans les données brutes {0}").\
                 format( e)
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
-
         except physiocap_exception_trop_err_csv as e:
             physiocap_log_for_error( self)
             aText = self.tr( "Trop d'erreurs {0} dans les données brutes").\
                 format( e)
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
-
         except physiocap_exception_mid as e:
             physiocap_log_for_error( self)
             aText = self.tr( "Erreur bloquante lors de la copie du fichier MID : {0}").\
                 format( e)
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
-
         except physiocap_exception_no_mid:
             physiocap_log_for_error( self)
             aText = self.tr( "Erreur bloquante : aucun fichier MID à traiter")
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
-    
         except physiocap_exception_no_transform as e:
             aMsg = "{0} Erreur bloquante durant tranformation CRS : pour la ligne brute numéro {1}". \
                     format ( PHYSIOCAP_STOP,  e)
             physiocap_error( self, aMsg, "CRITICAL" )
             return physiocap_message_box( self, aText, "information" )
-            
         except physiocap_exception_no_gpkg as e:
             aMsg = self.tr( "Erreur bloquante : problème lors de recherche du géopackage {0}").\
                 format( e)
             physiocap_error( self, aMsg, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
-        
         except physiocap_exception_vecteur_type_inconnu as e:
             physiocap_log_for_error( self)
             aText = self.tr( "Erreur bloquante : le format de vecteur {0} n'est pas supporté par l'extension").\
                 format( e)
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
-
         except physiocap_exception_calcul_segment_invalid as e:
             physiocap_log_for_error( self)
             aText = self.tr( "Erreur bloquante durant création des segments : {0}").\

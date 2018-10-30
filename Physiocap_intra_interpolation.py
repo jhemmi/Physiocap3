@@ -732,7 +732,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 chemin_raster =  os.path.join( chemin_intra, REPERTOIRE_RASTER_V3)
                 chemin_iso =  os.path.join( chemin_intra, REPERTOIRE_ISO_V3)
 
-        if version_3 == "YES":
+        if version_3 == "YES" and consolidation != "YES":
             if not (os.path.exists( chemin_intra)):
                 try:
                     os.mkdir( chemin_intra)
