@@ -671,7 +671,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
         laProjectionCRS, laProjectionTXT, EPSG_NUMBER = \
             physiocap_quelle_projection_et_lib_demandee( dialogue)
 
-        # Assert repertoire shapefile 
+        quel_vecteur_demande = dialogue.fieldComboFormats.currentText()
         nom_point_en_cours = vecteur_point.dataProvider().dataSourceUri()
         pos_fin_layer = nom_point_en_cours.rfind( "|layerid=")
         if ( pos_fin_layer != -1):
@@ -679,14 +679,29 @@ class PhysiocapIntra( QtWidgets.QDialog):
         else:
             nom_point_exact  = nom_point_exact
 
-        chemin_shapes = os.path.dirname( nom_point_exact ) 
-        chemin_session = os.path.dirname( chemin_shapes)
-        shape_point_extension = os.path.basename( nom_point_exact)
-        pos_extension = shape_point_extension.rfind(".")
-        shape_point_sans_extension = shape_point_extension[:pos_extension]
-        if ( not os.path.exists( chemin_shapes)):
-            raise physiocap_exception_rep( chemin_shapes)
+        # TODO: Test type de vecteur
+        if quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
+            chemin_session = os.path.dirname( nom_point_exact)
+            # Version 3.4.0 pas de geopackage en intra
+            return physiocap_message_box( dialogue, 
+            self.tr( "== Le format Géopackage n'est pas disponible pour les traitements intra-parcellaires"), "information")
+        
+        elif quel_vecteur_demande == SHAPEFILE_NOM:  # cas Shapefile
+            # Assert repertoire shapefile 
+            chemin_shapes = os.path.dirname( nom_point_exact ) 
+            chemin_session = os.path.dirname( chemin_shapes)
+            shape_point_extension = os.path.basename( nom_point_exact)
+            pos_extension = shape_point_extension.rfind(".")
+            shape_point_sans_extension = shape_point_extension[:pos_extension]
+            if ( not os.path.exists( chemin_shapes)):
+                raise physiocap_exception_rep( chemin_shapes)
+        
+        else: # Assert type vecteur supporté
+                raise physiocap_exception_vecteur_type_inconnu( quel_vecteur_demande)
 
+        if ( not os.path.exists( chemin_session)):
+            raise physiocap_exception_rep( chemin_session)
+ 
         consolidation = "NO"
         if dialogue.checkBoxConsolidation.isChecked():
             consolidation = "YES"

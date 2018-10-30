@@ -985,13 +985,14 @@ class PhysiocapInter( QtWidgets.QDialog):
         
         quel_vecteur_demande = dialogue.fieldComboFormats.currentText()
         nom_vecteur_point = vecteur_point.dataProvider().dataSourceUri()
-        physiocap_log( "Nom du vecteur point {0} type vecteur point {1}". \
-                format(nom_vecteur_point, type(nom_vecteur_point)), leModeDeTrace)
+# TODO: Test type de vecteur
+#       physiocap_log( "Nom du vecteur point {0} type vecteur point {1}". \
+#                format( nom_vecteur_point, type(nom_vecteur_point)), leModeDeTrace)
         if quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
             # Retrouver le chemin de la session avec le géopackage choisi
             # TODO: JHJH GEOPACKAGE
             chemin_session = os.path.dirname( nom_vecteur_point)
-            pos_extension = nom_vecteur_point.rfind(SEPARATEUR_GPKG)
+            pos_extension = nom_vecteur_point.rfind(SEPARATEUR_GPKG[0])
             nom_raccourci_gpkg = nom_vecteur_point[:pos_extension]
             # Assert nom gpkg  == nom session et existe 
             #nom_session = os.path.basename( nom_raccourci_gpkg)
@@ -1002,9 +1003,9 @@ class PhysiocapInter( QtWidgets.QDialog):
                     format( nom_raccourci_gpkg)
                 physiocap_error( self, uMsg)
                 raise physiocap_exception_no_gpkg( nom_raccourci_gpkg) 
-            
+            # Version 3.4.0 pas de geopackage en intra            
             return physiocap_message_box( dialogue, 
-            self.tr( "== Géopackage n'est pas disponible pour les traitements inter-parcellaires"), "information")
+            self.tr( "== Le format Géopackage n'est pas disponible pour les traitements inter-parcellaires"), "information")
         elif quel_vecteur_demande == SHAPEFILE_NOM:  # cas Shapefile
             # Retrouver et vérifier le repertoire de la session et des vecteurs (ancien shapefile)
             # Assert repertoire shapefile : c'est le repertoire qui contient le vecteur point

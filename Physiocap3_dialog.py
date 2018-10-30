@@ -1897,9 +1897,9 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         
         # Nouveautés avec Geopackage
         except physiocap_exception_no_gpkg as e:
-            aMsg = self.tr( "Erreur bloquante : problème lors de recherche du géopackage {0}").\
+            aText = self.tr( "Erreur bloquante : problème lors de recherche du géopackage {0}").\
                 format( e)
-            physiocap_error( self, aMsg, "CRITICAL")
+            physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
         except physiocap_exception_vecteur_type_inconnu as e:
             physiocap_log_for_error( self)
@@ -2181,14 +2181,14 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
         except physiocap_exception_no_transform as e:
-            aMsg = "{0} Erreur bloquante durant tranformation CRS : pour la ligne brute numéro {1}". \
+            aText = "{0} Erreur bloquante durant tranformation CRS : pour la ligne brute numéro {1}". \
                     format ( PHYSIOCAP_STOP,  e)
-            physiocap_error( self, aMsg, "CRITICAL" )
+            physiocap_error( self, aText, "CRITICAL" )
             return physiocap_message_box( self, aText, "information" )
         except physiocap_exception_no_gpkg as e:
-            aMsg = self.tr( "Erreur bloquante : problème lors de recherche du géopackage {0}").\
+            aText = self.tr( "Erreur bloquante : problème lors de recherche du géopackage {0}").\
                 format( e)
-            physiocap_error( self, aMsg, "CRITICAL")
+            physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
         except physiocap_exception_vecteur_type_inconnu as e:
             physiocap_log_for_error( self)
