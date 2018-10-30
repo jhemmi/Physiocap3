@@ -614,7 +614,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
 #                    format( PHYSIOCAP_UNI, self.tr("Traitement")), leModeDeTrace)
 #                raise physiocap_exception_no_processing( "Pas d'extension Traitement - initialize")               
             versionGDAL = processing.tools.raster.gdal.__version__
-            versionSAGA = processing.algs.saga.SagaUtils.getInstalledVersion()
+            versionSAGA = "2.3.2" # processing.algs.saga.SagaUtils.getInstalledVersion()
         except ImportError:
             physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
                 format( PHYSIOCAP_UNI, self.tr("Traitement")), leModeDeTrace)
