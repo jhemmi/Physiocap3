@@ -2,11 +2,11 @@
 _Physiocap plugin helps analysing raw data from Physiocap in QGIS. The documentations available on github are in French only. 
 The plugin and TIPS are mainly translated in English and Italian_
 
-La version 3 de l'extension se nomme Physiocap3 et supporte QGIS3 mais ne peut tourner sous QGIS 2. Par contre, Physiocap3 permet de conserver des formats de résultats identiques à ceux des versions 1.8.3 de QgisPhysiocapPlugin (compatible avec QGIS 2.14).
+La version 3 de l'extension se nomme Physiocap3 et supporte QGIS3 mais ne peut pas tourner sous QGIS 2. Par contre, Physiocap3 permet de conserver des formats de résultats identiques à ceux des versions 1.8.3 de QgisPhysiocapPlugin (compatible avec QGIS 2.14).
 
 L'extension Physiocap pour QGIS permet d'analyser les résultats bruts de Physiocap. Il s'agit de mesures directes de l'expression végétative de la vigne.
 Trois métriques sont calculés à partir des données brutes :
-* nombre de bois au mètre
+* nombre de sarments au mètre
 * le diamètre moyen et
 * l'indice de biomasse (kg de bois par m2)
 	
@@ -23,19 +23,18 @@ Cette version permet les interpolations SAGA et GDAL (voir détail dans l'issue 
 
 *"Physiocap" est déposé par le CIVC.*
 
-L'extension QgisPysiocapPlugin intègre le code de calcul du CIVC (PHYSIOCAP_V8). QgisPysiocapPlugin est donc sous licence Common Creative CC-BY-NC-SA V4. S'appuyant sur QGIS 3 API elle est aussi sous licence GNU/GPL (voir les détails sous https://github.com/jhemmi/Physiocap3/blob/master/LICENSE). Physiocap3 Plugin est un logiciel libre qui cherche :
+L'extension Pysiocap3 intègre le code de calcul du CIVC (PHYSIOCAP_V8). Pysiocap3 est donc sous licence Common Creative CC-BY-NC-SA V4. S'appuyant sur QGIS 3 API elle est aussi sous licence GNU/GPL (voir les détails sous https://github.com/jhemmi/Physiocap3/blob/master/LICENSE). Physiocap3 Plugin est un logiciel libre mais aussi un bien commun qui cherche :
 * à diffuser le traitement de ses données au plus près de l'utilisateur,
 * à favoriser l'utilisation de QGIS 3 dans le monde viticole,
 * plus généralement à "Valoriser vos données"
 
-La documentation de la version 2 se trouve dans le Wiki
-https://github.com/jhemmi/QgisPhysiocapPlugin/wiki/Qgis-Physiocap-Plugin-usage-&-installation
-La documentation de la version 3 n'est pas encore disponible.
+La documentation de la version 3 se trouve dans le Wiki https://github.com/jhemmi/Physiocap3/wiki. La documentation utilisateur est disponible sous https://drive.google.com/file/d/1l0cjwrqVe4PaROBVw7XpPlOK2Qdos_5X/view.
 
-La version 3.1.6 B est publiée dans le dépot github. La version 3.1.3-INTRA_GDAL est déposée sous QGIS 3 (accessible directement dans QGIS 3 depuis le Menu "Extension").
+La version 3.1.6 LTR est déposée sous QGIS 3 (accessible directement dans QGIS 3 depuis le Menu "Extension").
 
-La version de QGIS 3.0.3 va sortir dans les derniers jours de mai. Attention, elle n'a pas été testé avec Physiocap3. Elle sera testée avec 3.1.6 LTR et l'extension sera alors déposée dans QGIS.
+La version de QGIS 3.4 sortie fin octobre est accompagnée de la sortie de la version 3.4.0 CONSOLIDATION de Physiocap3 qui est disponible sous githut et le sera très prochainement dans la dépot de QGIS 3.
+La numérotation de l'extension suit le numéro des versions LT de QGIS3.
 
-**Attention, ce dépot GitHub contient la aussi dernière version en cours d'évolution (la 3.1.6 - Mai 2018 https://github.com/jhemmi/Physiocap3/releases) **
+**Attention, ce dépot GitHub contient la aussi dernière version en cours d'évolution (la 3.4.1 - Nov 2018 https://github.com/jhemmi/Physiocap3/releases) **
 
-**Warning, this GitHub repo contains last evolution version (Version  3.1.6 - Mai 2018 https://github.com/jhemmi/Physiocap3/releases) **
+**Warning, this GitHub repo contains last evolution version (Version 3.4.1 - No 2018 https://github.com/jhemmi/Physiocap3/releases) **
