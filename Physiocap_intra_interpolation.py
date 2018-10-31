@@ -677,7 +677,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
         if ( pos_fin_layer != -1):
             nom_point_exact = nom_point_en_cours[:pos_fin_layer]
         else:
-            nom_point_exact  = nom_point_exact
+            nom_point_exact  = nom_point_en_cours
 
         # TODO: Test type de vecteur
         if quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
