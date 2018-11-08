@@ -32,9 +32,9 @@ La documentation de la version 3 se trouve dans le Wiki https://github.com/jhemm
 
 La version 3.1.6 LTR est déposée sous QGIS 3 (accessible directement dans QGIS 3 depuis le Menu "Extension").
 
-La version de QGIS 3.4 sortie fin octobre est accompagnée de la sortie de la version 3.4.0 CONSOLIDATION de Physiocap3 qui est disponible sous githut et le sera très prochainement dans la dépot de QGIS 3.
+La version de QGIS 3.4 sortie fin octobre est accompagnée de la sortie de la version 3.4.0 CONSOLIDATION de Physiocap3 qui est disponible sous github et dans la dépot de QGIS 3.
 La numérotation de l'extension suit le numéro des versions LT de QGIS3.
 
 **Attention, ce dépot GitHub contient la aussi dernière version en cours d'évolution (la 3.4.1 - Nov 2018 https://github.com/jhemmi/Physiocap3/releases) **
 
-**Warning, this GitHub repo contains last evolution version (Version 3.4.1 - No 2018 https://github.com/jhemmi/Physiocap3/releases) **
+**Warning, this GitHub repo contains last evolution version (Version 3.4.1 - November 2018 https://github.com/jhemmi/Physiocap3/releases) **
