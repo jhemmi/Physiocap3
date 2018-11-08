@@ -45,7 +45,7 @@ from .Physiocap_tools import ( physiocap_log, physiocap_error, \
 from .Physiocap_var_exception import *
 
 #from PyQt5.QtCore import QVariant
-from qgis.core import ( QgsCoordinateReferenceSystem, QgsCoordinateTransform,  \
+from qgis.core import ( Qgis, QgsCoordinateReferenceSystem, QgsCoordinateTransform,  \
         QgsPointXY, QgsMessageLog)
         
 try :
@@ -694,7 +694,8 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
             raise physiocap_exception_err_csv( nom_court_csv_concat)
 
     if version_3 == "NO":
-        pass
+        vecteur_segment = None
+        vecteur_segment_brise = None
     else:
         if len( info_lignes_sans_coupure) != nombre_segments_sans_coupure:
             physiocap_error( self, "{0} on a trouvé {1} segments et {2} infos". \

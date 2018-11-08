@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project Physiocap3 -->
-<!-- Saved: 2018-01-17, 13:09:36 -->
+<!-- Saved: 2018-11-08, 15:11:36 -->
 <!-- Copyright (C) 2018 jhemmi.eu, jhemmi.eu -->
 <Project version="5.1">
   <Language></Language>
@@ -23,7 +23,6 @@
     <Source>Physiocap_tools.py</Source>
     <Source>Physiocap_var_exception.py</Source>
     <Source>__init__.py</Source>
-    <Source>scripts/MID_recursif.py</Source>
     <Source>test/__init__.py</Source>
     <Source>test/qgis_interface.py</Source>
     <Source>test/test_Physiocap3_dialog.py</Source>
