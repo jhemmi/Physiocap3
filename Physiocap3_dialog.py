@@ -42,14 +42,14 @@
 ***************************************************************************/
 """
 
-from .Physiocap_tools import physiocap_message_box, \
+from .Physiocap_tools import (physiocap_message_box, \
         physiocap_log_for_error, physiocap_log, physiocap_error, \
         physiocap_quelle_projection_et_lib_demandee, physiocap_nom_entite_avec_pb_caractere, \
-        physiocap_get_layer_by_name,  physiocap_get_layer_by_ID
+        physiocap_get_layer_by_name,  physiocap_get_layer_by_ID)
 
-from .Physiocap_creer_arbre import PhysiocapFiltrer
+from .Physiocap_creer_arbre import (PhysiocapFiltrer)
 from .Physiocap_inter import (PhysiocapInter, physiocap_fill_combo_poly_or_point)
-from .Physiocap_intra_interpolation import PhysiocapIntra 
+from .Physiocap_intra_interpolation import (PhysiocapIntra) 
 from .Physiocap_var_exception import *
 
 from PyQt5 import uic
@@ -78,10 +78,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.plugins_dir = os.path.dirname( self.plugin_dir)
         self.python_dir = os.path.dirname( self.plugins_dir)
         self.gis_dir = os.path.dirname( self.python_dir)
-
-#        version_3 = "NO"
-#        if self.checkBoxV3.isChecked():
-#            version_3 = "YES"
 
         self.settings= QSettings(PHYSIOCAP_NOM, PHYSIOCAP_NOM_3)
         # Remplissage du mode de traces
@@ -1859,10 +1855,14 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.memoriser_saisies_inter_intra_parcelles()
             
         try:
-            #physiocap_moyenne_InterParcelles(self)
             inter = PhysiocapInter( self)
-            # not used retour = 
-            inter.physiocap_moyenne_InterParcelles( self)        
+            # TODO: RENDU bloquer l'affichage self.iface.mapCanvas().setRenderFlag( False )
+            inter.physiocap_moyenne_InterParcelles( self)
+            # TODO: RENDU capturer dans la boucle le cancel
+            #if not self.progressBar.parent().parent().processStatus:
+                # The process was canceled
+                #self.iface.mapCanvas().setRenderFlag( True )
+    
         except physiocap_exception_rep as e:
             physiocap_log_for_error( self)
             aText = self.tr( "Erreur bloquante lors de la création du répertoire : {0}").\
@@ -1911,6 +1911,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         except:
             raise
         finally:
+            # TODO: RENDU again self.iface.mapCanvas().setRenderFlag( True )
             pass
         # Fin de capture des erreurs Physiocap        
         

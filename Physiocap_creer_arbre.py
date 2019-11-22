@@ -44,10 +44,10 @@ from .Physiocap_tools import ( physiocap_message_box, physiocap_question_box,\
         physiocap_rename_existing_file, physiocap_rename_create_dir, physiocap_open_file, \
         physiocap_look_for_MID, physiocap_list_MID, physiocap_csv_vers_vecteur ) 
         
-from .Physiocap_CIVC import physiocap_assert_csv, physiocap_ferme_csv, \
-        physiocap_fichier_histo, physiocap_tracer_histo, physiocap_filtrer   
+from .Physiocap_CIVC import (physiocap_assert_csv, physiocap_ferme_csv, \
+        physiocap_fichier_histo, physiocap_tracer_histo, physiocap_filtrer)   
 
-from .Physiocap_inter import physiocap_fill_combo_poly_or_point
+from .Physiocap_inter import (physiocap_fill_combo_poly_or_point)
 
 from .Physiocap_var_exception import *
 
@@ -307,6 +307,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             return physiocap_error( self, uMsg)
 
         # ouverture du fichier source
+        csv_concat.close()
         csv_concat = open(nom_csv_concat, "r")
 
         # Appeler la fonction de traitement
@@ -384,12 +385,14 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             name = nom_histo_vitesse
             physiocap_tracer_histo( data_histo_vitesse, name, 0, 15, "VITESSE en km/h", "FREQUENCE", "HISTOGRAMME VITESSE AVANT TRAITEMENT")
             data_histo_vitesse.close()  
+            histo_vitesse.close()  
 
             nom_data_histo_diametre, data_histo_diametre = physiocap_open_file( nom_court_fichier_diametre, chemin_textes, 'r')
             nom_histo_diametre, histo_diametre = physiocap_open_file( FICHIER_HISTO_DIAMETRE, chemin_histos)
             name = nom_histo_diametre
             physiocap_tracer_histo( data_histo_diametre, name, 0, 30, "DIAMETRE en mm", "FREQUENCE", "HISTOGRAMME DIAMETRE AVANT TRAITEMENT")
             data_histo_diametre.close()        
+            histo_diametre.close()        
             
             #physiocap_log( self.tr( "Fin de la création des histogrammes bruts"), leModeDeTrace)
         else:
@@ -445,13 +448,14 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         # On remonte les autres exceptions
         except:
             raise
-        # Progress BAR 35 %
-        dialogue.progressBar.setValue( 35)
+        # Progress BAR 30 %
+        dialogue.progressBar.setValue( 30)
 
         if histogrammes == "YES":
             # Histo apres filtration
             nom_fichier_diametre_filtre, diametre_filtre = physiocap_open_file( 
                 nom_court_fichier_diametre_filtre, chemin_textes , "r")
+            histo_diametre.close()
             nom_histo_diametre_filtre, histo_diametre = physiocap_open_file( FICHIER_HISTO_DIAMETRE_FILTRE, chemin_histos)
 
             physiocap_tracer_histo( diametre_filtre, nom_histo_diametre_filtre, 0, 30, \
@@ -460,6 +464,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             #physiocap_log( self.tr( "Fin de la création de l'histogramme filtré"), leModeDeTrace)
                                               
         # On écrit dans le fichiers résultats les paramètres du modéle
+        fichier_synthese.close()
         fichier_synthese = open(nom_fichier_synthese, "a")
         if details == "NO":
             fichier_synthese.write("\nAucune information parcellaire saisie\n")
@@ -478,8 +483,8 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         fichier_synthese.write("Diamètre maximal : %s mm\n" %maxdiam)
         fichier_synthese.close()
 
-        # Progress BAR 38%
-        dialogue.progressBar.setValue( 38)
+        # Progress BAR 40%
+        dialogue.progressBar.setValue( 40)
 
         nom_base_vecteur = Nom_Session + NOM_POINTS
         # Création des vecteurs sans 0
@@ -490,7 +495,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         nom_layer_sans_0 = physiocap_csv_vers_vecteur( dialogue, chemin_session, Nom_Session, 
             40, EXTENSION_SANS_ZERO, 
             nom_csv_sans_0,  chemin_shapes, nom_court_vecteur_sans_0,
-            nom_fichier_synthese, details, version_3)
+            "NO", details, version_3)
  
         # Progress BAR 50 %
         dialogue.progressBar.setValue( 50)
@@ -517,10 +522,10 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             nom_layer_0_seul = physiocap_csv_vers_vecteur( dialogue, chemin_session, Nom_Session, 
                 80, EXTENSION_ZERO_SEUL, 
                 nom_csv_0_seul,  chemin_shapes, nom_court_vecteur_0_seul,
-                nom_fichier_synthese, details, version_3) 
+                "NO", details, version_3) 
                 
-        # Progress BAR 90%
-        dialogue.progressBar.setValue( 905)
+        # Progress BAR 80%
+        dialogue.progressBar.setValue( 80)
         
         # Creer un groupe pour cette analyse
         # Attention il faut qgis > 2.4 metadata demande V2.4 mini
@@ -613,8 +618,8 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
                 fichier_synthese.close
                 break
 
-        # Progress BAR 95 %
-        dialogue.progressBar.setValue( 95)
+        # Progress BAR 90 %
+        dialogue.progressBar.setValue( 90)
                     
         # Mettre à jour les histogrammes dans fenetre resultat
         if histogrammes == "YES":

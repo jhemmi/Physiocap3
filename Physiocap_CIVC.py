@@ -7,10 +7,10 @@
  creates a synthesis of Physiocap measures' campaign
  Physiocap3 plugin permet l'analyse les données brutes de Physiocap dans QGIS 3 et
  crée une synthese d'une campagne de mesures Physiocap
- 
+
  Le module CIVC contient le filtre de données, de creation des csv 
  et shapfile, de creation des histogrammes
- 
+
  Partie Calcul non modifié par rapport à physiocap_V8
  Les variables et fonctions sont nommées en Francais par compatibilité avec 
  la version physiocap_V8
@@ -47,112 +47,24 @@ from .Physiocap_var_exception import *
 #from PyQt5.QtCore import QVariant
 from qgis.core import ( Qgis, QgsCoordinateReferenceSystem, QgsCoordinateTransform,  \
         QgsPointXY, QgsMessageLog)
-        
+
 try :
+    import matplotlib
     import matplotlib.pyplot as plt
+    matplotlib.use('Qt4Agg')
+
 except ImportError:
     aText ="Erreur bloquante : module matplotlib.pyplot n'est pas accessible\n" 
     aText = aText + 'Sous Ubuntu : installez python3-matplotlib par "sudo apt-get install python3-matplotlib"'
     aText = aText + "Sous Fedora : installez python-matplotlib-qt4" 
     QgsMessageLog.logMessage( aText, "\u03D5 Erreurs", Qgis.Warning)
-    
+
 try :
     import numpy as np
 except ImportError:
     aText ="Erreur bloquante : module numpy n'est pas accessible" 
     QgsMessageLog.logMessage( aText, "\u03D5 Erreurs", Qgis.Warning)
 
-
-#### def physiocap_old_csv_vers_shapefile( self, progress_barre, extension_point ,  csv_name, nom_vecteur, prj_name,         
-#### Cas PG
-####    if (self.fieldComboFormats.currentText() == POSTGRES_NOM ):
-####        # Todo ; fonction physiocap_creer_PG_par_copie_vecteur( uri_nom, shape_modele)
-####        # Vérifier si une connexion Physiocap existe
-####        uri_nom = physiocap_quel_uriname( self)
-####        uri_modele = physiocap_get_uri_by_layer( self, uri_nom )
-####        if uri_modele != None:
-####            uri_connect, uri_deb, uri_srid, uri_fin = physiocap_tester_uri( self, uri_modele)
-####            if uri_deb != None:
-####                nom_court_shp = os.path.basename( nom_vecteur)
-####                #laTable = "'public.\"" + nom_court_shp[ :-4] + "\"'"
-####                laTable = "'\"" + nom_court_shp[ :-4] + "\"'"
-####                reponse = physiocap_existe_table_uri( self, uri_deb, laTable)
-####                if reponse != None:
-####                    if reponse == True:
-####                        laTable = "\"" + nom_court_shp[ :-4] + "\""
-####                        #physiocap_log( "Table existe déjà : " +  laTable, TRACE_PG)
-####                        # Cette table existe déjà = > drop 
-####                        reponse_drop = physiocap_detruit_table_uri( self, uri_deb, laTable)
-####                        if reponse_drop == None:
-####                            aText = "Problème lors de la destruction de la table : " +  laTable
-####                            physiocap_log( aText, TRACE_PG)
-####                            physiocap_error( self, aText)  
-####                            # Todo : V3 gérer par exception physiocap_exception_pg
-####                            return physiocap_message_box( self, 
-####                                self.tr( aText),
-####                                "warning")                   
-####                    # Creer la table
-####                    laTable = nom_court_shp[ :-4] 
-####                    vector = QgsVectorLayer( nom_vecteur, "INUTILE", 'ogr')
-####                    uri = uri_deb + uri_srid + \
-####                        " key=gid type=POINTS table=" + laTable + uri_fin
-#### #       uri = "dbname='testpostgis' host=localhost port=5432" + \
-#### #             " user='postgres' password='postgres'" + \
-#### #              " key=gid type=POINTS table=" + nom_court_shp[ :-4] + " (geom) sql="
-####                    error = QgsVectorLayerImport.importLayer( vector, uri, POSTGRES_NOM, laProjectionCRS, False, False)
-####                    if error[0] != 0:
-####                        physiocap_error( self, "Problème Postgres : " + str(error[0]) + " => " + str(error[1]))
-####                        #iface.messageBar().pushMessage('Physiocap Error', error[1], QgsMessageBar.CRITICAL, 5)    
-#### #                    else:
-#### #                        # Sans erreur on détruit le shape file
-#### #                        if os.path.isfile( nom_vecteur):
-#### #                            os.remove( nom_vecteur)
-####                else:
-####                    aText = "Vérification problématique pour la table : " + laTable + \
-####                        ". On continue avec des shapefiles"
-####                    physiocap_log( aText, TRACE_PG)
-####                    piocap_error( aText)
-####                    # Remettre le choix vers ESRI shape file
-####                    self.fieldComboFormats.setCurrentIndex( 0)   
-####            else:
-####                aText = "Pas de connection possible à Postgres : " + uri_nom + \
-####                    ". On continue avec des shapefiles"
-####                physiocap_log( aText, TRACE_PG)
-####                physiocap_error( self, aText)
-####                # Remettre le choix vers ESRI shape file
-####                self.fieldComboFormats.setCurrentIndex( 0)   
-####                
-####        else:
-####            aText = "Pas de connecteur vers Postgres : " +  uri_nom + \
-####                        ". On continue avec des shapefiles"
-####            physiocap_log( aText, TRACE_PG)
-####            physiocap_error( self, aText)
-####            # Remettre le choix vers ESRI shape file
-####            self.fieldComboFormats.setCurrentIndex( 0)   
-####    else:
-
-#############################################################################""""
-####    # TODO : Création des histogrammes 
-####    try :
-####        import processing
-####        try:
-####            from processing.core.Processing import Processing
-####            Processing.initialize()
-####        except:
-####            physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
-####                format( PHYSIOCAP_UNI, self.tr("Traitement")), leModeDeTrace)
-####            raise physiocap_exception_no_processing( "Pas d'extension Traitement")               
-####        versionGDAL = processing.tools.raster.gdal.__version__
-####        #versionSAGA = processing.algs.saga.SagaUtils.getInstalledVersion()
-####    except ImportError:
-####        physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
-####            format( PHYSIOCAP_UNI, self.tr("Traitement")), leModeDeTrace)
-####        raise physiocap_exception_no_processing( "Pas d'extension Traitement")
-####        
-####    physiocap_log( self.tr( "Gdal version {0}").format(versionGDAL), TRACE_TOOLS)
-####    physiocap_log( self.tr( "L'extension {1} est prete pour les histogrammes de {0}").\
-####        format( PHYSIOCAP_UNI, self.tr("Traitement")), TRACE_TOOLS)    
-###
 
 # Fonction pour vérifier le fichier csv de concatenation (projet_RAW.csv)   
 def physiocap_assert_csv(self, src, err):
@@ -183,7 +95,7 @@ def physiocap_assert_csv(self, src, err):
             if nombre_erreurs < 10:
                 physiocap_error( self, aMsg )
             err.write( aMsg + '\n' ) # on écrit la ligne dans le fichier ERREUR
-            
+
             continue # on a tracé erreur et on saute la ligne         
 
         # Vérifier si tous les champs sont des float        
@@ -222,7 +134,7 @@ def physiocap_assert_csv(self, src, err):
         return pourcentage_erreurs
     else:
         return 0
-          
+
 # Fonction pour créer les fichiers histogrammes    
 def physiocap_fichier_histo( self, src, histo_diametre, histo_nbsarment, histo_vitesse,  err):
     """Fonction de traitement. Creation des fichiers pour réaliser les histogrammes
@@ -230,7 +142,7 @@ def physiocap_fichier_histo( self, src, histo_diametre, histo_nbsarment, histo_v
     Les résultats est écrit au fur et à mesure dans histo_diametre ou histo_nbsarment
     Il se fait un filtre des diam qui ne sont pas entre 2 et 28
     """
-   
+
     numero_ligne = 0     
     while True :
         ligne = src.readline() # lit les lignes 1 à 1
@@ -241,10 +153,10 @@ def physiocap_fichier_histo( self, src, histo_diametre, histo_nbsarment, histo_v
         if comptage != NB_VIRGULES:
             # Assert ligne sans 58 virgules 
             continue # on saute la ligne
-        
+
         result = ligne.split(",") # split en fonction des virgules
         # Intégrer ici les autres cas d'erreurs
-                
+
         try : # accompli cette fonction si pas d'erreur sinon except
             XY = [float(x) for x in result[1:9]]   # on extrait les XY et on les transforme en float  > Données GPS 
             diams = [float(x) for x in result[9:NB_VIRGULES+1]] # on extrait les diams et on les transforme en float 
@@ -280,17 +192,21 @@ def physiocap_tracer_histo(src, name, min=0, max =28, labelx = "Lab X", labely =
     #physiocap_log( "Histo min %d et nombre de valeurs : %d " % (min, nb_valeur), TRACE_TOOLS)
     classes = np.linspace(min, max, max+1)
     #physiocap_log( "Histo liste {0} ".format( XY), TRACE_TOOLS)
-    plt.hist( XY, bins=classes, normed=1, facecolor='green', alpha=0.75) 
+    #plt.hist( XY, bins=classes, normed=1, facecolor='green', alpha=0.75) 
+    plt.hist( XY, bins=classes, density=1, facecolor='green', alpha=0.75) 
     plt.xlabel(labelx)
     plt.ylabel(labely)
     plt.title(titre)
     plt.xlim((min, max))
     plt.grid(True)
     plt.savefig(name)
+    #print("avant show Histo")
+    #plt.ion()
     plt.show( block = 'false')
+    #print("apres show Histo")
     plt.close()
     return
- 
+
 def physiocap_ferme_csv( csv_sans_0, csv_avec_0, csv_0_seul, diametre_filtre, erreur, csv_concat):
     """ Fermeture des fichiers de filtration """
     csv_sans_0.close()
@@ -328,13 +244,13 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
         titre_sans_detail = "X ; Y ; XL93 ; YL93 ; NBSARM ; DIAM ; BIOM ; DATE ; VITESSE"
     else: # Ajout en version 3 de l'altitude 
         titre_sans_detail = "ID;X ; Y ; XL93 ; YL93 ; ALTITUDE; PDOP ; DISTANCE; DERIVE; AZIMUTH; NBSART; NBSARM ; DIAM ; BIOM ; DATE ; VITESSE"
-        
+
     if details == "NO" :
         titre = titre_sans_detail
     else:
         #S'il existe des données parcellaire, le script travaille avec les données brutes et les données calculées
         titre = titre_sans_detail + titre_partie_details
-    
+
     # Ecriture de l'entete pour tous les cas
     csv_sans_0.write("{0}\n".format( titre)) 
     csv_avec_0.write("{0}\n".format( titre))
@@ -366,33 +282,32 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
 
     for numero_point, ligne_brute in enumerate( lignes_brutes):
         if not ligne_brute: break 
-        
+
         # Progress BAR de 15 à 40 %
         if ( numero_point > barre * progress_step):
             progress_bar = progress_bar + 1
             barre = barre + 1
             self.progressBar.setValue( progress_bar)  
-                
+
         comptage = ligne_brute.count(",") # compte le nombre de virgules
         result = ligne_brute.split(",") # split en fonction des virgules
-        
+
         try :  # Transform GPS en L93
             # on extrait les Colonnnes 1 à 8 (XY, puis GPS jusqu'à vitesse)
             # en on les transforme en float  
             ### On utilise XY[0 et 1] puis Altitude XY[2] Pdop XY[5] et vitesse XY[7] 
             XY = [float(x) for x in result[1:9]]     
-            
+
             # Puis on transforme les WGS84 (du capteur) en L93 (probablement utile)
-            # TODO: d'autre EPSG ? et eviter cet appel dans la boucle
+            # TODO: ?V3.x autres EPSG ? et eviter cet appel dans la boucle
             crsDest = QgsCoordinateReferenceSystem.fromEpsgId( EPSG_NUMBER_L93)   # Lambert 93
             crsSrc = QgsCoordinateReferenceSystem.fromEpsgId( EPSG_NUMBER_GPS)  # WGS 84
             transformer = QgsCoordinateTransform()
             transformer.setSourceCrs( crsSrc)
             transformer.setDestinationCrs( crsDest)
             if not transformer.isValid():
-                # A_TESTER: monter une exception # plus d'appel de break
                 raise physiocap_exception_no_transform( numero_point)
-            
+
             # On assure la tranformation par compatibilité du CVS en GPS et L93
             point_L93 = transformer.transform( QgsPointXY( XY[0],XY[1]))
             XY_L93 = [ point_L93.x(), point_L93.y() ]
@@ -414,10 +329,10 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
             # monter directemenr exception
             raise
 
-        # TODO: envisager de marquer les points à conserver (non filtré et dans un segment)
+        # TODO: ?V3.x marquer les points à conserver (non filtré et dans un segment)
         # pour creer un 4eme csv POINTS_VALIDES
         # ce qui reste compliqué pour les segments courts que je ne connais pas encore
-        
+
         try:  # SEGMENT si V3
             # On regarde les points sans mesure avant SEGMENT
             diams = [float(x) for x in result[9:NB_VIRGULES+1]] # on extrait les diams et on les transforme en float 
@@ -433,7 +348,7 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
                 # Stocker le premier point pour comparer au prochain tour    
                 # et la Date début
                 precedent = XY_projete    
-                # TODO: Si passage en 3D mettre en Z la dérive
+                # TODO: ?V3.y passage en 3D mettre en Z la dérive
                 info_en_cours[ DATE_DEBUT] = result[0]
                 if len(diamsF) == 0:
                     # On ne STOCKE pas les points sans MESURE 
@@ -461,8 +376,8 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
                     le_point_precedent = QgsPointXY( precedent[0] ,  precedent[1])
                     ma_distance = distancearea.measureLine( le_point_projete, le_point_precedent)
                     mon_azimuth = le_point_projete.azimuth( le_point_precedent)
-                    # TODO JHJHJH Traiter l'azimuth depuis le début du segment
-                    
+                    # TODO: ?V3.y Traiter l'azimuth depuis le début du segment
+
                     distance_theorique = XY[7]*1000/3600 # On suppose une seconde d'avancement
                     derive = ( ma_distance - distance_theorique) / distance_theorique *100
 #                    physiocap_log( "Vitesse {3} Distance théorique {1:.2f} et ma distance {0:.2f}  \
@@ -472,7 +387,7 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
 #                            TRACE_SEGMENT)
                     #remplacer le precedent par l'actuel
                     precedent = XY_projete    
-                    
+
                     # Vérification de dérive
                     if abs( derive) > (segment_max_derive + (2 * segment_pas_de_derive)):
                         physiocap_log( "{0} DECOUPAGE point {1} : l'avancée dérive GRAVE ===> {2:.1f} ! ".\
@@ -503,7 +418,7 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
                             gid_en_cours.append( numero_point)
                         derive_en_cours.append( derive)
                         on_coupe = "NON"
-                            
+
                 else: # Cas d'arret (fin de rang) ou pdop
                     on_coupe = "OUI"
                     # Tracer cas decoupe vitessse
@@ -522,7 +437,7 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
                         physiocap_log("{0} DECOUPAGE point {1} : pdop {2:.1f} max est  {3:.1f}! ".\
                             format(PHYSIOCAP_WARNING, numero_point, XY[5], segment_max_pdop ), \
                             TRACE_SEGMENT_DECOUPES)  
-       
+
                 if on_coupe == "OUI": # Cas de fin de ligne
                     if  len(segment_en_cours) > segment_mini_point:
                         # Le segment est à garder
@@ -548,20 +463,20 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
                         for gid_perdu in gid_en_cours:
                             manquant_en_cours.append( gid_perdu)
                         manquant_en_cours.append( numero_point)
-                       
+
                         if  len(segment_en_cours) > 0:
                             physiocap_log("{0} SEGMENT {1} IGNORE : trop cours == {2} points, le mini est {3} ".\
                                 format(PHYSIOCAP_WARNING, nombre_segments_sans_coupure, 
                                 len(segment_en_cours),  segment_mini_point ),
                                 TRACE_SEGMENT_DECOUPES)
-                                
+
                     info_en_cours = {}
                     gid_en_cours = []
                     gid_sans_mesure = []
                     precedent = []
                     on_coupe = "PREMIER"
                     segment_en_cours = []
-                        
+
         except :
             aMsg = "{0} Erreur bloquante durant extraction des segments : pour la ligne brute numéro {1}". \
                 format ( PHYSIOCAP_STOP,  numero_point)
@@ -569,8 +484,8 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
             err.write( aMsg) # on écrit la ligne dans le fichier ERREUR
             # monter directemenr exception
             raise
- 
-           
+
+
         try: # On filtre vraiement           
             if details == "NO" :
                 if len(diamsF)==0: # si le nombre de diamètre après filtrage = 0 alors pas de mesures
@@ -592,7 +507,7 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
                                     XY[2],XY[5],ma_distance,derive,mon_azimuth,       result[0],XY[7])
                         csv_0_seul.write( a_ecrire)  
                         csv_avec_0.write( a_ecrire)
-                        
+
                 elif comptage==NB_VIRGULES and len(diamsF)>0 : # si le nombre de diamètre après filtrage != 0 alors mesures
                     # Nombre sarment total 
                     nbsart  = len(diamsF)
@@ -618,7 +533,7 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
                                     nbsarm,diam,biom,result[0],XY[7])
                             csv_avec_0.write( a_ecrire) 
                             csv_sans_0.write(a_ecrire)   
-    
+
                         for n in range(len(diamsF)) :
                             diametre_filtre.write("%f%s" %(diamsF[n],";"))
             elif details == "YES" :
@@ -647,7 +562,7 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
                         a_ecrire_complet = a_ecrire + a_ecrire_detail
                         csv_0_seul.write( a_ecrire_complet)  
                         csv_avec_0.write(a_ecrire_complet)
-                        
+
                 elif comptage==NB_VIRGULES and len(diamsF)>0 : # si le nombre de diamètre après filtrage != 0 alors mesures
                     nbsart  = len(diamsF)
                     if XY[7] != 0:
@@ -719,13 +634,13 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
 #            except:
 #                physiocap_error( self, "Problème : pas de date dans le segment")
 #                raise physiocap_exception_calcul_segment_invalid( "Date non présente")
-                
+
         # Creer les lignes simplifiés ou brisés de ces segments et infos
         vecteur_segment = physiocap_segment_vers_vecteur( self, chemin_session, nom_dir_segment,  nom_session, 
             mes_lignes_sans_coupure,  info_lignes_sans_coupure, version_3)
         vecteur_segment_brise = physiocap_segment_vers_vecteur( self, chemin_session, nom_dir_segment,  nom_session,
             mes_lignes_sans_coupure,  info_lignes_sans_coupure, version_3,  "BRISE")
-            
+
     physiocap_log( "{0} {1} Fin du filtrage OK des {2} lignes.". \
         format( PHYSIOCAP_INFO, PHYSIOCAP_UNI, str(numero_point - 1)), leModeDeTrace)
     return vecteur_segment, vecteur_segment_brise

@@ -812,7 +812,7 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
             r = csv.reader(csvfile, delimiter=";")
         except NameError:
             uText = "Erreur bloquante : module csv n'est pas accessible."
-            # TODO : tester les exceptions
+            # TODO: ?V3.12 LTR tester les exceptions ou passer à Panda
             raise physiocap_exception_csv( csv_name)
 
         for numrow, row in enumerate( r):
@@ -949,9 +949,8 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
                 val_Z = derive[numPoint]
             if extension_point == EXTENSION_ZERO_SEUL:
                 val_Z = vitesse[numPoint]                
-            #écrit la géométrie avec le Z = diametre (ou altitude ou vitesse)
-            feat.setGeometry( QgsGeometry(QgsPoint( 
-                Xpoint, y[numPoint], val_Z, val_M))) 
+            #écrit la géométrie avec le Z = diametre (ou altitude ou vitesse) et M
+            feat.setGeometry( QgsGeometry(QgsPoint( Xpoint, y[numPoint], val_Z, val_M))) 
         else:
             # A_TESTER: test sans fromPointXY
             feat.setGeometry( QgsGeometry.fromPointXY(QgsPointXY( Xpoint,y[numPoint]))) #écrit la géométrie

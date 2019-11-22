@@ -614,6 +614,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
 #                    format( PHYSIOCAP_UNI, self.tr("Traitement")), leModeDeTrace)
 #                raise physiocap_exception_no_processing( "Pas d'extension Traitement - initialize")               
             versionGDAL = processing.tools.raster.gdal.__version__
+            # TODO: ?V3.z Gerer La version et si SAGA Actif
             versionSAGA = "2.3.2" # processing.algs.saga.SagaUtils.getInstalledVersion()
         except ImportError:
             physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
@@ -679,7 +680,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
         else:
             nom_point_exact  = nom_point_en_cours
 
-        # TODO: Test type de vecteur
+        # TODO: ?V3.x GEOPACKAGE et autre type de vecteur
         if quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
             chemin_session = os.path.dirname( nom_point_exact)
             # Version 3.4.0 pas de geopackage en intra

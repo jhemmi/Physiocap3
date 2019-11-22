@@ -140,7 +140,7 @@ REPERTOIRE_SHAPEFILE_V3 = "Filtre"
 
 MODE_EXPERT = physiocap_mon_unicode( "As-tu contribué ?")
 
-# WARNING:_Pas d'affichage des VRT Pas de creation de png sous Linux
+# TESTE : Pas d'affichage des VRT Pas de creation de png sous Linux
 #if MACHINE == "Linux":
 #    EXTENSION_RASTER_SANS_POINT = "png"
 #else:

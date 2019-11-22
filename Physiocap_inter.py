@@ -585,9 +585,12 @@ def physiocap_point_un_contour( laProjectionCRS, EPSG_NUMBER, nom_point, nom_prj
     for gid in les_GID:   
         i = i+1
         feat = QgsFeature()
+        physiocap_log( "INTER point un contour : {0}". \
+                format( les_geoms_des_points[ i].asWkt()),  TRACE_SEGMENT) 
         if version_3 == "YES":
             # On pose directement les 3D
-            feat.setGeometry( QgsGeometry( QgsPoint( les_geoms_des_points[ i])))
+            # BUG #17 en QGIS3.10 : feat.setGeometry( QgsGeometry( QgsPoint( les_geoms_des_points[ i])))
+            feat.setGeometry( QgsGeometry.fromWkt(  les_geoms_des_points[ i].asWkt()))
         else:
             # A_TESTER: test sans fromPointXY
             feat.setGeometry( QgsGeometry.fromPointXY( les_geoms_des_points[ i])) #écrit la géométrie tel que lu dans shape contour
@@ -970,27 +973,14 @@ class PhysiocapInter( QtWidgets.QDialog):
         distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
         laProjectionCRS, laProjectionTXT, EPSG_NUMBER = \
             physiocap_quelle_projection_et_lib_demandee( dialogue)
-
-##        if (version_3 == "NO"):
-##            rep_vecteur = REPERTOIRE_SHAPEFILE
-##        else:
-##            rep_vecteur = REPERTOIRE_SHAPEFILE_V3
-###        pro = vecteur_point.dataProvider() 
-###        if ( pro.name() == POSTGRES_NOM):
-###            # On construit le chemin depuis data/projet...
-###            # Todo: WT PG : test non passé : pour une deuxieme session ...
-###            chemin_session = os.path.join( repertoire_cible, nom_noeud_arbre)
-###            chemin_shapes = os.path.join( chemin_session, rep_vecteur)
-###            chemin_shapes_segment = os.path.join( chemin_shapes, REPERTOIRE_SEGMENT_V3)
-        
+       
         quel_vecteur_demande = dialogue.fieldComboFormats.currentText()
         nom_vecteur_point = vecteur_point.dataProvider().dataSourceUri()
-# TODO: Test type de vecteur
 #       physiocap_log( "Nom du vecteur point {0} type vecteur point {1}". \
 #                format( nom_vecteur_point, type(nom_vecteur_point)), leModeDeTrace)
         if quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
             # Retrouver le chemin de la session avec le géopackage choisi
-            # TODO: JHJH GEOPACKAGE
+            # TODO: ?V3.x GEOPACKAGE
             chemin_session = os.path.dirname( nom_vecteur_point)
             pos_extension = nom_vecteur_point.rfind(SEPARATEUR_GPKG[0])
             nom_raccourci_gpkg = nom_vecteur_point[:pos_extension]
