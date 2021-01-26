@@ -1111,10 +1111,10 @@ class PhysiocapInter( QtWidgets.QDialog):
             geomType = QgsWkbTypes.geometryType( geomWkbType) 
            
             if geomType == QgsWkbTypes.Polygon:
-                physiocap_log ( self.tr( "Layer (Polygone) simple : {0} ".\
+                physiocap_log ( self.tr( "Couche (Polygone) simple : {0} ".\
                     format( un_nom)), leModeDeTrace)
             elif geomWkbMultiType == QgsWkbTypes.MultiPolygon:
-                physiocap_log ( self.tr("Layer (Polygone) multiple : {0} ".\
+                physiocap_log ( self.tr("Couche (Polygone) multiple : {0} ".\
                     format( un_nom)), leModeDeTrace)
             else:
                 aText = self.tr( "Cette forme n'est pas un polygone : {0}".\

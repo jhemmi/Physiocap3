@@ -322,7 +322,7 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
             XY_projete = [ le_point_projete.x(), le_point_projete.y() ]
 
         except :
-            aMsg = "{0} Erreur bloquante durant tranformation CRS : pour la ligne brute numéro {1}". \
+            aMsg = "{0} Erreur bloquante durant tranformation SCR : pour la ligne brute numéro {1}". \
                 format ( PHYSIOCAP_STOP,  numero_point)
             physiocap_error( self, aMsg )
             err.write( aMsg) # on écrit la ligne dans le fichier ERREUR

@@ -292,13 +292,13 @@ def physiocap_get_layer_by_ID( layerID):
             break
     if ( trouve == "YES"):
         if ( le_layer.isValid()):
-            physiocap_log( "OK Layer(Couche) valid(e) : {0}".format ( le_layer.name()), leModeTrace)
+            physiocap_log( "OK Couche valide : {0}".format ( le_layer.name()), leModeTrace)
             return le_layer
         else:
-            physiocap_log( "Layer(Couche) invalid(e) : {0}".format ( le_layer.name()), leModeTrace)
+            physiocap_log( "Couche invalide : {0}".format ( le_layer.name()), leModeTrace)
             return None
     else:
-        physiocap_log( "No layer (Aucune couche) find for (retrouvée pour) ID : {0}".\
+        physiocap_log( "Aucune couche retrouvée pour ID : {0}".\
             format( ( str( layerID))), leModeTrace)
         return None
 
@@ -356,12 +356,12 @@ def physiocap_preparer_calcul_distance( self, EPSG_NUMBER, laProjectionCRS):
         spheroid = SPHEROID_GPS    
     distancearea = QgsDistanceArea()
     if laProjectionCRS.isValid():
-        physiocap_log( "Calcul de distance Description CRS {0}".\
+        physiocap_log( "Calcul de distance Description SCR {0}".\
         format( laProjectionCRS.description()), TRACE_TOOLS)
-        physiocap_log( "PROJ.4 CRS {0}".\
+        physiocap_log( "PROJ.4 SCR {0}".\
         format( laProjectionCRS.toProj4()), TRACE_TOOLS)
     else:
-        physiocap_log( "INVALIDE CRS", TRACE_TOOLS)
+        physiocap_log( "INVALIDE SCR", TRACE_TOOLS)
         return None
         
     distancearea.setSourceCrs( laProjectionCRS, QgsProject.instance().transformContext())            

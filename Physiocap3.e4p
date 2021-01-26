@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project Physiocap3 -->
-<!-- Saved: 2018-11-08, 15:11:36 -->
-<!-- Copyright (C) 2018 jhemmi.eu, jhemmi.eu -->
+<!-- Saved: 2021-01-26, 19:30:07 -->
+<!-- Copyright (C) 2021 jhemmi.eu, jhemmi.eu -->
 <Project version="5.1">
   <Language></Language>
   <Hash>40f13e43515e2aa5c3fa5f986e0f331f2021fbbb</Hash>
@@ -35,12 +35,7 @@
   <Forms>
     <Form>Physiocap3_dialog_base.ui</Form>
   </Forms>
-  <Translations>
-    <Translation>i18n/Physiocap_en.qm</Translation>
-    <Translation>i18n/Physiocap_en.ts</Translation>
-    <Translation>i18n/Physiocap_it.qm</Translation>
-    <Translation>i18n/Physiocap_it.ts</Translation>
-  </Translations>
+  <Translations/>
   <Resources>
     <Resource>resources.qrc</Resource>
   </Resources>

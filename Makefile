@@ -25,7 +25,7 @@
 
 #Add iso code for any locales you want to support here (space separated)
 # default is no locales
-LOCALES = Physiocap_it Physiocap_en 
+LOCALES = Physiocap3_it Physiocap3_en 
 
 # If locales are enabled, set the name of the lrelease binary on your system. If
 # you have trouble compiling the translations, you may have to specify the full path to
@@ -211,7 +211,7 @@ upload: zip
 	@echo "-------------------------------------"
 	$(PLUGIN_UPLOAD) $(PLUGINNAME).zip
 
-transup:
+transupKO:
 	@echo
 	@echo "------------------------------------------------"
 	@echo "Updating translation files with any new strings."

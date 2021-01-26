@@ -1195,7 +1195,7 @@
       </property>
       <property name="font">
        <font>
-        <pointsize>11</pointsize>
+        <pointsize>9</pointsize>
        </font>
       </property>
       <property name="text">
@@ -1288,7 +1288,7 @@
       </property>
       <property name="font">
        <font>
-        <pointsize>11</pointsize>
+        <pointsize>9</pointsize>
        </font>
       </property>
       <property name="text">
@@ -4352,9 +4352,9 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QLabel" name="lab_1042">
       <property name="geometry">
        <rect>
-        <x>210</x>
+        <x>230</x>
         <y>70</y>
-        <width>181</width>
+        <width>151</width>
         <height>21</height>
        </rect>
       </property>
@@ -4372,7 +4372,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="text">
-       <string>Précision altitude (max pdop)</string>
+       <string>Précision (max pdop)</string>
       </property>
      </widget>
      <widget class="QLabel" name="lab_1041">
@@ -4404,7 +4404,7 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QSpinBox" name="spinBoxNombreMiniPointsConsecutifs">
       <property name="geometry">
        <rect>
-        <x>310</x>
+        <x>390</x>
         <y>45</y>
         <width>51</width>
         <height>21</height>
@@ -4465,7 +4465,7 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="geometry">
        <rect>
-        <x>310</x>
+        <x>390</x>
         <y>20</y>
         <width>70</width>
         <height>21</height>
@@ -4709,7 +4709,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <rect>
         <x>10</x>
         <y>61</y>
-        <width>171</width>
+        <width>211</width>
         <height>21</height>
        </rect>
       </property>
@@ -4730,7 +4730,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit du système de coordonnées qui est utilisé lors de la création de vos résultats d'analyse Physiocap.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Nous conseillons fortement d'utiliser le même systeme de coordonnées pour votre projet QGIS.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Les données créées par l'extension sont suffixées L93 ou GPS.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce 1 : si vous hésitez, choisissez L93.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="text">
-       <string>Système de coordonées</string>
+       <string>Système de coordonées de référence</string>
       </property>
      </widget>
      <widget class="QComboBox" name="fieldComboFormats">
@@ -4772,8 +4772,8 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="geometry">
        <rect>
-        <x>180</x>
-        <y>57</y>
+        <x>230</x>
+        <y>60</y>
         <width>201</width>
         <height>26</height>
        </rect>
@@ -4803,9 +4803,9 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QRadioButton" name="radioButtonGPS">
       <property name="geometry">
        <rect>
-        <x>180</x>
-        <y>77</y>
-        <width>221</width>
+        <x>230</x>
+        <y>80</y>
+        <width>181</width>
         <height>26</height>
        </rect>
       </property>
@@ -4996,6 +4996,9 @@ Si vous hésitez, trouvez du conseil. </string>
         <bold>true</bold>
        </font>
       </property>
+      <property name="accessibleDescription">
+       <string/>
+      </property>
       <property name="text">
        <string>L'extension Physiocap3 pour QGIS3 est utile pour vous ?</string>
       </property>
@@ -5107,7 +5110,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="text">
-       <string>Version 3.10.0</string>
+       <string>Version 3.10.2</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_500">
