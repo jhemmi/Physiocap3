@@ -750,7 +750,7 @@ Fatal error on Windows that force you to create a new Physiocap session</transla
         <location filename="../Physiocap3_dialog_base.ui" line="1295"/>
         <source>vos contours</source>
         <translatorcomment>second lign</translatorcomment>
-        <translation type="unfinished">identification field</translation>
+        <translation>identification field</translation>
     </message>
     <message>
         <location filename="../Physiocap3_dialog_base.ui" line="1356"/>
@@ -1115,7 +1115,7 @@ Fatal error on Windows that force you to create a new Physiocap session</transla
     <message>
         <location filename="../Physiocap3_dialog_base.ui" line="478"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Vous lancez un traitement des données brutes.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You filter your raw data.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Physiocap3_dialog_base.ui" line="484"/>

@@ -1814,7 +1814,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <rect>
         <x>10</x>
         <y>279</y>
-        <width>311</width>
+        <width>381</width>
         <height>21</height>
        </rect>
       </property>
@@ -4220,7 +4220,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <rect>
         <x>10</x>
         <y>70</y>
-        <width>121</width>
+        <width>131</width>
         <height>21</height>
        </rect>
       </property>
@@ -4282,7 +4282,7 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QSpinBox" name="spinBoxDeriveMaxSegment">
       <property name="geometry">
        <rect>
-        <x>140</x>
+        <x>150</x>
         <y>70</y>
         <width>51</width>
         <height>21</height>
@@ -4352,9 +4352,9 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QLabel" name="lab_1042">
       <property name="geometry">
        <rect>
-        <x>230</x>
+        <x>210</x>
         <y>70</y>
-        <width>151</width>
+        <width>171</width>
         <height>21</height>
        </rect>
       </property>
@@ -4380,7 +4380,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <rect>
         <x>10</x>
         <y>45</y>
-        <width>281</width>
+        <width>371</width>
         <height>21</height>
        </rect>
       </property>
@@ -4438,7 +4438,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <rect>
         <x>100</x>
         <y>20</y>
-        <width>211</width>
+        <width>271</width>
         <height>21</height>
        </rect>
       </property>
@@ -4576,7 +4576,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <rect>
         <x>10</x>
         <y>20</y>
-        <width>221</width>
+        <width>311</width>
         <height>26</height>
        </rect>
       </property>
@@ -4602,7 +4602,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <rect>
         <x>10</x>
         <y>40</y>
-        <width>251</width>
+        <width>321</width>
         <height>26</height>
        </rect>
       </property>
@@ -4648,7 +4648,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>181</width>
+        <width>251</width>
         <height>26</height>
        </rect>
       </property>
@@ -4774,7 +4774,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <rect>
         <x>230</x>
         <y>60</y>
-        <width>201</width>
+        <width>221</width>
         <height>26</height>
        </rect>
       </property>
@@ -4805,7 +4805,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <rect>
         <x>230</x>
         <y>80</y>
-        <width>181</width>
+        <width>211</width>
         <height>26</height>
        </rect>
       </property>
@@ -5110,7 +5110,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="text">
-       <string>Version 3.10.2</string>
+       <string>Version 3.10.4</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_500">
@@ -5118,7 +5118,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <rect>
         <x>20</x>
         <y>0</y>
-        <width>201</width>
+        <width>231</width>
         <height>21</height>
        </rect>
       </property>
