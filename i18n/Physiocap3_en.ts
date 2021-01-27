@@ -1009,13 +1009,13 @@ Fatal error on Windows that force you to create a new Physiocap session</transla
     </message>
     <message>
         <location filename="../Physiocap3_dialog_base.ui" line="5113"/>
-        <source>Version 3.10.2</source>
+        <source>Version 3.10.4</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../Physiocap3_dialog_base.ui" line="5131"/>
         <source>Extension Physiocap pour Qgis</source>
-        <translation>Physiocap3 plugin pour QGIS</translation>
+        <translation>Physiocap3 plugin for QGIS</translation>
     </message>
     <message>
         <location filename="../Physiocap3_dialog_base.ui" line="5147"/>
