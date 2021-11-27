@@ -6,9 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>539</width>
-    <height>719</height>
+    <width>800</width>
+    <height>878</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>550</width>
+    <height>600</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>800</width>
+    <height>1000</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Physiocap 3 pour QGIS3</string>
@@ -19,9 +31,9 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>270</x>
-     <y>680</y>
-     <width>211</width>
+     <x>610</x>
+     <y>10</y>
+     <width>171</width>
      <height>31</height>
     </rect>
    </property>
@@ -61,10 +73,10 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>10</y>
-     <width>521</width>
-     <height>661</height>
+     <x>0</x>
+     <y>70</y>
+     <width>781</width>
+     <height>671</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -76,7 +88,9 @@
    <property name="font">
     <font>
      <pointsize>9</pointsize>
+     <weight>50</weight>
      <italic>false</italic>
+     <bold>false</bold>
      <kerning>true</kerning>
     </font>
    </property>
@@ -100,413 +114,15 @@
    </property>
    <widget class="QWidget" name="tabParametres">
     <attribute name="title">
-     <string>Filtre</string>
+     <string>Calculs</string>
     </attribute>
-    <widget class="QGroupBox" name="Vignoble">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>5</x>
-       <y>340</y>
-       <width>511</width>
-       <height>121</height>
-      </rect>
-     </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>1</pointsize>
-      </font>
-     </property>
-     <property name="toolTip">
-      <string/>
-     </property>
-     <property name="whatsThis">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Les informations détaillées du vignoble sont nécessaires pous accéder aux unités détaillées des indicateurs Physiocap :&lt;br/&gt;- nombre de sarments par m2 : &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;NBSARMM2&lt;br/&gt;&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- nombre de sarments par cep : &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;NBSARCEP&lt;br/&gt;&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- indicateur de surface de bois en mm²/m² : &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;BIOMM2&lt;br/&gt;&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- biomasse en g par m² : &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;BIOMGM2&lt;br/&gt;&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- biomasse par pieds : &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;BIOMGCEP&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Sans ces informations de détails, l'extension ne calcule que 3 indicateurs :&lt;br/&gt;- nombre de sarment par metre lineaire : &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;SARM&lt;br/&gt;&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- section moyenne en mm : &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;DIAM&lt;br/&gt;&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- biomasse de la vigne mesurée en mm²/m linéaire : &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;BIOM&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Pour en savoir plus, par le bouton, retrouvez le Wiki de l'extension et comprenez tous les indicateurs Physiocap.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLineEdit { margin: 4px }</string>
-     </property>
-     <property name="title">
-      <string/>
-     </property>
-     <widget class="QLabel" name="lab_32">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>25</y>
-        <width>251</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Interrang (cm) - Ecartement entre rangs</string>
-      </property>
-     </widget>
-     <widget class="QSpinBox" name="spinBoxInterrangs">
-      <property name="geometry">
-       <rect>
-        <x>280</x>
-        <y>25</y>
-        <width>101</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="minimum">
-       <number>70</number>
-      </property>
-      <property name="maximum">
-       <number>500</number>
-      </property>
-      <property name="singleStep">
-       <number>5</number>
-      </property>
-      <property name="value">
-       <number>110</number>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lab_33">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>46</y>
-        <width>261</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Intercep (cm) - Ecartement entre ceps</string>
-      </property>
-     </widget>
-     <widget class="QSpinBox" name="spinBoxInterceps">
-      <property name="geometry">
-       <rect>
-        <x>280</x>
-        <y>46</y>
-        <width>101</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="minimum">
-       <number>50</number>
-      </property>
-      <property name="maximum">
-       <number>250</number>
-      </property>
-      <property name="singleStep">
-       <number>5</number>
-      </property>
-      <property name="value">
-       <number>100</number>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lab_34">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>76</y>
-        <width>291</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Hauteur végétative (cm) - Haie folaire</string>
-      </property>
-     </widget>
-     <widget class="QSpinBox" name="spinBoxHauteur">
-      <property name="geometry">
-       <rect>
-        <x>280</x>
-        <y>76</y>
-        <width>101</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="minimum">
-       <number>30</number>
-      </property>
-      <property name="maximum">
-       <number>200</number>
-      </property>
-      <property name="singleStep">
-       <number>5</number>
-      </property>
-      <property name="value">
-       <number>90</number>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lab_35">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>96</y>
-        <width>221</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Densité moyenne des sarments</string>
-      </property>
-     </widget>
-     <widget class="QDoubleSpinBox" name="doubleSpinBoxDensite">
-      <property name="geometry">
-       <rect>
-        <x>280</x>
-        <y>96</y>
-        <width>101</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Cette densité est utilisée dans le calcul de Biomasse en kg. La valeur 0,9 est une mesure moyenne dans la région Champagne. Mais la densité de vos bois dépend du cépage et des conditions météo.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : cette densité est un réel biais si vous comparez l'indice de biomasse à des pesées de bois de taille. Dans ce cas, prenez le temps de faire une mesure réelle de la densité de vos sarments, avant de préciser votre densité moyenne des sarments.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-      <property name="decimals">
-       <number>2</number>
-      </property>
-      <property name="minimum">
-       <double>0.500000000000000</double>
-      </property>
-      <property name="maximum">
-       <double>1.000000000000000</double>
-      </property>
-      <property name="singleStep">
-       <double>0.050000000000000</double>
-      </property>
-      <property name="value">
-       <double>0.900000000000000</double>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lab_38">
-      <property name="geometry">
-       <rect>
-        <x>410</x>
-        <y>26</y>
-        <width>71</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Densité :</string>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditDensite">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>400</x>
-        <y>44</y>
-        <width>101</width>
-        <height>28</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="inputMethodHints">
-       <set>Qt::ImhDialableCharactersOnly</set>
-      </property>
-      <property name="maxLength">
-       <number>50</number>
-      </property>
-      <property name="dragEnabled">
-       <bool>true</bool>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lab_39">
-      <property name="geometry">
-       <rect>
-        <x>410</x>
-        <y>70</y>
-        <width>81</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>en pied/ha</string>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QCheckBox" name="checkBoxInfoVignoble">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>5</x>
-       <y>320</y>
-       <width>491</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>11</pointsize>
-       <weight>75</weight>
-       <italic>true</italic>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Ce choix vous permet de préciser les détails de votre vignoble. Il est nécessaire pous accéder aux unités avancées de Physiocap.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="statusTip">
-      <string/>
-     </property>
-     <property name="whatsThis">
-      <string/>
-     </property>
-     <property name="text">
-      <string>Calculs détaillés :  précisez les informations du vignoble    </string>
-     </property>
-     <property name="tristate">
-      <bool>false</bool>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="ButtonFiltrer">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>50</x>
-       <y>490</y>
-       <width>211</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="mouseTracking">
-      <bool>false</bool>
-     </property>
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Vous lancez un traitement des données brutes.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="whatsThis">
-      <string/>
-     </property>
-     <property name="text">
-      <string>Filtrer les données brutes</string>
-     </property>
-    </widget>
-    <widget class="QProgressBar" name="progressBar">
-     <property name="geometry">
-      <rect>
-       <x>280</x>
-       <y>490</y>
-       <width>191</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Etat d'avancement du dernier calcul et filtrage des données brutes&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="value">
-      <number>0</number>
-     </property>
-    </widget>
     <widget class="QGroupBox" name="Filtres">
      <property name="geometry">
       <rect>
        <x>5</x>
        <y>200</y>
-       <width>511</width>
-       <height>101</height>
+       <width>601</width>
+       <height>91</height>
       </rect>
      </property>
      <property name="font">
@@ -517,7 +133,7 @@
       </font>
      </property>
      <property name="cursor">
-      <cursorShape>OpenHandCursor</cursorShape>
+      <cursorShape>ArrowCursor</cursorShape>
      </property>
      <property name="styleSheet">
       <string notr="true">QLineEdit { margin: 4px }</string>
@@ -583,7 +199,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>73</y>
+        <y>60</y>
         <width>70</width>
         <height>21</height>
        </rect>
@@ -613,7 +229,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>50</y>
+        <y>37</y>
         <width>421</width>
         <height>21</height>
        </rect>
@@ -637,7 +253,7 @@
       <property name="geometry">
        <rect>
         <x>110</x>
-        <y>73</y>
+        <y>60</y>
         <width>251</width>
         <height>21</height>
        </rect>
@@ -661,7 +277,7 @@
       <property name="geometry">
        <rect>
         <x>370</x>
-        <y>73</y>
+        <y>60</y>
         <width>70</width>
         <height>21</height>
        </rect>
@@ -693,7 +309,7 @@
       <rect>
        <x>5</x>
        <y>15</y>
-       <width>511</width>
+       <width>601</width>
        <height>175</height>
       </rect>
      </property>
@@ -796,7 +412,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>73</y>
+        <y>70</y>
         <width>501</width>
         <height>21</height>
        </rect>
@@ -809,7 +425,7 @@
        </font>
       </property>
       <property name="text">
-       <string>Sélectionnez le répertoire cible des données filtrées par Physiocap</string>
+       <string>Sélectionnez le répertoire cible des données calculées par Physiocap</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="lineEditDirectoryFiltre">
@@ -894,156 +510,13 @@
       </property>
      </widget>
     </widget>
-   </widget>
-   <widget class="QWidget" name="tabSynthese">
-    <attribute name="title">
-     <string>Synthèse</string>
-    </attribute>
-    <widget class="QTextEdit" name="textEditSynthese">
-     <property name="geometry">
-      <rect>
-       <x>5</x>
-       <y>40</y>
-       <width>511</width>
-       <height>581</height>
-      </rect>
-     </property>
-     <property name="textInteractionFlags">
-      <set>Qt::TextEditorInteraction</set>
-     </property>
-    </widget>
-    <widget class="QLabel" name="lab_50">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>221</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Dernier calcul Physiocap</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="lineEditDernierProjet">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>210</x>
-       <y>11</y>
-       <width>301</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Nom du dernier projet Physiocap. Répertoire contenant ce fichier de synthèse ainsi que tous les entités créées par l'extension.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="readOnly">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="tabHistogrammes">
-    <attribute name="title">
-     <string>Histos</string>
-    </attribute>
-    <widget class="QLabel" name="label_histo_sarment">
-     <property name="geometry">
-      <rect>
-       <x>5</x>
-       <y>50</y>
-       <width>250</width>
-       <height>250</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Histo sarment</string>
-     </property>
-     <property name="scaledContents">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_histo_vitesse">
-     <property name="geometry">
-      <rect>
-       <x>270</x>
-       <y>50</y>
-       <width>250</width>
-       <height>250</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Histo vitesse brut</string>
-     </property>
-     <property name="scaledContents">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_histo_diametre_apres">
-     <property name="geometry">
-      <rect>
-       <x>270</x>
-       <y>310</y>
-       <width>250</width>
-       <height>250</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Histo diamètre filtré</string>
-     </property>
-     <property name="scaledContents">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QCheckBox" name="checkBoxHistogramme">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>231</width>
-       <height>26</height>
-      </rect>
-     </property>
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Astuce : Si vous confiant dans votre paramétrage, vous pouvez décocher la création des histogrammes lors de traitement de grande masse de données.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="text">
-      <string>Création des histogrammes</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_histo_diametre_avant">
-     <property name="geometry">
-      <rect>
-       <x>5</x>
-       <y>310</y>
-       <width>250</width>
-       <height>250</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Histo diamètre brut</string>
-     </property>
-     <property name="scaledContents">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="TabParcelles">
-    <attribute name="title">
-     <string>Parcelles</string>
-    </attribute>
     <widget class="QGroupBox" name="groupBoxInter">
      <property name="geometry">
       <rect>
        <x>5</x>
-       <y>50</y>
-       <width>505</width>
-       <height>141</height>
+       <y>320</y>
+       <width>601</width>
+       <height>151</height>
       </rect>
      </property>
      <property name="sizePolicy">
@@ -1051,6 +524,17 @@
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>1</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
+       <kerning>false</kerning>
+      </font>
+     </property>
+     <property name="cursor">
+      <cursorShape>ArrowCursor</cursorShape>
      </property>
      <property name="toolTip">
       <string/>
@@ -1067,27 +551,12 @@
      <property name="title">
       <string/>
      </property>
-     <widget class="QComboBox" name="comboBoxPoints">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>70</y>
-        <width>481</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-     </widget>
      <widget class="QComboBox" name="comboBoxPolygone">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>20</y>
-        <width>261</width>
+        <y>100</y>
+        <width>341</width>
         <height>25</height>
        </rect>
       </property>
@@ -1097,16 +566,180 @@
        </font>
       </property>
      </widget>
-     <widget class="QLabel" name="lab_61">
+     <widget class="QComboBox" name="fieldComboContours">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>360</x>
+        <y>100</y>
+        <width>221</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit du champ de votre contour qui identifie chacune de vos parcelles. Dans la moyenne Inter Parcellaire, ce champ se nomme NOM_PHY&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vos contours ne contiennent pas de champ unique ou que vous ne connaissez pas les champs de vos contours, vous pouvez choisir NOM_PHY qui sera crée pa l'extension pour identifier chaque parcelles de vos contours. L'attribut aura des valeurs PHY_1, PHY-2 ...&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Attention : seuls les champs ayant une valeur différente pour chaque parcelle sont proposés.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lab_40">
       <property name="enabled">
        <bool>true</bool>
       </property>
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>-1</y>
+        <y>80</y>
+        <width>341</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <family>Sans</family>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Polygone décrivant vos contours</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lab_30">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>601</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <italic>true</italic>
+       </font>
+      </property>
+      <property name="text">
+       <string>Si besoin, ouvrir dans QGIS vos contours par le menu &quot;Couche&quot; puis &quot;Ajouter vecteur&quot; et rafraîchir</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="ButtonInterRefresh">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>50</y>
+        <width>371</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous hésitez, rafraîchissez ces listes&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="text">
+       <string>Rafraîchir la liste des vecteurs visibles dans QGIS</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lab_41">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>360</x>
+        <y>80</y>
         <width>271</width>
         <height>22</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Choisir le champ identifiant vos contours</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="checkBoxContourAgro">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>125</y>
+        <width>481</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous souhaitez regrouper des données MID de plusieurs sous répertoires, cochez la case &amp;quot;Recherche des MIDs dans les sous répertoires&amp;quot;.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : vous pouvez regrouper toutes les données brutes d'une campagne, d'un cépage ou d'un secteur dans un même arbre de données. Choisissez un nom de session Physiocap explicitant le regroupement. L'extension Physiocap les traitera avec un même paramétrage.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="text">
+       <string>Mes contours détaillent les données agronomiques de chaque parcelle</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lab_76">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>10</y>
+        <width>551</width>
+        <height>21</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -1123,220 +756,19 @@
        </font>
       </property>
       <property name="text">
-       <string>Polygones décrivant vos contours</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lab_63">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>50</y>
-        <width>201</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Choisir le jeu de mesures</string>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="fieldComboContours">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>290</x>
-        <y>40</y>
-        <width>211</width>
-        <height>24</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit du champ de votre contour qui identifie chacune de vos parcelles. Dans la moyenne Inter Parcellaire, ce champ se nomme NOM_PHY&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vos contours ne contiennent pas de champ unique ou que vous ne connaissez pas les champs de vos contours, vous pouvez choisir NOM_PHY qui sera crée pa l'extension pour identifier chaque parcelles de vos contours. L'attribut aura des valeurs PHY_1, PHY-2 ...&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Attention : seuls les champs ayant une valeur différente pour chaque parcelle sont proposés.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lab_65">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>290</x>
-        <y>-1</y>
-        <width>201</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Choisir le champ identifiant</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="ButtonInter">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>100</y>
-        <width>221</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="palette">
-       <palette>
-        <active>
-         <colorrole role="WindowText">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>0</red>
-            <green>85</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </active>
-        <inactive>
-         <colorrole role="WindowText">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>0</red>
-            <green>85</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </inactive>
-        <disabled>
-         <colorrole role="WindowText">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>143</red>
-            <green>146</green>
-            <blue>147</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </disabled>
-       </palette>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Déclenchez le calcul de moyenne Inter parcellaire pour le contour et le jeu de données choisis.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-      <property name="autoFillBackground">
-       <bool>true</bool>
-      </property>
-      <property name="text">
-       <string>Moyennes Inter Parcellaire</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lab_67">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>290</x>
-        <y>17</y>
-        <width>201</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>vos contours</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       <string>Moyennes Inter Parcellaire : précisez vos contours</string>
       </property>
      </widget>
     </widget>
-    <widget class="QPushButton" name="ButtonInterRefresh">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>20</y>
-       <width>281</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>9</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
-     </property>
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous hésitez, rafraîchissez ces listes&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="text">
-      <string>Rafraîchir les listes de vecteurs</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="lab_60">
+    <widget class="QCheckBox" name="checkBoxInfoVignoble">
      <property name="enabled">
       <bool>true</bool>
      </property>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>0</y>
-       <width>511</width>
+       <y>480</y>
+       <width>591</width>
        <height>21</height>
       </rect>
      </property>
@@ -1348,12 +780,68 @@
      </property>
      <property name="font">
       <font>
-       <pointsize>9</pointsize>
+       <pointsize>11</pointsize>
+       <weight>75</weight>
        <italic>true</italic>
+       <bold>true</bold>
       </font>
      </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Ce choix vous permet de préciser les détails de votre vignoble. Il est nécessaire pous accéder aux unités avancées de Physiocap.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="statusTip">
+      <string/>
+     </property>
+     <property name="whatsThis">
+      <string/>
+     </property>
      <property name="text">
-      <string>Si besoin, chargez vos contours par le menu &quot;Couche&quot; puis &quot;Ajouter vecteur&quot;</string>
+      <string>Calculs détaillés :  précisez les informations du vignoble : onglet Agronomie   </string>
+     </property>
+     <property name="tristate">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="checkBoxInfoVignoble_2">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>300</y>
+       <width>591</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+       <weight>75</weight>
+       <italic>true</italic>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Ce choix vous permet de préciser les détails de votre vignoble. Il est nécessaire pous accéder aux unités avancées de Physiocap.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="statusTip">
+      <string/>
+     </property>
+     <property name="whatsThis">
+      <string/>
+     </property>
+     <property name="text">
+      <string>Pas de couche contour : création d'une délimitation à partir des points bruts </string>
+     </property>
+     <property name="tristate">
+      <bool>false</bool>
      </property>
     </widget>
     <widget class="QGroupBox" name="groupBoxIntra">
@@ -1363,9 +851,9 @@
      <property name="geometry">
       <rect>
        <x>5</x>
-       <y>260</y>
-       <width>509</width>
-       <height>371</height>
+       <y>510</y>
+       <width>601</width>
+       <height>111</height>
       </rect>
      </property>
      <property name="sizePolicy">
@@ -1395,162 +883,8 @@ Si vous hésitez, trouvez du conseil. </string>
       <string notr="true">QLineEdit { margin: 4px } rgb(255, 170, 127)</string>
      </property>
      <property name="title">
-      <string>  Choisir le champ à interpoler </string>
+      <string>Carte Intra Parcellaire : choisir le(s) champ(s) et le(s) parcelle(s) à imprimer </string>
      </property>
-     <widget class="QLabel" name="lab_75">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>50</y>
-        <width>281</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Paramètres de l'interpolation </string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lab_77">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>70</y>
-        <width>251</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Taille du pixel (unité de carte)</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lab_83">
-      <property name="geometry">
-       <rect>
-        <x>290</x>
-        <y>210</y>
-        <width>161</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Valeur maximale</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lab_85">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>189</y>
-        <width>261</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Paramètres des isolignes </string>
-      </property>
-     </widget>
-     <widget class="QSpinBox" name="spinBoxIsoMax">
-      <property name="geometry">
-       <rect>
-        <x>290</x>
-        <y>231</y>
-        <width>101</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="minimum">
-       <number>5</number>
-      </property>
-      <property name="maximum">
-       <number>3000</number>
-      </property>
-      <property name="singleStep">
-       <number>1</number>
-      </property>
-      <property name="value">
-       <number>30</number>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lab_86">
-      <property name="geometry">
-       <rect>
-        <x>140</x>
-        <y>210</y>
-        <width>141</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Ecartement des isolignes</string>
-      </property>
-     </widget>
      <widget class="QComboBox" name="fieldComboIntra">
       <property name="enabled">
        <bool>true</bool>
@@ -1559,7 +893,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <rect>
         <x>10</x>
         <y>20</y>
-        <width>231</width>
+        <width>541</width>
         <height>21</height>
        </rect>
       </property>
@@ -1578,580 +912,71 @@ Si vous hésitez, trouvez du conseil. </string>
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
      </widget>
-     <widget class="QDoubleSpinBox" name="spinBoxPixel">
-      <property name="geometry">
-       <rect>
-        <x>290</x>
-        <y>70</y>
-        <width>121</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Selon votre choix de système de coordonnés, la correspondance à 1 mètre varie. Elle vaut 0,5 en L93 et 0,000009 en WGS84&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-      <property name="inputMethodHints">
-       <set>Qt::ImhNone</set>
-      </property>
-      <property name="decimals">
-       <number>7</number>
-      </property>
-      <property name="minimum">
-       <double>0.000000000000000</double>
-      </property>
-      <property name="maximum">
-       <double>3.000000000000000</double>
-      </property>
-      <property name="singleStep">
-       <double>0.100000000000000</double>
-      </property>
-      <property name="value">
-       <double>1.000000000000000</double>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lab_81">
+     <widget class="QRadioButton" name="radio_intra_toutes">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>211</y>
-        <width>111</width>
+        <y>50</y>
+        <width>289</width>
         <height>21</height>
        </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>10</pointsize>
-       </font>
       </property>
       <property name="text">
-       <string>Valeur minimale</string>
+       <string>Toutes les parcelles</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
       </property>
      </widget>
-     <widget class="QSpinBox" name="spinBoxIsoMin">
+     <widget class="QRadioButton" name="radio_intra_uneParc">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>231</y>
-        <width>101</width>
+        <x>190</x>
+        <y>50</y>
+        <width>447</width>
         <height>21</height>
        </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="minimum">
-       <number>0</number>
-      </property>
-      <property name="maximum">
-       <number>500</number>
-      </property>
-      <property name="singleStep">
-       <number>1</number>
-      </property>
-      <property name="value">
-       <number>5</number>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lab_82">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>255</y>
-        <width>111</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
       </property>
       <property name="text">
-       <string>Nombre d'isolignes</string>
+       <string>Une seule parcelle : Choisir le nom de la parcelle </string>
       </property>
      </widget>
-     <widget class="QSpinBox" name="spinBoxNombreIso">
-      <property name="geometry">
-       <rect>
-        <x>140</x>
-        <y>255</y>
-        <width>101</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="minimum">
-       <number>1</number>
-      </property>
-      <property name="maximum">
-       <number>25</number>
-      </property>
-      <property name="singleStep">
-       <number>1</number>
-      </property>
-      <property name="value">
-       <number>4</number>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lab_84">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>110</y>
-        <width>281</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Rayon d'interpolation (unite de carte)</string>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditDoubleRayon">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>150</y>
-        <width>511</width>
-        <height>33</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-        <weight>50</weight>
-        <italic>true</italic>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="maxLength">
-       <number>100</number>
-      </property>
-      <property name="dragEnabled">
-       <bool>true</bool>
-      </property>
-      <property name="readOnly">
-       <bool>false</bool>
-      </property>
-     </widget>
-     <widget class="QDoubleSpinBox" name="spinBoxDoubleRayon">
-      <property name="geometry">
-       <rect>
-        <x>290</x>
-        <y>110</y>
-        <width>121</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="decimals">
-       <number>7</number>
-      </property>
-      <property name="minimum">
-       <double>0.000000000000000</double>
-      </property>
-      <property name="maximum">
-       <double>20.000000000000000</double>
-      </property>
-      <property name="singleStep">
-       <double>0.100000000000000</double>
-      </property>
-      <property name="value">
-       <double>10.000000000000000</double>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lab_211">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>279</y>
-        <width>381</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Méthode d'aide au calcul des isolignes</string>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="fieldComboAideIso">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>302</y>
-        <width>481</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="editable">
-       <bool>true</bool>
-      </property>
-      <property name="currentIndex">
-       <number>-1</number>
-      </property>
-      <property name="minimumContentsLength">
-       <number>1</number>
-      </property>
-     </widget>
-     <widget class="QSpinBox" name="spinBoxDistanceIso">
-      <property name="geometry">
-       <rect>
-        <x>140</x>
-        <y>230</y>
-        <width>101</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="minimum">
-       <number>1</number>
-      </property>
-      <property name="maximum">
-       <number>3000</number>
-      </property>
-      <property name="singleStep">
-       <number>1</number>
-      </property>
-      <property name="value">
-       <number>25</number>
-      </property>
-     </widget>
-     <widget class="QProgressBar" name="progressBarIntra">
-      <property name="geometry">
-       <rect>
-        <x>290</x>
-        <y>331</y>
-        <width>191</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Etat d'avancement du dernier calcul Inter ou Intra&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-      <property name="value">
-       <number>0</number>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="ButtonIntra">
+     <widget class="QComboBox" name="comboNomParcelIntra">
       <property name="enabled">
        <bool>false</bool>
       </property>
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>330</y>
-        <width>221</width>
-        <height>31</height>
+        <x>130</x>
+        <y>80</y>
+        <width>447</width>
+        <height>23</height>
        </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="palette">
-       <palette>
-        <active>
-         <colorrole role="WindowText">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>0</red>
-            <green>85</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </active>
-        <inactive>
-         <colorrole role="WindowText">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>0</red>
-            <green>85</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </inactive>
-        <disabled>
-         <colorrole role="WindowText">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>143</red>
-            <green>146</green>
-            <blue>147</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </disabled>
-       </palette>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Déclenchez le calcul d'interpolation Intra parcellaire pour le (ou les) champ(s) à interpoler que vous avez choisi(s).&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-      <property name="autoFillBackground">
-       <bool>true</bool>
-      </property>
-      <property name="text">
-       <string>Images Intra Parcellaire</string>
-      </property>
-     </widget>
-     <widget class="QDoubleSpinBox" name="spinBoxMultiplieRayon">
-      <property name="geometry">
-       <rect>
-        <x>290</x>
-        <y>130</y>
-        <width>121</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Choix supplémentaire nécessaire à GDAL qui indique combien d'équivalent du rayon d'interpolation vous voulez scruter perpendicairement aux rangs (la forme de l'ellipse)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-      <property name="inputMethodHints">
-       <set>Qt::ImhNone</set>
-      </property>
-      <property name="decimals">
-       <number>1</number>
-      </property>
-      <property name="minimum">
-       <double>0.500000000000000</double>
-      </property>
-      <property name="maximum">
-       <double>5.000000000000000</double>
-      </property>
-      <property name="singleStep">
-       <double>0.100000000000000</double>
-      </property>
-      <property name="value">
-       <double>2.000000000000000</double>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lab_87">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>130</y>
-        <width>271</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Multiplicateur pour le rayon de l'ellipse</string>
       </property>
      </widget>
     </widget>
-    <widget class="QGroupBox" name="groupBoxArret">
-     <property name="geometry">
-      <rect>
-       <x>265</x>
-       <y>200</y>
-       <width>249</width>
-       <height>61</height>
-      </rect>
-     </property>
-     <property name="autoFillBackground">
+   </widget>
+   <widget class="QWidget" name="tab">
+    <attribute name="title">
+     <string>Agronomie</string>
+    </attribute>
+    <widget class="QGroupBox" name="Vignoble">
+     <property name="enabled">
       <bool>true</bool>
      </property>
-     <property name="title">
-      <string/>
-     </property>
-     <widget class="QComboBox" name="fieldComboIntraContinue">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>40</y>
-        <width>231</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="toolTip">
-       <string/>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lab_71">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>20</y>
-        <width>181</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-        <underline>false</underline>
-       </font>
-      </property>
-      <property name="text">
-       <string>Si interpolation existe déjà</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="checkBoxArret">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>0</y>
-        <width>201</width>
-        <height>26</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#4e9a06;&quot;&gt;Cette option évite de relancer un traitement déjà effectué dans le même contexte.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-      <property name="text">
-       <string>Arret si le groupe existe</string>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QGroupBox" name="groupBoxMethode">
      <property name="geometry">
       <rect>
-       <x>5</x>
-       <y>198</y>
-       <width>261</width>
-       <height>63</height>
+       <x>10</x>
+       <y>30</y>
+       <width>621</width>
+       <height>221</height>
       </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
      <property name="font">
       <font>
@@ -2160,67 +985,1015 @@ Si vous hésitez, trouvez du conseil. </string>
        <bold>true</bold>
       </font>
      </property>
-     <property name="autoFillBackground">
-      <bool>true</bool>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="whatsThis">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Les informations détaillées du vignoble sont nécessaires pous accéder aux unités détaillées des indicateurs Physiocap :&lt;br/&gt;- nombre de sarments par m2 : &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;NBSARMM2&lt;br/&gt;&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- nombre de sarments par cep : &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;NBSARCEP&lt;br/&gt;&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- indicateur de surface de bois en mm²/m² : &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;BIOMM2&lt;br/&gt;&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- biomasse en g par m² : &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;BIOMGM2&lt;br/&gt;&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- biomasse par pieds : &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;BIOMGCEP&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Sans ces informations de détails, l'extension ne calcule que 3 indicateurs :&lt;br/&gt;- nombre de sarment par metre lineaire : &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;SARM&lt;br/&gt;&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- section moyenne en mm : &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;DIAM&lt;br/&gt;&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- biomasse de la vigne mesurée en mm²/m linéaire : &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;BIOM&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Pour en savoir plus, par le bouton, retrouvez le Wiki de l'extension et comprenez tous les indicateurs Physiocap.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLineEdit { margin: 4px }</string>
      </property>
      <property name="title">
-      <string>  Choisir la méthode d'interpolation</string>
+      <string>Vignoble (* requis pour les calculs surfaciques) </string>
      </property>
-     <widget class="QRadioButton" name="radioButtonGDAL">
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <widget class="QLabel" name="lab_51">
       <property name="geometry">
        <rect>
-        <x>120</x>
+        <x>10</x>
         <y>25</y>
-        <width>71</width>
-        <height>26</height>
+        <width>251</width>
+        <height>21</height>
        </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
       <property name="font">
        <font>
         <pointsize>9</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
        </font>
       </property>
-      <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;GDAL permet une interpolation dans une ellipse qui tient compte de l'orientation des rangs. Cette possibilité n'est disponible qu'avec les attributs et vecteurs en version 3.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Avec cette interpolation, seul l'écartement entre les isolignes est réglable.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
       <property name="text">
-       <string>GDAL</string>
-      </property>
-      <property name="checked">
-       <bool>true</bool>
+       <string>*Interrang (cm) - Ecartement entre rangs</string>
       </property>
      </widget>
-     <widget class="QRadioButton" name="radioButtonSAGA">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
+     <widget class="QSpinBox" name="spinBoxInterrangs">
       <property name="geometry">
        <rect>
-        <x>40</x>
+        <x>280</x>
         <y>25</y>
-        <width>71</width>
-        <height>26</height>
+        <width>101</width>
+        <height>21</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <pointsize>9</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
+       </font>
+      </property>
+      <property name="minimum">
+       <number>70</number>
+      </property>
+      <property name="maximum">
+       <number>500</number>
+      </property>
+      <property name="singleStep">
+       <number>5</number>
+      </property>
+      <property name="value">
+       <number>110</number>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lab_52">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>46</y>
+        <width>261</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>*Intercep (cm) - Ecartement entre ceps</string>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="spinBoxInterceps">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>46</y>
+        <width>101</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="minimum">
+       <number>50</number>
+      </property>
+      <property name="maximum">
+       <number>250</number>
+      </property>
+      <property name="singleStep">
+       <number>5</number>
+      </property>
+      <property name="value">
+       <number>100</number>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lab_55">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>76</y>
+        <width>291</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>*Hauteur végétative (cm) - Haie folaire</string>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="spinBoxHauteur">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>76</y>
+        <width>101</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="minimum">
+       <number>30</number>
+      </property>
+      <property name="maximum">
+       <number>200</number>
+      </property>
+      <property name="singleStep">
+       <number>5</number>
+      </property>
+      <property name="value">
+       <number>90</number>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lab_56">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>96</y>
+        <width>221</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>*Densité moyenne des sarments</string>
+      </property>
+     </widget>
+     <widget class="QDoubleSpinBox" name="doubleSpinBoxDensite">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>96</y>
+        <width>101</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Saga n'est pas encore accessible avec la Version 3&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Cette densité est utilisée dans le calcul de Biomasse en kg. La valeur 0,9 est une mesure moyenne dans la région Champagne. Mais la densité de vos bois dépend du cépage et des conditions météo.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : cette densité est un réel biais si vous comparez l'indice de biomasse à des pesées de bois de taille. Dans ce cas, prenez le temps de faire une mesure réelle de la densité de vos sarments, avant de préciser votre densité moyenne des sarments.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="decimals">
+       <number>2</number>
+      </property>
+      <property name="minimum">
+       <double>0.500000000000000</double>
+      </property>
+      <property name="maximum">
+       <double>1.000000000000000</double>
+      </property>
+      <property name="singleStep">
+       <double>0.050000000000000</double>
+      </property>
+      <property name="value">
+       <double>0.900000000000000</double>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lab_53">
+      <property name="geometry">
+       <rect>
+        <x>410</x>
+        <y>26</y>
+        <width>71</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
       </property>
       <property name="text">
-       <string>SAGA</string>
+       <string>Densité :</string>
       </property>
-      <property name="checked">
+     </widget>
+     <widget class="QLineEdit" name="lineEditDensite">
+      <property name="enabled">
        <bool>false</bool>
       </property>
+      <property name="geometry">
+       <rect>
+        <x>400</x>
+        <y>44</y>
+        <width>101</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="inputMethodHints">
+       <set>Qt::ImhDialableCharactersOnly</set>
+      </property>
+      <property name="maxLength">
+       <number>50</number>
+      </property>
+      <property name="dragEnabled">
+       <bool>true</bool>
+      </property>
      </widget>
+     <widget class="QLabel" name="lab_54">
+      <property name="geometry">
+       <rect>
+        <x>410</x>
+        <y>70</y>
+        <width>81</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>en pied/ha</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lab_58">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>170</y>
+        <width>151</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Mode de taille</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="fieldComboTaille">
+      <property name="geometry">
+       <rect>
+        <x>220</x>
+        <y>170</y>
+        <width>241</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="fieldComboCepage">
+      <property name="geometry">
+       <rect>
+        <x>70</x>
+        <y>120</y>
+        <width>121</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Liste presque exhaustive.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : Taper la première lettre de votre cépage pour accéder à une liste limitée.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lab_57">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>120</y>
+        <width>61</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Cépage</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditPorteGreffe">
+      <property name="geometry">
+       <rect>
+        <x>470</x>
+        <y>120</y>
+        <width>101</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_6">
+      <property name="geometry">
+       <rect>
+        <x>354</x>
+        <y>120</y>
+        <width>100</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Porte-greffe</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditClone">
+      <property name="geometry">
+       <rect>
+        <x>250</x>
+        <y>118</y>
+        <width>84</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>197</x>
+        <y>120</y>
+        <width>67</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Clone</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="InfoAgroSaisie">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>260</y>
+       <width>842</width>
+       <height>301</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="title">
+      <string/>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_9">
+      <property name="leftMargin">
+       <number>3</number>
+      </property>
+      <property name="topMargin">
+       <number>3</number>
+      </property>
+      <property name="rightMargin">
+       <number>3</number>
+      </property>
+      <property name="bottomMargin">
+       <number>3</number>
+      </property>
+      <property name="spacing">
+       <number>3</number>
+      </property>
+      <item row="3" column="19" rowspan="2">
+       <widget class="QLineEdit" name="lineEditPoidsMoyGrap"/>
+      </item>
+      <item row="9" column="16" colspan="2">
+       <widget class="QLabel" name="label_35">
+        <property name="text">
+         <string>Fréquence</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" rowspan="2" colspan="5">
+       <widget class="QLabel" name="label_17">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>-Rendement(t/ha) :
+année en cours</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="6">
+       <widget class="QLabel" name="label_7">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Année plantation</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="4" colspan="2">
+       <widget class="QLabel" name="label_29">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Stratégie</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="16" colspan="2">
+       <widget class="QLabel" name="labelTypeApportFert_Autres">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>à préciser</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="7">
+       <widget class="QLabel" name="label_10">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>%</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="8">
+       <widget class="QSpinBox" name="spinBoxAnneePlant">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+        <property name="maximum">
+         <number>3000</number>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="6" colspan="4">
+       <widget class="QLineEdit" name="lineEditProduitFert"/>
+      </item>
+      <item row="6" column="0" colspan="2">
+       <widget class="QLabel" name="label_25">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Fertilisation :</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="3" colspan="4">
+       <widget class="QLabel" name="label_32">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Pourriture à la vendange</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="6" rowspan="2">
+       <widget class="QLineEdit" name="lineEditSolArgile"/>
+      </item>
+      <item row="3" column="12" rowspan="2" colspan="2">
+       <widget class="QLineEdit" name="lineEditNbGrappes"/>
+      </item>
+      <item row="6" column="2" colspan="4">
+       <widget class="QLabel" name="label_26">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Type apports</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="18">
+       <widget class="QLabel" name="label_13">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>C/N</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="19" rowspan="2">
+       <widget class="QLineEdit" name="lineEditSolCaCO3"/>
+      </item>
+      <item row="3" column="5">
+       <widget class="QLabel" name="label_18">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Rdt </string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="13">
+       <widget class="QLineEdit" name="lineEditDoseFert"/>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_5">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Nom parcelle</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="6" colspan="8">
+       <widget class="QComboBox" name="comboBoxTypeApportFert"/>
+      </item>
+      <item row="9" column="18" colspan="2">
+       <widget class="QSpinBox" name="spinBoxEtatSanitaire_frequence">
+        <property name="maximum">
+         <number>100</number>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="6" rowspan="2">
+       <widget class="QLineEdit" name="lineEditRendement"/>
+      </item>
+      <item row="1" column="5">
+       <widget class="QLabel" name="label_9">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Argile</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="6">
+       <widget class="QLineEdit" name="lineEditRendement_1"/>
+      </item>
+      <item row="1" column="12" rowspan="2" colspan="2">
+       <widget class="QLineEdit" name="lineEditSolMO"/>
+      </item>
+      <item row="8" column="0" colspan="4">
+       <widget class="QLabel" name="label_30">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Entretien du sol : </string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="14" rowspan="2" colspan="5">
+       <widget class="QLabel" name="label_21">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Poids moyen des grappes(g)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="0" colspan="3">
+       <widget class="QLabel" name="label_31">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Etat sanitaire : </string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="11">
+       <widget class="QLabel" name="label_11">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>MO</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="2">
+       <widget class="QLabel" name="label_16">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Données Sol : </string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="18" colspan="2">
+       <widget class="QLineEdit" name="lineEditStrategieSol_Autres">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="9" colspan="2">
+       <widget class="QLabel" name="label_34">
+        <property name="text">
+         <string>Intensité</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="11" colspan="3">
+       <widget class="QSpinBox" name="spinBoxEtatSanitaire_intensite">
+        <property name="maximum">
+         <number>100</number>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="16" colspan="2">
+       <widget class="QLabel" name="labelStrategieSol_Autres">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>à préciser</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="19">
+       <widget class="QLineEdit" name="lineEditPoidsMoyGrap_1"/>
+      </item>
+      <item row="7" column="10" colspan="3">
+       <widget class="QLabel" name="label_28">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Dose(t/ha)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="5">
+       <widget class="QLabel" name="label_23">
+        <property name="text">
+         <string>Rdt </string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="12" colspan="2">
+       <widget class="QLineEdit" name="lineEditNbGrappes_1"/>
+      </item>
+      <item row="4" column="0" rowspan="2" colspan="5">
+       <widget class="QLabel" name="label_22">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>-Rendement(t/ha)  
+année précédente: </string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" colspan="5">
+       <widget class="QLineEdit" name="lineEditNomParcelle">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>_</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="2" colspan="4">
+       <widget class="QLabel" name="label_27">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Produit : </string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="14" rowspan="2" colspan="5">
+       <widget class="QLabel" name="label_19">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+          <italic>false</italic>
+         </font>
+        </property>
+        <property name="text">
+         <string>Poids moyen des grappes(g)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="15">
+       <widget class="QLabel" name="label_33">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>*</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="14">
+       <widget class="QLabel" name="label_12">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>%</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="18" colspan="2">
+       <widget class="QLineEdit" name="lineEditTypeApportFert_Autres">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="6" colspan="8">
+       <widget class="QComboBox" name="comboBoxStrategieSol"/>
+      </item>
+      <item row="4" column="8" rowspan="2" colspan="4">
+       <widget class="QLabel" name="label_24">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Nb grappes par cep</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="8" rowspan="2" colspan="4">
+       <widget class="QLabel" name="label_20">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Nb grappes par cep</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="18" colspan="2">
+       <widget class="QLineEdit" name="lineEditRegion">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="11">
+       <widget class="QLabel" name="label_2">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Commune</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="12" colspan="3">
+       <widget class="QComboBox" name="comboBoxCommune"/>
+      </item>
+      <item row="0" column="16">
+       <widget class="QLabel" name="label_8">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Région</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+     <zorder>lineEditTypeApportFert_Autres</zorder>
+     <zorder>lineEditStrategieSol_Autres</zorder>
+     <zorder>label_9</zorder>
+     <zorder>lineEditSolArgile</zorder>
+     <zorder>label_10</zorder>
+     <zorder>lineEditSolMO</zorder>
+     <zorder>label_11</zorder>
+     <zorder>label_12</zorder>
+     <zorder>label_13</zorder>
+     <zorder>lineEditSolCaCO3</zorder>
+     <zorder>label_16</zorder>
+     <zorder>label_17</zorder>
+     <zorder>label_18</zorder>
+     <zorder>lineEditRendement</zorder>
+     <zorder>label_19</zorder>
+     <zorder>lineEditPoidsMoyGrap</zorder>
+     <zorder>label_20</zorder>
+     <zorder>lineEditNbGrappes</zorder>
+     <zorder>label_21</zorder>
+     <zorder>lineEditNbGrappes_1</zorder>
+     <zorder>lineEditRendement_1</zorder>
+     <zorder>label_22</zorder>
+     <zorder>label_23</zorder>
+     <zorder>lineEditPoidsMoyGrap_1</zorder>
+     <zorder>label_24</zorder>
+     <zorder>label_25</zorder>
+     <zorder>label_26</zorder>
+     <zorder>label_27</zorder>
+     <zorder>lineEditProduitFert</zorder>
+     <zorder>label_28</zorder>
+     <zorder>lineEditDoseFert</zorder>
+     <zorder>label_29</zorder>
+     <zorder>label_30</zorder>
+     <zorder>label_31</zorder>
+     <zorder>label_32</zorder>
+     <zorder>label_5</zorder>
+     <zorder>lineEditNomParcelle</zorder>
+     <zorder>label_7</zorder>
+     <zorder>comboBoxTypeApportFert</zorder>
+     <zorder>comboBoxStrategieSol</zorder>
+     <zorder>labelTypeApportFert_Autres</zorder>
+     <zorder>labelStrategieSol_Autres</zorder>
+     <zorder>spinBoxEtatSanitaire_intensite</zorder>
+     <zorder>spinBoxEtatSanitaire_frequence</zorder>
+     <zorder>label_33</zorder>
+     <zorder>label_34</zorder>
+     <zorder>label_35</zorder>
+     <zorder>spinBoxAnneePlant</zorder>
+     <zorder>comboBoxCommune</zorder>
+     <zorder>label_2</zorder>
+     <zorder>lineEditRegion</zorder>
+     <zorder>label_8</zorder>
     </widget>
    </widget>
    <widget class="QWidget" name="tabAffichages">
@@ -2233,7 +2006,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <x>10</x>
        <y>0</y>
        <width>311</width>
-       <height>501</height>
+       <height>541</height>
       </rect>
      </property>
      <property name="toolTip">
@@ -2916,525 +2689,36 @@ Si vous hésitez, trouvez du conseil. </string>
        <bool>false</bool>
       </property>
      </widget>
-    </widget>
-    <widget class="QGroupBox" name="groupBoxChoixAvances">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>510</y>
-       <width>491</width>
-       <height>111</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>11</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Fixez les isolignes pour 3 attributs et vous pourrez ensuite enchainer l'interpolation de ces 3 attributs en un seul calcul.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="statusTip">
-      <string/>
-     </property>
-     <property name="whatsThis">
-      <string/>
-     </property>
-     <property name="title">
-      <string>Choisissez un paramétrage fixe pour les isolignes</string>
-     </property>
-     <widget class="QLabel" name="lab_290">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>160</x>
-        <y>50</y>
-        <width>451</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-     <widget class="QSpinBox" name="spinBoxIsoMax_Fixe_DIAM">
-      <property name="geometry">
-       <rect>
-        <x>360</x>
-        <y>40</y>
-        <width>101</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="minimum">
-       <number>5</number>
-      </property>
-      <property name="maximum">
-       <number>3000</number>
-      </property>
-      <property name="singleStep">
-       <number>1</number>
-      </property>
-      <property name="value">
-       <number>11</number>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lab_294">
-      <property name="geometry">
-       <rect>
-        <x>220</x>
-        <y>20</y>
-        <width>121</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Ecartement isolignes</string>
-      </property>
-     </widget>
-     <widget class="QSpinBox" name="spinBoxIsoDistance_Fixe_DIAM">
-      <property name="geometry">
-       <rect>
-        <x>230</x>
-        <y>40</y>
-        <width>101</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="minimum">
-       <number>1</number>
-      </property>
-      <property name="maximum">
-       <number>3000</number>
-      </property>
-      <property name="singleStep">
-       <number>1</number>
-      </property>
-      <property name="value">
-       <number>1</number>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lab_295">
-      <property name="geometry">
-       <rect>
-        <x>360</x>
-        <y>20</y>
-        <width>101</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Valeur maximale</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lab_293">
+     <widget class="QCheckBox" name="checkBoxIntraImages_2">
       <property name="geometry">
        <rect>
         <x>120</x>
-        <y>20</y>
-        <width>101</width>
-        <height>21</height>
+        <y>540</y>
+        <width>211</width>
+        <height>26</height>
        </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
       </property>
       <property name="text">
-       <string>Valeur minimale</string>
+       <string>Images de chaque parcelle</string>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
       </property>
      </widget>
-     <widget class="QSpinBox" name="spinBoxIsoMin_Fixe_DIAM">
-      <property name="geometry">
-       <rect>
-        <x>120</x>
-        <y>40</y>
-        <width>71</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="minimum">
-       <number>0</number>
-      </property>
-      <property name="maximum">
-       <number>500</number>
-      </property>
-      <property name="singleStep">
-       <number>1</number>
-      </property>
-      <property name="value">
-       <number>7</number>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="fieldComboIntraDIAM">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
+     <widget class="QCheckBox" name="checkBoxIntraIPDF">
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>40</y>
-        <width>111</width>
-        <height>21</height>
+        <y>490</y>
+        <width>281</width>
+        <height>26</height>
        </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. Vous pouvez fixer le paramétrage des isolignes. Pour activer ces choix, il faut aussi dans l'onglet Parcelle choisir le mode de calcul fixe des isolignes. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-      <property name="editable">
-       <bool>true</bool>
-      </property>
-      <property name="currentText">
-       <string>DIAM</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lab_292">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>20</y>
-        <width>111</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
       </property>
       <property name="text">
-       <string>Champ à interpoler</string>
+       <string>Carte PDF de chaque parcelle</string>
       </property>
-     </widget>
-     <widget class="QSpinBox" name="spinBoxIsoMax_Fixe_SARM">
-      <property name="geometry">
-       <rect>
-        <x>360</x>
-        <y>60</y>
-        <width>101</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="minimum">
-       <number>5</number>
-      </property>
-      <property name="maximum">
-       <number>3000</number>
-      </property>
-      <property name="singleStep">
-       <number>1</number>
-      </property>
-      <property name="value">
-       <number>13</number>
-      </property>
-     </widget>
-     <widget class="QSpinBox" name="spinBoxIsoMin_Fixe_SARM">
-      <property name="geometry">
-       <rect>
-        <x>120</x>
-        <y>60</y>
-        <width>71</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="minimum">
-       <number>0</number>
-      </property>
-      <property name="maximum">
-       <number>500</number>
-      </property>
-      <property name="singleStep">
-       <number>1</number>
-      </property>
-      <property name="value">
-       <number>5</number>
-      </property>
-     </widget>
-     <widget class="QSpinBox" name="spinBoxIsoDistance_Fixe_SARM">
-      <property name="geometry">
-       <rect>
-        <x>230</x>
-        <y>60</y>
-        <width>101</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="minimum">
-       <number>1</number>
-      </property>
-      <property name="maximum">
-       <number>3000</number>
-      </property>
-      <property name="singleStep">
-       <number>1</number>
-      </property>
-      <property name="value">
-       <number>2</number>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="fieldComboIntraSARM">
-      <property name="enabled">
+      <property name="checked">
        <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>60</y>
-        <width>111</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. Vous pouvez fixer le paramétrage des isolignes. Pour activer ces choix, il faut aussi dans l'onglet Parcelle choisir le mode de calcul fixe des isolignes. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-      <property name="editable">
-       <bool>true</bool>
-      </property>
-      <property name="currentText">
-       <string>NBSARM</string>
-      </property>
-     </widget>
-     <widget class="QSpinBox" name="spinBoxIsoMax_Fixe_BIOM">
-      <property name="geometry">
-       <rect>
-        <x>360</x>
-        <y>80</y>
-        <width>101</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="minimum">
-       <number>5</number>
-      </property>
-      <property name="maximum">
-       <number>3000</number>
-      </property>
-      <property name="singleStep">
-       <number>1</number>
-      </property>
-      <property name="value">
-       <number>1000</number>
-      </property>
-     </widget>
-     <widget class="QSpinBox" name="spinBoxIsoDistance_Fixe_BIOM">
-      <property name="geometry">
-       <rect>
-        <x>230</x>
-        <y>80</y>
-        <width>101</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="minimum">
-       <number>1</number>
-      </property>
-      <property name="maximum">
-       <number>3000</number>
-      </property>
-      <property name="singleStep">
-       <number>1</number>
-      </property>
-      <property name="value">
-       <number>200</number>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="fieldComboIntraBIOM">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>80</y>
-        <width>111</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. Vous pouvez fixer le paramétrage des isolignes. Pour activer ces choix, il faut aussi dans l'onglet Parcelle choisir le mode de calcul fixe des isolignes. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-      <property name="editable">
-       <bool>true</bool>
-      </property>
-      <property name="currentText">
-       <string>BIOM</string>
-      </property>
-     </widget>
-     <widget class="QSpinBox" name="spinBoxIsoMin_Fixe_BIOM">
-      <property name="geometry">
-       <rect>
-        <x>120</x>
-        <y>80</y>
-        <width>71</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="minimum">
-       <number>0</number>
-      </property>
-      <property name="maximum">
-       <number>500</number>
-      </property>
-      <property name="singleStep">
-       <number>1</number>
-      </property>
-      <property name="value">
-       <number>200</number>
       </property>
      </widget>
     </widget>
@@ -3444,7 +2728,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <x>320</x>
        <y>0</y>
        <width>181</width>
-       <height>501</height>
+       <height>541</height>
       </rect>
      </property>
      <property name="title">
@@ -4116,6 +3400,1458 @@ Si vous hésitez, trouvez du conseil. </string>
        <bool>true</bool>
       </property>
      </widget>
+     <widget class="QLineEdit" name="lineEditThematiqueIntraPDF">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>490</y>
+        <width>161</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="inputMethodHints">
+       <set>Qt::ImhDialableCharactersOnly</set>
+      </property>
+      <property name="text">
+       <string>Aucun rapport</string>
+      </property>
+      <property name="maxLength">
+       <number>50</number>
+      </property>
+      <property name="dragEnabled">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tabSynthese">
+    <attribute name="title">
+     <string>Synthèse</string>
+    </attribute>
+    <widget class="QTextEdit" name="textEditSynthese">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>591</width>
+       <height>631</height>
+      </rect>
+     </property>
+     <property name="textInteractionFlags">
+      <set>Qt::TextEditorInteraction</set>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tabHistogrammes">
+    <attribute name="title">
+     <string>Histos</string>
+    </attribute>
+    <widget class="QLabel" name="label_histo_sarment">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>50</y>
+       <width>250</width>
+       <height>250</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Histo sarment</string>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_histo_vitesse">
+     <property name="geometry">
+      <rect>
+       <x>270</x>
+       <y>50</y>
+       <width>250</width>
+       <height>250</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Histo vitesse brut</string>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_histo_diametre_apres">
+     <property name="geometry">
+      <rect>
+       <x>270</x>
+       <y>310</y>
+       <width>250</width>
+       <height>250</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Histo diamètre filtré</string>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="checkBoxHistogramme">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>231</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Astuce : Si vous confiant dans votre paramétrage, vous pouvez décocher la création des histogrammes lors de traitement de grande masse de données.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string>Création des histogrammes</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_histo_diametre_avant">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>310</y>
+       <width>250</width>
+       <height>250</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Histo diamètre brut</string>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="TabParcelles">
+    <attribute name="title">
+     <string>Interpolation</string>
+    </attribute>
+    <widget class="QGroupBox" name="groupBoxMethode">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>10</y>
+       <width>611</width>
+       <height>221</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="autoFillBackground">
+      <bool>true</bool>
+     </property>
+     <property name="title">
+      <string>Paramètres de l'interpolation</string>
+     </property>
+     <widget class="QCheckBox" name="checkBoxSagaTIFF">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>241</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous souhaitez créer des interpolation en tiif plutôt qu'en sdat (format de SAGA).&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="text">
+       <string>Interpolations SAGA au format TIFF</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="fieldComboIntraContinue">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>310</x>
+        <y>50</y>
+        <width>231</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="toolTip">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lab_intra_exist">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>310</x>
+        <y>30</y>
+        <width>181</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+        <underline>false</underline>
+       </font>
+      </property>
+      <property name="text">
+       <string>Si interpolation existe déjà</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="checkBoxArret">
+      <property name="geometry">
+       <rect>
+        <x>310</x>
+        <y>10</y>
+        <width>201</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#4e9a06;&quot;&gt;Cette option évite de relancer un traitement déjà effectué dans le même contexte.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="text">
+       <string>Arret si le groupe existe</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lab_87">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>150</y>
+        <width>271</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Multiplicateur pour le rayon de l'ellipse</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lab_77">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>90</y>
+        <width>251</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Taille du pixel (unité de carte)</string>
+      </property>
+     </widget>
+     <widget class="QDoubleSpinBox" name="spinBoxMultiplieRayon">
+      <property name="geometry">
+       <rect>
+        <x>300</x>
+        <y>150</y>
+        <width>121</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Choix supplémentaire nécessaire à GDAL qui indique combien d'équivalent du rayon d'interpolation vous voulez scruter perpendicairement aux rangs (la forme de l'ellipse)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="inputMethodHints">
+       <set>Qt::ImhNone</set>
+      </property>
+      <property name="decimals">
+       <number>1</number>
+      </property>
+      <property name="minimum">
+       <double>0.500000000000000</double>
+      </property>
+      <property name="maximum">
+       <double>5.000000000000000</double>
+      </property>
+      <property name="singleStep">
+       <double>0.100000000000000</double>
+      </property>
+      <property name="value">
+       <double>2.000000000000000</double>
+      </property>
+     </widget>
+     <widget class="QDoubleSpinBox" name="spinBoxPixel">
+      <property name="geometry">
+       <rect>
+        <x>300</x>
+        <y>90</y>
+        <width>121</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Selon votre choix de système de coordonnés, la correspondance à 1 mètre varie. Elle vaut 0,5 en L93 et 0,000009 en WGS84&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="inputMethodHints">
+       <set>Qt::ImhNone</set>
+      </property>
+      <property name="decimals">
+       <number>7</number>
+      </property>
+      <property name="minimum">
+       <double>0.000000000000000</double>
+      </property>
+      <property name="maximum">
+       <double>3.000000000000000</double>
+      </property>
+      <property name="singleStep">
+       <double>0.100000000000000</double>
+      </property>
+      <property name="value">
+       <double>1.000000000000000</double>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lab_84">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>120</y>
+        <width>281</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Rayon d'interpolation (unite de carte)</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditDoubleRayon">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>180</y>
+        <width>511</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <italic>true</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="maxLength">
+       <number>100</number>
+      </property>
+      <property name="dragEnabled">
+       <bool>true</bool>
+      </property>
+      <property name="readOnly">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lab_75">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>281</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Choisir la méthode d'interpolation</string>
+      </property>
+     </widget>
+     <widget class="QDoubleSpinBox" name="spinBoxDoubleRayon">
+      <property name="geometry">
+       <rect>
+        <x>300</x>
+        <y>120</y>
+        <width>121</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="decimals">
+       <number>7</number>
+      </property>
+      <property name="minimum">
+       <double>0.000000000000000</double>
+      </property>
+      <property name="maximum">
+       <double>20.000000000000000</double>
+      </property>
+      <property name="singleStep">
+       <double>0.100000000000000</double>
+      </property>
+      <property name="value">
+       <double>10.000000000000000</double>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="radioButtonSAGA">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>40</y>
+        <width>71</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Saga n'est pas encore accessible avec la Version 3&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="text">
+       <string>SAGA</string>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="radioButtonGDAL">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>40</y>
+        <width>71</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;GDAL permet une interpolation dans une ellipse qui tient compte de l'orientation des rangs. Cette possibilité n'est disponible qu'avec les attributs et vecteurs en version 3.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Avec cette interpolation, seul l'écartement entre les isolignes est réglable.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="text">
+       <string>GDAL</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>230</y>
+       <width>571</width>
+       <height>321</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="title">
+      <string>Seuils et isolignes</string>
+     </property>
+     <widget class="QGroupBox" name="groupBoxSeuils">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>50</y>
+        <width>601</width>
+        <height>131</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="title">
+       <string> </string>
+      </property>
+      <widget class="QSpinBox" name="spinBoxIsoMax">
+       <property name="geometry">
+        <rect>
+         <x>300</x>
+         <y>40</y>
+         <width>101</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="minimum">
+        <number>5</number>
+       </property>
+       <property name="maximum">
+        <number>3000</number>
+       </property>
+       <property name="singleStep">
+        <number>1</number>
+       </property>
+       <property name="value">
+        <number>30</number>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="spinBoxDistanceIso">
+       <property name="geometry">
+        <rect>
+         <x>150</x>
+         <y>40</y>
+         <width>101</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>3000</number>
+       </property>
+       <property name="singleStep">
+        <number>1</number>
+       </property>
+       <property name="value">
+        <number>25</number>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="fieldComboAideIso">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>90</y>
+         <width>511</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="editable">
+        <bool>true</bool>
+       </property>
+       <property name="currentIndex">
+        <number>-1</number>
+       </property>
+       <property name="minimumContentsLength">
+        <number>1</number>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="spinBoxIsoMin">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>40</y>
+         <width>101</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="minimum">
+        <number>0</number>
+       </property>
+       <property name="maximum">
+        <number>500</number>
+       </property>
+       <property name="singleStep">
+        <number>1</number>
+       </property>
+       <property name="value">
+        <number>5</number>
+       </property>
+      </widget>
+      <widget class="QLabel" name="lab_82">
+       <property name="geometry">
+        <rect>
+         <x>440</x>
+         <y>20</y>
+         <width>111</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Nombre d'isolignes</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="lab_86">
+       <property name="geometry">
+        <rect>
+         <x>150</x>
+         <y>20</y>
+         <width>141</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Ecartement des isolignes</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="lab_83">
+       <property name="geometry">
+        <rect>
+         <x>300</x>
+         <y>20</y>
+         <width>161</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Valeur maximale</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="lab_81">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>20</y>
+         <width>111</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Valeur minimale</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="lab_211">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>70</y>
+         <width>381</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Méthode d'aide au calcul des isolignes</string>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="spinBoxNombreIso">
+       <property name="geometry">
+        <rect>
+         <x>440</x>
+         <y>40</y>
+         <width>101</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>25</number>
+       </property>
+       <property name="singleStep">
+        <number>1</number>
+       </property>
+       <property name="value">
+        <number>4</number>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBoxChoixAvances">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>200</y>
+        <width>491</width>
+        <height>111</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>1</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+        <kerning>false</kerning>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Fixez les isolignes pour 3 attributs et vous pourrez ensuite enchainer l'interpolation de ces 3 attributs en un seul calcul.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="statusTip">
+       <string/>
+      </property>
+      <property name="whatsThis">
+       <string/>
+      </property>
+      <property name="title">
+       <string/>
+      </property>
+      <widget class="QLabel" name="lab_290">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>160</x>
+         <y>50</y>
+         <width>451</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="spinBoxIsoMax_Fixe_DIAM">
+       <property name="geometry">
+        <rect>
+         <x>360</x>
+         <y>40</y>
+         <width>101</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="minimum">
+        <number>5</number>
+       </property>
+       <property name="maximum">
+        <number>3000</number>
+       </property>
+       <property name="singleStep">
+        <number>1</number>
+       </property>
+       <property name="value">
+        <number>11</number>
+       </property>
+      </widget>
+      <widget class="QLabel" name="lab_294">
+       <property name="geometry">
+        <rect>
+         <x>220</x>
+         <y>20</y>
+         <width>121</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Ecartement isolignes</string>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="spinBoxIsoDistance_Fixe_DIAM">
+       <property name="geometry">
+        <rect>
+         <x>230</x>
+         <y>40</y>
+         <width>101</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>3000</number>
+       </property>
+       <property name="singleStep">
+        <number>1</number>
+       </property>
+       <property name="value">
+        <number>1</number>
+       </property>
+      </widget>
+      <widget class="QLabel" name="lab_295">
+       <property name="geometry">
+        <rect>
+         <x>360</x>
+         <y>20</y>
+         <width>101</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Valeur maximale</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="lab_293">
+       <property name="geometry">
+        <rect>
+         <x>120</x>
+         <y>20</y>
+         <width>101</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Valeur minimale</string>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="spinBoxIsoMin_Fixe_DIAM">
+       <property name="geometry">
+        <rect>
+         <x>120</x>
+         <y>40</y>
+         <width>71</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="minimum">
+        <number>0</number>
+       </property>
+       <property name="maximum">
+        <number>500</number>
+       </property>
+       <property name="singleStep">
+        <number>1</number>
+       </property>
+       <property name="value">
+        <number>7</number>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="fieldComboIntraDIAM">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>40</y>
+         <width>111</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. Vous pouvez fixer le paramétrage des isolignes. Pour activer ces choix, il faut aussi dans l'onglet Parcelle choisir le mode de calcul fixe des isolignes. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="editable">
+        <bool>true</bool>
+       </property>
+       <property name="currentText">
+        <string>DIAM</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="lab_292">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>20</y>
+         <width>111</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Champ à interpoler</string>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="spinBoxIsoMax_Fixe_SARM">
+       <property name="geometry">
+        <rect>
+         <x>360</x>
+         <y>60</y>
+         <width>101</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="minimum">
+        <number>5</number>
+       </property>
+       <property name="maximum">
+        <number>3000</number>
+       </property>
+       <property name="singleStep">
+        <number>1</number>
+       </property>
+       <property name="value">
+        <number>13</number>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="spinBoxIsoMin_Fixe_SARM">
+       <property name="geometry">
+        <rect>
+         <x>120</x>
+         <y>60</y>
+         <width>71</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="minimum">
+        <number>0</number>
+       </property>
+       <property name="maximum">
+        <number>500</number>
+       </property>
+       <property name="singleStep">
+        <number>1</number>
+       </property>
+       <property name="value">
+        <number>5</number>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="spinBoxIsoDistance_Fixe_SARM">
+       <property name="geometry">
+        <rect>
+         <x>230</x>
+         <y>60</y>
+         <width>101</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>3000</number>
+       </property>
+       <property name="singleStep">
+        <number>1</number>
+       </property>
+       <property name="value">
+        <number>2</number>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="fieldComboIntraSARM">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>60</y>
+         <width>111</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. Vous pouvez fixer le paramétrage des isolignes. Pour activer ces choix, il faut aussi dans l'onglet Parcelle choisir le mode de calcul fixe des isolignes. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="editable">
+        <bool>true</bool>
+       </property>
+       <property name="currentText">
+        <string>NBSARM</string>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="spinBoxIsoMax_Fixe_BIOM">
+       <property name="geometry">
+        <rect>
+         <x>360</x>
+         <y>80</y>
+         <width>101</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="minimum">
+        <number>5</number>
+       </property>
+       <property name="maximum">
+        <number>3000</number>
+       </property>
+       <property name="singleStep">
+        <number>1</number>
+       </property>
+       <property name="value">
+        <number>1000</number>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="spinBoxIsoDistance_Fixe_BIOM">
+       <property name="geometry">
+        <rect>
+         <x>230</x>
+         <y>80</y>
+         <width>101</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>3000</number>
+       </property>
+       <property name="singleStep">
+        <number>1</number>
+       </property>
+       <property name="value">
+        <number>200</number>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="fieldComboIntraBIOM">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>80</y>
+         <width>111</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. Vous pouvez fixer le paramétrage des isolignes. Pour activer ces choix, il faut aussi dans l'onglet Parcelle choisir le mode de calcul fixe des isolignes. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="editable">
+        <bool>true</bool>
+       </property>
+       <property name="currentText">
+        <string>BIOM</string>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="spinBoxIsoMin_Fixe_BIOM">
+       <property name="geometry">
+        <rect>
+         <x>120</x>
+         <y>80</y>
+         <width>71</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="minimum">
+        <number>0</number>
+       </property>
+       <property name="maximum">
+        <number>500</number>
+       </property>
+       <property name="singleStep">
+        <number>1</number>
+       </property>
+       <property name="value">
+        <number>200</number>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QRadioButton" name="radioButtonSeuilFixes">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>180</y>
+        <width>291</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;GDAL permet une interpolation dans une ellipse qui tient compte de l'orientation des rangs. Cette possibilité n'est disponible qu'avec les attributs et vecteurs en version 3.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Avec cette interpolation, seul l'écartement entre les isolignes est réglable.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="text">
+       <string>Fixes</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="radioButtonSeuilsCalcules">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>30</y>
+        <width>411</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Saga n'est pas encore accessible avec la Version 3&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="text">
+       <string>Données de la session optimisent les seuils</string>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="tabExpert">
@@ -4126,9 +4862,9 @@ Si vous hésitez, trouvez du conseil. </string>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>350</y>
+       <y>250</y>
        <width>491</width>
-       <height>71</height>
+       <height>51</height>
       </rect>
      </property>
      <property name="font">
@@ -4148,7 +4884,7 @@ Si vous hésitez, trouvez du conseil. </string>
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>25</y>
+        <y>20</y>
         <width>471</width>
         <height>20</height>
        </rect>
@@ -4178,7 +4914,7 @@ Si vous hésitez, trouvez du conseil. </string>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>440</y>
+       <y>310</y>
        <width>491</width>
        <height>111</height>
       </rect>
@@ -4215,7 +4951,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <string/>
       </property>
      </widget>
-     <widget class="QLabel" name="lab_1044">
+     <widget class="QLabel" name="lab_derive">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -4349,7 +5085,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <double>2.500000000000000</double>
       </property>
      </widget>
-     <widget class="QLabel" name="lab_1042">
+     <widget class="QLabel" name="lab_maxPdop">
       <property name="geometry">
        <rect>
         <x>210</x>
@@ -4375,7 +5111,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <string>Précision (max pdop)</string>
       </property>
      </widget>
-     <widget class="QLabel" name="lab_1041">
+     <widget class="QLabel" name="lab_pointsContigus">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -4433,7 +5169,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <number>5</number>
       </property>
      </widget>
-     <widget class="QLabel" name="lab_1043">
+     <widget class="QLabel" name="lab_seuilsVitesse">
       <property name="geometry">
        <rect>
         <x>100</x>
@@ -4498,67 +5234,13 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
      </widget>
     </widget>
-    <widget class="QLabel" name="label_1000">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>190</y>
-       <width>211</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>11</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>Accès au mode expert</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="lineEditExpert">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>210</y>
-       <width>161</width>
-       <height>26</height>
-      </rect>
-     </property>
-     <property name="acceptDrops">
-      <bool>true</bool>
-     </property>
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous avez besoin d'accéder à ces paramères, questionnez-vous sur votre contribution à l'extension, puis de contactez son support à jean@jhemmi.eu&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="autoFillBackground">
-      <bool>false</bool>
-     </property>
-     <property name="inputMethodHints">
-      <set>Qt::ImhDialableCharactersOnly</set>
-     </property>
-     <property name="text">
-      <string>Avez-vous contribué ?</string>
-     </property>
-     <property name="maxLength">
-      <number>50</number>
-     </property>
-     <property name="dragEnabled">
-      <bool>true</bool>
-     </property>
-    </widget>
     <widget class="QGroupBox" name="groupBoxInterIntraExpert">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>250</y>
-       <width>491</width>
-       <height>71</height>
+       <y>160</y>
+       <width>591</width>
+       <height>51</height>
       </rect>
      </property>
      <property name="font">
@@ -4569,7 +5251,7 @@ Si vous hésitez, trouvez du conseil. </string>
       </font>
      </property>
      <property name="title">
-      <string>Inter - Intra</string>
+      <string>Inter</string>
      </property>
      <widget class="QCheckBox" name="checkBoxConsolidation">
       <property name="geometry">
@@ -4594,43 +5276,14 @@ Si vous hésitez, trouvez du conseil. </string>
        <string>Uniquement CONSOLIDATION</string>
       </property>
      </widget>
-     <widget class="QCheckBox" name="checkBoxSagaTIFF">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>40</y>
-        <width>321</width>
-        <height>26</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous souhaitez créer des interpolation en tiif plutôt qu'en sdat (format de SAGA).&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-      <property name="text">
-       <string>Interpolations SAGA au format TIFF</string>
-      </property>
-      <property name="checked">
-       <bool>true</bool>
-      </property>
-     </widget>
     </widget>
     <widget class="QGroupBox" name="groupBoxExpertOuvert">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>491</width>
-       <height>171</height>
+       <width>591</width>
+       <height>141</height>
       </rect>
      </property>
      <property name="font">
@@ -4647,9 +5300,9 @@ Si vous hésitez, trouvez du conseil. </string>
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>30</y>
+        <y>25</y>
         <width>251</width>
-        <height>26</height>
+        <height>21</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -4672,16 +5325,16 @@ Si vous hésitez, trouvez du conseil. </string>
        <string>Attributs et vecteurs V3</string>
       </property>
      </widget>
-     <widget class="QLabel" name="lab_15">
+     <widget class="QLabel" name="lab_veteur">
       <property name="enabled">
        <bool>true</bool>
       </property>
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>100</y>
+        <y>80</y>
         <width>261</width>
-        <height>19</height>
+        <height>21</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -4701,14 +5354,14 @@ Si vous hésitez, trouvez du conseil. </string>
        <string>Format des couches générées</string>
       </property>
      </widget>
-     <widget class="QLabel" name="lab_14">
+     <widget class="QLabel" name="lab_EPSG">
       <property name="enabled">
        <bool>true</bool>
       </property>
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>61</y>
+        <y>50</y>
         <width>211</width>
         <height>21</height>
        </rect>
@@ -4740,9 +5393,9 @@ Si vous hésitez, trouvez du conseil. </string>
       <property name="geometry">
        <rect>
         <x>230</x>
-        <y>102</y>
+        <y>82</y>
         <width>231</width>
-        <height>20</height>
+        <height>21</height>
        </rect>
       </property>
       <property name="font">
@@ -4773,7 +5426,7 @@ Si vous hésitez, trouvez du conseil. </string>
       <property name="geometry">
        <rect>
         <x>230</x>
-        <y>60</y>
+        <y>50</y>
         <width>221</width>
         <height>26</height>
        </rect>
@@ -4803,8 +5456,8 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QRadioButton" name="radioButtonGPS">
       <property name="geometry">
        <rect>
-        <x>230</x>
-        <y>80</y>
+        <x>360</x>
+        <y>50</y>
         <width>211</width>
         <height>26</height>
        </rect>
@@ -4834,9 +5487,9 @@ Si vous hésitez, trouvez du conseil. </string>
       <property name="geometry">
        <rect>
         <x>150</x>
-        <y>130</y>
+        <y>110</y>
         <width>311</width>
-        <height>20</height>
+        <height>21</height>
        </rect>
       </property>
       <property name="font">
@@ -4862,11 +5515,11 @@ Si vous hésitez, trouvez du conseil. </string>
        <number>1</number>
       </property>
      </widget>
-     <widget class="QLabel" name="lab_1010">
+     <widget class="QLabel" name="lab_traces">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>130</y>
+        <y>110</y>
         <width>131</width>
         <height>21</height>
        </rect>
@@ -4899,8 +5552,8 @@ Si vous hésitez, trouvez du conseil. </string>
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>511</width>
-       <height>467</height>
+       <width>631</width>
+       <height>581</height>
       </rect>
      </property>
      <property name="sizePolicy">
@@ -4979,7 +5632,7 @@ Si vous hésitez, trouvez du conseil. </string>
      <property name="title">
       <string/>
      </property>
-     <widget class="QLabel" name="label_505">
+     <widget class="QLabel" name="label_Contributions">
       <property name="geometry">
        <rect>
         <x>50</x>
@@ -5008,7 +5661,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <rect>
         <x>10</x>
         <y>220</y>
-        <width>481</width>
+        <width>601</width>
         <height>41</height>
        </rect>
       </property>
@@ -5110,7 +5763,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="text">
-       <string>Version 3.10.4</string>
+       <string>Version 3.10.5 Beta</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_500">
@@ -5128,7 +5781,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="text">
-       <string>Extension Physiocap pour Qgis</string>
+       <string>Extension Physiocap pour QGIS3</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_jhemmi">
@@ -5261,228 +5914,601 @@ Si vous hésitez, trouvez du conseil. </string>
        <bool>true</bool>
       </property>
      </widget>
-    </widget>
-    <widget class="QDoubleSpinBox" name="spinBoxPower">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>290</x>
-       <y>510</y>
-       <width>61</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="decimals">
-      <number>2</number>
-     </property>
-     <property name="minimum">
-      <double>1.000000000000000</double>
-     </property>
-     <property name="maximum">
-      <double>2.800000000000000</double>
-     </property>
-     <property name="singleStep">
-      <double>0.100000000000000</double>
-     </property>
-     <property name="value">
-      <double>2.000000000000000</double>
-     </property>
-    </widget>
-    <widget class="QComboBox" name="fieldComboTaille">
-     <property name="geometry">
-      <rect>
-       <x>110</x>
-       <y>550</y>
-       <width>241</width>
-       <height>20</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QLabel" name="lab_37">
-     <property name="geometry">
-      <rect>
-       <x>30</x>
-       <y>554</y>
-       <width>151</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>Mode de taille</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="lab_36">
-     <property name="geometry">
-      <rect>
-       <x>30</x>
-       <y>534</y>
-       <width>161</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>Cépage</string>
-     </property>
-    </widget>
-    <widget class="QComboBox" name="fieldComboCepage">
-     <property name="geometry">
-      <rect>
-       <x>110</x>
-       <y>530</y>
-       <width>241</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Liste presque exhaustive.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : Taper la première lettre de votre cépage pour accéder à une liste limitée.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-    </widget>
-    <widget class="QSpinBox" name="spinBoxPasDeDerive">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>300</x>
-       <y>570</y>
-       <width>51</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="toolTip">
-      <string/>
-     </property>
-     <property name="minimum">
-      <number>10</number>
-     </property>
-     <property name="maximum">
-      <number>90</number>
-     </property>
-     <property name="singleStep">
-      <number>1</number>
-     </property>
-     <property name="value">
-      <number>30</number>
-     </property>
-    </widget>
-    <widget class="QLabel" name="lab_46">
-     <property name="geometry">
-      <rect>
-       <x>30</x>
-       <y>570</y>
-       <width>251</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>Pas pour les gravités du messages dérives</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="lab_43">
-     <property name="geometry">
-      <rect>
-       <x>30</x>
-       <y>510</y>
-       <width>161</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>Intra power</string>
-     </property>
-    </widget>
-    <widget class="QComboBox" name="fieldPbGdal">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>230</x>
-       <y>490</y>
-       <width>141</width>
-       <height>24</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>9</pointsize>
-      </font>
-     </property>
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit du champ de votre contour qui identifie chacune de vos parcelles. Dans la moyenne Inter Parcellaire, ce champ se nomme NOM_PHY. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Attention : seuls les champs ayant une valeur différente pour chaque parcelle sont proposés.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="lab_44">
-     <property name="geometry">
-      <rect>
-       <x>30</x>
-       <y>490</y>
-       <width>191</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>Id champ posant question à GDAL</string>
-     </property>
-    </widget>
-    <widget class="QTextBrowser" name="textBrowserAide">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>480</y>
-       <width>511</width>
-       <height>121</height>
-      </rect>
-     </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="html">
-      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+     <widget class="QLabel" name="label_1000">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>530</y>
+        <width>211</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Accès au mode expert</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lab_43">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>510</y>
+        <width>161</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>Intra power</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lab_46">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>560</y>
+        <width>251</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>Pas pour les gravités du messages dérives</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="fieldPbGdal">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>240</x>
+        <y>490</y>
+        <width>141</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit du champ de votre contour qui identifie chacune de vos parcelles. Dans la moyenne Inter Parcellaire, ce champ se nomme NOM_PHY. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Attention : seuls les champs ayant une valeur différente pour chaque parcelle sont proposés.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="spinBoxPasDeDerive">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>310</x>
+        <y>560</y>
+        <width>51</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string/>
+      </property>
+      <property name="minimum">
+       <number>10</number>
+      </property>
+      <property name="maximum">
+       <number>90</number>
+      </property>
+      <property name="singleStep">
+       <number>1</number>
+      </property>
+      <property name="value">
+       <number>30</number>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lab_44">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>490</y>
+        <width>191</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>Id champ posant question à GDAL</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditExpert">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>270</x>
+        <y>530</y>
+        <width>161</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="acceptDrops">
+       <bool>true</bool>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous avez besoin d'accéder à ces paramères, questionnez-vous sur votre contribution à l'extension, puis de contactez son support à jean@jhemmi.eu&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="inputMethodHints">
+       <set>Qt::ImhDialableCharactersOnly</set>
+      </property>
+      <property name="text">
+       <string>Avez-vous contribué ?</string>
+      </property>
+      <property name="maxLength">
+       <number>50</number>
+      </property>
+      <property name="dragEnabled">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QDoubleSpinBox" name="spinBoxPower">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>300</x>
+        <y>510</y>
+        <width>61</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="decimals">
+       <number>2</number>
+      </property>
+      <property name="minimum">
+       <double>1.000000000000000</double>
+      </property>
+      <property name="maximum">
+       <double>2.800000000000000</double>
+      </property>
+      <property name="singleStep">
+       <double>0.100000000000000</double>
+      </property>
+      <property name="value">
+       <double>2.000000000000000</double>
+      </property>
+     </widget>
+     <widget class="QTextBrowser" name="textBrowserAide">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>450</y>
+        <width>601</width>
+        <height>131</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="html">
+       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Cantarell'; font-size:10pt;&quot;&gt;Utilisez le bouton &lt;/span&gt;&lt;span style=&quot; font-family:'Cantarell'; font-size:10pt; font-weight:600;&quot;&gt;Aide&lt;/span&gt;&lt;span style=&quot; font-family:'Cantarell'; font-size:10pt;&quot;&gt; pour accéder aux documentations, à la license et au suivi des évolutions sous le Wiki de l'extension. &lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Cantarell'; font-size:10pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Cantarell'; font-size:10pt;&quot;&gt;N'hésitez pas à y poster vos questions, proposition d'évolutions et retour de problèmes.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
+      </property>
+     </widget>
+     <widget class="QGroupBox" name="groupBoxArret">
+      <property name="geometry">
+       <rect>
+        <x>450</x>
+        <y>480</y>
+        <width>111</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+      <property name="title">
+       <string>box arret</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="comboBoxPoints">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>460</y>
+        <width>491</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+     </widget>
+     <zorder>groupBoxArret</zorder>
+     <zorder>comboBoxPoints</zorder>
+     <zorder>label_Contributions</zorder>
+     <zorder>buttonContribuer</zorder>
+     <zorder>label_506</zorder>
+     <zorder>label_CIVC</zorder>
+     <zorder>label_503</zorder>
+     <zorder>label_501</zorder>
+     <zorder>label_500</zorder>
+     <zorder>label_jhemmi</zorder>
+     <zorder>label_IFVV</zorder>
+     <zorder>label_MHCS</zorder>
+     <zorder>label_MORR</zorder>
+     <zorder>label_504</zorder>
+     <zorder>label_TAITTINGER</zorder>
+     <zorder>label_VCP</zorder>
+     <zorder>label_1000</zorder>
+     <zorder>lab_43</zorder>
+     <zorder>lab_46</zorder>
+     <zorder>fieldPbGdal</zorder>
+     <zorder>spinBoxPasDeDerive</zorder>
+     <zorder>lab_44</zorder>
+     <zorder>lineEditExpert</zorder>
+     <zorder>spinBoxPower</zorder>
+     <zorder>textBrowserAide</zorder>
     </widget>
    </widget>
+  </widget>
+  <widget class="QComboBox" name="fieldComboProfil">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>10</y>
+     <width>310</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lab_Profil">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>131</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Profil Physiocap</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lab_Session">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>40</y>
+     <width>131</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Dernière session</string>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="groupBoxActions">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>730</y>
+     <width>631</width>
+     <height>141</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>1</pointsize>
+     <kerning>true</kerning>
+    </font>
+   </property>
+   <property name="title">
+    <string/>
+   </property>
+   <widget class="QProgressBar" name="progressBar">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>20</y>
+      <width>191</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Etat d'avancement du dernier calcul et filtrage des données brutes&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="value">
+     <number>0</number>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ButtonInter">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>60</y>
+      <width>271</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="palette">
+     <palette>
+      <active>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>0</red>
+          <green>85</green>
+          <blue>255</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </active>
+      <inactive>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>0</red>
+          <green>85</green>
+          <blue>255</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </inactive>
+      <disabled>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>143</red>
+          <green>146</green>
+          <blue>147</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </disabled>
+     </palette>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Déclenchez le calcul de moyenne Inter parcellaire pour le contour et le jeu de données choisis.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="autoFillBackground">
+     <bool>true</bool>
+    </property>
+    <property name="text">
+     <string>Moyennes Inter Parcellaire</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ButtonIntra">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>100</y>
+      <width>271</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="palette">
+     <palette>
+      <active>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>0</red>
+          <green>85</green>
+          <blue>255</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </active>
+      <inactive>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>0</red>
+          <green>85</green>
+          <blue>255</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </inactive>
+      <disabled>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>143</red>
+          <green>146</green>
+          <blue>147</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </disabled>
+     </palette>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Déclenchez le calcul d'interpolation Intra parcellaire pour le (ou les) champ(s) à interpoler que vous avez choisi(s).&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="autoFillBackground">
+     <bool>true</bool>
+    </property>
+    <property name="text">
+     <string>Images Intra Parcellaire</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ButtonFiltrer">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>271</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="mouseTracking">
+     <bool>false</bool>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Vous lancez un traitement des données brutes.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="whatsThis">
+     <string/>
+    </property>
+    <property name="text">
+     <string>Filtrer les données brutes</string>
+    </property>
+   </widget>
+   <widget class="QProgressBar" name="progressBarInter">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>60</y>
+      <width>191</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Etat d'avancement du dernier calcul et filtrage des données brutes&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="value">
+     <number>0</number>
+    </property>
+   </widget>
+   <widget class="QProgressBar" name="progressBarIntra">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>100</y>
+      <width>191</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Etat d'avancement du dernier calcul Inter ou Intra&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="value">
+     <number>0</number>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QLineEdit" name="lineEditDernierProjet">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>40</y>
+     <width>311</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Nom du dernier projet Physiocap. Répertoire contenant ce fichier de synthèse ainsi que tous les entités créées par l'extension.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="readOnly">
+    <bool>false</bool>
+   </property>
   </widget>
  </widget>
  <resources/>

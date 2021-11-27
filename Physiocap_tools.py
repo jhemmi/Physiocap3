@@ -225,10 +225,10 @@ def physiocap_get_layer_by_URI( layerURI ):
     ids = root.findLayerIds()              
     trouve = "NO"
     layer = None
-    #physiocap_log( "Recherche {0}".format( layerURI), leModeTrace)
+    physiocap_log( "Recherche {0}".format( layerURI), leModeTrace)
     # BUG 7 melange des / et \ en V3. On repasse tout en "/"
     layerURI_nettoye = layerURI.replace("\\", "/")
-    #physiocap_log( "Modifié>> {0}".format( layerURI_nettoye), leModeTrace)
+    physiocap_log( "Modifié>> {0}".format( layerURI_nettoye), leModeTrace)
     for layerID in ids:
         # Retrouver le layer
         layer = root.findLayer( layerID).layer()
@@ -236,17 +236,18 @@ def physiocap_get_layer_by_URI( layerURI ):
         # Attention il faut enlever la mention |layerid à la fin de l'URI
         pos_fin_layer = URI_complet.rfind( "|layerid=")
         URI_vecteur = URI_complet[:pos_fin_layer]
-        #physiocap_log( "Layer URI {0}".format( URI_vecteur), leModeTrace)
+        physiocap_log( "Layer URI {0}".format( URI_vecteur), leModeTrace)
         if layer is not None and layer.type() == QgsMapLayer.VectorLayer and \
             (URI_vecteur == layerURI_nettoye or URI_vecteur == layerURI):
             trouve = "YES"
-            #physiocap_log( "Layer retrouvé  {0}".format( layer.name()), leModeTrace)
+            physiocap_log( "Layer retrouvé  {0}".format( layer.name()), leModeTrace)
             # The layer is found
             break
     if ( trouve == "YES"):
         if layer.isValid():
             return layer
         else:
+            physiocap_log( "Layer trouvé  {0} mais invalide".format( layer.name()), leModeTrace)
             return None
     else:
         return None
