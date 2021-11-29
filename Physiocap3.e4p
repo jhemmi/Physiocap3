@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project Physiocap3 -->
-<!-- Saved: 2021-01-26, 19:30:07 -->
+<!-- Saved: 2021-11-29, 16:29:10 -->
 <!-- Copyright (C) 2021 jhemmi.eu, jhemmi.eu -->
 <Project version="5.1">
   <Language></Language>
@@ -14,7 +14,6 @@
   <TranslationPattern>i18n/Physiocap_%language%.ts</TranslationPattern>
   <Sources>
     <Source>Makefile</Source>
-    <Source>Physiocap3.py</Source>
     <Source>Physiocap3_dialog.py</Source>
     <Source>Physiocap_CIVC.py</Source>
     <Source>Physiocap_creer_arbre.py</Source>
@@ -22,15 +21,6 @@
     <Source>Physiocap_intra_interpolation.py</Source>
     <Source>Physiocap_tools.py</Source>
     <Source>Physiocap_var_exception.py</Source>
-    <Source>__init__.py</Source>
-    <Source>test/__init__.py</Source>
-    <Source>test/qgis_interface.py</Source>
-    <Source>test/test_Physiocap3_dialog.py</Source>
-    <Source>test/test_init.py</Source>
-    <Source>test/test_qgis_environment.py</Source>
-    <Source>test/test_resources.py</Source>
-    <Source>test/test_translations.py</Source>
-    <Source>test/utilities.py</Source>
   </Sources>
   <Forms>
     <Form>Physiocap3_dialog_base.ui</Form>

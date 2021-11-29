@@ -186,7 +186,6 @@ def physiocap_create_projection_file( prj_name,  laProjection):
         epsg = EPSG_DESCRIPTION_L93
     if ( laProjection == PROJECTION_GPS) or ( laProjection == EPSG_NUMBER_GPS):
         epsg = EPSG_DESCRIPTION_GPS
-        
     prj.write(epsg)
     prj.close()
     return
