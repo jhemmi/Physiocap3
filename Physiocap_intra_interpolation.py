@@ -1110,6 +1110,8 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         physiocap_log ( self.tr( "=~= Fin Interpolation de {0} <<<<").\
                             format( un_nom), leModeDeTrace)
 
+            # TODO PDF
+
             if ( contour_avec_point >  0 ):                                            
                 physiocap_log( self.tr( "=~= Fin des {0}/{1} interpolation(s) intra parcellaire").\
                     format( str(contour_avec_point), str( contours_possibles)), leModeDeTrace)

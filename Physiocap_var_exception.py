@@ -37,12 +37,6 @@ import platform
 # VARIABLES GLOBALES DE PHYSIOCAP
 # ###########################
 
-def physiocap_mon_unicode(x):
-    mon_unic = ""
-    for pos in range( len( PHYSIOCAP_TEST3)):
-        mon_unic = mon_unic + PHYSIOCAP_TEST3[pos] + PHYSIOCAP_TEST6[pos]
-    return mon_unic
-
 # Ces variables sont nommées en Francais par compatibilité avec la version physiocap_V8
 # Pour reconnaitre si Windows ou Linux
 MACHINE = platform.system()
@@ -50,6 +44,8 @@ if MACHINE == "Linux":
     LE_MODE_PROD = "NO"
 else:
     LE_MODE_PROD = "YES"
+print( 'Mode production vaut ' + LE_MODE_PROD)
+LISTE_PROFIL= [ 'Standard', 'Champagne', 'Fronton', 'IFV Bordeaux']
     
 # LIVRAISON : supprimer en Prod
 #LE_MODE_PROD = "NO"
@@ -83,12 +79,6 @@ PHYSIOCAP_LOG_ERREUR = PHYSIOCAP_WARNING + " " + PHYSIOCAP_UNI + " Erreurs"
 # Test de robustesse de la gestion des unicodes
 PHYSIOCAP_TEST1 = "ȧƈƈḗƞŧḗḓ ŧḗẋŧ ƒǿř ŧḗşŧīƞɠ"
 PHYSIOCAP_TEST2 = "ℛℯα∂α♭ℓℯ ♭ʊ☂ η☺т Ѧ$☾ℐℐ"
-PHYSIOCAP_TEST3  = "Ja otiu"
-PHYSIOCAP_TEST4 = "¡ooʇ ןnɟǝsn sı uʍop-ǝpısdn"
-PHYSIOCAP_TEST5 = "Moët"
-PHYSIOCAP_TEST6  = "'icnrbé"
-
-LISTE_PROFIL= [ 'Champagne', 'Expert', 'Fronton', 'IFV Bordeaux',  'Standard']
 
 POSTGRES_NOM = "postgres"
 CSVT_NOM = "CSV avec WKT"
@@ -136,7 +126,7 @@ FORMAT_VECTEUR = [ SHAPEFILE_NOM] #,  POSTGRES_NOM] # "memory"]
 if MACHINE == "Linux":
     FORMAT_VECTEUR_V3 = [ SHAPEFILE_NOM,  CSVT_NOM, GEOJSON_NOM, GEOPACKAGE_NOM] #,  "memory"] # POSTGRES_NOM] 
 else:
-    FORMAT_VECTEUR_V3 = [ SHAPEFILE_NOM,  CSVT_NOM, GEOJSON_NOM, GEOPACKAGE_NOM] #,  "memory"] # POSTGRES_NOM] 
+    FORMAT_VECTEUR_V3 = [ SHAPEFILE_NOM, GEOPACKAGE_NOM] #,  "memory"] # POSTGRES_NOM] 
     
 # Répertoires des sources et de concaténation en fichiers texte
 FICHIER_RESULTAT = "resultat.txt"
@@ -176,11 +166,8 @@ FICHIER_HISTO_VITESSE= "histogramme_VITESSE_RAW"  + SUFFIXE_HISTO
 FICHIER_HISTO_DIAMETRE_FILTRE = "histogramme_DIAM_FILTERED" +  SUFFIXE_HISTO
 
 REPERTOIRE_SHAPEFILE = "shapefile"
-REPERTOIRE_SHAPEFILE_V3 = "Filtre"
 
-MODE_EXPERT = physiocap_mon_unicode( "As-tu contribué ?")
-
-# TESTE : Pas d'affichage des VRT Pas de creation de png sous Linux
+# TODO : à Vérifier Pas d'affichage des VRT Pas de creation de png sous Linux
 #if MACHINE == "Linux":
 #    EXTENSION_RASTER_SANS_POINT = "png"
 #else:

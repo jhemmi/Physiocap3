@@ -32,8 +32,6 @@ LOCALES = Physiocap3_it Physiocap3_en
 # lrelease
 LRELEASE = lrelease
 
-
-
 # translation
 SOURCES = \
     __init__.py \

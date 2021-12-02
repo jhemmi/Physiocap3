@@ -107,10 +107,9 @@ def physiocap_log( aText, modeTrace = TRACE_PAS,  level = "INFO"):
     Ce module encapsaule QgsMessageLog en choississant le mode
     de trace et le niveau de message
     Il permet de supprimer les traces détaillées en Prodcution"""
-    journal_nom = "{0} Informations".\
-        format( PHYSIOCAP_UNI)
+    journal_nom = "{0} Informations".format( PHYSIOCAP_UNI)
     if modeTrace == TRACE_PAS:
-        #QgsMessageLog.logMessage( "Pas de trace : " + aText,  journal_nom, Qgis.Info)
+        QgsMessageLog.logMessage( "Pas de trace : " + aText,  journal_nom, Qgis.Info)
         return
     elif modeTrace == TRACE_MINI:
         # On monte warning et message debut et fin
@@ -130,7 +129,7 @@ def physiocap_log( aText, modeTrace = TRACE_PAS,  level = "INFO"):
             if LE_MODE_PROD == "YES":
                 pass
             else:
-                if modeTrace in ["OGR"]:
+                if modeTrace in ["OK"]:
                     journal_nom = modeTrace
                 else:
                     journal_nom = "{0} {1}".format( PHYSIOCAP_UNI, modeTrace)

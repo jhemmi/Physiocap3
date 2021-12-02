@@ -132,9 +132,9 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         
         # Stocker dans la fenetre de synthese le nom de la session courante
         chemin_base_session = os.path.basename( chemin_session)
-        dialogue.lineEditDernierProjet.setText( chemin_base_session)
+        dialogue.lineEditDerniereSession.setText( chemin_base_session)
         dialogue.settings= QSettings( PHYSIOCAP_NOM, PHYSIOCAP_NOM_3)
-        dialogue.settings.setValue("Physiocap/dernier_repertoire", chemin_base_session) 
+        dialogue.settings.setValue("Physiocap/derniereSession", chemin_base_session) 
         
         physiocap_log( self.tr( "{0} {1} Début du traitement pour la session Physiocap {2}").\
                 format( PHYSIOCAP_2_ETOILES , PHYSIOCAP_UNI, chemin_base_session), leModeDeTrace)
