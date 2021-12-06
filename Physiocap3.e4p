@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project Physiocap3 -->
-<!-- Saved: 2021-11-29, 16:29:10 -->
+<!-- Saved: 2021-12-05, 21:23:34 -->
 <!-- Copyright (C) 2021 jhemmi.eu, jhemmi.eu -->
 <Project version="5.1">
   <Language></Language>
@@ -31,7 +31,7 @@
   </Resources>
   <Interfaces/>
   <Others/>
-  <MainScript>Physiocap_tools.py</MainScript>
+  <MainScript>Physiocap3_dialog.py</MainScript>
   <Vcs>
     <VcsType>None</VcsType>
   </Vcs>

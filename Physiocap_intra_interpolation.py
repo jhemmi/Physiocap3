@@ -558,7 +558,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
 
     def physiocap_interpolation_IntraParcelles( self, dialogue):
         """Interpolation des données de points intra parcellaires"""
-        NOM_PROJET = dialogue.lineEditProjet.text()
+        NOM_PROJET = dialogue.lineEditSession.text()
         leModeDeTrace = dialogue.fieldComboModeTrace.currentText()     
         version_3 = "NO"
         if dialogue.checkBoxV3.isChecked():

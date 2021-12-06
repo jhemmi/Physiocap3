@@ -78,7 +78,8 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         # Récupérer les paramètres saisies
         Repertoire_Donnees_Brutes = dialogue.lineEditDirectoryPhysiocap.text()
         Repertoire_Donnees_Cibles = dialogue.lineEditDirectoryFiltre.text()
-        Nom_Session = dialogue.lineEditProjet.text()
+        Nom_Session = dialogue.lineEditSession.text()
+
         #Format_vecteur =  dialogue.fieldComboFormats.currentText()
 
         mindiam = int( dialogue.spinBoxMinDiametre.value())

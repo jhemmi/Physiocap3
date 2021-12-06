@@ -857,7 +857,7 @@ def physiocap_csv_sortie(self, nom_fichier_synthese_CSV = "NO", nom_fichier_shap
     if nom_fichier_synthese_CSV != "NO":
         # ASSERT Le fichier de synthese existe
         if not os.path.isfile( nom_fichier_synthese_CSV):
-            uMsg =u"Le fichier de synthese " + nom_fichier_synthese_CSV + "n'existe pas"
+            uMsg =u"Le fichier de synthese " + nom_fichier_synthese_CSV + " n'existe pas"
             physiocap_log( uMsg)
             return physiocap_error( self, uMsg)
 
@@ -967,7 +967,7 @@ def physiocap_csv_sortie(self, nom_fichier_synthese_CSV = "NO", nom_fichier_shap
             chemin_donnees_cibles=self.lineEditDirectoryFiltre.text()
             chemin_entier_projet = os.path.join(chemin_donnees_cibles, derniereSession)
             chemin_shapeFiles = os.path.join(chemin_entier_projet, REPERTOIRE_SHAPEFILE)
-            Nom_Projet=self.lineEditProjet.text()
+            Nom_Projet=self.lineEditSession.text()
             laProjection, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, EPSG_NUMBER = physiocap_quelle_projection_demandee( self)
             nom_complet_poly = self.comboBoxContours.currentText().split( SEPARATEUR_NOEUD)
             inputLayer = nom_complet_poly[0]

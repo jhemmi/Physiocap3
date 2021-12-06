@@ -48,7 +48,7 @@ from .Physiocap_tools import (physiocap_message_box, \
         physiocap_get_layer_by_name,  physiocap_get_layer_by_ID)
 
 from .Physiocap_creer_arbre import (PhysiocapFiltrer)
-from .Physiocap_inter import (PhysiocapInter) #, physiocap_fill_combo_poly_or_point)
+from .Physiocap_inter import (PhysiocapInter, physiocap_fill_combo_poly_or_point)
 from .Physiocap_intra_interpolation import (PhysiocapIntra) 
 from .Physiocap_var_exception import *
 
@@ -106,6 +106,18 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         
         # Slot Profil
         self.fieldComboProfilPHY.currentIndexChanged[int].connect( self.slot_PROFIL_change )  
+        
+        # slot Vignoble
+        #self.lineEditSolMO.editingFinished.connect( self.slot_VIGNOBLE_donnees_sol_100)
+        #choix du type d'apprt et strategie sol
+        self.comboBoxTypeApportFert.currentIndexChanged[int].connect( self.slot_VIGNOBLE_choix_type_apport)
+        self.comboBoxStrategieSol.currentIndexChanged[int].connect( self.slot_VIGNOBLE_choix_strategie_sol)
+
+        #verification si les valeurs saisies sont numeriques
+        self.lineEditSolCSurN.editingFinished.connect(self.slot_VIGNOBLE_CsurN_numerique)
+        self.lineEditRendement.editingFinished.connect(self.slot_VIGNOBLE_rendement_numerique)
+
+        
         # Slot pour données brutes et pour données cibles
         self.toolButtonDirectoryPhysiocap.pressed.connect( self.slot_lecture_repertoire_donnees_brutes )  
         self.toolButtonDirectoryFiltre.pressed.connect( self.slot_lecture_repertoire_donnees_cibles)  
@@ -118,7 +130,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.checkBoxInterPasMesure.stateChanged.connect( self.slot_bascule_pas_mesure)
         self.checkBoxInterSegment.stateChanged.connect( self.slot_bascule_segment)
         self.checkBoxInterSegmentBrise.stateChanged.connect( self.slot_bascule_segment_brise)
-       
+        
         # Inter
         self.checkBoxContourSolo.stateChanged.connect( self.slot_bascule_contour)
         self.comboBoxPolygone.currentIndexChanged[int].connect( self.slot_INTER_maj_champ_poly_liste )
@@ -630,22 +642,22 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # On surcharge le contenu de la config sans la perdre 
         
         # Cas des templates de champagne 
-        # TODO ? troisieme voie : ni standard, ni nouveau repertoire user
+        # TODO: "PDF" Trouver une troisieme voie pour les templates : ni standard, ni nouveau repertoire user
         if  profilCourant == 'Champagne':
             CHEMIN_TEMPLATES = []
             CHEMIN_TEMPLATES.append( CHEMIN_TEMPLATES_CIVC)
+        else:
+            # TODO: "PROFIL" faire un slot pour chaque parametre de remplissage
+            pass    
         self.slot_CHEMIN_templates()
         
         # Remplissage des Region
         self.comboBoxRegion.setCurrentIndex( 0)
         if  profilCourant == 'Champagne':
             convert_list_to_set = set( REGIONS_CHAMPAGNE)
-            LISTE_REGION = list( convert_list_to_set)
-            print(' Tes regions étaient {}'.format( len(REGIONS_CHAMPAGNE)))
-            print(' Elles sont {}'.format( len(LISTE_REGION)))
-            print(' REGION_Champagne = {}'.format( LISTE_REGION))
+            LISTE_REGION = sorted( list( convert_list_to_set))
         else:
-            # Todo regions
+            # TODO: "PROFIL" regions
             LISTE_REGION = ['_']
         if len( LISTE_REGION) == 0:
             self.comboBoxRegion.clear( )
@@ -669,10 +681,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         if  profilCourant in [ 'Champagne', 'Fronton']:
             if profilCourant == 'Champagne':
                 convert_list_to_set = set( CRUS)
-                LISTE_COMMUNES = list( convert_list_to_set)
-                print(' Tes communes étaient {}'.format( len(CRUS)))
-                print(' Elles sont {} maintenant'.format( len(LISTE_COMMUNES)))
-                print(' CRUS_Champagne = {}'.format( LISTE_COMMUNES))
+                LISTE_COMMUNES = sorted( list( convert_list_to_set))
             elif profilCourant == 'Fronton':
                 LISTE_COMMUNES = COMMUNES_FRONTON
             else:
@@ -708,6 +717,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             # Basculer aussi groupBoxVignoble & groupBoxAgroSaisie
             self.groupBoxVignoble.setEnabled( True)
             self.groupBoxAgroSaisie.setEnabled( True)
+            self.label_CaCO3.setEnabled( False)            
             self.lineEditSolCaCO3.setEnabled( False)            
             # Saga par defaut et L93
             self.radioButtonSAGA.setChecked(  Qt.Checked)
@@ -726,8 +736,13 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.groupBoxSegment.setEnabled( False)
             # TODO : Limiter cepage
         elif profilCourant == 'Fronton':
+            self.spinBoxMinDiametre.setValue( 3)
+            self.spinBoxMaxDiametre.setValue( 22)
+            self.spinBoxMaxSarmentsParMetre.setValue( 25)
             self.groupBoxFiltrer.setEnabled( True)
             self.groupBoxDetailVignoble.setEnabled( True)
+            self.label_CaCO3.setEnabled( True)            
+            self.lineEditSolCaCO3.setEnabled( True)
             self.groupBoxInter.setEnabled( False)
             self.checkBoxEnchainer3Actions.setChecked( Qt.Unchecked)
             self.groupBoxIntra.setEnabled( False)
@@ -739,11 +754,16 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.groupBoxExpertOuvert.setEnabled( False)
             self.groupBoxSegment.setEnabled( True)
         elif profilCourant == 'Standart':
+            self.spinBoxMinDiametre.setValue( 4)
+            self.spinBoxMaxDiametre.setValue( 18)
+            self.spinBoxMaxSarmentsParMetre.setValue( 25)
             self.groupBoxFiltrer.setEnabled( True)
             self.groupBoxInter.setEnabled( False)
             self.checkBoxEnchainer3Actions.setChecked( Qt.Unchecked)
             self.groupBoxIntra.setEnabled( False)
             self.groupBoxVignoble.setEnabled( True)
+            self.label_CaCO3.setEnabled( True)            
+            self.lineEditSolCaCO3.setEnabled( True)
             self.groupBoxAgroSaisie.setEnabled( False)
             self.groupBoxExpertOuvert.setEnabled( True)
             self.groupBoxIsolignes.setChecked( Qt.Checked)
@@ -758,6 +778,16 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.settings= QSettings(PHYSIOCAP_NOM, nomSettings)
         
     def memoriser_tous_Settings( self):
+        """ Utilisation des settings de QT
+            Organisation des initialisation commence  dans Physiocap puis 
+            pour affichage, style, agro, expert, inter & intra 
+            TODO : "PROFIL" bascules
+            Pour les profils, on memorise l'initialisation d'un profil (premier passage) 
+                - dans Profil/nom_du_profil et le dernier profil actif pour les changements.
+                - et dans nom_du_profil/ on conserve les valeurs particulières, les check box ou group box    
+                - une bascule On permet de jouer ces initalisations
+                  et pour la bascule profil Off  dans le profil standard on stocke la valeur ou check box ou group box stadard
+        """
         self.dans_Quel_Settings()
         self.settings.setValue("Physiocap/leProfilPHY", self.fieldComboProfilPHY.currentText())
         self.settings.setValue("Physiocap/repertoire", self.lineEditDirectoryPhysiocap.text() )
@@ -776,8 +806,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.settings.setValue("Physiocap/pasContour", pasContour)
 
         self.memoriser_affichages_styles()
-        version_3, consolidation, leModeTrace = self.memoriserExpert()
-        self.memoriserAgro()
+        version_3, consolidation, leModeTrace = self.memoriser_expert()
+        self.memoriser_agro()
         self.memoriser_saisies_InterIntraParcelles()
         # Profil Champagne
         VALEUR_PROFIL_INITIALISE = 'Initialisé'
@@ -841,7 +871,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.settings.setValue("Agro/clone",self.lineEditClone.text())#___définir les valeurs des variables : clone
         self.settings.setValue("Agro/porte_greffe", self.lineEditPorteGreffe.text())#___definir les valeurs des variables : porte-greffe
         self.settings.setValue("Agro/sol_argile", int( self.spinBoxInterrangs.value()))
-        self.settings.setValue("Agro/sol_mo", self.lineEditSolMO.text())#___definir les valeurs des variables : sol pourcentage MO
+        self.settings.setValue("Agro/sol_mo", float( self.doubleSpinBoxMO.value()))
         self.settings.setValue("Agro/sol_CsurN", self.lineEditSolCSurN.text())#___definir les valeurs des variables : sol pourcentage CaCO3
         self.settings.setValue("Agro/sol_caco3", self.lineEditSolCaCO3.text())#___definir les valeurs des variables : sol pourcentage CaCO3
         self.settings.setValue("Agro/rendement", self.lineEditRendement.text())#___definir les valeurs des variables : rendement annee courante
@@ -1194,6 +1224,92 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
           return
         self.lineEditDirectoryFiltre.setText( dirName )
  
+    # VIGNOBLE
+    def slot_VIGNOBLE_choix_type_apport( self ):
+        # si le choix de type apports est 'autre(à préciser)' une zone de texte doit apparaitre pour permettre de saisir l'information ___Nadia___
+        liste_apports_nb=len(TYPE_APPORTS)
+        choix_user_ind=self.comboBoxTypeApportFert.currentIndex()
+        if(choix_user_ind==liste_apports_nb-1):
+            self.lineEditTypeApportFert_Autres.setText("")
+            self.lineEditTypeApportFert_Autres.setEnabled(True)
+        else :
+            self.lineEditTypeApportFert_Autres.setText("à préciser")
+            self.lineEditTypeApportFert_Autres.setEnabled(False)
+
+    def slot_VIGNOBLE_choix_strategie_sol( self ):
+        # si le choix de strategie de sol est 'autre(à préciser)' une zone de texte doit apparaitre pour permettre de saisir l'information ___Nadia___
+        liste_strategies_nb=len(ENTRETIEN_SOL)
+        choix_user_ind=self.comboBoxStrategieSol.currentIndex()
+        if(choix_user_ind==liste_strategies_nb-1):
+            self.lineEditStrategieSol_Autres.setText("")
+            self.lineEditStrategieSol_Autres.setEnabled(True)
+        else :
+            self.lineEditStrategieSol_Autres.setText("à préciser")
+            self.lineEditStrategieSol_Autres.setEnabled(False)
+    
+    def slot_VIGNOBLE_CsurN_numerique( self):
+        value=self.lineEditSolCSurN.text()
+        if value:
+            try :
+                value_num=float(value)
+            except :
+                self.lineEditSolCSurN.setText("")
+                physiocap_message_box( self, "la valeur doit etre numérique")
+
+    def slot_VIGNOBLE_rendement_numerique( self):
+        value=self.lineEditRendement.text()
+        if value:
+            try :
+                value_num=float(value)
+            except :
+                self.lineEditRendement.setText("")
+                physiocap_message_box( self, "la valeur doit etre numerique")
+
+        #verification que les pourcentages de sol ne depassent pas 100%	___Nadia___
+
+    def slot_VIGNOBLE_donnees_sol_100( self ):
+        #argile=self.lineEditSolArgile.text()
+        #mo=self.lineEditSolMO.text()
+        #caco3=self.lineEditSolCaCO3.text()
+        perc_argile=0
+        perc_mo=0
+        #perc_caco3=0
+        if  argile :
+            try:
+                perc_argile=float(argile)
+                if perc_argile>100.00:
+                    self.lineEditSolArgile.setText("")
+                    physiocap_message_box( self, "Le pourcentage ne doit pas depasser 100%")
+                    return
+            except :
+                self.lineEditSolArgile.setText("")
+                physiocap_message_box( self, "la valeur doit etre numerique")
+        if  mo :
+            try :
+                perc_mo=float(mo)
+                if perc_mo>100.00:
+                    self.lineEditSolMO.setText("")
+                    physiocap_message_box( self, "Le pourcentage ne doit pas depasser 100%")
+                    return
+            except :
+                self.lineEditSolMO.setText("")
+                physiocap_message_box( self, "la valeur doit etre numerique")
+        else:
+            pass
+        #if  caco3 :
+                #    try :
+                #       perc_caco3=float(caco3)
+                #       if perc_caco3>100.00:
+                #           self.lineEditSolCaCO3.setText("")
+                #           physiocap_message_box( self, "Le pourcentage ne doit pas depasser 100%")
+            #            return
+            #except :
+                #  self.lineEditSolCaCO3.setText("")
+        #  physiocap_message_box( self, "la valeur doit etre numerique")
+        #else:
+        #    pass
+
+
     # INTRA
     def slot_INTRA_DIAM_min_max_fixe( self ):
         """ Vérifie si min et max du choix fixe DIAM sont cohérents"""
@@ -1505,7 +1621,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             return physiocap_message_box( self, aText, "information" )
 
         # Memorisation des saisies et expert et les affichages
-        version_3, consolidation, _,  details,  _ = self.memoriser_tous_Settings()
+        version_3, consolidation, _, _, details,  _ = self.memoriser_tous_Settings()
             
         try:
             # Création des répertoires et des résultats de synthèse
@@ -1787,6 +1903,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         nombre_poly = 0
         nombre_point = 0
         nombre_poly, nombre_point = physiocap_fill_combo_poly_or_point( self)
+        leModeDeTrace = self.fieldComboModeTrace.currentText()
         physiocap_log( "Dans slot_INTER_liste_parcelles : poly >> {}<< et points >> {}<<". \
            format ( nombre_poly,nombre_point), leModeDeTrace)
 
@@ -1937,7 +2054,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Eviter les appels multiples
         self.ButtonInter.setEnabled( False)
         # Memorisation des saisies
-        version_3, consolidation, _,  details,  _ = self.memoriser_tous_Settings()
+        version_3, consolidation, _, _, details,  _ = self.memoriser_tous_Settings()
            
         try:
             inter = PhysiocapInter( self)
@@ -2099,7 +2216,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             
     def slot_calcul_densite( self):
         # Densité pied /ha
-
         interrang  = int( self.spinBoxInterrangs.value())
         intercep   = int( self.spinBoxInterceps.value())
         densite = ""
@@ -2174,7 +2290,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         """Close when bouton is Cancel"""
         # Todo : V3 prefixe Slot et nommage SLOT_Bouton_Cancel      
         # On sauve les saisies
-        _, _, _,  _,  _ = self.memoriser_tous_Settings()
+        self.memoriser_tous_Settings()
         QDialog.reject( self)
                 
     def slot_accept( self ):
@@ -2182,6 +2298,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Vérifier les valeurs saisies
         # QT confiance et initialisation par Qsettings sert d'assert sur la
         # cohérence des variables saisies
+        leModeDeTrace = self.fieldComboModeTrace.currentText()
         repertoire_data = self.lineEditDirectoryPhysiocap.text()
         if ((repertoire_data == "") or ( not os.path.exists( repertoire_data))):
             aText = self.tr( "Pas de répertoire de données brutes choisi")
@@ -2205,7 +2322,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.settings.setValue("Expert/laProjection", laProjectionTXT)
         
         # On sauve les affichages et rend les bascules pour traitement
-        version_3, consolidation, recursif,  details,  TRACE_HISTO = self.memoriser_tous_Settings()
+        version_3, consolidation, recursif,  details,  TRACE_HISTO, pasContour = self.memoriser_tous_Settings()
 
         if recursif == "YES":
             physiocap_log( self.tr( "La recherche des MID fouille l'arbre de données"), leModeDeTrace)
