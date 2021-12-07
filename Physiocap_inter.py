@@ -1033,9 +1033,8 @@ class PhysiocapInter( QtWidgets.QDialog):
 
     def __init__(self, parent=None):
         """Class constructor."""
+        print("INTER init class")
         super( PhysiocapInter, self).__init__()
-    
-
     
     def physiocap_moyenne_InterParcelles( self, dialogue):
         """Vérification et requete spatiale"""

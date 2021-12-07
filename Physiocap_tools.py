@@ -67,7 +67,6 @@ except ImportError:
 # Pour les traces de Tools
 leModeTrace = TRACE_TOOLS
 
-
 # MESSAGES & LOG
 def physiocap_message_box( self, text, level="warning"):
     """Send a message box by default Warning"""
@@ -301,6 +300,57 @@ def physiocap_get_layer_by_ID( layerID):
             format( ( str( layerID))), leModeTrace)
         return None
 
+def physiocap_quelles_informations_vignoble_agro( self):
+    """ Mettre les info vignobles dans un dict """ 
+    infoVignoble = {}
+    infoVignoble[ "nom_parcelle"] = self.lineEditNomParcelle.text()
+    details = "YES" if self.groupBoxDetailVignoble.isChecked() else "NO"
+    infoVignoble[ "details"] = details
+    infoVignoble[ "max_sarments_metre"] = float( self.spinBoxMaxSarmentsParMetre.value())
+    infoVignoble[ "interrangs"] = float( self.spinBoxInterrangs.value())
+    infoVignoble[ "interceps"] = float( self.spinBoxInterceps.value())
+    infoVignoble[ "hauteur"] = float( self.spinBoxHauteur.value())
+    infoVignoble[ "densite"] = float( self.doubleSpinBoxDensite.value())
+    infoVignoble[ "le_cepage"] = self.comboBoxCepage.currentText()
+    infoVignoble[ "la_taille"] = self.comboBoxTaille.currentText()
+    #        # Informations agronomiques ___Nadia___
+#        if self.radioButtonInfoRenseign.isChecked():
+#            infoAgro = "Renseign"
+
+    #infoVignoble[ ""] = 
+#            self.settings.setValue("Physiocap/info_agro", infoAgro)#___definir les valeurs des variables : details : yes/no
+#            self.settings.setValue("Physiocap/nom_parcelle", self.lineEditNomParcelle.text())#___definir les valeurs des variables : nom de la parcelle 
+#            self.settings.setValue("Physiocap/annee_plant", int( self.spinBoxAnneePlant.value()))#___definir les valeurs des variables : année de plantation
+#            self.settings.setValue("Physiocap/comuune",  self.comboBoxCommune.currentText())#___definir les valeurs des variables : commune
+#            self.settings.setValue("Physiocap/region",  self.lineEditRegion.text())#___definir les valeurs des variables : region
+#            self.settings.setValue("Physiocap/clone",self.lineEditClone.text())#___définir les valeurs des variables : clone
+#            self.settings.setValue("Physiocap/porte_greffe", self.lineEditPorteGreffe.text())#___definir les valeurs des variables : porte-greffe
+#            self.settings.setValue("Physiocap/sol_argile", self.lineEditSolArgile.text())#___definir les valeurs des variables : sol pourcentage argile
+#            self.settings.setValue("Physiocap/sol_mo", self.lineEditSolMO.text())#___definir les valeurs des variables : sol pourcentage MO
+#            self.settings.setValue("Physiocap/sol_caco3", self.lineEditSolCaCO3.text())#___definir les valeurs des variables : sol pourcentage CaCO3
+#            self.settings.setValue("Physiocap/rendement", self.lineEditRendement.text())#___definir les valeurs des variables : rendement annee courante
+#            self.settings.setValue("Physiocap/nb_grappes", self.lineEditNbGrappes.text())#___definir les valeurs des variables : nombre de grappes annee courante
+#            self.settings.setValue("Physiocap/poids_moy_grappes", self.lineEditPoidsMoyGrap.text())#___definir les valeurs des variables : poids moyen de grappes annee courante
+#            self.settings.setValue("Physiocap/rendement_1", self.lineEditRendement_1.text())#___definir les valeurs des variables : rendement annee precedente
+#            self.settings.setValue("Physiocap/nb_grappes_1", self.lineEditNbGrappes_1.text())#___definir les valeurs des variables : nombre de grappes annee precedente
+#            self.settings.setValue("Physiocap/poids_moy_grappes_1",self.lineEditPoidsMoyGrap_1.text())#___definir les valeurs des variables : poids moyen de grappes annee precedente
+#            liste_apports_nb=len(TYPE_APPORTS)
+#            choix_user_ind=self.comboBoxTypeApportFert.currentIndex()
+#            if(choix_user_ind==liste_apports_nb-1):
+#                self.settings.setValue("Physiocap/type_apports", self.lineEditTypeApportFert_Autres.text().replace(',',' '))#___definir les valeurs des variables : apport ,cas autre à préciser
+#            else : 
+#                self.settings.setValue("Physiocap/type_apports", self.comboBoxTypeApportFert.currentText())#___definir les valeurs des variables : type apports fertilisation
+#            self.settings.setValue("Physiocap/produit",self.lineEditProduitFert.text())#___definir les valeurs des variables : produit
+#            self.settings.setValue("Physiocap/dose", self.lineEditDoseFert.text())#___definir les valeurs des variables : dose(t/ha)
+#            liste_strategies_nb=len(ENTRETIEN_SOL)
+#            choix_user_ind=self.comboBoxStrategieSol.currentIndex()
+#            if(choix_user_ind==liste_strategies_nb-1):
+#                self.settings.setValue("Physiocap/strategie_entretien_sol", self.lineEditStrategieSol_Autres.text().replace(',',' '))#___definir les valeurs des variables : strategie entretien sol , cas autre à préciser
+#            else : 
+#                self.settings.setValue("Physiocap/strategie_entretien_sol", self.comboBoxStrategieSol.currentText())#___definir les valeurs des variables : strategie entretien de sol
+#            self.settings.setValue("Physiocap/etat_sanitaire", str(self.spinBoxEtatSanitaire_intensite.value())+"*"+str(self.spinBoxEtatSanitaire_frequence.value()))#___definir les valeurs des variables : etat sanitaire intensité*frequance
+
+    return infoVignoble
 def physiocap_quelle_projection_et_lib_demandee( self):
     """ Selon la valeur cochée dans le radio de projection 
     positionne laProjection (en QgsCoordinateReferenceSystem, texte et nombre (epsg)
@@ -1060,6 +1110,7 @@ class PhysiocapTools( QtWidgets.QDialog):
     """QGIS Pour voir les messages traduits."""
     def __init__(self, parent=None):
         """Class constructor."""
+        print("TOOLS init class")
         super( PhysiocapTools, self).__init__()
         
     def physiocap_tools_log_for_error( self):

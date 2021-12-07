@@ -108,16 +108,10 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.fieldComboProfilPHY.currentIndexChanged[int].connect( self.slot_PROFIL_change )  
         
         # slot Vignoble
-        #self.lineEditSolMO.editingFinished.connect( self.slot_VIGNOBLE_donnees_sol_100)
-        #choix du type d'apprt et strategie sol
+        # Choix "Autres" pour type d'apport et strategie sol
         self.comboBoxTypeApportFert.currentIndexChanged[int].connect( self.slot_VIGNOBLE_choix_type_apport)
         self.comboBoxStrategieSol.currentIndexChanged[int].connect( self.slot_VIGNOBLE_choix_strategie_sol)
 
-        #verification si les valeurs saisies sont numeriques
-        self.lineEditSolCSurN.editingFinished.connect(self.slot_VIGNOBLE_CsurN_numerique)
-        self.lineEditRendement.editingFinished.connect(self.slot_VIGNOBLE_rendement_numerique)
-
-        
         # Slot pour données brutes et pour données cibles
         self.toolButtonDirectoryPhysiocap.pressed.connect( self.slot_lecture_repertoire_donnees_brutes )  
         self.toolButtonDirectoryFiltre.pressed.connect( self.slot_lecture_repertoire_donnees_cibles)  
@@ -509,6 +503,10 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.checkBoxSegment.setChecked( Qt.Checked)
         else:
             self.checkBoxSegment.setChecked( Qt.Unchecked)
+        if (self.settings.value("Affichage/GenererContour", "NO") == "YES"):
+            self.checkBoxContour.setChecked( Qt.Checked)
+        else:
+            self.checkBoxContour.setChecked( Qt.Unchecked)
             
         # Choix d'affichage Inter
         if (self.settings.value("Affichage/InterDiametre", "YES") == "YES"):
@@ -654,14 +652,15 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Remplissage des Region
         self.comboBoxRegion.setCurrentIndex( 0)
         if  profilCourant == 'Champagne':
-            convert_list_to_set = set( REGIONS_CHAMPAGNE)
-            LISTE_REGION = sorted( list( convert_list_to_set))
+            LISTE_REGION = REGIONS_CHAMPAGNE
+        elif profilCourant == 'Fronton':
+            LISTE_REGION = ['Vins du Sud Ouest']
         else:
             # TODO: "PROFIL" regions
             LISTE_REGION = ['_']
         if len( LISTE_REGION) == 0:
             self.comboBoxRegion.clear( )
-            physiocap_error( self, self.tr( "Pas de liste des régions pré définie"))
+            physiocap_error( self, self.tr( "Pas de liste des régions pré définie"), TRACE_PROFIL)
         else:
             self.comboBoxRegion.clear( )
             self.comboBoxRegion.addItems( LISTE_REGION)
@@ -673,15 +672,14 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 #print( ' "{}",'.format(une))
                 if ( une == laRegion):
                     self.comboBoxCommune.setCurrentIndex( idx)
-                    physiocap_log( self.tr( "Région retrouvée"), leModeDeTrace) 
+                    physiocap_log( self.tr( "Région retrouvée"), leModeDeTrace, TRACE_PROFIL) 
 
         # Remplissage des communes
         # TODO commune par région ?
         self.comboBoxCommune.setCurrentIndex( 0)
         if  profilCourant in [ 'Champagne', 'Fronton']:
             if profilCourant == 'Champagne':
-                convert_list_to_set = set( CRUS)
-                LISTE_COMMUNES = sorted( list( convert_list_to_set))
+                LISTE_COMMUNES = sorted( CRUS_CHAMPAGNE)
             elif profilCourant == 'Fronton':
                 LISTE_COMMUNES = COMMUNES_FRONTON
             else:
@@ -717,8 +715,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             # Basculer aussi groupBoxVignoble & groupBoxAgroSaisie
             self.groupBoxVignoble.setEnabled( True)
             self.groupBoxAgroSaisie.setEnabled( True)
-            self.label_CaCO3.setEnabled( False)            
-            self.lineEditSolCaCO3.setEnabled( False)            
+            self.label_PH.setEnabled( False)            
+            self.doubleSpinBoxPH.setEnabled( False)            
             # Saga par defaut et L93
             self.radioButtonSAGA.setChecked(  Qt.Checked)
             self.checkBoxSagaTIFF.setChecked( Qt.Checked)
@@ -741,8 +739,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.spinBoxMaxSarmentsParMetre.setValue( 25)
             self.groupBoxFiltrer.setEnabled( True)
             self.groupBoxDetailVignoble.setEnabled( True)
-            self.label_CaCO3.setEnabled( True)            
-            self.lineEditSolCaCO3.setEnabled( True)
+            self.label_PH.setEnabled( True)            
+            self.doubleSpinBoxPH.setEnabled( True)            
             self.groupBoxInter.setEnabled( False)
             self.checkBoxEnchainer3Actions.setChecked( Qt.Unchecked)
             self.groupBoxIntra.setEnabled( False)
@@ -762,17 +760,17 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.checkBoxEnchainer3Actions.setChecked( Qt.Unchecked)
             self.groupBoxIntra.setEnabled( False)
             self.groupBoxVignoble.setEnabled( True)
-            self.label_CaCO3.setEnabled( True)            
-            self.lineEditSolCaCO3.setEnabled( True)
+            self.label_PH.setEnabled( True)            
+            self.doubleSpinBoxPH.setEnabled( True)            
             self.groupBoxAgroSaisie.setEnabled( False)
             self.groupBoxExpertOuvert.setEnabled( True)
             self.groupBoxIsolignes.setChecked( Qt.Checked)
             self.groupBoxIsolignes.setEnabled( True)
         else:
             physiocap_error( "Dans slot_PROFIL {} est inconnu ". \
-            format ( profilCourant), leModeDeTrace)
+            format ( profilCourant), leModeDeTrace, TRACE_PROFIL)
         physiocap_log( "PROFIL {} pris en compte ". \
-            format ( profilCourant), leModeDeTrace)
+            format ( profilCourant), leModeDeTrace, TRACE_PROFIL)
 
     def dans_Quel_Settings( self, nomSettings=PHYSIOCAP_NOM_3):
         self.settings= QSettings(PHYSIOCAP_NOM, nomSettings)
@@ -813,16 +811,14 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         VALEUR_PROFIL_INITIALISE = 'Initialisé'
         existeChampagne = self.settings.value("Profil/Champagne", "inconnu")
         if ( existeChampagne ==  "inconnu"):
-            self.settings.setValue("Champagne/tripleMetrique", [DIAM,  BIOMGCEP,  NBSARCEP])    # Email CD du 2 décembre 21
+            self.settings.setValue("Champagne/tripleMetrique", ["DIAM",  "BIOMGCEP",  "NBSARCEP"])    # Email CD du 2 décembre 21
             self.settings.setValue("Champagne/listeMetriques", ATTRIBUTS_INTRA + ATTRIBUTS_INTRA_DETAILS )
             self.settings.setValue("Champagne/Boite_eteintes", ["groupBoxFiltrer", "groupBoxAffichages"])
             self.settings.setValue("Champagne/Boite_allumées", ["groupBoxInter", "groupBoxIntra"])
-            physiocap_log('Settings Champagne est initialisé', TRACE_TOOLS)
+            physiocap_log('Settings Champagne devient {}'.format(VALEUR_PROFIL_INITIALISE), TRACE_PROFIL)
             self.settings.setValue("Profil/Champagne", VALEUR_PROFIL_INITIALISE)
-        else:
-            physiocap_log('Settings champagne vaut {}'.format( existeChampagne), TRACE_TOOLS) 
             
-        physiocap_log('Tous les settings PROFIL sont sauvegardées', TRACE_TOOLS) 
+        physiocap_log('Tous les settings PROFIL sont sauvegardées', TRACE_PROFIL) 
         return version_3, consolidation, leModeTrace, recursif,  details, pasContour 
         
     def memoriser_expert( self):
@@ -843,7 +839,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         version_3 = "NO"
         if self.checkBoxV3.isChecked():
             version_3 = "YES"
-            physiocap_log( self.tr( "Les formats de la version V3 sont choisis"), TRACE_TOOLS) 
+            physiocap_log( self.tr( "Les formats de la version V3 sont choisis"), TRACE_PROFIL) 
         self.settings.setValue("Expert/version3", version_3 )
 
         # Cas consolidation
@@ -852,7 +848,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Cas SagaTIFF
         sagaTIFF = "YES" if self.checkBoxSagaTIFF.isChecked() else "NO"
         self.settings.setValue("Expert/SagaTIFF", sagaTIFF )
-        physiocap_log('Les informations expertes sont sauvegardées', TRACE_TOOLS) 
+        physiocap_log('Les informations expertes sont sauvegardées', TRACE_PROFIL) 
         return version_3, consolidation, leModeTrace
         
     def memoriser_agro( self):
@@ -860,9 +856,9 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.dans_Quel_Settings()
         #self.settings.setValue("Agro/info_agro", infoAgro)#___definir les valeurs des variables : details : yes/no
         self.settings.setValue("Agro/nom_parcelle", self.lineEditNomParcelle.text())#___definir les valeurs des variables : nom de la parcelle 
+        self.settings.setValue("Agro/region",  self.comboBoxRegion.currentText())
         self.settings.setValue("Agro/annee_plantation", int( self.spinBoxAnneePlant.value()))
         self.settings.setValue("Agro/commune",  self.comboBoxCommune.currentText())
-        self.settings.setValue("Agro/region",  self.comboBoxRegion.currentText())
         self.settings.setValue("Agro/interrangs", int( self.spinBoxInterrangs.value()))
         self.settings.setValue("Agro/interceps", int( self.spinBoxInterceps.value()))
         self.settings.setValue("Agro/hauteur", int( self.spinBoxHauteur.value()))
@@ -870,18 +866,19 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.settings.setValue("Agro/leCepage", self.comboBoxCepage.currentText())
         self.settings.setValue("Agro/clone",self.lineEditClone.text())#___définir les valeurs des variables : clone
         self.settings.setValue("Agro/porte_greffe", self.lineEditPorteGreffe.text())#___definir les valeurs des variables : porte-greffe
+        self.settings.setValue("Agro/laTaille", self.comboBoxTaille.currentText())
         self.settings.setValue("Agro/sol_argile", int( self.spinBoxInterrangs.value()))
         self.settings.setValue("Agro/sol_mo", float( self.doubleSpinBoxMO.value()))
-        self.settings.setValue("Agro/sol_CsurN", self.lineEditSolCSurN.text())#___definir les valeurs des variables : sol pourcentage CaCO3
-        self.settings.setValue("Agro/sol_caco3", self.lineEditSolCaCO3.text())#___definir les valeurs des variables : sol pourcentage CaCO3
-        self.settings.setValue("Agro/rendement", self.lineEditRendement.text())#___definir les valeurs des variables : rendement annee courante
-        self.settings.setValue("Agro/nb_grappes", self.lineEditNbGrappes.text())#___definir les valeurs des variables : nombre de grappes annee courante
-        self.settings.setValue("Agro/poids_moy_grappes", self.lineEditPoidsMoyGrap.text())#___definir les valeurs des variables : poids moyen de grappes annee courante
-        self.settings.setValue("Agro/rendement_1", self.lineEditRendement_1.text())#___definir les valeurs des variables : rendement annee precedente
-        self.settings.setValue("Agro/nb_grappes_1", self.lineEditNbGrappes_1.text())#___definir les valeurs des variables : nombre de grappes annee precedente
-        self.settings.setValue("Agro/poids_moy_grappes_1",self.lineEditPoidsMoyGrap_1.text())#___definir les valeurs des variables : poids moyen de grappes annee precedente
-#        liste_apports_nb=len(TYPE_APPORTS)
-#        choix_user_ind=self.comboBoxTypeApportFert.currentIndex()
+        self.settings.setValue("Agro/sol_CsurN", int( self.spinBoxCsurN.value()))
+        self.settings.setValue("Agro/sol_PH", float( self.doubleSpinBoxPH.value()))
+        self.settings.setValue("Agro/rendement", int( self.spinBoxRendement.value()))
+        self.settings.setValue("Agro/nb_grappes", int( self.spinBoxNbGrappes.value()))
+        self.settings.setValue("Agro/poids_moy_grappes", int( self.spinBoxPoidsMoyenGrappes.value()))
+        # Annee précedente
+        self.settings.setValue("Agro/rendement_N1",  int( self.spinBoxRendement_N1.text()))
+        self.settings.setValue("Agro/nb_grappes_N1", int( self.spinBoxNbGrappes_N1.value()))
+        self.settings.setValue("Agro/poids_moy_grappes_N1", int( self.spinBoxPoidsMoyenGrappes_N1.value()))
+    ######        choix_user_ind=self.comboBoxTypeApportFert.currentIndex()
     ######    if(choix_user_ind==liste_apports_nb-1):
     ######        self.settings.setValue("Agro/type_apports", self.lineEditTypeApportFert_Autres.text().replace(',',' '))#___definir les valeurs des variables : apport ,cas autre à préciser
     ######    else : 
@@ -904,7 +901,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
     #    else :
     #        self.settings.setValue("Physiocap/generer_contour", "NO")
 
-        physiocap_log('Les informations agronomiques sont sauvegardées', TRACE_TOOLS) 
+        physiocap_log('Les informations agronomiques sont sauvegardées', TRACE_PROFIL) 
 
     
     def memoriser_affichages_styles(self):
@@ -924,6 +921,9 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.settings.setValue("Affichage/FiltrerSegment", filtre_segment )
         filtre_segment_brise = "YES" if self.checkBoxSegmentBrise.isChecked() else "NO"            
         self.settings.setValue("Affichage/FiltrerSegmentBrise", filtre_segment_brise )
+        genere_contour = "YES" if self.checkBoxContour.isChecked() else "NO"            
+        self.settings.setValue("Affichage/GenererContour", genere_contour )
+
 
         # Sauver les affichages Inter
         diametre = "YES" if self.checkBoxInterDiametre.isChecked() else "NO"
@@ -1004,6 +1004,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.settings.setValue("Style/themePasMesure", self.lineEditThematiquePasMesure.text())
         self.settings.setValue("Style/themeSegment", self.lineEditThematiqueSegment.text())
         self.settings.setValue("Style/themeSegmentBrise", self.lineEditThematiqueSegmentBrise.text())
+        self.settings.setValue("Style/themeContour", self.lineEditThematiqueContour.text())
         # Inter
         self.settings.setValue("Style/themeInterDiametre", self.lineEditThematiqueInterDiametre.text())
         self.settings.setValue("Style/themeInterSarment", self.lineEditThematiqueInterSarment.text())
@@ -1111,6 +1112,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 self.lineEditThematiqueSegment.setText( themeSegment )
                 themeSegmentBrise = self.settings.value("Style/themeSegmentBrise", "Filtre segment brisé")
                 self.lineEditThematiqueSegmentBrise.setText( themeSegmentBrise )
+                themeContour = self.settings.value("Style/themeContour", "Contours")
+                self.lineEditThematiqueContour.setText( themeContour )
                 # Inter
                 themeDiametre = self.settings.value("Style/themeInterDiametre", "Inter diamètre")
                 self.lineEditThematiqueInterDiametre.setText( themeDiametre )
@@ -1160,6 +1163,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 self.settings.setValue("Style/themeSegment","Filtre segment")
                 self.lineEditThematiqueSegmentBrise.setText("Filtre segment brisé")
                 self.settings.setValue("Style/themeSegmentBrise","Filtre segment brisé")
+                self.lineEditThematiqueContour.setText("Contours")
+                self.settings.setValue("Style/themeContour","Contours")
                 # Inter
                 self.lineEditThematiqueInterDiametre.setText("Inter diamètre")
                 self.settings.setValue("Style/themeInterDiametre", "Inter diamètre")
@@ -1247,69 +1252,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.lineEditStrategieSol_Autres.setText("à préciser")
             self.lineEditStrategieSol_Autres.setEnabled(False)
     
-    def slot_VIGNOBLE_CsurN_numerique( self):
-        value=self.lineEditSolCSurN.text()
-        if value:
-            try :
-                value_num=float(value)
-            except :
-                self.lineEditSolCSurN.setText("")
-                physiocap_message_box( self, "la valeur doit etre numérique")
-
-    def slot_VIGNOBLE_rendement_numerique( self):
-        value=self.lineEditRendement.text()
-        if value:
-            try :
-                value_num=float(value)
-            except :
-                self.lineEditRendement.setText("")
-                physiocap_message_box( self, "la valeur doit etre numerique")
-
-        #verification que les pourcentages de sol ne depassent pas 100%	___Nadia___
-
-    def slot_VIGNOBLE_donnees_sol_100( self ):
-        #argile=self.lineEditSolArgile.text()
-        #mo=self.lineEditSolMO.text()
-        #caco3=self.lineEditSolCaCO3.text()
-        perc_argile=0
-        perc_mo=0
-        #perc_caco3=0
-        if  argile :
-            try:
-                perc_argile=float(argile)
-                if perc_argile>100.00:
-                    self.lineEditSolArgile.setText("")
-                    physiocap_message_box( self, "Le pourcentage ne doit pas depasser 100%")
-                    return
-            except :
-                self.lineEditSolArgile.setText("")
-                physiocap_message_box( self, "la valeur doit etre numerique")
-        if  mo :
-            try :
-                perc_mo=float(mo)
-                if perc_mo>100.00:
-                    self.lineEditSolMO.setText("")
-                    physiocap_message_box( self, "Le pourcentage ne doit pas depasser 100%")
-                    return
-            except :
-                self.lineEditSolMO.setText("")
-                physiocap_message_box( self, "la valeur doit etre numerique")
-        else:
-            pass
-        #if  caco3 :
-                #    try :
-                #       perc_caco3=float(caco3)
-                #       if perc_caco3>100.00:
-                #           self.lineEditSolCaCO3.setText("")
-                #           physiocap_message_box( self, "Le pourcentage ne doit pas depasser 100%")
-            #            return
-            #except :
-                #  self.lineEditSolCaCO3.setText("")
-        #  physiocap_message_box( self, "la valeur doit etre numerique")
-        #else:
-        #    pass
-
-
     # INTRA
     def slot_INTRA_DIAM_min_max_fixe( self ):
         """ Vérifie si min et max du choix fixe DIAM sont cohérents"""
@@ -2195,9 +2137,9 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
     def slot_bascule_contour(self):
         """ Mode sans contour connu : pas de choix de la couche        """ 
         if self.checkBoxContourSolo.isChecked():
-            self.groupBoxInter.setEnabled( False)
+            self.groupBoxContourInter.setEnabled( False)
         else:
-            self.groupBoxInter.setEnabled( True)
+            self.groupBoxContourInter.setEnabled( True)
         
     def slot_bascule_details_vignoble(self):
     # Calcul aide et sortie

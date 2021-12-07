@@ -58,14 +58,13 @@ from qgis.core import ( Qgis, QgsProject, QgsVectorLayer, \
     QgsFeatureRequest, QgsExpression, QgsProcessingFeedback)
     
 
-
-
 class PhysiocapIntra( QtWidgets.QDialog):
     """QGIS Pour voir les messages traduits."""
     
     
     def __init__(self, parent=None):
         """Class constructor."""
+        print("INTRA init class")
         super( PhysiocapIntra, self).__init__()
         
     def physiocap_affiche_raster_iso( self, dialogue, nom_raster_final, nom_court_raster, le_template_raster, affiche_raster,
@@ -172,7 +171,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
         textes_sortie_algo = {}
         try:
             if lettre_algo == "s":
-                # Pour SAGA
+                # TODO : Tester si utile : Pour SAGA
                 textes_sortie_algo = processing.run( algo, params_algo, feedback=mon_feedback)        
             else:
                 textes_sortie_algo = processing.run( algo, params_algo, feedback=mon_feedback)        

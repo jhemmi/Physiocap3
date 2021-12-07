@@ -45,7 +45,8 @@ from .Physiocap_tools import ( physiocap_message_box, physiocap_question_box,\
         physiocap_look_for_MID, physiocap_list_MID, physiocap_csv_vers_vecteur ) 
         
 from .Physiocap_CIVC import (physiocap_assert_csv, physiocap_ferme_csv, \
-        physiocap_fichier_histo, physiocap_tracer_histo, physiocap_filtrer)   
+        physiocap_fichier_histo, physiocap_tracer_histo, physiocap_filtrer, 
+        generer_contour_depuis_points)   
 
 from .Physiocap_inter import (physiocap_fill_combo_poly_or_point)
 
@@ -512,7 +513,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             nom_fichier_synthese, details, version_3)
  
         # Progress BAR 
-        dialogue.progressBar.setValue( 70)
+        dialogue.progressBar.setValue( 65)
 
         # Création des vecteurs O seul
         if (version_3 == "NO"):
@@ -524,6 +525,17 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
                 80, EXTENSION_ZERO_SEUL, 
                 nom_csv_0_seul,  chemin_shapes, nom_court_vecteur_0_seul,
                 "NO", details, version_3) 
+
+        # Progress BAR 
+        dialogue.progressBar.setValue( 70)
+
+        
+        if dialogue.checkBoxContourSolo.isChecked():
+            physiocap_log( "{0} {1} Avant création du contour à partir des points.". \
+                format( PHYSIOCAP_INFO, PHYSIOCAP_UNI), leModeDeTrace)
+            nom_contour = generer_contour_depuis_points( dialogue, nom_layer_sans_0)                
+            physiocap_log( "{0} {1} Création du contour OK : {2}.". \
+                format( PHYSIOCAP_INFO, PHYSIOCAP_UNI, nom_contour), leModeDeTrace)
                 
         # Progress BAR 80%
         dialogue.progressBar.setValue( 80)
@@ -565,7 +577,12 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
                 SHAPE_A_AFFICHER.append( (nom_layer_sans_0, 'VITESSE km/h', qml_is))
             else:
                 SHAPE_A_AFFICHER.append( (nom_layer_avec_0, 'VITESSE km/h', qml_is))       
-
+        if dialogue.checkBoxContour.isChecked():
+            qml_is = dialogue.lineEditThematiqueContour.text().strip('"') + EXTENSION_QML
+            # Choix du shape à afficher
+            if dialogue.checkBoxContourSolo.isChecked() and os.path.exists(nom_contour):
+                SHAPE_A_AFFICHER.append( (nom_contour, 'Contour généré', qml_is))
+                
         if (version_3 != "NO") and dialogue.checkBoxPasMesure.isChecked():
             qml_is = dialogue.lineEditThematiquePasMesure.text().strip('"') + EXTENSION_QML
             SHAPE_A_AFFICHER.append( (nom_layer_0_seul, 'PAS DE MESURE', qml_is))

@@ -40,13 +40,14 @@
 ***************************************************************************/
 """
 
-from .Physiocap_tools import ( physiocap_log, physiocap_error, \
+from .Physiocap_tools import ( physiocap_log, physiocap_error, 
+    physiocap_quelles_informations_vignoble_agro, \
     physiocap_quelle_projection_et_lib_demandee, physiocap_segment_vers_vecteur ) 
 from .Physiocap_var_exception import *
 
 #from PyQt5.QtCore import QVariant
 from qgis.core import ( Qgis, QgsCoordinateReferenceSystem, QgsCoordinateTransform,  \
-        QgsPointXY, QgsMessageLog)
+        QgsPointXY, QgsMessageLog, QgsProcessingFeedback, QgsProject, QgsVectorLayer)
 
 try :
     import matplotlib
@@ -68,8 +69,6 @@ except ImportError:
 
 # Fonction pour vérifier le fichier csv de concatenation (projet_RAW.csv)   
 def physiocap_assert_csv(self, src, err):
-    
-# Générer un Contour à partir des points
     """Fonction d'assert. 
     Vérifie si le csv de concatenation des MID est au bon format: 
     58 virgules
@@ -137,155 +136,173 @@ def physiocap_assert_csv(self, src, err):
     else:
         return 0
 
-def generer_contour_fin(self, nom_fichier_synthese_CSV="NO", nom_fichier_shape_sans_0="", ss_groupe=None):
+def generer_contour_depuis_points(self, nom_fichier_shape_sans_0):
+    """ Générer un Contour à partir des points sans Zéro"""
+    # Vérifier disponibilité de processing (on attend d'etre dans Intra)
+    try :
+        import processing
+    except ImportError:
+        physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
+                format( PHYSIOCAP_UNI, self.tr("Traitement")), leModeDeTrace)
+        raise physiocap_exception_no_processing( "Pas d'extension Traitement")
+    
+    # Assert points existent bien
+    if ( os.path.exists( nom_fichier_shape_sans_0)):
+        infoVignobleAgro = physiocap_quelles_informations_vignoble_agro( self)
+        physiocap_log( "Information vignoble et agro == Nom de parcelle {}".\
+            format( infoVignobleAgro[ "nom_parcelle"]))
+#        type_apports = self.settings.value("Physiocap/type_apports","xx")  # ___recuperer les valeurs des variables : type apports fertilisation
+#        produit = self.settings.value("Physiocap/produit", "xx")  # ___recuperer les valeurs des variables : produit
+#        dose = self.settings.value("Physiocap/dose", "xx")  # ___recuperer les valeurs des variables : dose(t/ha)
+#        strategie_entretien_sol = self.settings.value("Physiocap/strategie_entretien_sol", "xx")  # ___recuperer les valeurs des variables : strategie entretien de sol
+#        etat_sanitaire = self.settings.value("Physiocap/etat_sanitaire","xx")  # ___recuperer les valeurs des variables : etat sanitaire intensité*frequance
+#        cepage = self.settings.value("Physiocap/leCepage2","xx")  # ___recuperer les valeurs des variables : etat sanitaire intensité*frequance
+#        hauteur_rognage = self.settings.value("Physiocap/hauteur", "xx")  # ___recuperer les valeurs des variables : etat sanitaire intensité*frequance
+#        densite_plantation = self.settings.value("Physiocap/densite", "xx")  # ___recuperer les valeurs des variables : etat sanitaire intensité*frequance
+#        type_taille = self.settings.value("Physiocap/laTaille", "xx")  # ___recuperer les valeurs des variables : etat sanitaire intensité*frequance
+#        diamshp_moy = self.settings.value("Physiocap/diamshp_moy","xx")  # ___recuperer les valeurs des variables : diametre moyen
+#        nbsarmshp_moy = self.settings.value("Physiocap/nbsarmshp_moy","xx")  # ___recuperer les valeurs des variables : nbsarmshp moyen
+#        biomshp_moy = self.settings.value("Physiocap/biomshp_moy", "xx")  # ___recuperer les valeurs des variables : biomshp moyen
+#        vitesseshp_moy = self.settings.value("Physiocap/vitesseshp","xx")  # ___recuperer les valeurs des varoables : vitesse moyenne
+#        generer_contour = self.settings.value("Physiocap/generer_contour","xx")  # ___recuperer les valeurs des varoables : vitesse moyenne
+        chemin_acces = os.path.dirname( nom_fichier_shape_sans_0)
+        chemin_fichier_convex = os.path.join( chemin_acces,  FICHIER_CONTOUR_GENERE + EXTENSION_SHP)
+        mon_feedback = QgsProcessingFeedback()
+        params_algo = { 'FIELD' : None, 
+         'INPUT' : nom_fichier_shape_sans_0, 
+         'OUTPUT' : chemin_fichier_convex, 
+         'TYPE' : 3 } # Enveloppe convexe
+        textes_sortie_algo={}
+        algo = "qgis:minimumboundinggeometry"
+        textes_sortie_algo = processing.run( algo, params_algo, feedback=mon_feedback)        
+        physiocap_log( "Sortie algo {} contient {}".\
+            format( algo, textes_sortie_algo))
+        
+        self.settings.setValue("Physiocap/chemin_contour_genere", chemin_fichier_convex)
+    else:
+        msg = "Erreur durant génération automatique de contour : fichier de point {} n'existe pas\n".\
+            format( nom_fichier_shape_sans_0)
+        physiocap_error( self, msg )
+        err.write( str( msg) ) # on écrit la ligne dans le fichier ERREUR
+    return chemin_fichier_convex
 
-    fichier_synthese_CSV = open(nom_fichier_synthese_CSV, "wb")
 
-    infoAgro = self.settings.value("Physiocap/info_agro",
-                                   "")  # ___recuperer les valeurs des variables : InfoAgro : Renseign/Contour
-    if infoAgro == "Renseign":
-        # Ecriture de l'entête
-        nom_parcelle = self.settings.value("Physiocap/nom_parcelle","xx")  # ___recuperer les valeurs des variables : nom de la parcelle
-        annee_plant = self.settings.value("Physiocap/annee_plant","xx")  # ___recuperer les valeurs des variables : année de plantation
-        comuune = self.settings.value("Physiocap/comuune", "xx")  # ___recuperer les valeurs des variables : commune
-        region = self.settings.value("Physiocap/region", "xx")  # ___recuperer les valeurs des variables : region
-        clone = self.settings.value("Physiocap/clone", "xx")  # ___définir les valeurs des variables : clone
-        porte_greffe = self.settings.value("Physiocap/porte_greffe","xx")  # ___recuperer les valeurs des variables : porte-greffe
-        sol_argile = self.settings.value("Physiocap/sol_argile", "xx")  # ___recuperer les valeurs des variables : sol pourcentage argile
-        sol_mo = self.settings.value("Physiocap/sol_mo","xx")  # ___recuperer les valeurs des variables : sol pourcentage MO
-        sol_caco3 = self.settings.value("Physiocap/sol_caco3","xx")  # ___recuperer les valeurs des variables : sol pourcentage CaCO3
-        rendement = self.settings.value("Physiocap/rendement","xx")  # ___recuperer les valeurs des variables : rendement annee courante
-        nb_grappes = self.settings.value("Physiocap/nb_grappes", "xx")  # ___recuperer les valeurs des variables : nombre de grappes annee courante
-        poids_moy_grappes = self.settings.value("Physiocap/poids_moy_grappes","xx")  # ___recuperer les valeurs des variables : poids moyen de grappes annee courante
-        rendement_1 = self.settings.value("Physiocap/rendement_1","xx")  # ___recuperer les valeurs des variables : rendement annee precedente
-        nb_grappes_1 = self.settings.value("Physiocap/nb_grappes_1", "xx")  # ___recuperer les valeurs des variables : nombre de grappes annee precedente
-        poids_moy_grappes_1 = self.settings.value("Physiocap/poids_moy_grappes_1","xx")  # ___recuperer les valeurs des variables : poids moyen de grappes annee precedente
-        type_apports = self.settings.value("Physiocap/type_apports","xx")  # ___recuperer les valeurs des variables : type apports fertilisation
-        produit = self.settings.value("Physiocap/produit", "xx")  # ___recuperer les valeurs des variables : produit
-        dose = self.settings.value("Physiocap/dose", "xx")  # ___recuperer les valeurs des variables : dose(t/ha)
-        strategie_entretien_sol = self.settings.value("Physiocap/strategie_entretien_sol", "xx")  # ___recuperer les valeurs des variables : strategie entretien de sol
-        etat_sanitaire = self.settings.value("Physiocap/etat_sanitaire","xx")  # ___recuperer les valeurs des variables : etat sanitaire intensité*frequance
-        cepage = self.settings.value("Physiocap/leCepage2","xx")  # ___recuperer les valeurs des variables : etat sanitaire intensité*frequance
-        hauteur_rognage = self.settings.value("Physiocap/hauteur", "xx")  # ___recuperer les valeurs des variables : etat sanitaire intensité*frequance
-        densite_plantation = self.settings.value("Physiocap/densite", "xx")  # ___recuperer les valeurs des variables : etat sanitaire intensité*frequance
-        type_taille = self.settings.value("Physiocap/laTaille", "xx")  # ___recuperer les valeurs des variables : etat sanitaire intensité*frequance
-        diamshp_moy = self.settings.value("Physiocap/diamshp_moy","xx")  # ___recuperer les valeurs des variables : diametre moyen
-        nbsarmshp_moy = self.settings.value("Physiocap/nbsarmshp_moy","xx")  # ___recuperer les valeurs des variables : nbsarmshp moyen
-        biomshp_moy = self.settings.value("Physiocap/biomshp_moy", "xx")  # ___recuperer les valeurs des variables : biomshp moyen
-        vitesseshp_moy = self.settings.value("Physiocap/vitesseshp","xx")  # ___recuperer les valeurs des varoables : vitesse moyenne
-        generer_contour = self.settings.value("Physiocap/generer_contour","xx")  # ___recuperer les valeurs des varoables : vitesse moyenne
-        geom_wkt = ""
-        (chemin_acces, file_name) = os.path.split(nom_fichier_shape_sans_0)
-        chemin_fichier_convex = chemin_acces + "\contour_genere.shp"
-        if self.checkBoxGenererContour.isChecked():
-            # get shape file without 0 and run the function  qgis.convexhull
-            processing.runalg("qgis:convexhull", nom_fichier_shape_sans_0, None, 0, chemin_fichier_convex)
-            convexhull_layer = QgsVectorLayer(chemin_fichier_convex, 'contour_genere', 'ogr')
-            self.settings.setValue("Physiocap/chemin_contour_genere", chemin_fichier_convex)
-            # delete fields and leave just the geometry
-            fields = convexhull_layer.dataProvider().fields()
-            count = 0
-            fieldsList = list()
-            for field in convexhull_layer.pendingFields():
-                fieldsList.append(count)
-                count += 1
-            convexhull_layer.dataProvider().deleteAttributes(fieldsList)
-            convexhull_layer.updateFields()
-            # add the layer to the legend
-            convexhull_layer.setLayerTransparency(60)
-            QgsMapLayerRegistry.instance().addMapLayer(convexhull_layer, False)
-            ss_groupe.addLayer(convexhull_layer)
-            # iface.addVectorLayer(chemin_fichier_convex, 'contour_genere', 'ogr')
-            # get the geometry from the layer and paste it in the csv file
-            for feature in convexhull_layer.getFeatures():
-                buff = feature.geometry().buffer(0.5, 1)
-                convexhull_layer.dataProvider().changeGeometryValues({feature.id(): buff})
-                geom_wkt = str(feature.geometry().exportToWkt())
-            # add attributes filled by the user
-            convexhull_layer.startEditing()
+def inclure_vignoble_sur_contour(self, chemin_fichier_convex, ss_groupe=None):
 
-            convexhull_layer.dataProvider().addAttributes([QgsField("Nom_Parcel", QVariant.String)])
-            convexhull_layer.dataProvider().addAttributes([QgsField("Commune", QVariant.String)])
-            convexhull_layer.dataProvider().addAttributes([QgsField("Region", QVariant.String)])
-            convexhull_layer.dataProvider().addAttributes([QgsField("Cepage", QVariant.String)])
-            convexhull_layer.dataProvider().addAttributes([QgsField("Clone", QVariant.String)])
-            convexhull_layer.dataProvider().addAttributes([QgsField("Porte_gref", QVariant.String)])
-            convexhull_layer.dataProvider().addAttributes([QgsField("Annee_plan", QVariant.String)])
-            convexhull_layer.dataProvider().addAttributes([QgsField("Haut_rogn", QVariant.String)])
-            convexhull_layer.dataProvider().addAttributes([QgsField("Dens_plan", QVariant.String)])
-            convexhull_layer.dataProvider().addAttributes([QgsField("Type_tail", QVariant.String)])
-            convexhull_layer.dataProvider().addAttributes([QgsField("Sol_argile", QVariant.String)])
-            convexhull_layer.dataProvider().addAttributes([QgsField("Sol_MO", QVariant.String)])
-            convexhull_layer.dataProvider().addAttributes([QgsField("Sol_CaCo3", QVariant.String)])
-            convexhull_layer.dataProvider().addAttributes([QgsField("Rendement", QVariant.String)])
-            convexhull_layer.dataProvider().addAttributes([QgsField("Poi_m_grap", QVariant.String)])
-            convexhull_layer.dataProvider().addAttributes([QgsField("Nb_grap", QVariant.String)])
-            convexhull_layer.dataProvider().addAttributes([QgsField("Rend_an-1", QVariant.String)])
-            convexhull_layer.dataProvider().addAttributes([QgsField("Poi_m_gra1", QVariant.String)])
-            convexhull_layer.dataProvider().addAttributes([QgsField("Nbgrap-1", QVariant.String)])
-            convexhull_layer.dataProvider().addAttributes([QgsField("type_appor", QVariant.String)])
-            convexhull_layer.dataProvider().addAttributes([QgsField("Fert_prod", QVariant.String)])
-            convexhull_layer.dataProvider().addAttributes([QgsField("Fert_dose", QVariant.String)])
-            convexhull_layer.dataProvider().addAttributes([QgsField("entr_sol", QVariant.String)])
-            convexhull_layer.dataProvider().addAttributes([QgsField("Etat_sanit", QVariant.String)])
+    if ( os.path.exists( chemin_fichier_convex)):
 
-            convexhull_layer.updateFields()
+    ###    geom_wkt = ""
 
-            for feat in convexhull_layer.getFeatures():
-                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Nom_Parcel'),
-                                                      nom_parcelle.encode("Utf-8"))
-                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Commune'),
-                                                      comuune.encode("Utf-8"))
-                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Region'),
-                                                      region.encode("Utf-8"))
-                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Cepage'),
-                                                      cepage.encode("Utf-8"))
-                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Clone'),
-                                                      clone.encode("Utf-8"))
-                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Porte_gref'),
-                                                      str(porte_greffe.encode("Utf-8")))
-                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Annee_plan'),
-                                                      str(annee_plant))
-                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Haut_rogn'),
-                                                      str(hauteur_rognage))
-                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Dens_plan'),
-                                                      str(densite_plantation))
-                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Type_tail'),
-                                                      type_taille.encode("Utf-8"))
-                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Sol_argile'),
-                                                      str(sol_argile))
-                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Sol_MO'),
-                                                      str(sol_mo))
-                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Sol_CaCo3'),
-                                                      str(sol_caco3))
-                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Rendement'),
-                                                      str(rendement))
-                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Poi_m_grap'),
-                                                      str(poids_moy_grappes))
-                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Nb_grap'),
-                                                      str(nb_grappes))
-                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Rend_an-1'),
-                                                      str(rendement_1))
-                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Poi_m_gra1'),
-                                                      str(poids_moy_grappes_1))
-                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Nbgrap-1'),
-                                                      str(nb_grappes_1))
-                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('type_appor'),
-                                                      str(type_apports.encode("Utf-8")))
-                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Fert_prod'),
-                                                      str(produit.encode("Utf-8")))
-                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Fert_dose'),
-                                                      str(dose))
-                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('entr_sol'),
-                                                      str(strategie_entretien_sol.encode("Utf-8")))
-                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Etat_sanit'),
-                                                      str(etat_sanitaire.encode("Utf-8")))
+        # delete fields and leave just the geometry
+    ###    fields = convexhull_layer.dataProvider().fields()
+        count = 0
+        fieldsList = list()
+        for field in convexhull_layer.pendingFields():
+            fieldsList.append(count)
+            count += 1
+        convexhull_layer.dataProvider().deleteAttributes(fieldsList)
+        convexhull_layer.updateFields()
+        # add the layer to the legend
+        convexhull_layer.setLayerTransparency(60)
+        QgsMapLayerRegistry.instance().addMapLayer(convexhull_layer, False)
+        ss_groupe.addLayer(convexhull_layer)
+        # iface.addVectorLayer(chemin_fichier_convex, 'contour_genere', 'ogr')
+        # get the geometry from the layer and paste it in the csv file
+        for feature in convexhull_layer.getFeatures():
+            buff = feature.geometry().buffer(0.5, 1)
+            convexhull_layer.dataProvider().changeGeometryValues({feature.id(): buff})
+###        geom_wkt = str(feature.geometry().exportToWkt())
 
-            convexhull_layer.commitChanges()
+###            # add attributes filled by the user
+###            convexhull_layer.startEditing()
+###
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Nom_Parcel", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Commune", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Region", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Cepage", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Clone", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Porte_gref", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Annee_plan", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Haut_rogn", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Dens_plan", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Type_tail", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Sol_argile", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Sol_MO", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Sol_CaCo3", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Rendement", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Poi_m_grap", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Nb_grap", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Rend_an-1", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Poi_m_gra1", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Nbgrap-1", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("type_appor", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Fert_prod", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Fert_dose", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("entr_sol", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Etat_sanit", QVariant.String)])
+###
+###            convexhull_layer.updateFields()
+###
+###            for feat in convexhull_layer.getFeatures():
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Nom_Parcel'),
+###                                                      nom_parcelle.encode("Utf-8"))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Commune'),
+###                                                      comuune.encode("Utf-8"))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Region'),
+###                                                      region.encode("Utf-8"))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Cepage'),
+###                                                      cepage.encode("Utf-8"))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Clone'),
+###                                                      clone.encode("Utf-8"))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Porte_gref'),
+###                                                      str(porte_greffe.encode("Utf-8")))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Annee_plan'),
+###                                                      str(annee_plant))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Haut_rogn'),
+###                                                      str(hauteur_rognage))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Dens_plan'),
+###                                                      str(densite_plantation))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Type_tail'),
+###                                                      type_taille.encode("Utf-8"))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Sol_argile'),
+###                                                      str(sol_argile))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Sol_MO'),
+###                                                      str(sol_mo))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Sol_CaCo3'),
+###                                                      str(sol_caco3))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Rendement'),
+###                                                      str(rendement))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Poi_m_grap'),
+###                                                      str(poids_moy_grappes))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Nb_grap'),
+###                                                      str(nb_grappes))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Rend_an-1'),
+###                                                      str(rendement_1))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Poi_m_gra1'),
+###                                                      str(poids_moy_grappes_1))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Nbgrap-1'),
+###                                                      str(nb_grappes_1))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('type_appor'),
+###                                                      str(type_apports.encode("Utf-8")))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Fert_prod'),
+###                                                      str(produit.encode("Utf-8")))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Fert_dose'),
+###                                                      str(dose))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('entr_sol'),
+###                                                      str(strategie_entretien_sol.encode("Utf-8")))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Etat_sanit'),
+###                                                      str(etat_sanitaire.encode("Utf-8")))
+###
+###            convexhull_layer.commitChanges()
         # get the feature geometry and copy the WKT
         # ecriture de l'entête
         # fichier_synthese_CSV.write("Nom_Parcelle; Commune ; Region ; Cepage; Clone; Porte_greffe; Annee_plantation; Hauteur_rognage; Densite_plantation; Type_taille; Sol_argile; Sol_MO; Sol_CaCo3; Rendement; Poids_moyen_grappes; Nombre_grappes; Rendemenr_annee-1; Poids_moyen_grappes-1; Nombre_grappes-1; Fert_type_apports; Fert_produit; Fert_dose; Strategie_entretien_sol; Etat_sanitaire; Nb_sarments_moy; Section_moy; Biomasse_moy "+"\n")
-    return 0
+    else:
+        msg = "Erreur durant génération automatique de contour : fichier de point {} n'existe pas\n".\
+            format( nom_fichier_shape_sans_0)
+        physiocap_error( self, msg )
+        err.write( str( msg) ) # on écrit la ligne dans le fichier ERREUR
+    return chemin_fichier_convex
 
 # Fonction pour créer les fichiers histogrammes    
 def physiocap_fichier_histo( self, src, histo_diametre, histo_nbsarment, histo_vitesse,  err):
@@ -294,7 +311,6 @@ def physiocap_fichier_histo( self, src, histo_diametre, histo_nbsarment, histo_v
     Les résultats est écrit au fur et à mesure dans histo_diametre ou histo_nbsarment
     Il se fait un filtre des diam qui ne sont pas entre 2 et 28
     """
-
     numero_ligne = 0     
     while True :
         ligne = src.readline() # lit les lignes 1 à 1
@@ -795,4 +811,5 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
 
     physiocap_log( "{0} {1} Fin du filtrage OK des {2} lignes.". \
         format( PHYSIOCAP_INFO, PHYSIOCAP_UNI, str(numero_point - 1)), leModeDeTrace)
+
     return vecteur_segment, vecteur_segment_brise
