@@ -45,7 +45,7 @@
 from .Physiocap_tools import (physiocap_message_box, \
         physiocap_log_for_error, physiocap_log, physiocap_error, \
         physiocap_quelle_projection_et_lib_demandee, physiocap_nom_entite_avec_pb_caractere, \
-        physiocap_get_layer_by_name,  physiocap_get_layer_by_ID)
+        physiocap_get_layer_by_name, physiocap_get_layer_by_ID)
 
 from .Physiocap_creer_arbre import (PhysiocapFiltrer)
 from .Physiocap_inter import (PhysiocapInter, physiocap_fill_combo_poly_or_point)
@@ -117,8 +117,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.toolButtonDirectoryFiltre.pressed.connect( self.slot_lecture_repertoire_donnees_cibles)  
         # Slot pour le groupe vignoble
         self.groupBoxDetailVignoble.clicked.connect( self.slot_bascule_details_vignoble)
+        self.checkBoxInfoVignoble.stateChanged.connect( self.slot_bascule_info_vignoble)
         self.radioButtonOnglet.toggled.connect( self.slot_bascule_onglet_vignoble)
-        ## TODO Supprimer pres CD decembre self.checkBoxInfoVignoble.stateChanged.connect( self.slot_bascule_details_vignoble)
         # Slot pour le groupe format V3
         self.checkBoxV3.stateChanged.connect( self.slot_bascule_V3)
         self.checkBoxInterPasMesure.stateChanged.connect( self.slot_bascule_pas_mesure)
@@ -143,9 +143,9 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.spinBoxIsoMin_Fixe_SARM.valueChanged.connect( self.slot_INTRA_SARM_min_max_fixe )
         self.spinBoxIsoMax_Fixe_BIOM.valueChanged.connect( self.slot_INTRA_BIOM_min_max_fixe )
         # attention aux appels recursifs infinis : on a fait 2 maj_attributs ... 
-        self.fieldComboIntraDIAM.currentIndexChanged[int].connect( self.slot_INTRA_maj_attributs_interpolables)
-        self.fieldComboIntraSARM.currentIndexChanged[int].connect( self.slot_INTRA_maj_attributs_interpolables)
-        self.fieldComboIntraBIOM.currentIndexChanged[int].connect( self.slot_INTRA_maj_attributs_interpolables)
+        self.fieldComboIntraDIAM.currentIndexChanged[int].connect( self.slot_PROFIL_INTRA_maj_attributs_interpolables)
+        self.fieldComboIntraSARM.currentIndexChanged[int].connect( self.slot_PROFIL_INTRA_maj_attributs_interpolables)
+        self.fieldComboIntraBIOM.currentIndexChanged[int].connect( self.slot_PROFIL_INTRA_maj_attributs_interpolables)
 
         self.ButtonIntra.pressed.connect(self.slot_INTRA_interpolation_parcelles)
         self.groupBoxIntra.setEnabled( False)
@@ -599,8 +599,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.radioButtonGPS.toggled.connect( self.slot_GPS_alert)
  
         # Remplissage de la liste de ATTRIBUTS_INTRA 
-        self.slot_INTRA_maj_attributs_interpolables( "INIT")
-        self.slot_INTRA_maj_triplet_interpolables()
+        self.slot_PROFIL_INTRA_maj_attributs_interpolables( "INIT")
+        self.slot_PROFIL_INTRA_maj_triplet_interpolables()
         # la box arret-continue
         self.slot_INTRA_box_arret()
 
@@ -707,21 +707,35 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.spinBoxMaxSarmentsParMetre.setValue( 25)
             self.groupBoxFiltrer.setEnabled( False)
             self.groupBoxInter.setEnabled( True)
-            self.checkBoxEnchainer3Actions.setChecked( Qt.Checked)
             self.groupBoxIntra.setEnabled( True)
+            self.groupBoxTroisActions.setChecked( Qt.Checked)
             self.groupBoxDetailVignoble.setChecked( Qt.Checked)
+            self.checkBoxInfoVignoble.setChecked( Qt.Checked)
             # TODO Valider defaut avec Constance
             self.radioButtonOnglet.setChecked(  Qt.Checked)  
-            # Basculer aussi groupBoxVignoble & groupBoxAgroSaisie
-            self.groupBoxVignoble.setEnabled( True)
-            self.groupBoxAgroSaisie.setEnabled( True)
+            # Basculer aussi groupBoxVignoble & groupBoxAgroSaisie mais par slot
+            #self.groupBoxVignoble.setEnabled( True)
+            #self.groupBoxAgroSaisie.setEnabled( True)
             self.label_PH.setEnabled( False)            
             self.doubleSpinBoxPH.setEnabled( False)            
             # Saga par defaut et L93
             self.radioButtonSAGA.setChecked(  Qt.Checked)
             self.checkBoxSagaTIFF.setChecked( Qt.Checked)
             self.radioButtonL93.setChecked(  Qt.Checked)
-            # TODO: un triplet pour intra A confirmer DIAM BIOMGCEP NBSARCEP            
+            # initialisation sans sauvegarde dans profil
+            self.spinBoxIsoMin_Fixe_DIAM.setValue( int( self.settings.value("Champagne/isoMinFixe_1", 7 )))
+            self.spinBoxIsoMax_Fixe_DIAM.setValue( int( self.settings.value("Champagne/isoMaxFixe_1", 11 )))
+            self.spinBoxIsoDistance_Fixe_DIAM.setValue( int( self.settings.value("Champagne/isoDistanceFixe_1", 1 )))
+            self.spinBoxIsoMin_Fixe_SARM.setValue( int( self.settings.value("Champagne/isoMinFixe_2", 5 )))
+            self.spinBoxIsoMax_Fixe_SARM.setValue( int( self.settings.value("Champagne/isoMaxFixe_2", 13)))
+            self.spinBoxIsoDistance_Fixe_SARM.setValue( int( self.settings.value("Champagne/isoDistanceFixe_2", 2 )))
+            self.spinBoxIsoMin_Fixe_BIOM.setValue( int( self.settings.value("Champagne/isoMinFixe_3", 200 )))
+            self.spinBoxIsoMax_Fixe_BIOM.setValue( int( self.settings.value("Champagne/isoMaxFixe_3", 1000 )))
+            self.spinBoxIsoDistance_Fixe_BIOM.setValue( int( self.settings.value("Champagne/isoDistanceFixe_3", 200 )))
+            # un seul triplet pour intra DIAM BIOMGCEP NBSARCEP est code dans ce slot
+            self.slot_PROFIL_INTRA_maj_attributs_interpolables( profilCourant)
+            # Supprimer deux autre BIOM 
+            
             # TODO PDF 
             self.checkBoxIntraPDF.setChecked( Qt.Checked)
             # Pas d'isoligne
@@ -741,8 +755,10 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.groupBoxDetailVignoble.setEnabled( True)
             self.label_PH.setEnabled( True)            
             self.doubleSpinBoxPH.setEnabled( True)            
-            self.groupBoxInter.setEnabled( False)
-            self.checkBoxEnchainer3Actions.setChecked( Qt.Unchecked)
+            self.groupBoxInter.setEnabled( True)
+            self.groupBoxTroisActions.setChecked( Qt.Unchecked)
+            self.groupBoxDetailVignoble.setChecked( Qt.Checked)
+            self.checkBoxInfoVignoble.setChecked( Qt.Checked)
             self.groupBoxIntra.setEnabled( False)
             self.groupBoxVignoble.setEnabled( True)
             self.groupBoxAgroSaisie.setEnabled( False)
@@ -751,18 +767,20 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.groupBoxMethode.setEnabled( True)
             self.groupBoxExpertOuvert.setEnabled( False)
             self.groupBoxSegment.setEnabled( True)
-        elif profilCourant == 'Standart':
+        elif profilCourant == 'Standard':
             self.spinBoxMinDiametre.setValue( 4)
             self.spinBoxMaxDiametre.setValue( 18)
             self.spinBoxMaxSarmentsParMetre.setValue( 25)
             self.groupBoxFiltrer.setEnabled( True)
-            self.groupBoxInter.setEnabled( False)
-            self.checkBoxEnchainer3Actions.setChecked( Qt.Unchecked)
-            self.groupBoxIntra.setEnabled( False)
+            self.groupBoxInter.setEnabled( True)
+            self.groupBoxTroisActions.setChecked( Qt.Checked)
+            self.groupBoxDetailVignoble.setChecked( Qt.Checked)
+            self.checkBoxInfoVignoble.setChecked( Qt.Checked)
+            self.groupBoxIntra.setEnabled( True)
             self.groupBoxVignoble.setEnabled( True)
+            self.groupBoxAgroSaisie.setEnabled( True)
             self.label_PH.setEnabled( True)            
             self.doubleSpinBoxPH.setEnabled( True)            
-            self.groupBoxAgroSaisie.setEnabled( False)
             self.groupBoxExpertOuvert.setEnabled( True)
             self.groupBoxIsolignes.setChecked( Qt.Checked)
             self.groupBoxIsolignes.setEnabled( True)
@@ -811,10 +829,22 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         VALEUR_PROFIL_INITIALISE = 'Initialisé'
         existeChampagne = self.settings.value("Profil/Champagne", "inconnu")
         if ( existeChampagne ==  "inconnu"):
-            self.settings.setValue("Champagne/tripleMetrique", ["DIAM",  "BIOMGCEP",  "NBSARCEP"])    # Email CD du 2 décembre 21
-            self.settings.setValue("Champagne/listeMetriques", ATTRIBUTS_INTRA + ATTRIBUTS_INTRA_DETAILS )
+            self.settings.setValue("Champagne/attributIntraFixe_1", self.fieldComboIntraDIAM.currentText())
+            self.settings.setValue("Champagne/isoMinFixe_1",  self.spinBoxIsoMin_Fixe_DIAM.value())
+            self.settings.setValue("Champagne/isoMaxFixe_1",  self.spinBoxIsoMax_Fixe_DIAM.value())
+            self.settings.setValue("Champagne/isoDistanceFixe_1",  self.spinBoxIsoDistance_Fixe_DIAM.value())
+
+            self.settings.setValue("Champagne/attributIntraFixe_2", self.fieldComboIntraSARM.currentText())
+            self.settings.setValue("Champagne/isoMinFixe_2",  self.spinBoxIsoMin_Fixe_SARM.value())
+            self.settings.setValue("Champagne/isoMaxFixe_2",  self.spinBoxIsoMax_Fixe_SARM.value())
+            self.settings.setValue("Champagne/isoDistanceFixe_2",  self.spinBoxIsoDistance_Fixe_SARM.value())
+
+            self.settings.setValue("Champagne/attributIntraFixe_3", self.fieldComboIntraBIOM.currentText())
+            self.settings.setValue("Champagne/isoMinFixe_3",  self.spinBoxIsoMin_Fixe_BIOM.value())
+            self.settings.setValue("Champagne/isoMaxFixe_3",  self.spinBoxIsoMax_Fixe_BIOM.value())
+            self.settings.setValue("Champagne/isoDistanceFixe_3",  self.spinBoxIsoDistance_Fixe_BIOM.value())
             self.settings.setValue("Champagne/Boite_eteintes", ["groupBoxFiltrer", "groupBoxAffichages"])
-            self.settings.setValue("Champagne/Boite_allumées", ["groupBoxInter", "groupBoxIntra"])
+            self.settings.setValue("Champagne/Boite_allumées", ["groupBox_select", "groupBoxInter", "groupBoxIntra"])
             physiocap_log('Settings Champagne devient {}'.format(VALEUR_PROFIL_INITIALISE), TRACE_PROFIL)
             self.settings.setValue("Profil/Champagne", VALEUR_PROFIL_INITIALISE)
             
@@ -871,11 +901,11 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.settings.setValue("Agro/sol_mo", float( self.doubleSpinBoxMO.value()))
         self.settings.setValue("Agro/sol_CsurN", int( self.spinBoxCsurN.value()))
         self.settings.setValue("Agro/sol_PH", float( self.doubleSpinBoxPH.value()))
-        self.settings.setValue("Agro/rendement", int( self.spinBoxRendement.value()))
+        self.settings.setValue("Agro/rendement", float( self.doubleSpinBoxRendement.value()))
         self.settings.setValue("Agro/nb_grappes", int( self.spinBoxNbGrappes.value()))
         self.settings.setValue("Agro/poids_moy_grappes", int( self.spinBoxPoidsMoyenGrappes.value()))
         # Annee précedente
-        self.settings.setValue("Agro/rendement_N1",  int( self.spinBoxRendement_N1.text()))
+        self.settings.setValue("Agro/rendement_N1",  float( self.doubleSpinBoxRendement_N1.value()))
         self.settings.setValue("Agro/nb_grappes_N1", int( self.spinBoxNbGrappes_N1.value()))
         self.settings.setValue("Agro/poids_moy_grappes_N1", int( self.spinBoxPoidsMoyenGrappes_N1.value()))
     ######        choix_user_ind=self.comboBoxTypeApportFert.currentIndex()
@@ -923,7 +953,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.settings.setValue("Affichage/FiltrerSegmentBrise", filtre_segment_brise )
         genere_contour = "YES" if self.checkBoxContour.isChecked() else "NO"            
         self.settings.setValue("Affichage/GenererContour", genere_contour )
-
 
         # Sauver les affichages Inter
         diametre = "YES" if self.checkBoxInterDiametre.isChecked() else "NO"
@@ -974,20 +1003,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         images = "YES" if self.checkBoxIntraImages.isChecked() else "NO"
         self.settings.setValue("Affichage/IntraImages", images ) 
 
-        self.settings.setValue("Affichage/attributIntraFixe_1", self.fieldComboIntraDIAM.currentText())
-        self.settings.setValue("Affichage/isoMinFixe_1",  self.spinBoxIsoMin_Fixe_DIAM.value())
-        self.settings.setValue("Affichage/isoMaxFixe_1",  self.spinBoxIsoMax_Fixe_DIAM.value())
-        self.settings.setValue("Affichage/isoDistanceFixe_1",  self.spinBoxIsoDistance_Fixe_DIAM.value())
-
-        self.settings.setValue("Affichage/attributIntraFixe_2", self.fieldComboIntraSARM.currentText())
-        self.settings.setValue("Affichage/isoMinFixe_2",  self.spinBoxIsoMin_Fixe_SARM.value())
-        self.settings.setValue("Affichage/isoMaxFixe_2",  self.spinBoxIsoMax_Fixe_SARM.value())
-        self.settings.setValue("Affichage/isoDistanceFixe_2",  self.spinBoxIsoDistance_Fixe_SARM.value())
-
-        self.settings.setValue("Affichage/attributIntraFixe_3", self.fieldComboIntraBIOM.currentText())
-        self.settings.setValue("Affichage/isoMinFixe_3",  self.spinBoxIsoMin_Fixe_BIOM.value())
-        self.settings.setValue("Affichage/isoMaxFixe_3",  self.spinBoxIsoMax_Fixe_BIOM.value())
-        self.settings.setValue("Affichage/isoDistanceFixe_3",  self.spinBoxIsoDistance_Fixe_BIOM.value())
         
         # Trois parametre INTRA
         self.settings.setValue("Physiocap/leChoixShapeSarment", self.fieldComboShapeSarment.currentIndex())
@@ -1046,6 +1061,20 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Choix des isolignes
         iso_group = "YES" if self.groupBoxIsolignes.isChecked() else "NO"
         self.settings.setValue("Intra/groupIso", iso_group )         
+        self.settings.setValue("Intra/attributIntraFixe_1", self.fieldComboIntraDIAM.currentText())
+        self.settings.setValue("Intra/isoMinFixe_1",  self.spinBoxIsoMin_Fixe_DIAM.value())
+        self.settings.setValue("Intra/isoMaxFixe_1",  self.spinBoxIsoMax_Fixe_DIAM.value())
+        self.settings.setValue("Intra/isoDistanceFixe_1",  self.spinBoxIsoDistance_Fixe_DIAM.value())
+
+        self.settings.setValue("Intra/attributIntraFixe_2", self.fieldComboIntraSARM.currentText())
+        self.settings.setValue("Intra/isoMinFixe_2",  self.spinBoxIsoMin_Fixe_SARM.value())
+        self.settings.setValue("Intra/isoMaxFixe_2",  self.spinBoxIsoMax_Fixe_SARM.value())
+        self.settings.setValue("Intra/isoDistanceFixe_2",  self.spinBoxIsoDistance_Fixe_SARM.value())
+
+        self.settings.setValue("Intra/attributIntraFixe_3", self.fieldComboIntraBIOM.currentText())
+        self.settings.setValue("Intra/isoMinFixe_3",  self.spinBoxIsoMin_Fixe_BIOM.value())
+        self.settings.setValue("Intra/isoMaxFixe_3",  self.spinBoxIsoMax_Fixe_BIOM.value())
+        self.settings.setValue("Intra/isoDistanceFixe_3",  self.spinBoxIsoDistance_Fixe_BIOM.value())
             
         # Choix de continuer ou non
         continue_group = "YES" if self.checkBoxArret.isChecked() else "NO"
@@ -1350,10 +1379,11 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         return
         
         
-    def slot_INTRA_maj_attributs_interpolables( self,  ORIGINE_TRIPLET):
+    def slot_PROFIL_INTRA_maj_attributs_interpolables( self,  ORIGINE_TRIPLET):
         """ Créer la liste des attributs interpolable
         Cette liste provient de ATTRIBUTS_INTRA et si details ATTRIBUTS_INTRA_DETAILS et gere le cas V3"""
         #leModeDeTrace = self.fieldComboModeTrace.currentText()
+        profilCourant =  self.fieldComboProfilPHY.currentText()
         ATTR_LISTE=[]
 
         if (len( ATTRIBUTS_INTRA) == 0):
@@ -1362,12 +1392,18 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             return
         
         if ORIGINE_TRIPLET == "INIT":
-            # Récupérer les choix dans settings pour le cas initalial
-            leChoixDiam = self.settings.value("Affichage/attributIntraFixe_1", "x1")
-            leChoixSarm = self.settings.value("Affichage/attributIntraFixe_2", "x2")
-            leChoixBiom = self.settings.value("Affichage/attributIntraFixe_3", "x3")
+            # Récupérer les choix dans settings pour le cas initial
+            leChoixDiam = self.settings.value("Intra/attributIntraFixe_1", "x1")
+            leChoixSarm = self.settings.value("Intra/attributIntraFixe_2", "x2")
+            leChoixBiom = self.settings.value("Intra/attributIntraFixe_3", "x3")
             # Retrouver les choix intra précedent (dans intra ou dans préference)        
-            leChoixIntra = self.settings.value("Physiocap/attributIntra", "xx") 
+            leChoixIntra = self.settings.value("Intra/attributIntra", "xx") 
+        elif ORIGINE_TRIPLET == "Champagne":
+            leChoixDiam = self.settings.value("Champagne/attributIntraFixe_1", "DIAM")
+            leChoixSarm = self.settings.value("Champagne/attributIntraFixe_2", "NBSARCEP")
+            leChoixBiom = self.settings.value("Champagne/attributIntraFixe_3", "BIOMGCEP")
+            # Retrouver les choix intra précedent (dans intra ou dans préference)        
+            leChoixIntra = self.settings.value("Intra/attributIntra", "xx") 
         else:    # pour les autres cas dont le slot lors d'un changement dans le triplet
             leChoixDiam = self.fieldComboIntraDIAM.currentText()
             leChoixSarm = self.fieldComboIntraSARM.currentText()
@@ -1388,7 +1424,10 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         
         # Cas de details ATTRIBUTS_INTRA_DETAIL
         if self.groupBoxDetailVignoble.isChecked():
-            ATTR_LISTE = ATTR_LISTE + ATTRIBUTS_INTRA_DETAILS
+            if  profilCourant == 'Champagne':
+                ATTR_LISTE = ATTR_LISTE + ATTRIBUTS_INTRA_DETAILS
+            else:
+                ATTR_LISTE = ATTR_LISTE + ATTRIBUTS_INTRA_DETAILS + ATTRIBUTS_INTRA_DETAILS_PLUS
 
         self.fieldComboIntra.clear()
         self.fieldComboIntra.addItems( ATTR_LISTE)
@@ -1438,7 +1477,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         return
 
         
-    def slot_INTRA_maj_triplet_interpolables( self):
+    def slot_PROFIL_INTRA_maj_triplet_interpolables( self):
         """ Créer la liste du triplet d'attributs interpolable
         on cherche dans settings et la liste des attributs possible dans pour le choix du triplet
         qui se nomme DIAM puis SARM puis BIOM mais peut contenir n'importe quelle valeur
@@ -1453,9 +1492,15 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             return
         
         # Récupérer les choix dans settings 
-        leChoixDiam = self.settings.value("Physiocap/attributIntraFixe_1", "x1")
-        leChoixSarm = self.settings.value("Physiocap/attributIntraFixe_2", "x2")
-        leChoixBiom = self.settings.value("Physiocap/attributIntraFixe_3", "x3")
+        profilCourant =  self.fieldComboProfilPHY.currentText()
+        if profilCourant == 'Champagne': # ce passage est impossible si GroupIso est false
+            leChoixDiam = self.settings.value("Champagne/attributIntraFixe_1", "BIOM")
+            leChoixSarm = self.settings.value("Champagne/attributIntraFixe_2", "NBSARCEP")
+            leChoixBiom = self.settings.value("Champagne/attributIntraFixe_3", "BIOMGCEP")
+        else:
+            leChoixDiam = self.settings.value("Intra/attributIntraFixe_1", "x1")
+            leChoixSarm = self.settings.value("Intra/attributIntraFixe_2", "x2")
+            leChoixBiom = self.settings.value("Intra/attributIntraFixe_3", "x3")
 
         # Ajout des attributs standard 
         ATTR_LISTE_TRIPLET = ATTRIBUTS_INTRA
@@ -1466,7 +1511,10 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         
         # Cas de details ATTRIBUTS_INTRA_DETAIL
         if self.groupBoxDetailVignoble.isChecked():
-            ATTR_LISTE_TRIPLET = ATTR_LISTE_TRIPLET + ATTRIBUTS_INTRA_DETAILS
+            if profilCourant == 'Champagne':
+                ATTR_LISTE_TRIPLET = ATTR_LISTE_TRIPLET + ATTRIBUTS_INTRA_DETAILS
+            else:
+                ATTR_LISTE_TRIPLET = ATTR_LISTE_TRIPLET + ATTRIBUTS_INTRA_DETAILS + ATTRIBUTS_INTRA_DETAILS_PLUS
             
         self.fieldComboIntraDIAM.clear()
         self.fieldComboIntraDIAM.addItems( ATTR_LISTE_TRIPLET)
@@ -1867,7 +1915,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.fieldPbGdal.setCurrentIndex( position_choix)                              
    
     def slot_INTER_maj_champ_poly_liste( self ):
-        """ Create a list of fields having unique values for the current vector in fieldCombo Box"""
+        """ Creer une liste de champs (fieldCombo Box) à valuer values pour le vecteur courant"""
         leModeDeTrace = self.fieldComboModeTrace.currentText()
         nom_complet_poly = self.comboBoxPolygone.currentText().split( SEPARATEUR_NOEUD)
         inputLayer = nom_complet_poly[0] 
@@ -2014,10 +2062,9 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
         except physiocap_exception_vignette_exists as e:
-            aText = self.tr( "Les moyennes InterParcellaires dans {0} existent déjà. ").\
+            aText1 = self.tr( "Les moyennes InterParcellaires dans {0} existent déjà. ").\
                 format( e)
             physiocap_log(aText1, leModeDeTrace,  "information")
-            physiocap_log_for_error( self)
             aText = aText + self.tr( "Vous ne pouvez pas redemander ce calcul Inter : vous devez détruire le groupe ") 
             aText = aText + self.tr( "ou créer une nouvelle session Physiocap")
             physiocap_error( self, aText, "CRITICAL")
@@ -2079,32 +2126,20 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
     def slot_bascule_segment(self):
         """ Changement de choix Inter Segment : 
         """ 
-        set_quoi = False
-        if self.checkBoxInterSegment.isChecked():
-            set_quoi = True
-        else:
-            set_quoi = False            
-        self.checkBoxInterSegmentDetails.setEnabled( set_quoi)
+        quoi = True if self.checkBoxInterSegment.isChecked() else False
+        self.checkBoxInterSegmentDetails.setEnabled( quoi)
 
     def slot_bascule_segment_brise(self):
         """ Changement de choix Inter Segment Brise: 
         """ 
-        set_quoi = False
-        if self.checkBoxInterSegmentBrise.isChecked():
-            set_quoi = True
-        else:
-            set_quoi = False            
-        self.checkBoxInterSegmentBriseDetails.setEnabled( set_quoi)
+        quoi = True if self.checkBoxInterSegmentBrise.isChecked() else False
+        self.checkBoxInterSegmentBriseDetails.setEnabled( quoi)
 
     def slot_bascule_V3(self):
         """ Changement de demande pour format V3 : 
         on grise le groupe Segment et les choix segment
         """ 
-        set_quoi = False
-        if self.checkBoxV3.isChecked():
-            set_quoi = True
-        else:
-            set_quoi = False
+        set_quoi = True if self.checkBoxV3.isChecked() else False
                 
         self.checkBoxSegment.setEnabled( set_quoi)
         self.checkBoxSegmentBrise.setEnabled( set_quoi)
@@ -2117,9 +2152,9 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.groupBoxThemaTrace.setEnabled( set_quoi)
         self.groupBoxInterIntraExpert.setEnabled( set_quoi)
             
-        # appel des attributs INTRA
-        self.slot_INTRA_maj_attributs_interpolables( "DYNAMIQUE")
-        self.slot_INTRA_maj_triplet_interpolables()
+        # appel des attributs INTRA qui sont Profil dépendant
+        self.slot_PROFIL_INTRA_maj_attributs_interpolables( "DYNAMIQUE")
+        self.slot_PROFIL_INTRA_maj_triplet_interpolables()
 
         if set_quoi == True:            # Forcer LE CHOIX DU SEGMENT BRISÉ
             physiocap_log( self.tr( "{0} passe en Format V3 et force le choix du segment brisé.").\
@@ -2141,19 +2176,39 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         else:
             self.groupBoxContourInter.setEnabled( True)
         
+    def slot_bascule_onglet_vignoble(self):
+        """ Changer acces à l'onglet vignoble"""
+        if  self.radioButtonOnglet.isChecked():
+            self.groupBoxVignoble.setEnabled( True)
+            self.groupBoxAgroSaisie.setEnabled( True)
+        else:
+            self.groupBoxVignoble.setEnabled( False)    
+            self.groupBoxAgroSaisie.setEnabled( False) 
+
     def slot_bascule_details_vignoble(self):
     # Calcul aide et sortie
         """ Changement de demande pour les details vignoble : 
         on dégrise le groupe Vignoble que si le choix est onglet
         """ 
         # appel des attributs INTRA
-        self.slot_INTRA_maj_attributs_interpolables( "DYNAMIQUE")
-        self.slot_INTRA_maj_triplet_interpolables()
+        self.slot_PROFIL_INTRA_maj_attributs_interpolables( "DYNAMIQUE")
+        self.slot_PROFIL_INTRA_maj_triplet_interpolables()
         if  self.radioButtonOnglet.isChecked():
             self.groupBoxVignoble.setEnabled( True)
-            self.groupBoxAgroSaisie.setEnabled( True)
         else:
             self.groupBoxVignoble.setEnabled( False)    
+
+    def slot_bascule_info_vignoble(self):
+    # Calcul aide et sortie
+        """ Changement de demande pour les info vignoble : 
+        on dégrise le groupe Vignoble que si le choix est onglet
+        """ 
+        # appel des attributs INTRA
+        self.slot_PROFIL_INTRA_maj_attributs_interpolables( "DYNAMIQUE")
+        self.slot_PROFIL_INTRA_maj_triplet_interpolables()
+        if  self.radioButtonOnglet.isChecked():
+            self.groupBoxAgroSaisie.setEnabled( True)
+        else:
             self.groupBoxAgroSaisie.setEnabled( False)    
             
     def slot_calcul_densite( self):
@@ -2176,17 +2231,13 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         QDesktopServices.openUrl(help_url)
 
     def slot_AIDE_contrib_alert( self):
-        """ 
-        Toutes les x utilisations, rappeler à l'utilisateur qu'il est bien de contribuer
-        """
+        """ Toutes les x utilisations, rappeler à l'utilisateur qu'il est bien de contribuer """
         # Vérifier si le nombre d'utilisation est atteint
         self.dans_Quel_Settings()
         niveau_utilisation = int( self.settings.value("Affichage/Contrib_alert", 0))
         if ( niveau_utilisation <  500):
-            self.settings.setValue("Affichage/Contrib_alert", \
-                niveau_utilisation + 1)
-            return 
-        
+            self.settings.setValue("Affichage/Contrib_alert", niveau_utilisation + 1)
+            return
         aText = self.tr( "{0} vous rapelle que ce logiciel ouvert et libre n'est pas exempt de besoins. ").\
                     format( PHYSIOCAP_UNI)
         aText = aText + self.tr( "L'extension est diffusée gratuitement par le biais de la distribution ")
@@ -2198,15 +2249,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.settings.setValue("Affichage/Contrib_alert", 0)
         return physiocap_message_box( self, aText, "information")
  
-    def slot_bascule_onglet_vignoble(self):
-        """ Changer acces à l'onglet vignoble"""
-        if  self.radioButtonOnglet.isChecked():
-            self.groupBoxVignoble.setEnabled( True)
-            self.groupBoxAgroSaisie.setEnabled( True)
-        else:
-            self.groupBoxVignoble.setEnabled( False)    
-            self.groupBoxAgroSaisie.setEnabled( False) 
-            
     def slot_GPS_alert( self):
         """ Quand GPS est choisi, on monte une alerte """
         # Vérifier si le message a déjà été donné
@@ -2275,7 +2317,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.settings.setValue("Physiocap/histogrammes", TRACE_HISTO)
                    
         # ########################################
-        # Gestion de capture des erreurs Physiocap
+        # Gestion de capture des erreurs et du filtre des données brutes Physiocap
         # ########################################
         try:
             filtreur = PhysiocapFiltrer( self)
@@ -2362,5 +2404,10 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         if ( retour == 0 ):
             physiocap_log( self.tr( "** {0} est prêt pour calcul Inter parcellaire - Onglet Parcelles").\
                 format( PHYSIOCAP_UNI), leModeDeTrace)
+
+            # Si OK : chercher à enchainer vers Intra
+            if  self.groupBoxTroisActions.isChecked():
+                self.slot_INTER_moyennes_parcelles()
+
         return retour
 

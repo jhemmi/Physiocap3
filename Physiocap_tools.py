@@ -43,7 +43,8 @@ from PyQt5.QtCore import QVariant
 from qgis.core import (Qgis, QgsDistanceArea, QgsProject, QgsMessageLog, \
         QgsMapLayer, QgsCoordinateReferenceSystem, QgsFields, QgsField, \
         QgsFeature, QgsGeometry, QgsPoint, QgsPointXY,  \
-        QgsVectorFileWriter, QgsWkbTypes)
+        QgsVectorFileWriter, QgsWkbTypes, QgsVectorLayer, 
+        QgsProcessingFeedback)
 from PyQt5.QtWidgets import QMessageBox
 
 try :
@@ -108,7 +109,8 @@ def physiocap_log( aText, modeTrace = TRACE_PAS,  level = "INFO"):
     Il permet de supprimer les traces détaillées en Prodcution"""
     journal_nom = "{0} Informations".format( PHYSIOCAP_UNI)
     if modeTrace == TRACE_PAS:
-        QgsMessageLog.logMessage( "Pas de trace : " + aText,  journal_nom, Qgis.Info)
+        if LE_MODE_PROD == "NO":
+            QgsMessageLog.logMessage( "Pas de trace : " + aText,  journal_nom, Qgis.Info)
         return
     elif modeTrace == TRACE_MINI:
         # On monte warning et message debut et fin
@@ -145,6 +147,523 @@ def physiocap_error( self, aText, level ="WARNING"):
     toolsObject.physiocap_tools_log_error( aText, level)
     return -1      
 
+
+# Vignobles Moyennes et CSVT
+def quelles_informations_moyennes():
+    """ Mettre les info moyennes dans l'ordre et dans un dict entete """ 
+    champsMoyenneOrdonnes = [ "DIAM", "VITESSE", "BIOM", "NBSARMM2", "BIOMGCEP", "NBSARMCEP"]
+    listeEnteteMoyenne = [ "DIAM_AVG", "VITESSE_AVG", "BIOM", "NBSARMM2", "BIOMGCEP", "NBSARMCEP"]
+    return champsMoyenneOrdonnes, listeEnteteMoyenne
+
+def quelles_informations_vignoble_agro( self):
+    """ Mettre les info vignobles dans l'ordre et dans deux dict 
+        un pour les entete et type, 
+        l'autre pour les valeurs """ 
+    valeurNA = ""
+    dictInfoVignoble = {}
+    dictEnteteVignoble = {}  # dict de liste [ "nom champ csv", "type_QGIS", "champ shp"] 
+    # pour entete manque pH non demandé et CaCO3 non necessaire
+    champsVignobleOrdonnes = [ "nom_parcelle", "commune", "region", "cepage", "clone", "porte_greffe", "annee_plantation", \
+        "interrangs", "interceps", "taille", "argile", "mo",  "CN", "rendement", "poids_moy_grappes", "nb_grappes"]
+    
+    dictEnteteVignoble[ "nom_parcelle"] = [ "Nom_Parcel", "chaine", "Nom_Parcel"]
+    dictEnteteVignoble[ "commune"]      = [ "Commune", "chaine", "Commune"]
+    dictEnteteVignoble[ "region"]       = [ "Region", "chaine", "Region"]
+    dictEnteteVignoble[ "cepage"]       = [ "Cepage", "chaine", "Cepage"]
+    dictEnteteVignoble[ "clone"]        = [ "Clone", "chaine", "Clone"]
+    dictEnteteVignoble[ "porte_greffe"] = [ "Porte_gref", "chaine", "Porte_gref"]
+    dictEnteteVignoble[ "annee_plantation"] = [ "Annee_plan", "entier", "Annee_plan"]
+    #dictEnteteVignoble[ "details"] = []
+    #dictEnteteVignoble[ "max_sarments_metre"] = []
+    dictEnteteVignoble[ "interrangs"]   = [ "interrang (cm)", "entier", "interrang"]
+    dictEnteteVignoble[ "interceps"]    = [ "intercep (cm)" , "entier",  "intercep"]
+    #dictEnteteVignoble[ "hauteur"] = []
+    #dictEnteteVignoble[ "densite"] = []
+    dictEnteteVignoble[ "taille"]       = [ "Type_taill", "chaine", "Type_taill" ]
+    dictEnteteVignoble[ "argile"]       = [ "Sol_argile", "entier",  "Sol_argile"]
+    dictEnteteVignoble[ "mo"]       = [ "Sol_MO", "reel.1",  "Sol_MO"]      
+    dictEnteteVignoble[ "CN"]       = [ "Sol_CsurN", "entier",  "Sol_CsurN"]      
+    #dictEnteteVignoble[ "sol_PH"]       = []   
+    dictEnteteVignoble[ "rendement"]       = [ "Rendement", "reel",  "Rendement"]      
+    dictEnteteVignoble[ "poids_moy_grappes"]       = [ "Poids_moye", "entier",  "Poids_moye"]      
+    dictEnteteVignoble[ "nb_grappes"]       = [ "Nombre_gra", "entier",  "Nombre_gra"]      
+    
+    dictInfoVignoble[ "nom_parcelle"]   = self.lineEditNomParcelle.text()
+    dictInfoVignoble[ "commune"]        = self.comboBoxCommune.currentText()
+    dictInfoVignoble[ "region"]         = self.comboBoxRegion.currentText()
+    dictInfoVignoble[ "cepage"]         = self.comboBoxCepage.currentText()
+    dictInfoVignoble[ "clone"]          = self.lineEditClone.text()
+    dictInfoVignoble[ "porte_greffe"]   = self.lineEditPorteGreffe.text()
+    dictInfoVignoble[ "annee_plantation"] = int( self.spinBoxAnneePlant.value())
+    details = "YES" if self.groupBoxDetailVignoble.isChecked() else "NO"
+    dictInfoVignoble[ "details"] = details
+    dictInfoVignoble[ "max_sarments_metre"]  = int( self.spinBoxMaxSarmentsParMetre.value())
+    dictInfoVignoble[ "interrangs"]          = int( self.spinBoxInterrangs.value())
+    dictInfoVignoble[ "interceps"]           = int( self.spinBoxInterceps.value())
+    dictInfoVignoble[ "hauteur"]             = int( self.spinBoxHauteur.value())
+    dictInfoVignoble[ "densite"]             = float( self.doubleSpinBoxDensite.value())
+    dictInfoVignoble[ "taille"]              = self.comboBoxTaille.currentText()
+    if self.spinBoxArgile.value() != 'Inconnu':
+        dictInfoVignoble[ "argile"] = int( self.spinBoxArgile.value())
+    else:
+        dictInfoVignoble[ "argile"] = valeurNA
+    if self.doubleSpinBoxMO.value() != 'Inconnu':
+        dictInfoVignoble[ "mo"] = float( self.doubleSpinBoxMO.value())
+    else:
+        dictInfoVignoble[ "mo"] = valeurNA
+    if self.spinBoxCsurN.value() != 'Inconnu':
+        dictInfoVignoble[ "CN"] = int( self.spinBoxCsurN.value())
+    else:
+        dictInfoVignoble[ "CN"] = valeurNA    
+    if self.doubleSpinBoxPH.value() != 'Inconnu':
+        dictInfoVignoble[ "PH"] = float( self.doubleSpinBoxPH.value())
+    else:
+        dictInfoVignoble[ "PH"] = valeurNA
+    if self.doubleSpinBoxRendement.value() != 'Inconnu':
+        dictInfoVignoble[ "rendement"] = float( self.doubleSpinBoxRendement.value())
+    else:
+        dictInfoVignoble[ "rendement"] = valeurNA
+    if self.spinBoxPoidsMoyenGrappes.value() != 'Inconnu':
+        dictInfoVignoble[ "poids_moy_grappes"] = int( self.spinBoxPoidsMoyenGrappes.value())
+    else:
+        dictInfoVignoble[ "poids_moy_grappes"] = valeurNA    
+    if self.spinBoxNbGrappes.value() != 'Inconnu':
+        dictInfoVignoble[ "nb_grappes"] = int( self.spinBoxNbGrappes.value())
+    else:
+        dictInfoVignoble[ "nb_grappes"] = valeurNA    
+### Non utilisé dans CSVT ou shape 
+###            self.settings.setValue("Physiocap/rendement", self.lineEditRendement.text())#___definir les valeurs des variables : rendement annee courante
+###            self.settings.setValue("Physiocap/nb_grappes", self.lineEditNbGrappes.text())#___definir les valeurs des variables : nombre de grappes annee courante
+###            self.settings.setValue("Physiocap/poids_moy_grappes", self.lineEditPoidsMoyGrap.text())#___definir les valeurs des variables : poids moyen de grappes annee courante
+###            self.settings.setValue("Physiocap/rendement_1", self.lineEditRendement_1.text())#___definir les valeurs des variables : rendement annee precedente
+###            self.settings.setValue("Physiocap/nb_grappes_1", self.lineEditNbGrappes_1.text())#___definir les valeurs des variables : nombre de grappes annee precedente
+###            self.settings.setValue("Physiocap/poids_moy_grappes_1",self.lineEditPoidsMoyGrap_1.text())#___definir les valeurs des variables : poids moyen de grappes annee precedente
+###            liste_apports_nb=len(TYPE_APPORTS)
+###            choix_user_ind=self.comboBoxTypeApportFert.currentIndex()
+###            if(choix_user_ind==liste_apports_nb-1):
+###                self.settings.setValue("Physiocap/type_apports", self.lineEditTypeApportFert_Autres.text().replace(',',' '))#___definir les valeurs des variables : apport ,cas autre à préciser
+###            else : 
+###                self.settings.setValue("Physiocap/type_apports", self.comboBoxTypeApportFert.currentText())#___definir les valeurs des variables : type apports fertilisation
+###            self.settings.setValue("Physiocap/produit",self.lineEditProduitFert.text())#___definir les valeurs des variables : produit
+###            self.settings.setValue("Physiocap/dose", self.lineEditDoseFert.text())#___definir les valeurs des variables : dose(t/ha)
+###            liste_strategies_nb=len(ENTRETIEN_SOL)
+###            choix_user_ind=self.comboBoxStrategieSol.currentIndex()
+###            if(choix_user_ind==liste_strategies_nb-1):
+###                self.settings.setValue("Physiocap/strategie_entretien_sol", self.lineEditStrategieSol_Autres.text().replace(',',' '))#___definir les valeurs des variables : strategie entretien sol , cas autre à préciser
+###            else : 
+###                self.settings.setValue("Physiocap/strategie_entretien_sol", self.comboBoxStrategieSol.currentText())#___definir les valeurs des variables : strategie entretien de sol
+###            self.settings.setValue("Physiocap/etat_sanitaire", str(self.spinBoxEtatSanitaire_intensite.value())+"*"+str(self.spinBoxEtatSanitaire_frequence.value()))#___definir les valeurs des variables : etat sanitaire intensité*frequance
+    listeEntete = []
+    listeInfo = []
+    for unChamp in champsVignobleOrdonnes:
+        listeEntete.append( dictEnteteVignoble[ unChamp][0])
+        listeInfo.append( dictInfoVignoble[ unChamp])
+    physiocap_log( "La Liste Agro : {}".format(listeInfo), leModeTrace)
+    return champsVignobleOrdonnes, dictInfoVignoble, listeInfo,  dictEnteteVignoble, listeEntete
+
+def noms_CSVT_contour_genere( self):
+    """Rend les nom du CSVT et du contour"""
+    leModeDeTrace = self.fieldComboModeTrace.currentText()
+    derniere_session = self.lineEditDerniereSession.text()
+    chemin_session = os.path.join( self.lineEditDirectoryFiltre.text(), derniere_session)
+    quel_vecteur_demande = self.fieldComboFormats.currentText()
+    version_3 = "YES" if self.checkBoxV3.isChecked() else "NO"
+    # Nom du contour et du CSVT
+    if version_3 == "YES":
+        chemin_MID = os.path.join( chemin_session, REPERTOIRE_SOURCE_V3)
+        chemin_vecteur = os.path.join( chemin_session, REPERTOIRE_INTER_V3)        
+    else:
+        chemin_MID = os.path.join( chemin_session, REPERTOIRE_SOURCES)
+        chemin_vecteur = os.path.join( chemin_session, REPERTOIRE_SHAPEFILE)        
+    # TODO : CONTOUR passer le nom de la parcelle (agro) pour le nom et rendre en sortie
+    if quel_vecteur_demande == SHAPEFILE_NOM:
+        nomLongContour = os.path.join( chemin_MID, FICHIER_CONTOUR_GENERE + EXTENSION_SHP)
+    else:
+        physiocap_log( self.tr( "{0} ne reconnait pas les vecteurs {1} ").\
+                format( PHYSIOCAP_UNI, quel_vecteur_demande), leModeDeTrace)
+        raise physiocap_exception_vecteur_type_inconnu( quel_vecteur_demande)
+    nom_CSVT = os.path.join( chemin_vecteur, CVST_VIGNOBLE + EXTENSION_CSV)
+
+    return derniere_session, nom_CSVT, nomLongContour
+    
+def generer_contour_depuis_points( self, nom_fichier_shape_sans_0):
+    """ Générer un Contour à partir des points bruts"""
+
+    version_3 = "YES" if self.checkBoxV3.isChecked() else "NO"
+    # Vérifier disponibilité de processing
+    try :
+        import processing
+    except ImportError:
+        physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
+                format( PHYSIOCAP_UNI, self.tr("Traitement")), leModeDeTrace)
+        raise physiocap_exception_no_processing( "Pas d'extension Traitement")
+    
+    # Assert points existent bien
+    if ( os.path.exists( nom_fichier_shape_sans_0)):
+        champsVignobleOrdonnes, dictInfoVignobleAgro, _, dictEnteteVignoble, _ = \
+            quelles_informations_vignoble_agro(self)
+        physiocap_log( 'Information vignoble et agro == Nom de parcelle contiendra Entete "{}" et Info "{}"'.\
+            format( champsVignobleOrdonnes[0], dictInfoVignobleAgro[ champsVignobleOrdonnes[0]]))
+        chemin_vecteur = os.path.dirname( nom_fichier_shape_sans_0)
+        if version_3 == "YES":
+            chemin_acces = os.path.join( os.path.dirname( chemin_vecteur), REPERTOIRE_SOURCE_V3)
+        else:
+            chemin_acces = os.path.join( os.path.dirname( chemin_vecteur), REPERTOIRE_SOURCES)
+        chemin_fichier_convex = os.path.join( chemin_acces,  FICHIER_CONTOUR_GENERE + EXTENSION_SHP)
+        mon_feedback = QgsProcessingFeedback()
+        params_algo = { 'FIELD' : None, 
+         'INPUT' : nom_fichier_shape_sans_0, 
+         'OUTPUT' : chemin_fichier_convex, 
+         'TYPE' : 3 } # Enveloppe convexe
+        textes_sortie_algo={}
+        algo = "qgis:minimumboundinggeometry"
+        textes_sortie_algo = processing.run( algo, params_algo, feedback=mon_feedback)        
+        physiocap_log( "Sortie algo {} contient {}".format( algo, textes_sortie_algo))
+        # Changer attributs GID=0 et dictInfoVignobleAgro[ champsVignobleTri[0]]
+        # TODO : ICICCI
+        self.settings.setValue("Physiocap/chemin_contour_genere", chemin_fichier_convex)
+    else:
+        msg = "Erreur durant génération automatique de contour : fichier de point {} n'existe pas\n".\
+            format( nom_fichier_shape_sans_0)
+        physiocap_error( self, msg )
+        err.write( str( msg) ) # on écrit la ligne dans le fichier ERREUR
+    return chemin_fichier_convex
+
+def inclure_vignoble_sur_contour(self, chemin_fichier_convex, ss_groupe=None):
+
+    if ( os.path.exists( chemin_fichier_convex)):
+
+    ###    geom_wkt = ""
+
+        # delete fields and leave just the geometry
+    ###    fields = convexhull_layer.dataProvider().fields()
+        count = 0
+        fieldsList = list()
+        for field in convexhull_layer.pendingFields():
+            fieldsList.append(count)
+            count += 1
+        convexhull_layer.dataProvider().deleteAttributes(fieldsList)
+        convexhull_layer.updateFields()
+        # add the layer to the legend
+        convexhull_layer.setLayerTransparency(60)
+        QgsMapLayerRegistry.instance().addMapLayer(convexhull_layer, False)
+        ss_groupe.addLayer(convexhull_layer)
+        # iface.addVectorLayer(chemin_fichier_convex, 'contour_genere', 'ogr')
+        # get the geometry from the layer and paste it in the csv file
+        for feature in convexhull_layer.getFeatures():
+            buff = feature.geometry().buffer(0.5, 1)
+            convexhull_layer.dataProvider().changeGeometryValues({feature.id(): buff})
+###        geom_wkt = str(feature.geometry().exportToWkt())
+
+###            # add attributes filled by the user
+###            convexhull_layer.startEditing()
+###
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Nom_Parcel", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Commune", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Region", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Cepage", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Clone", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Porte_gref", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Annee_plan", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Haut_rogn", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Dens_plan", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Type_tail", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Sol_argile", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Sol_MO", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Sol_CaCo3", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Rendement", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Poi_m_grap", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Nb_grap", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Rend_an-1", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Poi_m_gra1", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Nbgrap-1", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("type_appor", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Fert_prod", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Fert_dose", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("entr_sol", QVariant.String)])
+###            convexhull_layer.dataProvider().addAttributes([QgsField("Etat_sanit", QVariant.String)])
+###
+###            convexhull_layer.updateFields()
+###
+###            for feat in convexhull_layer.getFeatures():
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Nom_Parcel'),
+###                                                      nom_parcelle.encode("Utf-8"))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Commune'),
+###                                                      comuune.encode("Utf-8"))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Region'),
+###                                                      region.encode("Utf-8"))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Cepage'),
+###                                                      cepage.encode("Utf-8"))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Clone'),
+###                                                      clone.encode("Utf-8"))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Porte_gref'),
+###                                                      str(porte_greffe.encode("Utf-8")))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Annee_plan'),
+###                                                      str(annee_plant))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Haut_rogn'),
+###                                                      str(hauteur_rognage))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Dens_plan'),
+###                                                      str(densite_plantation))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Type_tail'),
+###                                                      type_taille.encode("Utf-8"))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Sol_argile'),
+###                                                      str(sol_argile))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Sol_MO'),
+###                                                      str(sol_mo))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Sol_CaCo3'),
+###                                                      str(sol_caco3))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Rendement'),
+###                                                      str(rendement))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Poi_m_grap'),
+###                                                      str(poids_moy_grappes))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Nb_grap'),
+###                                                      str(nb_grappes))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Rend_an-1'),
+###                                                      str(rendement_1))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Poi_m_gra1'),
+###                                                      str(poids_moy_grappes_1))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Nbgrap-1'),
+###                                                      str(nb_grappes_1))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('type_appor'),
+###                                                      str(type_apports.encode("Utf-8")))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Fert_prod'),
+###                                                      str(produit.encode("Utf-8")))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Fert_dose'),
+###                                                      str(dose))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('entr_sol'),
+###                                                      str(strategie_entretien_sol.encode("Utf-8")))
+###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Etat_sanit'),
+###                                                      str(etat_sanitaire.encode("Utf-8")))
+###
+###            convexhull_layer.commitChanges()
+        # get the feature geometry and copy the WKT
+        # ecriture de l'entête
+##        # fichier_synthese_CSV.write("Nom_Parcelle; Commune ; Region ; Cepage; Clone; Porte_greffe; \
+##        Annee_plantation; Hauteur_rognage; Densite_plantation; Type_taille; Sol_argile; Sol_MO; Sol_CaCo3;\
+##        Rendement; Poids_moyen_grappes; Nombre_grappes; Rendemenr_annee-1; Poids_moyen_grappes-1; Nombre_grappes-1;\
+##        Fert_type_apports; Fert_produit; Fert_dose; Strategie_entretien_sol; \
+##        Etat_sanitaire; Nb_sarments_moy; Section_moy; Biomasse_moy "+"\n")
+    else:
+        msg = "Erreur durant génération automatique de contour : fichier de point {} n'existe pas\n".\
+            format( nom_fichier_shape_sans_0)
+        physiocap_error( self, msg )
+        err.write( str( msg) ) # on écrit la ligne dans le fichier ERREUR
+    return chemin_fichier_convex
+
+  
+# Fonction pour générer le CSVT : csv avec info agro, moyenne et geometrie en WKT
+def creer_csvt_source_onglet( self, les_parcelles,  les_parcelles_ID, les_geoms_poly, les_moyennes_par_contour):
+    """Créer CSVT avec les informations de moyenne & l'onglet Agronomie"""
+    leModeDeTrace = self.fieldComboModeTrace.currentText()
+
+    # TODO CSVT CONTOURS : Faire une boucle pour tous les contours
+    # Récupération des moyennes du contour
+    lesMoyennesOrdonnees = []
+    champsMoyenneOrdonnes, listeEnteteMoyenne = quelles_informations_moyennes()    
+    physiocap_log ( "Physiocap moyennes par contour : {}".format( les_moyennes_par_contour), leModeDeTrace)
+    for parcelleId in les_parcelles_ID[0]:
+        physiocap_log ( "Physiocap moyenne de la {} ieme parcelle {} a pour diam : {}".
+            format( les_parcelles[parcelleId], les_moyennes_par_contour[parcelleId].get( 'diam')), leModeDeTrace)
+        geomContour = les_geoms_poly[parcelleId]
+        for unChamp in champsMoyenneOrdonnes:
+            lesMoyennesOrdonnees.append( les_moyennes_par_contour[parcelleId].get( unChamp)) 
+    physiocap_log ( "Physiocap moyennes du contour {}: {}".\
+        format( les_parcelles[parcelleId], lesMoyennesOrdonnees), leModeDeTrace)
+    
+    # Calculer geomWKT du contour généré
+    #geomWKT = str( feature.geometry().asWkt())
+    geomWKT = str( geomContour.asWkt())
+
+    _, nom_CSVT, nom_contour = noms_CSVT_contour_genere( self)
+    champsVignobleOrdonnes, dictInfoVignoble, listeInfo,  dictEnteteVignoble, listeEntete = \
+        quelles_informations_vignoble_agro( self)
+    
+    # ASSERT listes ont la même taille
+    if (len( listeEntete) != len( listeInfo)):
+        # TODO warning à logguer
+        uMsg = "Liste entete CSVT ({}) et info vignoble ({}) n'ont pas la même taille".\
+            format( len( listeEntete), len( listeInfo))
+        physiocap_log( uMsg)
+        return physiocap_error( self, uMsg)
+        
+    # ASSERT Contour existe
+    if os.path.isfile( nom_contour):
+        # ASSERT Le fichier de synthese existe
+        if os.path.isfile( nom_CSVT):
+            uMsg =u"Le CSVT " + nom_CSVT + " existe dejà"
+            physiocap_log( uMsg)
+            return physiocap_error( self, uMsg)
+        else:
+            # geom provient de contour
+            # Ecriture CSVT avec agro et moyenne
+            fichier_CSVT = open( nom_CSVT, "w")
+        #try:
+            writerCSVT = csv.writer( fichier_CSVT, delimiter=';')
+###        # TODO Année n'est pas celle de la date du jour 
+###        today = date.today()
+###        annee = today.strftime("%Y")
+            # Ecriture de l'entête et des infos vignobles
+            # TODO INTRA MOYENNE Ajouter infos moyennes
+            writerCSVT.writerow( listeEntete + listeEnteteMoyenne + ["geomWKT"])
+            writerCSVT.writerow( listeInfo  + lesMoyennesOrdonnees + [ geomWKT])
+            fichier_CSVT.close()
+    else:
+        uMsg =u"Le contour demandé " + nom_contour + " n'existe pas"
+        physiocap_log( uMsg)
+        return physiocap_error( self, uMsg)
+    
+    return 0
+    
+    # Version __Nadia
+########            ("Nom_Parcelle","Commune ","Region ","Cepage","Clone","Porte_greffe","Annee_plantation",\
+########                                  "Hauteur_rognage","Densite_plantation","Type_taille","Sol_argile","Sol_MO",\
+########                                  "Sol_CaCo3","Rendement","Poids_moyen_grappes","Nombre_grappes","Rendemenr_annee-1",\
+########                                  "Poids_moyen_grappes-1","Nombre_grappes-1","Fert_type_apports",\
+########                                  "Fert_produit","Fert_dose","Strategie_entretien_sol","Etat_sanitaire","NbsarmMoy"+annee,"SectMoy"+annee,"BiomMoy"+annee,"vitMoy"+annee,"geomWKT"))
+########            
+
+            
+######            nom_parcelle=self.settings.value("Physiocap/nom_parcelle", "xx")#___recuperer les valeurs des variables : nom de la parcelle
+######            annee_plant=self.settings.value("Physiocap/annee_plant","xx")#___recuperer les valeurs des variables : année de plantation
+######            comuune=self.settings.value("Physiocap/comuune", "xx")#___recuperer les valeurs des variables : commune
+######            region=self.settings.value("Physiocap/region","xx")#___recuperer les valeurs des variables : region
+######            clone=self.settings.value("Physiocap/clone","xx")#___définir les valeurs des variables : clone
+######            porte_greffe=self.settings.value("Physiocap/porte_greffe", "xx")#___recuperer les valeurs des variables : porte-greffe
+######            sol_argile=self.settings.value("Physiocap/sol_argile","xx")#___recuperer les valeurs des variables : sol pourcentage argile
+######            sol_mo=self.settings.value("Physiocap/sol_mo","xx")#___recuperer les valeurs des variables : sol pourcentage MO
+######            sol_caco3=self.settings.value("Physiocap/sol_caco3","xx")#___recuperer les valeurs des variables : sol pourcentage CaCO3
+######            rendement=self.settings.value("Physiocap/rendement", "xx")#___recuperer les valeurs des variables : rendement annee courante
+######            nb_grappes=self.settings.value("Physiocap/nb_grappes", "xx")#___recuperer les valeurs des variables : nombre de grappes annee courante
+######            poids_moy_grappes=self.settings.value("Physiocap/poids_moy_grappes", "xx")#___recuperer les valeurs des variables : poids moyen de grappes annee courante
+######            rendement_1=self.settings.value("Physiocap/rendement_1","xx")#___recuperer les valeurs des variables : rendement annee precedente
+######            nb_grappes_1=self.settings.value("Physiocap/nb_grappes_1", "xx")#___recuperer les valeurs des variables : nombre de grappes annee precedente
+######            poids_moy_grappes_1=self.settings.value("Physiocap/poids_moy_grappes_1", "xx")#___recuperer les valeurs des variables : poids moyen de grappes annee precedente
+######            type_apports=self.settings.value("Physiocap/type_apports","xx")#___recuperer les valeurs des variables : type apports fertilisation
+######            produit=self.settings.value("Physiocap/produit", "xx")#___recuperer les valeurs des variables : produit
+######            dose=self.settings.value("Physiocap/dose", "xx")#___recuperer les valeurs des variables : dose(t/ha)
+######            strategie_entretien_sol=self.settings.value("Physiocap/strategie_entretien_sol", "xx")#___recuperer les valeurs des variables : strategie entretien de sol
+######            etat_sanitaire=self.settings.value("Physiocap/etat_sanitaire", "xx")#___recuperer les valeurs des variables : etat sanitaire intensité*frequance
+######            cepage=self.settings.value("Physiocap/leCepage2", "xx")#___recuperer les valeurs des variables : etat sanitaire intensité*frequance
+######            hauteur_rognage=self.settings.value("Physiocap/hauteur", "xx")#___recuperer les valeurs des variables : etat sanitaire intensité*frequance
+######            densite_plantation=self.settings.value("Physiocap/densite", "xx")#___recuperer les valeurs des variables : etat sanitaire intensité*frequance
+######            type_taille=self.settings.value("Physiocap/laTaille", "xx")#___recuperer les valeurs des variables : etat sanitaire intensité*frequance
+######            diamshp_moy=self.settings.value("Physiocap/diamshp_moy", "xx") #___recuperer les valeurs des variables : diametre moyen
+######            nbsarmshp_moy=self.settings.value("Physiocap/nbsarmshp_moy", "xx") #___recuperer les valeurs des variables : nbsarmshp moyen
+######            biomshp_moy=self.settings.value("Physiocap/biomshp_moy","xx") #___recuperer les valeurs des variables : biomshp moyen
+######            vitesseshp_moy=self.settings.value("Physiocap/vitesseshp","xx")#___recuperer les valeurs des varoables : vitesse moyenne
+######            generer_contour=self.settings.value("Physiocap/generer_contour","xx")#___recuperer les valeurs des varoables : vitesse moyenne
+######            geom_wkt=""
+######            (chemin_acces, file_name)=os.path.split(nom_fichier_shape_sans_0)
+######            chemin_fichier_convex=chemin_acces+"\contour_genere.shp"
+######            # get the feature geometry and copy the WKT
+
+
+        
+######            if self.checkBoxGenererContour.isChecked():
+######                #recuperer le WKT du fichier genere
+######                chemin_contour_genere=self.settings.value("Physiocap/chemin_contour_genere","xx")
+######                contour_layer1 = QgsVectorLayer(chemin_contour_genere, 'contour_genere', 'ogr')
+######                for feature in contour_layer1.getFeatures():
+######                    geom_wkt = str(feature.geometry().exportToWkt())
+######            else :
+######                #recuperer le WKT a partir du fichier selectionné dans la liste des contours
+######                chemin_contour_intra = self.settings.value("Physiocap/layer_intra", "xx")
+######                chemin_contour_intra2 = chemin_contour_intra.split('|')
+######                chemin_contour_intra3 = chemin_contour_intra2[0]
+######                contour_layer2 = QgsVectorLayer(chemin_contour_intra3, 'layer_intra', 'ogr')
+######                for feature in contour_layer2.getFeatures():
+######                    geom_wkt = str(feature.geometry().exportToWkt())
+
+################
+################        # TODO : clone du calcul inter
+################        if infoAgro=="Contour":
+################            #get selected layer
+################            selected_layer=self.comboBoxContours.currentText()
+################            liste_fields_names=[]
+################            liste_fields_values=[]
+################            if selected_layer :
+################                #write rows from colomns
+################
+################                nom_complet_poly = self.comboBoxContours.currentText().split( SEPARATEUR_NOEUD)
+################                inputLayer = nom_complet_poly[0]
+################                layer = self.lister_nom_couches( inputLayer)
+################                if layer is not None:
+################                    k=0#indice pour parcourir les entites
+################                    for feature in layer.getFeatures():
+################                        k=k+1
+################                    if k==0:
+################                        print ("Le fichier est vide, aucune information ne peut etre extraite")
+################                        physiocap_message_box( self, "Le fichier est vide, aucune information ne peut etre extraite", "information")
+################            else :
+################                print	("Il faut selectionner un fichier shp/si le projet ne contient aucun fichier shapefile , il faut l'ouvrir et ressayer")
+################                physiocap_message_box( self, "Il faut selectionner un fichier shp/si le projet ne contient aucun fichier shapefile , il faut l'ouvrir et ressayer", "information")
+################            #calcul points statistics for polygones pour avoir une moyenne de diam/biomass/nbsarments pour chaque parcelle
+################            # TODO : JH reprendre les chemins non linux
+################            derniereSession=self.settings.value("Physiocap/derniereSession", "xx")
+################            chemin_donnees_cibles=self.lineEditDirectoryFiltre.text()
+################            chemin_entier_projet = os.path.join(chemin_donnees_cibles, derniereSession)
+################            chemin_shapeFiles = os.path.join(chemin_entier_projet, REPERTOIRE_SHAPEFILE)
+################            Nom_Projet=self.lineEditSession.text()
+################            laProjection, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, EPSG_NUMBER = physiocap_quelle_projection_demandee( self)
+################            nom_complet_poly = self.comboBoxContours.currentText().split( SEPARATEUR_NOEUD)
+################            inputLayer = nom_complet_poly[0]
+################            layer = self.lister_nom_couches( inputLayer)
+################            nom_court_shape_sans_0 = Nom_Projet + "_POINTS" + EXT_CRS_SHP
+################            nom_shape_sans_0 = os.path.join(chemin_shapeFiles, nom_court_shape_sans_0)
+###################            stat1="stat1.shp"
+###################            stat2="stat2.shp"
+###################            stat3="stat3.shp"
+###################            stat4="stat4.shp"
+###################            nom_stat1=os.path.join(chemin_shapeFiles,stat1)
+###################            nom_stat2=os.path.join(chemin_shapeFiles, stat2)
+###################            nom_stat3=os.path.join(chemin_shapeFiles, stat3)
+###################            nom_stat4=os.path.join(chemin_shapeFiles, stat4)
+###################            processing.runalg("saga:pointstatisticsforpolygons",nom_shape_sans_0 ,layer.source(),"DIAM",1,False,True,False,False,False,False,False,nom_stat1)
+###################            processing.runalg("saga:pointstatisticsforpolygons",nom_shape_sans_0 ,nom_stat1,"BIOM",1,False,True,False,False,False,False,False,nom_stat2)
+###################            processing.runalg("saga:pointstatisticsforpolygons",nom_shape_sans_0 ,nom_stat2,"NBSARM",1,False,True,False,False,False,False,False,nom_stat3)
+###################            processing.runalg("saga:pointstatisticsforpolygons",nom_shape_sans_0 ,nom_stat3,"VITESSE",1,False,True,False,False,False,False,False,nom_stat4)
+################
+################            #Ajouter les champs diametre,nbsarments et biomasse à la liste pour les ecriredans le fichier CSV
+################            #diamshp_moy=self.settings.value("Physiocap/diamshp_moy", "xx") #___recuperer les valeurs des variables : diametre moyen
+################            #nbsarmshp_moy=self.settings.value("Physiocap/nbsarmshp_moy", "xx") #___recuperer les valeurs des variables : nbsarmshp moyen
+################            #biomshp_moy=self.settings.value("Physiocap/biomshp_moy","xx") #___recuperer les valeurs des variables : biomshp moyen
+################            #liste_fields_names.append("Nb_sarments_moy")
+################            #liste_fields_names.append("Section_moy")
+################            #liste_fields_names.append("Biomasse_moy")
+################            #liste_fields_values.append(nbsarmshp_moy)
+################            #liste_fields_values.append(diamshp_moy)
+################            #liste_fields_values.append(biomshp_moy)
+################
+#################            chemin_stat_vector=nom_stat4.replace('\\','/')
+#################            newVector = QgsVectorLayer( chemin_stat_vector, 'StatisticsCSV', 'ogr')
+################            #QgsMapLayerRegistry.instance().addMapLayer(newVector)
+#################            for index, field in enumerate(newVector.dataProvider().fields()):
+#################                        mon_nom = field.name().encode("Utf-8")
+#################                        if "DIAM" in mon_nom or "BIOM" in mon_nom or  "NBSARM" in mon_nom or  "VITESSE" in mon_nom:
+#################                            liste_fields_names.append(mon_nom+annee)
+#################                        else:
+#################                            liste_fields_names.append(mon_nom)
+#################            liste_fields_names.append("GeomWKT")
+#################            writer1.writerow(liste_fields_names)
+################
+################            for feature in newVector.getFeatures():
+################                for j in range(len(liste_fields_names)-1):
+################                    liste_fields_values.append(str(feature[j]).encode("Utf-8"))
+################                    #liste_fields_values.append((feature[j]))
+################                liste_fields_values.append(str(feature.geometry().exportToWkt()))
+################                writer1.writerow(liste_fields_values)
+################                del liste_fields_values [:]
+################                
+################        #except:
+################            #msg = "Erreur bloquante durant l ecriture du fichier CSV\n"
+################            #physiocap_error( self, msg )
+################            #return -1
+################
+################        fichier_synthese_CSV.close()
+        
+################         return 0
+
+# TOOLS
 def physiocap_write_in_synthese( self, aText):
     """Write a text in the results list"""
     self.textEditSynthese.insertPlainText( aText)   
@@ -188,7 +707,7 @@ def physiocap_create_projection_file( prj_name,  laProjection):
     prj.close()
     return
     
-def  physiocap_nom_entite_sans_pb_caractere( un_nom,  mon_unique = 0):
+def physiocap_nom_entite_sans_pb_caractere( un_nom,  mon_unique = 0):
     """Change la chaine un_nom selon qu'elle contient ou non le caractère ' ou blanc"""
     ## Cela peut ne rien faire
     return un_nom.replace(" ",SEPARATEUR_).replace("\'", SEPARATEUR_)
@@ -201,7 +720,7 @@ def  physiocap_nom_entite_sans_pb_caractere( un_nom,  mon_unique = 0):
 #        # on veut un nom unique
 #        return PHYSIOCAP_UNI + SEPARATEUR_+ un_nom.replace("\'", "") + SEPARATEUR_ + str( unique)
      
-def  physiocap_nom_entite_avec_pb_caractere( un_nom, un_texte = "GDAL"):
+def physiocap_nom_entite_avec_pb_caractere( un_nom, un_texte = "GDAL"):
     """rend True si la chaine un_nom contient un caractère ' problématique pour la librairie : un_texte"""
     if un_texte == "GDAL" and type(un_nom) == str:
         # Tester si une cote '
@@ -299,58 +818,7 @@ def physiocap_get_layer_by_ID( layerID):
         physiocap_log( "Aucune couche retrouvée pour ID : {0}".\
             format( ( str( layerID))), leModeTrace)
         return None
-
-def physiocap_quelles_informations_vignoble_agro( self):
-    """ Mettre les info vignobles dans un dict """ 
-    infoVignoble = {}
-    infoVignoble[ "nom_parcelle"] = self.lineEditNomParcelle.text()
-    details = "YES" if self.groupBoxDetailVignoble.isChecked() else "NO"
-    infoVignoble[ "details"] = details
-    infoVignoble[ "max_sarments_metre"] = float( self.spinBoxMaxSarmentsParMetre.value())
-    infoVignoble[ "interrangs"] = float( self.spinBoxInterrangs.value())
-    infoVignoble[ "interceps"] = float( self.spinBoxInterceps.value())
-    infoVignoble[ "hauteur"] = float( self.spinBoxHauteur.value())
-    infoVignoble[ "densite"] = float( self.doubleSpinBoxDensite.value())
-    infoVignoble[ "le_cepage"] = self.comboBoxCepage.currentText()
-    infoVignoble[ "la_taille"] = self.comboBoxTaille.currentText()
-    #        # Informations agronomiques ___Nadia___
-#        if self.radioButtonInfoRenseign.isChecked():
-#            infoAgro = "Renseign"
-
-    #infoVignoble[ ""] = 
-#            self.settings.setValue("Physiocap/info_agro", infoAgro)#___definir les valeurs des variables : details : yes/no
-#            self.settings.setValue("Physiocap/nom_parcelle", self.lineEditNomParcelle.text())#___definir les valeurs des variables : nom de la parcelle 
-#            self.settings.setValue("Physiocap/annee_plant", int( self.spinBoxAnneePlant.value()))#___definir les valeurs des variables : année de plantation
-#            self.settings.setValue("Physiocap/comuune",  self.comboBoxCommune.currentText())#___definir les valeurs des variables : commune
-#            self.settings.setValue("Physiocap/region",  self.lineEditRegion.text())#___definir les valeurs des variables : region
-#            self.settings.setValue("Physiocap/clone",self.lineEditClone.text())#___définir les valeurs des variables : clone
-#            self.settings.setValue("Physiocap/porte_greffe", self.lineEditPorteGreffe.text())#___definir les valeurs des variables : porte-greffe
-#            self.settings.setValue("Physiocap/sol_argile", self.lineEditSolArgile.text())#___definir les valeurs des variables : sol pourcentage argile
-#            self.settings.setValue("Physiocap/sol_mo", self.lineEditSolMO.text())#___definir les valeurs des variables : sol pourcentage MO
-#            self.settings.setValue("Physiocap/sol_caco3", self.lineEditSolCaCO3.text())#___definir les valeurs des variables : sol pourcentage CaCO3
-#            self.settings.setValue("Physiocap/rendement", self.lineEditRendement.text())#___definir les valeurs des variables : rendement annee courante
-#            self.settings.setValue("Physiocap/nb_grappes", self.lineEditNbGrappes.text())#___definir les valeurs des variables : nombre de grappes annee courante
-#            self.settings.setValue("Physiocap/poids_moy_grappes", self.lineEditPoidsMoyGrap.text())#___definir les valeurs des variables : poids moyen de grappes annee courante
-#            self.settings.setValue("Physiocap/rendement_1", self.lineEditRendement_1.text())#___definir les valeurs des variables : rendement annee precedente
-#            self.settings.setValue("Physiocap/nb_grappes_1", self.lineEditNbGrappes_1.text())#___definir les valeurs des variables : nombre de grappes annee precedente
-#            self.settings.setValue("Physiocap/poids_moy_grappes_1",self.lineEditPoidsMoyGrap_1.text())#___definir les valeurs des variables : poids moyen de grappes annee precedente
-#            liste_apports_nb=len(TYPE_APPORTS)
-#            choix_user_ind=self.comboBoxTypeApportFert.currentIndex()
-#            if(choix_user_ind==liste_apports_nb-1):
-#                self.settings.setValue("Physiocap/type_apports", self.lineEditTypeApportFert_Autres.text().replace(',',' '))#___definir les valeurs des variables : apport ,cas autre à préciser
-#            else : 
-#                self.settings.setValue("Physiocap/type_apports", self.comboBoxTypeApportFert.currentText())#___definir les valeurs des variables : type apports fertilisation
-#            self.settings.setValue("Physiocap/produit",self.lineEditProduitFert.text())#___definir les valeurs des variables : produit
-#            self.settings.setValue("Physiocap/dose", self.lineEditDoseFert.text())#___definir les valeurs des variables : dose(t/ha)
-#            liste_strategies_nb=len(ENTRETIEN_SOL)
-#            choix_user_ind=self.comboBoxStrategieSol.currentIndex()
-#            if(choix_user_ind==liste_strategies_nb-1):
-#                self.settings.setValue("Physiocap/strategie_entretien_sol", self.lineEditStrategieSol_Autres.text().replace(',',' '))#___definir les valeurs des variables : strategie entretien sol , cas autre à préciser
-#            else : 
-#                self.settings.setValue("Physiocap/strategie_entretien_sol", self.comboBoxStrategieSol.currentText())#___definir les valeurs des variables : strategie entretien de sol
-#            self.settings.setValue("Physiocap/etat_sanitaire", str(self.spinBoxEtatSanitaire_intensite.value())+"*"+str(self.spinBoxEtatSanitaire_frequence.value()))#___definir les valeurs des variables : etat sanitaire intensité*frequance
-
-    return infoVignoble
+  
 def physiocap_quelle_projection_et_lib_demandee( self):
     """ Selon la valeur cochée dans le radio de projection 
     positionne laProjection (en QgsCoordinateReferenceSystem, texte et nombre (epsg)

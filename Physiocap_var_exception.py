@@ -71,11 +71,24 @@ PHYSIOCAP_NOM = "Physiocap"
 PHYSIOCAP_NOM_3 = "Physiocap3"
 PHYSIOCAP_UNI = u"\u03D5"
 PHYSIOCAP_WARNING = u"\u26A0"
-PHYSIOCAP_INFO = u"\U0001F6C8"
+PHYSIOCAP_INFO = u"\u2139" 
 PHYSIOCAP_STOP = u"\U0001F6AB"
 PHYSIOCAP_2_ETOILES = "**"
 PHYSIOCAP_2_EGALS = "=="
 PHYSIOCAP_LOG_ERREUR = PHYSIOCAP_WARNING + " " + PHYSIOCAP_UNI + " Erreurs"
+PHYSIOCAP_OK    ="✔️"
+#U_WARNING       =u"\u26A0" #.encode("UTF-8") 
+#E_WARNING       ="⚠️"
+#U_INFO          =u"\u2139"  
+#U_STOP          =u"\U0001F6AB"
+#E_STOP          ="🔥" 
+#E_INTERDIT      ="🛑"
+#E_CLAP          ="🎬"
+#E_PANDAS        ="🐼"
+#U_LIGNE         ="│"
+#U_BRISE         ="〰️"
+#U_LIGNE_TOURNANTE =u"\u21BA"
+#U_CISEAUX       ="✂️"
 
 # Test de robustesse de la gestion des unicodes
 PHYSIOCAP_TEST1 = "ȧƈƈḗƞŧḗḓ ŧḗẋŧ ƒǿř ŧḗşŧīƞɠ"
@@ -84,6 +97,7 @@ PHYSIOCAP_TEST2 = "ℛℯα∂α♭ℓℯ ♭ʊ☂ η☺т Ѧ$☾ℐℐ"
 POSTGRES_NOM = "postgres"
 CSVT_NOM = "CSV avec WKT"
 CSVT_DRIVER = "CSVT"
+CSVT_GEOM = "GeomWKT"  # TODO VERIFIER standard pour QGIS ?
 GEOJSON_NOM = "GeoJSON"
 GEOJSON_DRIVER = "GeoJSON"  # mes choix  RFC7946=YES  WRITE_BBOX=YES  « GeoJSON - Newline Delimited »  defaut COORDINATE_PRECISION=15
 """
@@ -123,7 +137,7 @@ SEPARATEUR_ ="_"
 NOM_PROJET = "PHY" + SEPARATEUR_ # + PHYSIOCAP_TEST4 + SEPARATEUR_
 
 FORMAT_VECTEUR = [ SHAPEFILE_NOM] #,  POSTGRES_NOM] # "memory"]
-#TODO: prod à trancher
+#TODO: PROD liste des formats vecteur en prod à trancher
 if MACHINE == "Linux":
     FORMAT_VECTEUR_V3 = [ SHAPEFILE_NOM,  CSVT_NOM, GEOJSON_NOM, GEOPACKAGE_NOM] #,  "memory"] # POSTGRES_NOM] 
 else:
@@ -167,7 +181,9 @@ FICHIER_HISTO_VITESSE= "histogramme_VITESSE_RAW"  + SUFFIXE_HISTO
 FICHIER_HISTO_DIAMETRE_FILTRE = "histogramme_DIAM_FILTERED" +  SUFFIXE_HISTO
 
 FICHIER_CONTOUR_GENERE="contour_genere"
+CVST_VIGNOBLE="synthese_vignoble"
 REPERTOIRE_SHAPEFILE = "shapefile"
+#REPERTOIRE_SHAPEFILE_V3 = "vecteur"
 
 # TODO : à Vérifier Pas d'affichage des VRT Pas de creation de png sous Linux
 #if MACHINE == "Linux":
@@ -250,7 +266,6 @@ GID_GARDE = "Points gardés"
 GID_SANS_MESURE = "Points du segment sans mesure"
 
 # Inter PARCELLAIRE
-#SHAPE_CONTOURS = '/home/jhemmi/Documents/GIS/SCRIPT/QGIS/PhysiocapAnalyseur/data Cap/Contour.shp'
 SEPARATEUR_NOEUD = "~~"
 NOM_MOYENNE = SEPARATEUR_ + "MOYENNE" + SEPARATEUR_
 VIGNETTES_INTER = "INTER_PARCELLAIRE"
@@ -283,9 +298,10 @@ ATTR_CONTINUE = ["Arrêt si une interpolation existe", \
 ATTRIBUTS_INTRA = ["DIAM", "NBSARM", "BIOM"]
 # Interpolation étendue aux nouveaux attributs de V3
 ATTRIBUTS_V3_INTRA = ["VITESSE", "ALTITUDE", "PDOP", "DISTANCE", "NBSART"]
-ATTRIBUTS_INTRA_DETAILS = ["NBSARMM2", "NBSARCEP","BIOMM2", "BIOMGM2", "BIOMGCEP"]
-# si QGIS & version 3 verifier que ces index n'ont pas bougé avec les nouveau attributs 
-# ATTRIBUTS_INTRA_INDEX = {"DIAM" : 4 ,"NBSARM" : 3 ,"BIOM" : 5,  "NBSARMM2":6, "NBSARCEP":7,"BIOMM2":8, "BIOMGM2":9, "BIOMGCEP":10}
+ATTRIBUTS_INTRA_DETAILS = ["NBSARMM2", "NBSARCEP", "BIOMGCEP"]
+ATTRIBUTS_INTRA_DETAILS_PLUS = ["BIOMM2", "BIOMGM2"]
+### si QGIS & version 3 verifier que ces index n'ont pas bougé avec les nouveau attributs 
+### WHY ATTRIBUTS_INTRA_INDEX = {"DIAM" : 4 ,"NBSARM" : 3 ,"BIOM" : 5,  "NBSARMM2":6, "NBSARCEP":7,"BIOMM2":8, "BIOMGM2":9, "BIOMGCEP":10}
 CHEMIN_TEMPLATES = [ "modeleQgis/Physiocap3", "project_templates/Physiocap3"]
 
 # Exceptions Physiocap à partir de 30 erreurs sur un fchier mid
@@ -310,6 +326,7 @@ TAILLES = [ "Inconnue", "Chablis", "Cordon de Royat", "Cordon libre", "Guyot sim
 # TODO: vérifier liste Spécifique du profil Fronton
 COMMUNES_FRONTON=["Fronton", "Villaudric", "Vacquiers", "Villematier", "Castelnau d'Estrétefond", "Pompignan", \
     "Grisolles", "Campsas", "Labastide", "Nohic", "Orgueuil"]
+
 # Spécifique du profil Champagne
 # TODO tester puis sauver en V3
 CHEMIN_TEMPLATES_CIVC="modeleQgis/CIVC_V2"

@@ -42,11 +42,13 @@
 from .Physiocap_tools import ( physiocap_message_box, physiocap_question_box,\
         physiocap_log, physiocap_error, physiocap_write_in_synthese, \
         physiocap_rename_existing_file, physiocap_rename_create_dir, physiocap_open_file, \
-        physiocap_look_for_MID, physiocap_list_MID, physiocap_csv_vers_vecteur ) 
+        physiocap_look_for_MID, physiocap_list_MID, physiocap_csv_vers_vecteur, 
+        generer_contour_depuis_points 
+        ) 
         
 from .Physiocap_CIVC import (physiocap_assert_csv, physiocap_ferme_csv, \
-        physiocap_fichier_histo, physiocap_tracer_histo, physiocap_filtrer, 
-        generer_contour_depuis_points)   
+        physiocap_fichier_histo, physiocap_tracer_histo, physiocap_filtrer
+        )   
 
 from .Physiocap_inter import (physiocap_fill_combo_poly_or_point)
 
@@ -112,10 +114,10 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
 #            leCepage = dialogue.fieldComboCepage.currentText()
 #            laTaille = dialogue.fieldComboTaille.currentText()
         else:
-            interrangs = 1
-            interceps = 1 
-            densite = 1
-            hauteur = 1
+            interrangs = 110
+            interceps = 100 
+            densite = 0.9
+            hauteur = 90
             
         # Vérification de l'existance ou création du répertoire session
         chemin_session = os.path.join(Repertoire_Donnees_Cibles, Nom_Session)
@@ -131,8 +133,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             except:
                 raise physiocap_exception_rep( chemin_session)
         
-        
-        # Stocker dans la fenetre de synthese le nom de la session courante
+        # Stocker dans la fenetre principale le nom de la session courante
         chemin_base_session = os.path.basename( chemin_session)
         dialogue.lineEditDerniereSession.setText( chemin_base_session)
         dialogue.settings= QSettings( PHYSIOCAP_NOM, PHYSIOCAP_NOM_3)
@@ -146,7 +147,6 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         # Progress BAR 2 %
         dialogue.progressBar.setValue( 2)
         
-            
         # Verification de l'existance ou création du répertoire des sources MID et fichier csv
         if version_3 == "YES":
             chemin_sources = os.path.join(chemin_session, REPERTOIRE_SOURCE_V3)
@@ -529,7 +529,6 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         # Progress BAR 
         dialogue.progressBar.setValue( 70)
 
-        
         if dialogue.checkBoxContourSolo.isChecked():
             physiocap_log( "{0} {1} Avant création du contour à partir des points.". \
                 format( PHYSIOCAP_INFO, PHYSIOCAP_UNI), leModeDeTrace)
