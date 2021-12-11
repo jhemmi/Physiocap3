@@ -342,7 +342,7 @@
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Ouvrir la liste de vos répertoires avec le bouton &amp;quot;...&amp;quot;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Vous devez sélectionner le répertoire où se trouvent les mesures brutes de votre capture Physiocap (répertoire qui contient les fichiers MID issus de votre clé USB).&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;L'extension crée des entités dans des sous répertoires et n'altèrent jamais vos données brutes.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Ouvrir la liste de vos répertoires avec le bouton &amp;quot;...&amp;quot;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Vous devez sélectionner le répertoire où se trouvent les mesures brutes de votre capture Physiocap (répertoire qui contient les fichiers MID issus de votre clé USB).&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Ce répertoire peut contenir aussi votre contour qui est ouvert dans QGIS automatiquement à la fin du traitement &amp;quot;Filtrer les données brutes&amp;quot;.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;L'extension crée des entités dans des sous répertoires et n'altèrent jamais vos données brutes.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
      </widget>
      <widget class="QToolButton" name="toolButtonDirectoryPhysiocap">
@@ -518,7 +518,7 @@
        <x>5</x>
        <y>280</y>
        <width>601</width>
-       <height>91</height>
+       <height>101</height>
       </rect>
      </property>
      <property name="font">
@@ -528,8 +528,11 @@
        <bold>true</bold>
       </font>
      </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Ce choix vous permet d'accéder aux unités avancées de Physiocap.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si les calculs détaillés sont demandés, vous pouvez renseigner les informations requises pour ces calculs et les informations agronomique par deux sources :&lt;br/&gt;- Onglet Agronomie&lt;br/&gt;- vos contours décrivent ces données agronomiques (voir le shape ou le CSV modèle dans ~plugins/data). Ces vecteurs doivent être déposés dans le répertoires des données brutes pour être ouvert automtiquement par l'extension lors de &amp;quot;Filtrer les données brutes&amp;quot;.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Ce choix d'&amp;quot;Unités détaillées&amp;quot; est obligatoire pour accéder à l'ensemble des informations agronomiques.&lt;/span&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="whatsThis">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si les calculs détaillés sont demandeés, vous pouvez renseigner les informations requises pour ces calculs et les informatioins agronomique par trois source :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Onglet Agronomie&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- vos contours décrivent ces données agronomiques (voir le shape ou le CSVT modèle dans ~plugins/data)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- un CSV décrit ces information ( voir modèle de CSV dans ~plugins/data)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string/>
      </property>
      <property name="title">
       <string>Unités détaillées par m2 ou par cep</string>
@@ -544,7 +547,7 @@
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>45</y>
+        <y>55</y>
         <width>411</width>
         <height>26</height>
        </rect>
@@ -557,7 +560,7 @@
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Saga n'est pas encore accessible avec la Version 3&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string/>
       </property>
       <property name="text">
        <string>Onglet Agronomie détaille mon information du vignoble</string>
@@ -573,7 +576,7 @@
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>65</y>
+        <y>75</y>
         <width>411</width>
         <height>26</height>
        </rect>
@@ -586,7 +589,7 @@
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Saga n'est pas encore accessible avec la Version 3&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string/>
       </property>
       <property name="text">
        <string>Mes contours détaillent les données agronomiques de chaque parcelle</string>
@@ -595,13 +598,13 @@
        <bool>false</bool>
       </property>
      </widget>
-     <widget class="QLabel" name="lab_25">
+     <widget class="QCheckBox" name="checkBoxInfoVignoble">
       <property name="geometry">
        <rect>
-        <x>5</x>
-        <y>25</y>
-        <width>531</width>
-        <height>21</height>
+        <x>10</x>
+        <y>30</y>
+        <width>241</width>
+        <height>22</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -613,36 +616,15 @@
       <property name="font">
        <font>
         <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Précisez densité de plantation, hauteur de haie foliare et autres données agronomiques</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="checkBoxInfoVignoble">
-      <property name="geometry">
-       <rect>
-        <x>290</x>
-        <y>-3</y>
-        <width>281</width>
-        <height>26</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
         <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Vous souhaitez faire suivre toutes vos informations agroniqmiques&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Vous souhaitez faire suivre toutes vos informations agronomiques&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="autoFillBackground">
+       <bool>true</bool>
       </property>
       <property name="text">
        <string>Toutes vos informations vignobles</string>
@@ -651,14 +633,61 @@
        <bool>true</bool>
       </property>
      </widget>
+     <widget class="QGroupBox" name="groupBoxPrecisez">
+      <property name="geometry">
+       <rect>
+        <x>330</x>
+        <y>-10</y>
+        <width>271</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>1</pointsize>
+       </font>
+      </property>
+      <property name="title">
+       <string/>
+      </property>
+      <widget class="QLabel" name="lab_precisez">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>20</y>
+         <width>261</width>
+         <height>50</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+         <weight>50</weight>
+         <italic>true</italic>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Vous devez préciser vos densités de plantation,
+hauteurs de haie foliaire et
+vos autres données agronomiques</string>
+       </property>
+      </widget>
+     </widget>
     </widget>
     <widget class="QGroupBox" name="groupBoxInter">
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>370</y>
+       <y>390</y>
        <width>601</width>
-       <height>171</height>
+       <height>131</height>
       </rect>
      </property>
      <property name="font">
@@ -748,7 +777,7 @@
         </font>
        </property>
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit du champ de votre contour qui identifie chacune de vos parcelles. Dans la moyenne Inter Parcellaire, ce champ se nomme NOM_PHY&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vos contours ne contiennent pas de champ unique ou que vous ne connaissez pas les champs de vos contours, vous pouvez choisir NOM_PHY qui sera crée pa l'extension pour identifier chaque parcelles de vos contours. L'attribut aura des valeurs PHY_1, PHY-2 ...&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Attention : seuls les champs ayant une valeur différente pour chaque parcelle sont proposés.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Choisissez le champ de votre contour qui identifie chacune de vos parcelles. Dans la moyenne Inter Parcellaire, ce champ se nomme NOM_PHY&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vos contours ne contiennent pas de champ unique ou que vous ne connaissez pas les champs de vos contours, vous pouvez choisir NOM_PHY qui sera crée pa l'extension pour identifier chaque parcelles de vos contours. L'attribut aura des valeurs PHY_1, PHY-2 ...&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Attention : seuls les champs ayant une valeur différente pour chaque parcelle sont proposés.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
       <widget class="QLabel" name="lab_40">
@@ -786,7 +815,7 @@
         <rect>
          <x>5</x>
          <y>20</y>
-         <width>550</width>
+         <width>431</width>
          <height>21</height>
         </rect>
        </property>
@@ -804,10 +833,10 @@
         </font>
        </property>
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous hésitez, rafraîchissez ces listes&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous ne voyez pas tous les contours ouverts dans QGIS ou présents dans votre répertoire des données brutes, rafraîchissez ces listes.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
-        <string>Choisir un autre vecteur non ouvert dans QGIS</string>
+        <string>Rafraîchir pour afficher la liste de tous les polygones ouverts dans QGIS</string>
        </property>
       </widget>
       <widget class="QLabel" name="lab_41">
@@ -864,107 +893,13 @@
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous souhaitez regrouper des données MID de plusieurs sous répertoires, cochez la case &amp;quot;Recherche des MIDs dans les sous répertoires&amp;quot;.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : vous pouvez regrouper toutes les données brutes d'une campagne, d'un cépage ou d'un secteur dans un même arbre de données. Choisissez un nom de session Physiocap explicitant le regroupement. L'extension Physiocap les traitera avec un même paramétrage.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Vous savez pas ce que sont des contours ou vous n'avez pas de contours de votre parcellaire. L'extension peut générer le contour entourant vos mesures Physiocap. Ce contour généré se trouve dans le répertoire cible des données calculées. Il se nomme &amp;quot;contour généré.csv&amp;quot;.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous avez capturé une seule parcelle., cette solution est opérationnelle. Par contre, si vous avez capturés plusieurs ilots :&lt;br/&gt;- si les ilots sont contigüs, le contour généré regroupera tous ces îlots&lt;br/&gt;- si les îlots sont éloignés, le contour généré devient incohérent en particulier pour les interpolation.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : vous pouvez générer un contour incohérent et le modifier dans QGIS pour qu'il deviennent votre couche de contour. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="text">
        <string>Pas de couche contour : création d'une délimitation à partir des points bruts </string>
       </property>
-     </widget>
-     <widget class="QComboBox" name="comboBoxPoints">
-      <property name="geometry">
-       <rect>
-        <x>50</x>
-        <y>120</y>
-        <width>491</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="currentText">
-       <string/>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lab_42">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>120</y>
-        <width>61</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <family>Sans</family>
-        <pointsize>9</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Points</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lab_44">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>140</y>
-        <width>191</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Id champ posant question à GDAL</string>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="fieldPbGdal">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>260</x>
-        <y>140</y>
-        <width>261</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit du champ de votre contour qui identifie chacune de vos parcelles. Dans la moyenne Inter Parcellaire, ce champ se nomme NOM_PHY. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Attention : seuls les champs ayant une valeur différente pour chaque parcelle sont proposés.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <property name="checked">
+       <bool>false</bool>
       </property>
      </widget>
     </widget>
@@ -975,7 +910,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>550</y>
+       <y>530</y>
        <width>601</width>
        <height>81</height>
       </rect>
@@ -1033,7 +968,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial, selon vos choix de calculer les unités détaillées et de voir les paramètres V3 (Onglet Expert).&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Un triplet d'indicateur (par exemple DIAM~~NBSARM~~BIOM) permet de lancer l'interpolation pour trois indicateurs à la fois. Les valeurs de ce triplet peut provenir de votre Profil ou des choix de parametrages IntraParcellaire ( cas des Isoligne fixes).&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="checkBoxToutes">
@@ -1041,7 +976,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <rect>
         <x>10</x>
         <y>50</y>
-        <width>371</width>
+        <width>301</width>
         <height>26</height>
        </rect>
       </property>
@@ -1059,10 +994,13 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous souhaitez regrouper des données MID de plusieurs sous répertoires, cochez la case &amp;quot;Recherche des MIDs dans les sous répertoires&amp;quot;.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : vous pouvez regrouper toutes les données brutes d'une campagne, d'un cépage ou d'un secteur dans un même arbre de données. Choisissez un nom de session Physiocap explicitant le regroupement. L'extension Physiocap les traitera avec un même paramétrage.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Vous pouvez choisir de calculer l'interpolation pour toutes les parcelles de votre contour ou choisir une seule parcelle.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="text">
        <string>Cartographiez toutes les parcelles ou précisez</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
       </property>
      </widget>
      <widget class="QComboBox" name="fieldComboParcelleIntra">
@@ -1071,9 +1009,9 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="geometry">
        <rect>
-        <x>390</x>
+        <x>310</x>
         <y>52</y>
-        <width>191</width>
+        <width>241</width>
         <height>21</height>
        </rect>
       </property>
@@ -1089,7 +1027,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;La liste des parcelles provient du contour et nom de champ choisis pour vos moyennes Inter Parcellaire&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
      </widget>
     </widget>
@@ -1246,7 +1184,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <string>à préciser</string>
       </property>
      </widget>
-     <widget class="QLabel" name="label">
+     <widget class="QLabel" name="label_Clone">
       <property name="geometry">
        <rect>
         <x>267</x>
@@ -1313,33 +1251,6 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="text">
        <string>Nom parcelle</string>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditNomParcelle">
-      <property name="geometry">
-       <rect>
-        <x>80</x>
-        <y>20</y>
-        <width>111</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="inputMask">
-       <string>à préciser</string>
-      </property>
-      <property name="frame">
-       <bool>true</bool>
       </property>
      </widget>
      <widget class="QComboBox" name="comboBoxCommune">
@@ -1867,7 +1778,7 @@ Si vous hésitez, trouvez du conseil. </string>
         </font>
        </property>
        <property name="text">
-        <string>en pied/ha</string>
+        <string>en pieds/ha</string>
        </property>
       </widget>
       <widget class="QSpinBox" name="spinBoxInterrangs">
@@ -2002,7 +1913,7 @@ Si vous hésitez, trouvez du conseil. </string>
       <widget class="QDoubleSpinBox" name="doubleSpinBoxDensite">
        <property name="geometry">
         <rect>
-         <x>270</x>
+         <x>273</x>
          <y>80</y>
          <width>101</width>
          <height>21</height>
@@ -2125,6 +2036,30 @@ Si vous hésitez, trouvez du conseil. </string>
         <string>*Interrang (cm) - Ecartement entre rangs</string>
        </property>
       </widget>
+     </widget>
+     <widget class="QLineEdit" name="lineEditNomParcelle">
+      <property name="geometry">
+       <rect>
+        <x>80</x>
+        <y>20</y>
+        <width>111</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>à préciser</string>
+      </property>
      </widget>
     </widget>
     <widget class="QLabel" name="lab_50">
@@ -4179,28 +4114,6 @@ année précédente</string>
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QLabel" name="lab_texte_star2">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>540</y>
-        <width>221</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>6</pointsize>
-        <italic>true</italic>
-       </font>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
      <widget class="QLabel" name="lab_texte_star">
       <property name="enabled">
        <bool>true</bool>
@@ -4374,7 +4287,7 @@ DIAM, SARM, BIOM,...) </string>
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QLabel" name="label_202">
+     <widget class="QLabel" name="label_thematique">
       <property name="geometry">
        <rect>
         <x>1</x>
@@ -4619,7 +4532,7 @@ DIAM, SARM, BIOM,...) </string>
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous souhaitez créer des interpolation en tiif plutôt qu'en sdat (format de SAGA).&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous souhaitez créer des interpolation en Tiff plutôt qu'en sdat (format de SAGA).&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="text">
        <string>Interpolations SAGA au format TIFF</string>
@@ -4695,7 +4608,7 @@ DIAM, SARM, BIOM,...) </string>
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#4e9a06;&quot;&gt;Cette option évite de relancer un traitement déjà effectué dans le même contexte.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#4e9a06;&quot;&gt;Cette option évite de relancer un traitement déjà effectué dans la même session.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="text">
        <string>Arret si le groupe existe</string>
@@ -4972,7 +4885,7 @@ DIAM, SARM, BIOM,...) </string>
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Saga n'est pas encore accessible avec la Version 3&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Saga est accessible avec la Version 3, mais les traitements d'interpolation souvent beaucoup plus lent qu'avec GDAL.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Le grain des cartes est plus fin avec SAGA : le rendu est plus joli.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="text">
        <string>SAGA</string>
@@ -5542,7 +5455,7 @@ DIAM, SARM, BIOM,...) </string>
         </font>
        </property>
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. Vous pouvez fixer le paramétrage des isolignes. Pour activer ces choix, il faut aussi dans l'onglet Parcelle choisir le mode de calcul fixe des isolignes. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. Vous pouvez fixer le paramétrage des isolignes.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="editable">
         <bool>true</bool>
@@ -5690,7 +5603,7 @@ DIAM, SARM, BIOM,...) </string>
         </font>
        </property>
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. Vous pouvez fixer le paramétrage des isolignes. Pour activer ces choix, il faut aussi dans l'onglet Parcelle choisir le mode de calcul fixe des isolignes. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. Vous pouvez fixer le paramétrage des isolignes. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="editable">
         <bool>true</bool>
@@ -5783,7 +5696,7 @@ DIAM, SARM, BIOM,...) </string>
         </font>
        </property>
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. Vous pouvez fixer le paramétrage des isolignes. Pour activer ces choix, il faut aussi dans l'onglet Parcelle choisir le mode de calcul fixe des isolignes. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit des différents indicateurs calculés lors du traitement initial. Vous pouvez fixer le paramétrage des isolignes.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="editable">
         <bool>true</bool>
@@ -5839,7 +5752,7 @@ DIAM, SARM, BIOM,...) </string>
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;GDAL permet une interpolation dans une ellipse qui tient compte de l'orientation des rangs. Cette possibilité n'est disponible qu'avec les attributs et vecteurs en version 3.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Avec cette interpolation, seul l'écartement entre les isolignes est réglable.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;On peut fixer des valeurs seuils (min et max) et les écarts entre isolignes. On a ainsi toujours les même isolignes. Les données de la session doivent se trouver dans ces seuils, sinon les affichage peuvent être incohérents.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="text">
        <string>Isolignes fixes</string>
@@ -5868,7 +5781,7 @@ DIAM, SARM, BIOM,...) </string>
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Saga n'est pas encore accessible avec la Version 3&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Ce sont les données de la session qui proposent des seuils (min max d'isolignes).&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;La méthode d'aide au calcul part d'un nombre d'isoligne (ce qui génère un écart entre chaque isoligne) ou d'un écart (qui génère un nombre d'isolignes).&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="text">
        <string>Données de la session optimisent les isolignes</string>
@@ -5905,25 +5818,6 @@ DIAM, SARM, BIOM,...) </string>
      <property name="title">
       <string>Seuils pour les segments de points contigüs cohérents</string>
      </property>
-     <widget class="QLabel" name="lab_1040">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>30</y>
-        <width>181</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
      <widget class="QLabel" name="lab_derive">
       <property name="geometry">
        <rect>
@@ -6145,7 +6039,7 @@ DIAM, SARM, BIOM,...) </string>
      <widget class="QLabel" name="lab_seuilsVitesse">
       <property name="geometry">
        <rect>
-        <x>100</x>
+        <x>90</x>
         <y>20</y>
         <width>271</width>
         <height>21</height>
@@ -6271,7 +6165,7 @@ DIAM, SARM, BIOM,...) </string>
     <widget class="QGroupBox" name="groupBoxInterIntraExpert">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>5</x>
        <y>240</y>
        <width>591</width>
        <height>51</height>
@@ -6353,7 +6247,7 @@ DIAM, SARM, BIOM,...) </string>
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Nouveautés de la V3 : &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;attributs, vecteur des POINTS_0_SEUL ou points sans captures de sarments et 3D.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Voici la description des 6 nouveaux attributs présents dans les vecteur de points :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Altitude est la valeur de l'altitude donnée par le GPS. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Pdop est un indicateur qualitatif de la capture GPS. * &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Distance est la distance entre un point et le point précédent. *&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Dérive est le pourcentage de déviation entre le point et le point théorique prévu à partir du point précédent. *&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Azimuth est l'orientation entre le point et son précédent. Il est un indicateur de la précision du GPS (ou de rang courbe (;)).&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- Nbsart le nombre total de sarments filtrés. Ne pas confondre avec Nbsarm qui est le nombre de sarments filtrés au m linéaire.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Au niveau des vecteurs de segment par contour, on retrouve l'azimuth et la longueur de chaque segment.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Plus globalement il apparaît pour chaque attribut dans les vecteurs de moyennes, l'écart type et la médiane (préfixes respectifs EC_ et M_). &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Les points sans mesure sont des indicateurs de la qualité de la mesure ou du nombres de pieds manquant mesurés. Après filtrer, la thématique &amp;quot;Filtrer pas de mesure&amp;quot; est la plus facile analyse de la qualité de capture. Les points rouge autour du contour permette de valider la qualité de vos contours. Les points rouges dans la parcelle montre une éventuelle zone avec plus de points sans mesure. La densité par ha des points sans mesures donne un autre format de l'indicateur visuel.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Pour l'&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;utilisation de la 3D (nouveauté de QGIS3)&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;, les attributs suivant rentrent dans la composante Z des vecteurs de points. Les vecteurs de points deviennent des 2.5D :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- DIAM (Diamètre moyen) pour les POINTS_SANS_0&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- VITESSE pour les POINTS_AVEC_0&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;L'extension voit apparaître des thématiques 3D pour visualiser en 3D ces attributs. Elles ne sont pas choisies par défaut. La visualisation 2D reste le défaut.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : Vous pouvez rester au format des données de l'extension Physiocap 1.8.x, c'est à dire que vos shapefile et cvs restent sans :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;- les nouveaux attributs de qualification de vos captures (altitude, pdop, distance, derive, azimuth, nbsart)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;- segments de captures contigus et cohérentes.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Vous pouvez ainsi vérifier la non régression de l'extension Physiocap 3, mais ce mode n'est resté actif que pour re-traiter des données anciennes. Nous vous conseillons de passer aux format V3 pour utiliser les nouveaux attributs, les nouveaux vecteurs et la 3D.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Les vecteurs arrivant avec Physiocap 3&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt; sont décrits dans l'onglet Expert et sur le wiki https://github.com/jhemmi/Physiocap3/wiki&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Nouveautés de la V3 : &lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;attributs, vecteur des POINTS_0_SEUL ou points sans captures de sarments et 3D.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Voici la description des 6 nouveaux attributs présents dans les vecteur de points :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Altitude&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt; est la valeur de l'altitude donnée par le GPS. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Pdop&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt; est un indicateur qualitatif de la capture GPS. * &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Distance&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt; est la distance entre un point et le point précédent. *&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Dérive&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt; est le pourcentage de déviation entre le point et le point théorique prévu à partir du point précédent. *&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Azimuth&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt; est l'orientation entre le point et son précédent. Il est un indicateur de la précision du GPS (ou de rang courbe (;)).&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Nbsart&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt; le nombre total de sarments filtrés. Ne pas confondre avec Nbsarm qui est le nombre de sarments filtrés au m linéaire.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Au niveau des vecteurs de segment par contour, on retrouve l'azimuth et la longueur de chaque segment.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Plus globalement il apparaît pour chaque attribut dans les vecteurs de moyennes, l'écart type et la médiane (préfixes respectifs EC_ et M_). &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Les points sans mesure sont des indicateurs de la qualité de la mesure ou du nombres de pieds manquant mesurés. Après filtrer, la thématique &amp;quot;Filtrer pas de mesure&amp;quot; est la plus facile analyse de la qualité de capture. Les points rouge autour du contour permette de valider la qualité de vos contours. Les points rouges dans la parcelle montre une éventuelle zone avec plus de points sans mesure. La densité par ha des points sans mesures donne un autre format de l'indicateur visuel.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Pour l'&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;utilisation de la 3D (nouveauté de QGIS3)&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;, les attributs suivant rentrent dans la composante Z des vecteurs de points. Les vecteurs de points deviennent des 2.5D :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- DIAM (Diamètre moyen) pour les POINTS_SANS_0&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;- VITESSE pour les POINTS_AVEC_0&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;L'extension voit apparaître des thématiques 3D pour visualiser en 3D ces attributs. Elles ne sont pas choisies par défaut. La visualisation 2D reste le défaut.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : Vous pouvez rester au format des données de l'extension Physiocap 1.8.x, c'est à dire que vos shapefile et cvs restent sans :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;- les nouveaux attributs de qualification de vos captures (altitude, pdop, distance, derive, azimuth, nbsart)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;- segments de captures contigus et cohérentes.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Vous pouvez ainsi vérifier la non régression de l'extension Physiocap 3, mais ce mode n'est resté actif que pour re-traiter des données anciennes. Nous vous conseillons de passer aux format V3 pour utiliser les nouveaux attributs, les nouveaux vecteurs et la 3D.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#00aa00;&quot;&gt;Les vecteurs arrivant avec Physiocap 3&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt; sont décrits dans l'onglet Expert et sur le wiki https://github.com/jhemmi/Physiocap3/wiki&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="text">
        <string>Attributs et vecteurs V3</string>
@@ -6438,7 +6332,7 @@ DIAM, SARM, BIOM,...) </string>
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Cette version de l'extension ne propose que le format ESRI Shapefile.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Cette version de l'extension ne propose que le format ESRI Shapefile. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Pour évaluation, le choix Geopackage pour &amp;quot;Filtrer les données&amp;quot; est disponible, mais il n'est pas activable pour Inter et Intra. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;A vos demandes de modifications et/ou contributions. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="accessibleDescription">
        <string/>
@@ -6512,6 +6406,165 @@ DIAM, SARM, BIOM,...) </string>
       </property>
       <property name="text">
        <string>GPS - WGS84 - EPSG 4326</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="groupBoxCampagne">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>300</y>
+       <width>591</width>
+       <height>111</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Cette notion de campagne est utile pour identifier le millesimes des données dans les synthèses inter-annuelles. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Deux point de vue peuvent exister. On peut nommer la campagne de mesure Physiocap comme la future vendange ou comme la vendange précédente. La mesure Physiocap concerne en effet un potentiel de production mais, le plus souvent, comme la synthèse du millésime passé. Faites votre choix.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Elle permet aussi de valider que vous ne mélangez pas des MIDs incohérents entre eux lors d'une même session.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Bien sûr, une fois votre choix effectué, il ne faut plus le changer.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="title">
+      <string>Campagne de mesures (précisez votre hémisphère)</string>
+     </property>
+     <widget class="QRadioButton" name="radioButtonNordPrecedent">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>561</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+        <stylestrategy>PreferDefault</stylestrategy>
+       </font>
+      </property>
+      <property name="mouseTracking">
+       <bool>true</bool>
+      </property>
+      <property name="toolTip">
+       <string/>
+      </property>
+      <property name="text">
+       <string>NORD Vendange précedente ( mesures entre sept 21 - avril 22  =&gt; Campagne 2021)</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="radioButtonNordSuivant">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>40</y>
+        <width>551</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+        <stylestrategy>PreferDefault</stylestrategy>
+       </font>
+      </property>
+      <property name="mouseTracking">
+       <bool>true</bool>
+      </property>
+      <property name="toolTip">
+       <string/>
+      </property>
+      <property name="text">
+       <string>NORD Vendange suivante ( mesures entre sept 21 - avril 22  =&gt; Campagne 2022)</string>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="radioButtonSudPrecedent">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>561</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+        <stylestrategy>PreferDefault</stylestrategy>
+       </font>
+      </property>
+      <property name="mouseTracking">
+       <bool>true</bool>
+      </property>
+      <property name="toolTip">
+       <string/>
+      </property>
+      <property name="text">
+       <string>SUD Vendange précedente ( mesures entre mars 21 - octobre 21  =&gt; Campagne 2021)</string>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="radioButtonSudSuivant">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>80</y>
+        <width>561</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+        <stylestrategy>PreferDefault</stylestrategy>
+       </font>
+      </property>
+      <property name="mouseTracking">
+       <bool>true</bool>
+      </property>
+      <property name="toolTip">
+       <string/>
+      </property>
+      <property name="text">
+       <string>SUD Vendange suivante ( mesures entre mars 21 - octobre 21  =&gt; Campagne 2022)</string>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
       </property>
      </widget>
     </widget>
@@ -7065,6 +7118,103 @@ p, li { white-space: pre-wrap; }
        <string>Mode de traces</string>
       </property>
      </widget>
+     <widget class="QLabel" name="lab_44">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>480</y>
+        <width>191</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Id champ posant question à GDAL</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="comboBoxPoints">
+      <property name="geometry">
+       <rect>
+        <x>70</x>
+        <y>460</y>
+        <width>491</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="currentText">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lab_42">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>460</y>
+        <width>61</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <family>Sans</family>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Points</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="fieldPbGdal">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>290</x>
+        <y>480</y>
+        <width>261</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit du champ de votre contour qui identifie chacune de vos parcelles. Dans la moyenne Inter Parcellaire, ce champ se nomme NOM_PHY. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Attention : seuls les champs ayant une valeur différente pour chaque parcelle sont proposés.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
      <zorder>groupBoxArret</zorder>
      <zorder>label_Contributions</zorder>
      <zorder>buttonContribuer</zorder>
@@ -7082,10 +7232,14 @@ p, li { white-space: pre-wrap; }
      <zorder>label_VCP</zorder>
      <zorder>lab_43</zorder>
      <zorder>spinBoxPower</zorder>
-     <zorder>textBrowserAide</zorder>
      <zorder>lab_510</zorder>
      <zorder>fieldComboModeTrace</zorder>
      <zorder>lab_traces</zorder>
+     <zorder>lab_44</zorder>
+     <zorder>comboBoxPoints</zorder>
+     <zorder>lab_42</zorder>
+     <zorder>fieldPbGdal</zorder>
+     <zorder>textBrowserAide</zorder>
     </widget>
    </widget>
   </widget>
@@ -7095,9 +7249,9 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="geometry">
     <rect>
-     <x>150</x>
+     <x>120</x>
      <y>10</y>
-     <width>341</width>
+     <width>371</width>
      <height>23</height>
     </rect>
    </property>
@@ -7124,7 +7278,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>131</width>
+     <width>111</width>
      <height>21</height>
     </rect>
    </property>
@@ -7145,7 +7299,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>10</x>
      <y>40</y>
-     <width>131</width>
+     <width>111</width>
      <height>21</height>
     </rect>
    </property>
@@ -7155,34 +7309,34 @@ p, li { white-space: pre-wrap; }
     </font>
    </property>
    <property name="text">
-    <string>Session en cours</string>
+    <string>Dernière session</string>
    </property>
   </widget>
   <widget class="QGroupBox" name="groupBoxTroisActions">
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>750</y>
+     <y>740</y>
      <width>621</width>
      <height>111</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>11</pointsize>
+     <pointsize>1</pointsize>
      <weight>75</weight>
      <bold>true</bold>
      <kerning>true</kerning>
     </font>
    </property>
    <property name="title">
-    <string>Enchainez les trois traitements</string>
+    <string/>
    </property>
    <property name="checkable">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="checked">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <widget class="QProgressBar" name="progressBar">
     <property name="geometry">
@@ -7420,6 +7574,29 @@ p, li { white-space: pre-wrap; }
      <number>0</number>
     </property>
    </widget>
+   <widget class="QCheckBox" name="checkBoxTroisActions">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>0</y>
+      <width>311</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="toolTip">
+     <string/>
+    </property>
+    <property name="text">
+     <string>Enchaîner les 3 traitements</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QLineEdit" name="lineEditDerniereSession">
    <property name="enabled">
@@ -7427,9 +7604,49 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="geometry">
     <rect>
-     <x>150</x>
+     <x>120</x>
      <y>40</y>
-     <width>341</width>
+     <width>191</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Nom de la  dernière session Physiocap. C'est le nom du répertoire tous les entités créées par l'extension et regroupé dans un groupe du panneau de couche de QGIS.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="readOnly">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lab_Camapgne">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>320</x>
+     <y>40</y>
+     <width>81</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Campagne</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEditCampagne">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>40</y>
+     <width>81</width>
      <height>23</height>
     </rect>
    </property>

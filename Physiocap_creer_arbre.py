@@ -43,7 +43,7 @@ from .Physiocap_tools import ( physiocap_message_box, physiocap_question_box,\
         physiocap_log, physiocap_error, physiocap_write_in_synthese, \
         physiocap_rename_existing_file, physiocap_rename_create_dir, physiocap_open_file, \
         physiocap_look_for_MID, physiocap_list_MID, physiocap_csv_vers_vecteur, 
-        generer_contour_depuis_points 
+        generer_contour_depuis_points, quelle_campagne
         ) 
         
 from .Physiocap_CIVC import (physiocap_assert_csv, physiocap_ferme_csv, \
@@ -234,6 +234,12 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             fichier_synthese.write("\nCentroïdes")
         fichier_synthese.write("\n")
         info_mid = physiocap_list_MID( Repertoire_Donnees_Brutes, listeTriee)
+        physiocap_log( self.tr( "{} Liste MIDs {}").\
+                format( PHYSIOCAP_UNI, info_mid), leModeDeTrace)
+
+        campagne = quelle_campagne( dialogue, info_mid[0])
+        dialogue.lineEditCampagne.setText( campagne)
+        
         for all_info in info_mid:
             info = all_info.split(";")
             if (version_3 == "NO"):
@@ -254,6 +260,8 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         
         # Progress BAR 5 %
         dialogue.progressBar.setValue( 5)
+        dialogue.progressBarInter.setValue( 0)
+        dialogue.progressBarIntra.setValue( 0)
         #physiocap_log( self.tr( "Fin de la création csv et début de synthèse"), leModeDeTrace)
         if (version_3 == "NO"):
             rep_csv = REPERTOIRE_TEXTES
@@ -532,7 +540,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         if dialogue.checkBoxContourSolo.isChecked():
             physiocap_log( "{0} {1} Avant création du contour à partir des points.". \
                 format( PHYSIOCAP_INFO, PHYSIOCAP_UNI), leModeDeTrace)
-            nom_contour = generer_contour_depuis_points( dialogue, nom_layer_sans_0)                
+            nom_contour = generer_contour_depuis_points( dialogue, nom_layer_sans_0, listeTriee)                
             physiocap_log( "{0} {1} Création du contour OK : {2}.". \
                 format( PHYSIOCAP_INFO, PHYSIOCAP_UNI, nom_contour), leModeDeTrace)
                 
@@ -632,8 +640,9 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             ligne = fichier_synthese.readline() # lit les lignes 1 à 1
             physiocap_write_in_synthese( dialogue, ligne)
             if not ligne: 
-                fichier_synthese.close
+                #fichier_synthese.close
                 break
+        fichier_synthese.close
 
         # Progress BAR 90 %
         dialogue.progressBar.setValue( 90)

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project Physiocap3 -->
-<!-- Saved: 2021-12-05, 21:23:34 -->
+<!-- Saved: 2021-12-11, 23:52:48 -->
 <!-- Copyright (C) 2021 jhemmi.eu, jhemmi.eu -->
 <Project version="5.1">
   <Language></Language>
@@ -13,7 +13,6 @@
   <Email>jhemmi.eu</Email>
   <TranslationPattern>i18n/Physiocap_%language%.ts</TranslationPattern>
   <Sources>
-    <Source>Makefile</Source>
     <Source>Physiocap3_dialog.py</Source>
     <Source>Physiocap_CIVC.py</Source>
     <Source>Physiocap_creer_arbre.py</Source>

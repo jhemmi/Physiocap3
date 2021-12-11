@@ -708,14 +708,14 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.groupBoxFiltrer.setEnabled( False)
             self.groupBoxInter.setEnabled( True)
             self.groupBoxIntra.setEnabled( True)
-            self.groupBoxTroisActions.setChecked( Qt.Checked)
+            self.checkBoxTroisActions.setChecked( Qt.Checked)
             self.groupBoxDetailVignoble.setChecked( Qt.Checked)
             self.checkBoxInfoVignoble.setChecked( Qt.Checked)
             # TODO Valider defaut avec Constance
             self.radioButtonOnglet.setChecked(  Qt.Checked)  
             # Basculer aussi groupBoxVignoble & groupBoxAgroSaisie mais par slot
-            #self.groupBoxVignoble.setEnabled( True)
-            #self.groupBoxAgroSaisie.setEnabled( True)
+            self.groupBoxVignoble.setEnabled( True)
+            self.groupBoxAgroSaisie.setEnabled( True)
             self.label_PH.setEnabled( False)            
             self.doubleSpinBoxPH.setEnabled( False)            
             # Saga par defaut et L93
@@ -734,7 +734,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.spinBoxIsoDistance_Fixe_BIOM.setValue( int( self.settings.value("Champagne/isoDistanceFixe_3", 200 )))
             # un seul triplet pour intra DIAM BIOMGCEP NBSARCEP est code dans ce slot
             self.slot_PROFIL_INTRA_maj_attributs_interpolables( profilCourant)
-            # Supprimer deux autre BIOM 
             
             # TODO PDF 
             self.checkBoxIntraPDF.setChecked( Qt.Checked)
@@ -756,7 +755,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.label_PH.setEnabled( True)            
             self.doubleSpinBoxPH.setEnabled( True)            
             self.groupBoxInter.setEnabled( True)
-            self.groupBoxTroisActions.setChecked( Qt.Unchecked)
+            self.checkBoxTroisActions.setChecked( Qt.Unchecked)
             self.groupBoxDetailVignoble.setChecked( Qt.Checked)
             self.checkBoxInfoVignoble.setChecked( Qt.Checked)
             self.groupBoxIntra.setEnabled( False)
@@ -773,7 +772,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.spinBoxMaxSarmentsParMetre.setValue( 25)
             self.groupBoxFiltrer.setEnabled( True)
             self.groupBoxInter.setEnabled( True)
-            self.groupBoxTroisActions.setChecked( Qt.Checked)
+            self.checkBoxTroisActions.setChecked( Qt.Unchecked)
             self.groupBoxDetailVignoble.setChecked( Qt.Checked)
             self.checkBoxInfoVignoble.setChecked( Qt.Checked)
             self.groupBoxIntra.setEnabled( True)
@@ -2062,9 +2061,9 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
         except physiocap_exception_vignette_exists as e:
-            aText1 = self.tr( "Les moyennes InterParcellaires dans {0} existent déjà. ").\
+            aText = self.tr( "Les moyennes InterParcellaires dans {0} existent déjà. ").\
                 format( e)
-            physiocap_log(aText1, leModeDeTrace,  "information")
+            physiocap_log(aText, leModeDeTrace,  "information")
             aText = aText + self.tr( "Vous ne pouvez pas redemander ce calcul Inter : vous devez détruire le groupe ") 
             aText = aText + self.tr( "ou créer une nouvelle session Physiocap")
             physiocap_error( self, aText, "CRITICAL")
@@ -2215,7 +2214,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Densité pied /ha
         interrang  = int( self.spinBoxInterrangs.value())
         intercep   = int( self.spinBoxInterceps.value())
-        densite = ""
+        densite = 0
         if (interrang !=0) and ( intercep != 0):
             densite = int (10000 / ((interrang/100) * (intercep/100)))
         self.lineEditDensite.setText( str( densite))
@@ -2406,7 +2405,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 format( PHYSIOCAP_UNI), leModeDeTrace)
 
             # Si OK : chercher à enchainer vers Intra
-            if  self.groupBoxTroisActions.isChecked():
+            if  self.checkBoxTroisActions.isChecked():
                 self.slot_INTER_moyennes_parcelles()
 
         return retour

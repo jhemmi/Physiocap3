@@ -194,7 +194,7 @@ class Physiocap3:
         # show the dialog
         self.dlg.show()
         # Run the dialog event loop
-        result = self.dlg.exec_()
+        result = self.dlg.exec() #       result = self.dlg.exec_()
         # See if OK was pressed
 ##        physiocap_message_box( self.dlg, "Dans Physiocap.run apres dial_exec <" +
 ##                               str(result ) + ">",

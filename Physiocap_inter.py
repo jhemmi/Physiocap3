@@ -1840,8 +1840,8 @@ class PhysiocapInter( QtWidgets.QDialog):
         # INSERTION_CIVC_V2 pour CSV
         dialogue.progressBarInter.setValue( 90)
         # Créer un CSVT de synthese moyenne et vignoble
-        retour_csv = creer_csvt_source_onglet( dialogue, les_parcelles,  les_parcelles_ID, \
-                les_geoms_poly, les_moyennes_par_contour)
+        retour_csv = creer_csvt_source_onglet( dialogue, \
+                les_parcelles,  les_parcelles_ID, les_geoms_poly, les_moyennes_par_contour)
         if retour_csv != 0:
             return physiocap_error(self, self.tr( \
                 "Erreur bloquante : problème lors de la création du CSVT "))

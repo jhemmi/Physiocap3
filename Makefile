@@ -164,7 +164,7 @@ deploy: compile doc transcompile
 dclean:
 	@echo
 	@echo "-----------------------------------"
-	@echo "Removing any compiled python files."
+	@echo "Removing any compiled python files & .git ? TODO
 	@echo "-----------------------------------"
 	find $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME) -iname "*.pyc" -delete
 	find $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME) -iname ".git" -prune -exec rm -Rf {} \;
