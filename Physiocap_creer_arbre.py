@@ -43,14 +43,12 @@ from .Physiocap_tools import ( physiocap_message_box, physiocap_question_box,\
         physiocap_log, physiocap_error, physiocap_write_in_synthese, \
         physiocap_rename_existing_file, physiocap_rename_create_dir, physiocap_open_file, \
         physiocap_look_for_MID, physiocap_list_MID, physiocap_csv_vers_vecteur, 
-        generer_contour_depuis_points, quelle_campagne
+        quel_poly_point_INTRA, generer_contour_depuis_points, quelle_campagne
         ) 
         
 from .Physiocap_CIVC import (physiocap_assert_csv, physiocap_ferme_csv, \
         physiocap_fichier_histo, physiocap_tracer_histo, physiocap_filtrer
         )   
-
-from .Physiocap_inter import (physiocap_fill_combo_poly_or_point)
 
 from .Physiocap_var_exception import *
 
@@ -166,7 +164,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             raise physiocap_exception_csv( nom_court_csv_concat)
             
         # Création du fichier concaténé
-        nom_fichiers_recherches = os.path.join(Repertoire_Donnees_Brutes, EXTENSION_MID)
+        nom_fichiers_recherches = os.path.join(Repertoire_Donnees_Brutes, RECHERCHE_EXTENSION_MID)
         
         # Assert le nombre de MID > 0
         # le Tri pour retomber dans l'ordre de Physiocap_V8
@@ -234,8 +232,8 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             fichier_synthese.write("\nCentroïdes")
         fichier_synthese.write("\n")
         info_mid = physiocap_list_MID( Repertoire_Donnees_Brutes, listeTriee)
-        physiocap_log( self.tr( "{} Liste MIDs {}").\
-                format( PHYSIOCAP_UNI, info_mid), leModeDeTrace)
+#        physiocap_log( self.tr( "{} Liste MIDs {}").\
+#                format( PHYSIOCAP_UNI, info_mid), leModeDeTrace)
 
         campagne = quelle_campagne( dialogue, info_mid[0])
         dialogue.lineEditCampagne.setText( campagne)
@@ -667,5 +665,6 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         # Fin 
         physiocap_log( self.tr( "{0} {1} a affiché les couches demandées dans le groupe {2}").\
             format( PHYSIOCAP_INFO , PHYSIOCAP_UNI, chemin_base_session), leModeDeTrace)
-        physiocap_fill_combo_poly_or_point( dialogue)
+        quel_poly_point_INTRA( dialogue)
+
         return 0 

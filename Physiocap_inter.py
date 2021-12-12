@@ -44,7 +44,7 @@
 from .Physiocap_tools import (physiocap_message_box,\
         physiocap_log, physiocap_error, \
         physiocap_nom_entite_sans_pb_caractere, physiocap_rename_existing_file,  \
-        physiocap_quelle_projection_et_lib_demandee, physiocap_create_projection_file, \
+        quelle_projection_et_lib_demandee, physiocap_create_projection_file, \
         physiocap_get_layer_by_URI,  physiocap_get_layer_by_ID,  \
         creer_csvt_source_onglet)       #physiocap_vecteur_vers_gpkg, \
 
@@ -53,7 +53,7 @@ from .Physiocap_var_exception import *
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import QVariant
 from qgis.core import (Qgis, QgsProject, QgsVectorLayer, \
-    QgsLayerTreeGroup, QgsLayerTreeLayer,\
+    QgsLayerTreeGroup,\
     QgsFeatureRequest, QgsFields, QgsField, QgsVectorFileWriter, QgsFeature,\
     QgsPoint, QgsPointXY, QgsGeometry, QgsWkbTypes, QgsMessageLog)
 try :
@@ -62,102 +62,6 @@ except ImportError:
     aText ="Erreur bloquante : module numpy n'est pas accessible" 
     QgsMessageLog.logMessage( aText, "\u03D5 Erreurs", Qgis.Warning)
     QgsMessageLog.logMessage( aText, PHYSIOCAP_LOG_ERREUR, Qgis.Warning)
-
-
-def physiocap_vector_type( self, vector):
-    """Vérifie le type de forme du vector : on simplifie au cas multiple pour Wbk et """
-
-    try:
-        # A_TESTER: V3 ? vérifier multiType couvre plus de cas
-        # et cas vecteur non shape
-        geomWkbType = vector.wkbType()
-        geomWkbMultiType = QgsWkbTypes.multiType( geomWkbType) # multiple sous processing
-        geomType = QgsWkbTypes.geometryType( geomWkbType) 
-        geomTypeText = QgsWkbTypes.geometryDisplayString( geomType)
-        geomWkbTypeText = QgsWkbTypes.displayString( geomWkbType)
-        
-        # physiocap_log( "-- Vector Text {0} type geom {1} et WkbType {2}".\
-        #    format( geomTypeText, geomType,  geomWkbType), TRACE_TOOLS)
-        return geomTypeText, geomWkbTypeText, geomWkbType,  geomWkbMultiType  
-    except:
-#        physiocap_error( self, self.tr("Warning : couche (layer) {0} n'est ni (is nor) point, ni (nor) polygone").\
-#            format( vector.id()))
-        pass
-        # On evite les cas imprévus
-        return "Inconnu", "WkbInconnu",  None,  None
-                    
- 
-def physiocap_fill_combo_poly_or_point( self, isRoot = None, node = None ):
-    """ Recherche dans l'arbre Physiocap (recursif)
-    les Polygones,
-    les Points de nom DIAMETRE qui correspondent aux données filtreés
-    Remplit deux listes pour le comboxBox des vecteurs "inter Parcellaire"
-    Rend aussi le nombre de poly et point retrouvé
-    """
-    #leModeDeTrace = self.fieldComboModeTrace.currentText() 
-    nombre_poly = 0
-    nombre_point = 0
-   
-    if ( isRoot == None):
-        root = QgsProject.instance().layerTreeRoot()
-        self.comboBoxPolygone.clear()
-        self.comboBoxPoints.clear()
-        noeud_en_cours = ""
-        noeud = root
-    else:
-        # On force root comme le noeud
-        noeud = node
-        noeud_en_cours = node.name()
-
-    #physiocap_log( "- noeud en cours {0}".format( noeud_en_cours), TRACE_TOOLS))        
-
-    # On descend de l'arbre par la racine
-    for child in noeud.children():
-        #physiocap_log( "-- in noeud : comment connaitre le type ?", TRACE_TOOLS))        
-        if isinstance( child, QgsLayerTreeGroup):
-            #physiocap_log( "--Group: " + child.name(), TRACE_TOOLS))
-            noeud_en_cours = child.name()
-            groupe_inter = noeud_en_cours + SEPARATEUR_ + VIGNETTES_INTER
-            #physiocap_log( "--Group inter : " + groupe_inter, TRACE_TOOLS))
-            if ( noeud_en_cours != groupe_inter ):
-                # On exclut les vignettes INTER : sinon on descend dans le groupe
-                un_nombre_poly, un_nombre_point = physiocap_fill_combo_poly_or_point( self, noeud, child)
-                nombre_point = nombre_point + un_nombre_point
-                nombre_poly = nombre_poly + un_nombre_poly
-        elif isinstance( child, QgsLayerTreeLayer):
-#            physiocap_log( "--Layer >> {0}  ID>> {1} ". \
-#                format( child.name(),  child.layerId()), TRACE_TOOLS)) 
-#           physiocap_log( "--Layer parent le groupe >> " + child.parent().name() , TRACE_TOOLS)) 
-            # Tester si poly ou point
-            type_layer,  type_Wkb_layer,  numero_Wkb_layer,  numero_Multi_Wkb = \
-                physiocap_vector_type( self, child.layer())
-#            physiocap_log( "--Layer a pour type >> {0} WkbType  >> {1} et numero_Wkb  >> {2} ".\
-#            format( type_layer,  type_Wkb_layer,  numero_Wkb_layer), TRACE_TOOLS))
-            if ( type_layer == "Point"):
-                if (((not self.checkBoxConsolidation.isChecked()) and \
-                    ( child.name() == "DIAMETRE mm")) \
-                    or \
-                    ((self.checkBoxConsolidation.isChecked()) and \
-                    ( child.parent().name() == CONSOLIDATION))):
-                    physiocap_log( "- layer POINT: " + child.name() + "  ID: " + child.layerId(), TRACE_TOOLS) 
-                    node_layer = noeud_en_cours + SEPARATEUR_NOEUD + child.layerId()
-                    self.comboBoxPoints.addItem( node_layer)
-                    nombre_point = nombre_point + 1
-            elif ( type_layer == "Polygon"):
-                physiocap_log( "- layer POLY: " + child.name() + "  ID: " + child.layerId(), TRACE_TOOLS) 
-                node_layer = child.name() + SEPARATEUR_NOEUD + child.layerId()        
-                self.comboBoxPolygone.addItem( node_layer)
-                nombre_poly = nombre_poly + 1
-            elif ( type_layer == "Line"):
-                pass # cas de segments
-            else:
-                pass
-#                physiocap_log( "- Layer de type {0} rejeté : {1} ID: ".\
-#                    format( type_layer, child.name(),  child.layerId()), leModeDeTrace) 
-    return nombre_poly, nombre_point
-
-              
-
 
 def physiocap_moyenne_un_contour( laProjectionCRS, EPSG_NUMBER, nom_vignette, nom_prj,
         geom_poly, la_surface, un_nom, un_autre_ID, date_debut, date_fin,
@@ -972,8 +876,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                   
         # Récupérer le CRS choisi, les extensions et le calculateur de distance
         distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
-        laProjectionCRS, laProjectionTXT, EPSG_NUMBER = \
-            physiocap_quelle_projection_et_lib_demandee( dialogue)
+        laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( dialogue)
        
         quel_vecteur_demande = dialogue.fieldComboFormats.currentText()
         nom_vecteur_point = vecteur_point.dataProvider().dataSourceUri()
@@ -1841,7 +1744,7 @@ class PhysiocapInter( QtWidgets.QDialog):
         dialogue.progressBarInter.setValue( 90)
         # Créer un CSVT de synthese moyenne et vignoble
         retour_csv = creer_csvt_source_onglet( dialogue, \
-                les_parcelles,  les_parcelles_ID, les_geoms_poly, les_moyennes_par_contour)
+                les_parcelles, les_geoms_poly, les_moyennes_par_contour)
         if retour_csv != 0:
             return physiocap_error(self, self.tr( \
                 "Erreur bloquante : problème lors de la création du CSVT "))

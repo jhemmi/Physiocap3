@@ -44,11 +44,11 @@
 
 from .Physiocap_tools import (physiocap_message_box, \
         physiocap_log_for_error, physiocap_log, physiocap_error, \
-        physiocap_quelle_projection_et_lib_demandee, physiocap_nom_entite_avec_pb_caractere, \
+        quel_poly_point_INTRA, quelle_projection_et_lib_demandee, physiocap_nom_entite_avec_pb_caractere, \
         physiocap_get_layer_by_name, physiocap_get_layer_by_ID)
 
 from .Physiocap_creer_arbre import (PhysiocapFiltrer)
-from .Physiocap_inter import (PhysiocapInter, physiocap_fill_combo_poly_or_point)
+from .Physiocap_inter import (PhysiocapInter)
 from .Physiocap_intra_interpolation import (PhysiocapIntra) 
 from .Physiocap_var_exception import *
 
@@ -89,7 +89,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.fieldComboModeTrace.clear( )
             self.fieldComboModeTrace.addItems( MODE_TRACE )
             # Retrouver le mode de trace dans  settings
-            leModeDeTrace = self.settings.value("Expert/leModeTrace", TRACE_TOUT)
+            leModeDeTrace = self.settings.value("Expert/leModeDeTrace", TRACE_TOUT)
             for idx, modeTrace in enumerate( MODE_TRACE):
                 if ( modeTrace == leModeDeTrace):
                     self.fieldComboModeTrace.setCurrentIndex( idx)
@@ -127,7 +127,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         
         # Inter
         self.checkBoxContourSolo.stateChanged.connect( self.slot_bascule_contour)
-        self.comboBoxPolygone.currentIndexChanged[int].connect( self.slot_INTER_maj_champ_poly_liste )
+        self.comboBoxPolygone.currentIndexChanged[int].connect( self.slot_PROFIL_INTER_maj_champ_poly_liste )
         self.fieldComboContours.currentIndexChanged[int].connect( self.slot_INTER_change_champ_choisi )
         self.ButtonInter.pressed.connect(self.slot_INTER_moyennes_parcelles)
         self.ButtonInterRefresh.pressed.connect(self.slot_INTER_liste_parcelles)
@@ -239,7 +239,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             for idx, un in enumerate( LISTE_PROFIL):
                 if ( un == leProfil):
                     self.fieldComboProfilPHY.setCurrentIndex( idx)
-                    physiocap_log( self.tr( "Profil retrouvé"), leModeDeTrace) 
+                    physiocap_log( self.tr( "Profil retrouvé"), TRACE_PROFIL) 
 
         # Remplissage des cepages
         self.comboBoxCepage.setCurrentIndex( 0)
@@ -255,7 +255,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             for idx, un in enumerate( CEPAGES):
                 if ( un == leCepage):
                     self.comboBoxCepage.setCurrentIndex( idx)
-                    physiocap_log( self.tr( "Cépage retrouvé"), leModeDeTrace) 
+                    physiocap_log( self.tr( "Cépage retrouvé"), TRACE_PROFIL) 
 
         # Remplissage des modes de taille
         self.comboBoxTaille.setCurrentIndex( 0)
@@ -785,9 +785,9 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.groupBoxIsolignes.setEnabled( True)
         else:
             physiocap_error( "Dans slot_PROFIL {} est inconnu ". \
-            format ( profilCourant), leModeDeTrace, TRACE_PROFIL)
+            format ( profilCourant), TRACE_PROFIL)
         physiocap_log( "PROFIL {} pris en compte ". \
-            format ( profilCourant), leModeDeTrace, TRACE_PROFIL)
+            format ( profilCourant), TRACE_PROFIL)
 
     def dans_Quel_Settings( self, nomSettings=PHYSIOCAP_NOM_3):
         self.settings= QSettings(PHYSIOCAP_NOM, nomSettings)
@@ -811,6 +811,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Cas recursif
         recursif = "YES" if self.checkBoxRecursif.isChecked() else "NO"
         self.settings.setValue("Physiocap/recursif", recursif )
+        TRACE_HISTO = "YES" if self.checkBoxHistogramme.isChecked() else "NO"
+        self.settings.setValue("Physiocap/histogrammes", TRACE_HISTO )
         # Cas détail vignoble
         details = "YES" if self.groupBoxDetailVignoble.isChecked() else "NO"
         self.settings.setValue("Physiocap/details", details)
@@ -821,7 +823,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.settings.setValue("Physiocap/pasContour", pasContour)
 
         self.memoriser_affichages_styles()
-        version_3, consolidation, leModeTrace = self.memoriser_expert()
+        version_3, consolidation, leModeDeTrace = self.memoriser_expert()
         self.memoriser_agro()
         self.memoriser_saisies_InterIntraParcelles()
         # Profil Champagne
@@ -848,14 +850,14 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.settings.setValue("Profil/Champagne", VALEUR_PROFIL_INITIALISE)
             
         physiocap_log('Tous les settings PROFIL sont sauvegardées', TRACE_PROFIL) 
-        return version_3, consolidation, leModeTrace, recursif,  details, pasContour 
+        return version_3, consolidation, recursif,  details, TRACE_HISTO, pasContour 
         
     def memoriser_expert( self):
         """ Mémoriser les choix d'expert """        
         # THEMATIQUES text et index
         self.dans_Quel_Settings()
-        leModeTrace = self.fieldComboModeTrace.currentText()
-        self.settings.setValue("Expert/leModeTrace", leModeTrace)
+        leModeDeTrace = self.fieldComboModeTrace.currentText()
+        self.settings.setValue("Expert/leModeDeTrace", leModeDeTrace)
         self.settings.setValue("Expert/leFormat", self.fieldComboFormats.currentText())
         # Cas détail segment
         self.settings.setValue("Expert/vitesse_mini_segment", float( self.doubleSpinBoxVitesseMiniSegment.value()))        
@@ -878,12 +880,11 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         sagaTIFF = "YES" if self.checkBoxSagaTIFF.isChecked() else "NO"
         self.settings.setValue("Expert/SagaTIFF", sagaTIFF )
         physiocap_log('Les informations expertes sont sauvegardées', TRACE_PROFIL) 
-        return version_3, consolidation, leModeTrace
+        return version_3, consolidation, leModeDeTrace
         
     def memoriser_agro( self):
         # Informations agronomiques (inspiré de ___Nadia___)
         self.dans_Quel_Settings()
-        #self.settings.setValue("Agro/info_agro", infoAgro)#___definir les valeurs des variables : details : yes/no
         self.settings.setValue("Agro/nom_parcelle", self.lineEditNomParcelle.text())#___definir les valeurs des variables : nom de la parcelle 
         self.settings.setValue("Agro/region",  self.comboBoxRegion.currentText())
         self.settings.setValue("Agro/annee_plantation", int( self.spinBoxAnneePlant.value()))
@@ -1610,7 +1611,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             return physiocap_message_box( self, aText, "information" )
 
         # Memorisation des saisies et expert et les affichages
-        version_3, consolidation, _, _, details,  _ = self.memoriser_tous_Settings()
+        version_3, consolidation, _, details, _,  _ = self.memoriser_tous_Settings()
             
         try:
             # Création des répertoires et des résultats de synthèse
@@ -1846,7 +1847,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 aText = aText + self.tr( "La méthode d'aide au calcul des isolignes est forcée à \n")
                 aText = aText + "\"Nombre d'isolignes permet le calcul de l'écartement des isolignes\""
                 self.fieldComboAideIso.setCurrentIndex( 0)   
-                physiocap_log( aText , leModeDeTrace)
+                physiocap_log( aText , TRACE_MIN_MAX)
         else:
             # Cas pour une seul interpolation
 #            self.spinBoxIsoMin.setEnabled( True)
@@ -1891,14 +1892,14 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         """ Rafraichit les listes avant le calcul inter parcelles"""
         nombre_poly = 0
         nombre_point = 0
-        nombre_poly, nombre_point = physiocap_fill_combo_poly_or_point( self)
+        nombre_poly, nombre_point = quel_poly_point_INTRA( self)
         leModeDeTrace = self.fieldComboModeTrace.currentText()
         physiocap_log( "Dans slot_INTER_liste_parcelles : poly >> {}<< et points >> {}<<". \
            format ( nombre_poly,nombre_point), leModeDeTrace)
 
         if ( nombre_poly > 0):
             # A_TESTER: si utile fin inter self.slot_min_max_champ_intra()
-            self.slot_INTER_maj_champ_poly_liste()
+            self.slot_PROFIL_INTER_maj_champ_poly_liste()
         if (( nombre_poly > 0) and ( nombre_point > 0)):
             # Liberer le bouton "moyenne"
             self.groupBoxInter.setEnabled( True)
@@ -1913,8 +1914,9 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         position_choix = self.fieldComboContours.currentIndex()
         self.fieldPbGdal.setCurrentIndex( position_choix)                              
    
-    def slot_INTER_maj_champ_poly_liste( self ):
+    def slot_PROFIL_INTER_maj_champ_poly_liste( self ):
         """ Creer une liste de champs (fieldCombo Box) à valuer values pour le vecteur courant"""
+        leProfil = self.fieldComboProfilPHY.currentText()
         leModeDeTrace = self.fieldComboModeTrace.currentText()
         nom_complet_poly = self.comboBoxPolygone.currentText().split( SEPARATEUR_NOEUD)
         inputLayer = nom_complet_poly[0] 
@@ -1930,46 +1932,66 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.fieldComboContours.addItem( CHAMP_NOM_PHY)
         self.fieldComboContours.setCurrentIndex( 0)
         if layer is not None:
-            # On exclut les layer qui ne sont pas de type 0 (exemple 1 raster)
+            # On exclut les layers qui ne sont pas de type 0 (exemple 1 raster)
             if ( layer.type() == 0):
                 position_combo = 1 # Demarre à 1 car NOM_PHY est dejà ajouté
                 dernierAttribut = self.settings.value("Physiocap/attributPoly", "xx")
                 mon_provider = layer.dataProvider()
                 nombre_ligne = mon_provider.featureCount()
                 map_champ = mon_provider.fieldNameMap()
-                for mon_champ in mon_provider.fields():
-                    nom_champ = mon_champ.name()
-                    liste_valeurs = mon_provider.uniqueValues( map_champ[ nom_champ])
+                valeur_unique = "NO"
+                if leProfil == 'Champagne':
+                    # On garde le seul champ nomant les parcelles 
+                    for mon_champ in mon_provider.fields():
+                        nom_champ = mon_champ.name()
+                        if nom_champ == "Nom_Parcel":
+                            liste_valeurs = mon_provider.uniqueValues( map_champ[ nom_champ])
+                            valeur_unique = "YES" if nombre_ligne == len( liste_valeurs) else "NO"
+                            break
+                
+                if valeur_unique == "YES": # cas champagne et champ Nom_Parcel OK
+                    self.fieldComboContours.clear()
+                    self.fieldPbGdal.clear()
+                    self.fieldPbGdal.addItem( "NO" )                                
+                    self.fieldComboContours.addItem( "Nom_Parcel")
+                    self.fieldComboContours.setCurrentIndex( 0)
+                else:
+                    for mon_champ in mon_provider.fields():
+                        nom_champ = mon_champ.name()
+                        if mon_champ.type() != 10:
+                            physiocap_log( "type Exclu {} pour {}".format( mon_champ.type(), nom_champ))
+                            continue
+                        liste_valeurs = mon_provider.uniqueValues( map_champ[ nom_champ])
 
-                    if leModeDeTrace == TRACE_PAS:
-                        # Raccourci si aucun trace, on suppose toutes les valeurs sont uniques
-                        valeur_unique = "YES" 
-                    else:
-                        # Vérifier si les valeurs du field name sont toutes uniques
-    #                    physiocap_log( "Unique : field >> {0} \n {1}<<". \
-    #                        format ( nom_champ,  liste_valeurs), leModeDeTrace)
-                        if nombre_ligne == len( liste_valeurs):
+                        if leModeDeTrace == TRACE_PAS:
+                            # Raccourci si aucun trace, on suppose toutes les valeurs sont uniques
                             valeur_unique = "YES" 
                         else:
-#                            physiocap_log( "Dans recherche de champ : field >> {0} nombre {1} mais possible {2}". \
-#                            format ( nom_champ,  len( liste_valeurs),  nombre_ligne), leModeDeTrace)
-                            valeur_unique = "NO" 
-                            
-                    # ne pas remettre NOM_PHY une deuxieme fois
-                    if valeur_unique == "YES" and nom_champ != CHAMP_NOM_PHY:
-                        valeur_pb_GDAL = "NO"
-                        for val in liste_valeurs:
-                            if physiocap_nom_entite_avec_pb_caractere( val):
-                                valeur_pb_GDAL = "YES"
-                                break                        
-                        self.fieldPbGdal.addItem( valeur_pb_GDAL )                                
-                        self.fieldComboContours.addItem( nom_champ )
-                        if ( nom_champ == dernierAttribut):
-                            self.fieldComboContours.setCurrentIndex( position_combo)
-                            self.fieldPbGdal.setCurrentIndex( position_combo)                              
-                        position_combo = position_combo + 1
-  
-                liste_valeurs={}
+                            # Vérifier si les valeurs du field name sont toutes uniques
+        #                    physiocap_log( "Unique : field >> {0} \n {1}<<". \
+        #                        format ( nom_champ,  liste_valeurs), leModeDeTrace)
+                            if nombre_ligne == len( liste_valeurs):
+                                valeur_unique = "YES" 
+                            else:
+    #                            physiocap_log( "Dans recherche de champ : field >> {0} nombre {1} mais possible {2}". \
+    #                            format ( nom_champ,  len( liste_valeurs),  nombre_ligne), leModeDeTrace)
+                                valeur_unique = "NO" 
+                                
+                        # ne pas remettre NOM_PHY une deuxieme fois
+                        if valeur_unique == "YES" and nom_champ != CHAMP_NOM_PHY:
+                            valeur_pb_GDAL = "NO"
+                            for val in liste_valeurs:
+                                if physiocap_nom_entite_avec_pb_caractere( val):
+                                    valeur_pb_GDAL = "YES"
+                                    break                        
+                            self.fieldPbGdal.addItem( valeur_pb_GDAL )                                
+                            self.fieldComboContours.addItem( nom_champ )
+                            if ( nom_champ == dernierAttribut):
+                                self.fieldComboContours.setCurrentIndex( position_combo)
+                                self.fieldPbGdal.setCurrentIndex( position_combo)                              
+                            position_combo = position_combo + 1
+      
+                        liste_valeurs={}
                 mon_provider = None
         else:
             physiocap_log( "Dans recherche des champs uniques : aucun layer", leModeDeTrace)            
@@ -2043,16 +2065,12 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Eviter les appels multiples
         self.ButtonInter.setEnabled( False)
         # Memorisation des saisies
-        version_3, consolidation, _, _, details,  _ = self.memoriser_tous_Settings()
+        version_3, consolidation, _, details, _, _ = self.memoriser_tous_Settings()
            
         try:
             inter = PhysiocapInter( self)
             # TODO: RENDU bloquer l'affichage self.iface.mapCanvas().setRenderFlag( False )
             inter.physiocap_moyenne_InterParcelles( self)
-            # TODO: RENDU capturer dans la boucle le cancel
-            #if not self.progressBar.parent().parent().processStatus:
-                # The process was canceled
-                #self.iface.mapCanvas().setRenderFlag( True )
     
         except physiocap_exception_rep as e:
             physiocap_log_for_error( self)
@@ -2300,12 +2318,12 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.textEditSynthese.clear()
 
         distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
-        laProjectionCRS, laProjectionTXT, EPSG_NUMBER = \
-            physiocap_quelle_projection_et_lib_demandee( self)
+        laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( self)
         self.settings.setValue("Expert/laProjection", laProjectionTXT)
         
         # On sauve les affichages et rend les bascules pour traitement
-        version_3, consolidation, recursif,  details,  TRACE_HISTO, pasContour = self.memoriser_tous_Settings()
+        version_3, consolidation, recursif, details, TRACE_HISTO, pasContour = self.memoriser_tous_Settings()
+        physiocap_log( self.tr( "Les détails du vignoble sont {}").format( details), leModeDeTrace)
 
         if recursif == "YES":
             physiocap_log( self.tr( "La recherche des MID fouille l'arbre de données"), leModeDeTrace)

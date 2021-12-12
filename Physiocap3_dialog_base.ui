@@ -28,6 +28,12 @@
   <property name="toolTip">
    <string/>
   </property>
+  <property name="sizeGripEnabled">
+   <bool>false</bool>
+  </property>
+  <property name="modal">
+   <bool>false</bool>
+  </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
@@ -6789,7 +6795,7 @@ DIAM, SARM, BIOM,...) </string>
        </font>
       </property>
       <property name="text">
-       <string>Version 3.10.7 Beta Contour</string>
+       <string>Version 3.10.8 Beta PDF</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_500">
@@ -6990,8 +6996,8 @@ DIAM, SARM, BIOM,...) </string>
      <widget class="QTextBrowser" name="textBrowserAide">
       <property name="geometry">
        <rect>
-        <x>0</x>
-        <y>430</y>
+        <x>10</x>
+        <y>310</y>
         <width>601</width>
         <height>131</height>
        </rect>
@@ -7063,8 +7069,8 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="geometry">
        <rect>
-        <x>120</x>
-        <y>400</y>
+        <x>100</x>
+        <y>590</y>
         <width>311</width>
         <height>21</height>
        </rect>
@@ -7095,8 +7101,8 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="lab_traces">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>400</y>
+        <x>0</x>
+        <y>590</y>
         <width>131</width>
         <height>21</height>
        </rect>

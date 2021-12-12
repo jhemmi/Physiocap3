@@ -45,8 +45,7 @@
 from .Physiocap_tools import physiocap_message_box,\
         physiocap_log, physiocap_error, physiocap_is_only_ascii, \
         physiocap_nom_entite_sans_pb_caractere,  physiocap_nom_entite_avec_pb_caractere, \
-        physiocap_rename_existing_file, \
-        physiocap_quelle_projection_et_lib_demandee, \
+        physiocap_rename_existing_file, quelle_projection_et_lib_demandee, \
         physiocap_get_layer_by_ID
 
 from .Physiocap_var_exception import *
@@ -235,8 +234,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
      
         # Recuperer le CRS choisi, les extensions et le calculateur de distance
         distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
-        laProjectionCRS, laProjectionTXT, EPSG_NUMBER = \
-            physiocap_quelle_projection_et_lib_demandee( dialogue)
+        laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( dialogue)
             
         # Récupération des deux parametres d'Intra pour GDAL demandé et non forcé
         rayonDoubleIntra = float ( dialogue.spinBoxDoubleRayon.value())
@@ -668,8 +666,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                    
         # Recuperer le CRS choisi, les extensions et le calculateur de distance
         distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
-        laProjectionCRS, laProjectionTXT, EPSG_NUMBER = \
-            physiocap_quelle_projection_et_lib_demandee( dialogue)
+        laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( dialogue)
 
         quel_vecteur_demande = dialogue.fieldComboFormats.currentText()
         nom_point_en_cours = vecteur_point.dataProvider().dataSourceUri()

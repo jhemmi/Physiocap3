@@ -41,12 +41,13 @@ from PyQt5 import QtWidgets
 from PyQt5.QtCore import QVariant
 
 from qgis.core import (Qgis, QgsDistanceArea, QgsProject, QgsMessageLog, \
-        QgsMapLayer, QgsCoordinateReferenceSystem, QgsFields, QgsField, \
+        QgsLayerTreeGroup, QgsLayerTreeLayer, QgsMapLayer, QgsCoordinateReferenceSystem, QgsFields, QgsField, \
         QgsFeature, QgsGeometry, QgsPoint, QgsPointXY,  \
         QgsVectorFileWriter, QgsWkbTypes, 
         QgsProcessingFeedback, QgsVectorLayer) 
 from PyQt5.QtWidgets import QMessageBox
 
+import glob
 try :
     from osgeo import ogr
 except ImportError:
@@ -65,8 +66,6 @@ except ImportError:
     aText ="Erreur bloquante : module numpy n'est pas accessible" 
     QgsMessageLog.logMessage( aText, "\u03D5 Erreurs", Qgis.Warning)
 
-# Pour les traces de Tools
-leModeTrace = TRACE_TOOLS
 
 # MESSAGES & LOG
 def physiocap_message_box( self, text, level="warning"):
@@ -147,10 +146,115 @@ def physiocap_error( self, aText, level ="WARNING"):
     toolsObject.physiocap_tools_log_error( aText, level)
     return -1      
 
+# Utilitaire liste poly inter
+def quel_type_vecteur( self, vector):
+    """Vérifie le type de forme du vector : on simplifie au cas multiple pour Wbk et """
+
+    try:
+        # A_TESTER: V3 ? vérifier multiType couvre plus de cas
+        # et cas vecteur non shape
+        geomWkbType = vector.wkbType()
+        geomWkbMultiType = QgsWkbTypes.multiType( geomWkbType) # multiple sous processing
+        geomType = QgsWkbTypes.geometryType( geomWkbType) 
+        geomTypeText = QgsWkbTypes.geometryDisplayString( geomType)
+        geomWkbTypeText = QgsWkbTypes.displayString( geomWkbType)
+        
+        # physiocap_log( "-- Vector Text {0} type geom {1} et WkbType {2}".\
+        #    format( geomTypeText, geomType,  geomWkbType), TRACE_TOOLS)
+        return geomTypeText, geomWkbTypeText, geomWkbType,  geomWkbMultiType  
+    except:
+#        physiocap_error( self, self.tr("Warning : couche (layer) {0} n'est ni (is nor) point, ni (nor) polygone").\
+#            format( vector.id()))
+        pass
+        # On evite les cas imprévus
+        return "Inconnu", "WkbInconnu",  None,  None
+
+def quel_poly_point_INTRA( self, isRoot = None, node = None ):
+    """ Recherche dans l'arbre Physiocap (recursif)
+    les Polygones,
+    les Points de nom DIAMETRE qui correspondent aux données filtreés
+    Remplit deux listes pour le comboxBox des vecteurs "inter Parcellaire"
+    Rend aussi le nombre de poly et point retrouvé
+    """
+    #leModeDeTrace = self.fieldComboModeTrace.currentText() 
+    derniere_session = self.lineEditDerniereSession.text()
+    Repertoire_Donnees_Brutes = self.lineEditDirectoryPhysiocap.text()
+    le_profil =  self.fieldComboProfilPHY.currentText()
+    nombre_poly = 0
+    nombre_point = 0
+   
+    if ( isRoot == None):
+        root = QgsProject.instance().layerTreeRoot()
+        self.comboBoxPolygone.clear()
+        self.comboBoxPoints.clear()
+        noeud_en_cours = ""
+        noeud = root
+        if le_profil == 'Champagne':
+            # On prend un eventuel shp ou CSV dans rep des données brutes
+            un_vecteur = liste_vecteur_dans_brut( Repertoire_Donnees_Brutes)
+            if len( un_vecteur) > 0:                
+                node_layer = un_vecteur + SEPARATEUR_NOEUD + "présent avec MID"
+                self.comboBoxPolygone.addItem( node_layer)            
+            else:
+                pass
+    else:
+        # On force root comme le noeud
+        noeud = node
+        noeud_en_cours = node.name()
+
+    #physiocap_log( "- noeud en cours {0}".format( noeud_en_cours), TRACE_JH)        
+
+    # On descend de l'arbre par la racine
+    for child in noeud.children():
+        #physiocap_log( "-- in noeud : comment connaitre le type ?", TRACE_TOOLS))        
+        if isinstance( child, QgsLayerTreeGroup):
+            noeud_en_cours = child.name()
+            #physiocap_log( "--Group: " + noeud_en_cours, TRACE_JH)
+            if noeud_en_cours != derniere_session:
+                continue
+            #physiocap_log( "--Group: " + noeud_en_cours, TRACE_JH)
+            groupe_inter = noeud_en_cours + SEPARATEUR_ + VIGNETTES_INTER
+            #physiocap_log( "--Group inter : " + groupe_inter, TRACE_TOOLS))
+            if ( noeud_en_cours != groupe_inter):
+                # On exclut les vignettes INTER : sinon on descend dans le groupe
+                un_nombre_poly, un_nombre_point = quel_poly_point_INTRA( self, noeud, child)
+                nombre_point = nombre_point + un_nombre_point
+                nombre_poly = nombre_poly + un_nombre_poly
+        elif isinstance( child, QgsLayerTreeLayer):
+#            physiocap_log( "--Layer >> {0}  ID>> {1} ". \
+#                format( child.name(),  child.layerId()), TRACE_TOOLS)) 
+#           physiocap_log( "--Layer parent le groupe >> " + child.parent().name() , TRACE_TOOLS)) 
+            # Tester si poly ou point
+            type_layer,  type_Wkb_layer,  numero_Wkb_layer,  numero_Multi_Wkb = quel_type_vecteur( self, child.layer())
+#            physiocap_log( "--Layer a pour type >> {0} WkbType  >> {1} et numero_Wkb  >> {2} ".\
+#            format( type_layer,  type_Wkb_layer,  numero_Wkb_layer), TRACE_TOOLS))
+            if ( type_layer == "Point"):
+                if (((not self.checkBoxConsolidation.isChecked()) and \
+                    ( child.name() == "DIAMETRE mm")) \
+                    or \
+                    ((self.checkBoxConsolidation.isChecked()) and \
+                    ( child.parent().name() == CONSOLIDATION))):
+                    physiocap_log( "- layer POINT: " + child.name() + "  ID: " + child.layerId(), TRACE_TOOLS) 
+                    node_layer = noeud_en_cours + SEPARATEUR_NOEUD + child.layerId()
+                    self.comboBoxPoints.addItem( node_layer)
+                    nombre_point = nombre_point + 1
+            elif ( type_layer == "Polygon"):
+                physiocap_log( "- layer POLY: " + child.name() + "  ID: " + child.layerId(), TRACE_TOOLS) 
+                node_layer = child.name() + SEPARATEUR_NOEUD + child.layerId()        
+                self.comboBoxPolygone.addItem( node_layer)
+                nombre_poly = nombre_poly + 1
+            elif ( type_layer == "Line"):
+                pass # cas de segments
+            else:
+                pass
+#                physiocap_log( "- Layer de type {0} rejeté : {1} ID: ".\
+#                    format( type_layer, child.name(),  child.layerId()), TRACE_TOOLS) 
+    return nombre_poly, nombre_point
+
 # Vignobles Moyennes et CSVT
 def quelles_informations_moyennes():
     """ Mettre les info moyennes dans l'ordre et dans un dict entete """ 
-    champsMoyenneOrdonnes = [ "DIAM", "VITESSE", "BIOM", "NBSARMM2", "BIOMGCEP", "NBSARMCEP"]
+    champsMoyenneOrdonnes = [ "diam", "vitesse", "biom", "nbsarmm2", "biomgcep", "nbsarcep"]
     listeEnteteMoyenne = [ "DIAM_AVG", "VITESSE_AVG", "BIOM", "NBSARMM2", "BIOMGCEP", "NBSARMCEP"]
     return champsMoyenneOrdonnes, listeEnteteMoyenne
 
@@ -162,8 +266,9 @@ def quelles_informations_vignoble_agro( self):
     dictInfoVignoble = {}
     dictEnteteVignoble = {}  # dict de liste [ "nom champ csv", "type_QGIS", "champ shp"] 
     # pour entete manque pH non demandé et CaCO3 non necessaire
-    champsVignobleOrdonnes = [ "nom_parcelle", "commune", "region", "cepage", "clone", "porte_greffe", "annee_plantation", \
-        "interrangs", "interceps", "taille", "argile", "mo",  "CN", "rendement", "poids_moy_grappes", "nb_grappes"]
+    champsVignobleOrdonnes = [ "nom_parcelle", "commune", "region", "cepage", "clone", "porte_greffe", \
+      "annee_plantation", "interrangs", "interceps", "hauteur", "densite", "taille", "argile", "mo",  \
+      "CN", "rendement", "poids_moy_grappes", "nb_grappes"]
     
     dictEnteteVignoble[ "nom_parcelle"] = [ "Nom_Parcel", "chaine", "Nom_Parcel"]
     dictEnteteVignoble[ "commune"]      = [ "Commune", "chaine", "Commune"]
@@ -176,8 +281,8 @@ def quelles_informations_vignoble_agro( self):
     #dictEnteteVignoble[ "max_sarments_metre"] = []
     dictEnteteVignoble[ "interrangs"]   = [ "interrang (cm)", "entier", "interrang"]
     dictEnteteVignoble[ "interceps"]    = [ "intercep (cm)" , "entier",  "intercep"]
-    #dictEnteteVignoble[ "hauteur"] = []
-    #dictEnteteVignoble[ "densite"] = []
+    dictEnteteVignoble[ "hauteur"] = [ "hauteur (cm)" , "entier",  "Hauteur"]
+    dictEnteteVignoble[ "densite"] = [ "densite_sarment", "reel",  "Densité"] 
     dictEnteteVignoble[ "taille"]       = [ "Type_taill", "chaine", "Type_taill" ]
     dictEnteteVignoble[ "argile"]       = [ "Sol_argile", "entier",  "Sol_argile"]
     dictEnteteVignoble[ "mo"]       = [ "Sol_MO", "reel.1",  "Sol_MO"]      
@@ -257,7 +362,7 @@ def quelles_informations_vignoble_agro( self):
     for unChamp in champsVignobleOrdonnes:
         listeEntete.append( dictEnteteVignoble[ unChamp][0])
         listeInfo.append( dictInfoVignoble[ unChamp])
-    physiocap_log( "La Liste Agro : {}".format(listeInfo), leModeTrace)
+    physiocap_log( "La Liste Agro : {}".format(listeInfo), TRACE_TOOLS)
     return champsVignobleOrdonnes, dictInfoVignoble, listeInfo,  dictEnteteVignoble, listeEntete
 
 def quel_nom_CSVT( self):
@@ -501,28 +606,29 @@ def inclure_vignoble_sur_contour(self, chemin_fichier_convex, ss_groupe=None):
     return chemin_fichier_convex
 
 # Fonction pour générer le CSVT : csv avec info agro, moyenne et geometrie en WKT
-def creer_csvt_source_onglet( self, les_parcelles,  les_parcelles_ID, les_geoms_poly, les_moyennes_par_contour):
+def creer_csvt_source_onglet( self, les_parcelles,  les_geoms_poly, les_moyennes_par_contour):
     """Créer CSVT avec les informations de moyenne & l'onglet Agronomie"""
-    leModeDeTrace = self.fieldComboModeTrace.currentText()
+    #leModeDeTrace = self.fieldComboModeTrace.currentText()
     campagne = self.lineEditCampagne.text()
     # TODO CSVT CONTOURS : Faire une boucle pour tous les contours
     # Récupération des moyennes du contour
     lesMoyennesOrdonnees = []
     champsMoyenneOrdonnes, listeEnteteMoyenne = quelles_informations_moyennes()    
-    physiocap_log ( "Physiocap parcelles id : {}".format( les_parcelles_ID), leModeDeTrace)
-    physiocap_log ( "Physiocap parcelles : {}".format( les_parcelles), leModeDeTrace)
-    physiocap_log ( "Physiocap moyennes par contour : {}".format( les_moyennes_par_contour), leModeDeTrace)
-    for parcelleId in les_parcelles_ID:
-#        physiocap_log ( "Physiocap moyenne de la {} ieme parcelle a pour diam : {}".
-#            format( les_parcelles[parcelleId], les_moyennes_par_contour[parcelleId].get( 'diam')), leModeDeTrace)
-        geomContour = les_geoms_poly[parcelleId]
+    physiocap_log ( "Physiocap parcelles : {}".format( les_parcelles), TRACE_JH)
+    physiocap_log ( "Physiocap moyennes par contour : {}".format( les_moyennes_par_contour), TRACE_JH)
+    #physiocap_log ( "Physiocap geom de contour : {}".format( les_geoms_poly), TRACE_JH)
+    for parcelleId,  parcelleNom in enumerate( les_parcelles):
+        physiocap_log ( "Physiocap moyenne de {} la {} ieme parcelle a pour diam : {}".
+        format( parcelleNom,  parcelleId, les_moyennes_par_contour[parcelleId].get( 'diam')), TRACE_JH)
+        geomContour = QgsGeometry.fromMultiPolygonXY( les_geoms_poly[ parcelleId])
+
         for unChamp in champsMoyenneOrdonnes:
             lesMoyennesOrdonnees.append( les_moyennes_par_contour[parcelleId].get( unChamp)) 
     physiocap_log ( "Physiocap moyennes du contour {}: {}".\
-        format( les_parcelles[parcelleId], lesMoyennesOrdonnees), leModeDeTrace)
-    
+        format( les_parcelles[parcelleId], lesMoyennesOrdonnees), TRACE_JH)
     # Calculer geomWKT à partir de geom du contour
     geomWKT = str( geomContour.asWkt())
+    physiocap_log ( "Physiocap geom du contour : {}".format( geomWKT), TRACE_JH)
 
     _, nom_CSVT = quel_nom_CSVT( self)
     champsVignobleOrdonnes, dictInfoVignoble, listeInfo,  dictEnteteVignoble, listeEntete = \
@@ -547,8 +653,8 @@ def creer_csvt_source_onglet( self, les_parcelles,  les_parcelles_ID, les_geoms_
     #try:
         writerCSVT = csv.writer( fichier_CSVT, delimiter=';')
         # Ecriture de l'entête et des infos vignobles
-        writerCSVT.writerow( ["Campagne"] + listeEntete + listeEnteteMoyenne +   ["geomWKT"])
-        writerCSVT.writerow( campagne,      listeInfo  +  lesMoyennesOrdonnees + [ geomWKT])
+        writerCSVT.writerow( [ "Campagne"] + listeEntete + listeEnteteMoyenne +   [  "geomWKT"])
+        writerCSVT.writerow( [ campagne] +     listeInfo  +  lesMoyennesOrdonnees + [ geomWKT])
         fichier_CSVT.close()
     
     return 0
@@ -560,15 +666,15 @@ def physiocap_write_in_synthese( self, aText):
   
 def physiocap_is_only_ascii(s):
     if isinstance( s, unicode):
-        physiocap_log( "physiocap_is_only_ascii {0}".format( "Cas unicode"), leModeTrace)
+        physiocap_log( "physiocap_is_only_ascii {0}".format( "Cas unicode"), TRACE_TOOLS)
         try:
             s.encode('ascii')
-            physiocap_log( "physiocap_is_only_ascii {0} : resultat OK {1}".format( "apres encode", s.encode('ascii')), leModeTrace)
+            physiocap_log( "physiocap_is_only_ascii {0} : resultat OK {1}".format( "apres encode", s.encode('ascii')), TRACE_TOOLS)
         except UnicodeEncodeError:
-            physiocap_log( "physiocap_is_only_ascii {0}".format( "dans exception"), leModeTrace)
+            physiocap_log( "physiocap_is_only_ascii {0}".format( "dans exception"), TRACE_TOOLS)
             return False
     else:
-        physiocap_log( "physiocap_is_only_ascii {0}".format( "Non unicode"), leModeTrace)
+        physiocap_log( "physiocap_is_only_ascii {0}".format( "Non unicode"), TRACE_TOOLS)
         try:
             s.decode('ascii')
         except UnicodeDecodeError:
@@ -619,7 +725,7 @@ def physiocap_nom_entite_avec_pb_caractere( un_nom, un_texte = "GDAL"):
         if un_nom.find(' ') >= 0:
             return True
 #    else:
-#        physiocap_log( "pb GDAL {0}".format( type(un_nom)), leModeTrace)
+#        physiocap_log( "pb GDAL {0}".format( type(un_nom)), TRACE_TOOLS)
 #        
     # On a rien trouvé
     return False
@@ -631,10 +737,10 @@ def physiocap_get_layer_by_URI( layerURI ):
     ids = root.findLayerIds()              
     trouve = "NO"
     layer = None
-    physiocap_log( "Recherche {0}".format( layerURI), leModeTrace)
+    physiocap_log( "Recherche {0}".format( layerURI), TRACE_TOOLS)
     # BUG 7 melange des / et \ en V3. On repasse tout en "/"
     layerURI_nettoye = layerURI.replace("\\", "/")
-    physiocap_log( "Modifié>> {0}".format( layerURI_nettoye), leModeTrace)
+    physiocap_log( "Modifié>> {0}".format( layerURI_nettoye), TRACE_TOOLS)
     for layerID in ids:
         # Retrouver le layer
         layer = root.findLayer( layerID).layer()
@@ -642,18 +748,18 @@ def physiocap_get_layer_by_URI( layerURI ):
         # Attention il faut enlever la mention |layerid à la fin de l'URI
         pos_fin_layer = URI_complet.rfind( "|layerid=")
         URI_vecteur = URI_complet[:pos_fin_layer]
-        physiocap_log( "Layer URI {0}".format( URI_vecteur), leModeTrace)
+        physiocap_log( "Layer URI {0}".format( URI_vecteur), TRACE_TOOLS)
         if layer is not None and layer.type() == QgsMapLayer.VectorLayer and \
             (URI_vecteur == layerURI_nettoye or URI_vecteur == layerURI):
             trouve = "YES"
-            physiocap_log( "Layer retrouvé  {0}".format( layer.name()), leModeTrace)
+            physiocap_log( "Layer retrouvé  {0}".format( layer.name()), TRACE_TOOLS)
             # The layer is found
             break
     if ( trouve == "YES"):
         if layer.isValid():
             return layer
         else:
-            physiocap_log( "Layer trouvé  {0} mais invalide".format( layer.name()), leModeTrace)
+            physiocap_log( "Layer trouvé  {0} mais invalide".format( layer.name()), TRACE_TOOLS)
             return None
     else:
         return None
@@ -692,24 +798,24 @@ def physiocap_get_layer_by_ID( layerID):
     trouve = "NO"
     for id in ids:
         if id == layerID:
-            #physiocap_log( "Layer retrouvé : " + str( layerID), leModeTrace)
+            #physiocap_log( "Layer retrouvé : " + str( layerID), TRACE_TOOLS)
             layer_trouve = root.findLayer( layerID)
             le_layer = layer_trouve.layer()
             trouve = "YES"
             break
     if ( trouve == "YES"):
         if ( le_layer.isValid()):
-            physiocap_log( "OK Couche valide : {0}".format ( le_layer.name()), leModeTrace)
+            physiocap_log( "OK Couche valide : {0}".format ( le_layer.name()), TRACE_TOOLS)
             return le_layer
         else:
-            physiocap_log( "Couche invalide : {0}".format ( le_layer.name()), leModeTrace)
+            physiocap_log( "Couche invalide : {0}".format ( le_layer.name()), TRACE_TOOLS)
             return None
     else:
         physiocap_log( "Aucune couche retrouvée pour ID : {0}".\
-            format( ( str( layerID))), leModeTrace)
+            format( ( str( layerID))), TRACE_TOOLS)
         return None
   
-def physiocap_quelle_projection_et_lib_demandee( self):
+def quelle_projection_et_lib_demandee( self):
     """ Selon la valeur cochée dans le radio de projection 
     positionne laProjection (en QgsCoordinateReferenceSystem, texte et nombre (epsg)
     les extensions EXTENSION_SHP, EXTENSION_PRJ et RASTER selon la demande SAGA
@@ -730,7 +836,7 @@ def physiocap_quelle_projection_et_lib_demandee( self):
 #    laProjection_str = str( la_projection_CRS.postgisSrid())
 #    if la_projection_CRS.isValid():
 #        physiocap_log("Projection {0} des shapefiles est demandée : {1} est un EPSG valide".\
-#            format( la_projection_TXT, laProjection_str), leModeTrace)
+#            format( la_projection_TXT, laProjection_str), TRACE_TOOLS)
         
     EXTENSION_SHP_COMPLET = SEPARATEUR_ + la_projection_TXT + EXTENSION_SHP
     EXTENSION_PRJ_COMPLET = SEPARATEUR_ + la_projection_TXT + EXTENSION_PRJ
@@ -806,7 +912,7 @@ def physiocap_rename_existing( chemin):
         extension = chemin[ pos_extension:]
         if ( pos_extension != -1):
             chemin = chemin[: pos_extension]
-            #physiocap_log("Nouveau chemin" + chemin, leModeTrace)
+            #physiocap_log("Nouveau chemin" + chemin, TRACE_TOOLS)
             
     # Si chemin a déjà une parenthèse dans la 3 derniers caracteres
     longueur = len(chemin)
@@ -852,7 +958,7 @@ def physiocap_rename_existing_file( chemin):
         nouveau_chemin = physiocap_rename_existing( chemin)
         return physiocap_rename_existing_file( nouveau_chemin) 
     else:
-        #physiocap_log( "Chemin pour la création du fichier ==" + chemin, leModeTrace)
+        #physiocap_log( "Chemin pour la création du fichier ==" + chemin, TRACE_TOOLS)
         return chemin
 
 def physiocap_rename_create_dir( chemin):
@@ -895,15 +1001,31 @@ def physiocap_look_for_MID( repertoire, recursif, exclusion="fic_sources"):
     for root, dirs, files in os.walk( repertoire, topdown=True):
         if root_base == "":
             root_base = root
-##        physiocap_log("ALL Root :" + str(root), leModeTrace)
-##        physiocap_log("ALL DIR :" + str(dirs), leModeTrace)
-##        physiocap_log("ALL FILE :" + str(files), leModeTrace)
+##        physiocap_log("ALL Root :" + str(root), TRACE_TOOLS)
+##        physiocap_log("ALL DIR :" + str(dirs), TRACE_TOOLS)
+##        physiocap_log("ALL FILE :" + str(files), TRACE_TOOLS)
         if exclusion in root:
             continue
         for name_file in files:
             if ".MID" in name_file[-4:]:
                 MIDs.append( os.path.join( root, name_file))
     return sorted( MIDs)
+
+def liste_vecteur_dans_brut( Repertoire_Donnees_Brutes):
+    """Cherche premier vecteur (shp puis csv) dans répertoire des données brutes (qui contient MID) """
+    nom_fichiers_recherches = os.path.join( Repertoire_Donnees_Brutes, RECHERCHE_EXTENSION_SHP)
+    listeSHPTriee = sorted(glob.glob( nom_fichiers_recherches))
+    if len( listeSHPTriee) == 0:
+        physiocap_log( "Aucun vecteur de type SHAPFILE dans répertoire des données brutes")
+    else:
+        physiocap_log( "Vecteur de type SHAPEFILE {}".format( listeSHPTriee[0]))
+        return os.path.basename( listeSHPTriee[0])        
+    nom_fichiers_recherches = os.path.join( Repertoire_Donnees_Brutes, RECHERCHE_EXTENSION_CSV)
+    listeCSVTriee = sorted(glob.glob( nom_fichiers_recherches))
+    if len( listeCSVTriee) == 0:
+        physiocap_log( "Aucun vecteur de type CSV dans répertoire des données brutes")
+    else:
+        return os.path.basename( listeCSVTriee[0])
 
 def physiocap_list_MID( repertoire, MIDs, synthese="xx"):
     """Fonction qui liste les MID.
@@ -1051,8 +1173,7 @@ def physiocap_segment_vers_vecteur( self, chemin_session,  nom_repertoire, nom_s
     """ Creation de shape file à partir des données de segment """
 
     distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
-        laProjectionCRS, laProjectionTXT, EPSG_NUMBER = \
-            physiocap_quelle_projection_et_lib_demandee( self)        
+        laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( self)        
     nom_court_vecteur_segment = None
     nom_court_prj_segment = None
     nom_vecteur_segment = None
@@ -1170,8 +1291,7 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
     leModeDeTrace = self.fieldComboModeTrace.currentText()
     # Recuperer le CRS choisi, les extensions et le calculateur de distance
     distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
-        laProjectionCRS, laProjectionTXT, EPSG_NUMBER = \
-            physiocap_quelle_projection_et_lib_demandee( self)        
+        laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( self)        
     
     # Initialisation
     nom_vecteur = None
