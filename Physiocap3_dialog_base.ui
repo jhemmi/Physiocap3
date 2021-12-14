@@ -476,7 +476,7 @@
        </font>
       </property>
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit du nom qui identifie votre session de travail. Ce nom sert de répertoire de base pour les données produites par l'extension Physiocap. Il sert aussi de préfixe pour les données créées.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : Choisir un nom court, décrivant clairement votre jeu de données.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous lancez plusieurs itérations (bouton OK), ce nom se completera du suffixe [1] puis [2]  jusqu'à [n] . Le plus grand numéro correspond à la dernière itération.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit du nom qui identifie votre session de travail. Ce nom sert de répertoire de base pour les données produites par l'extension Physiocap. Il sert aussi de préfixe pour les données créées.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce 1 : Choisir un nom court, décrivant clairement votre jeu de données.&lt;br/&gt;Astuce 2 : Difficile de matérialiser l'impact de ce nom : choissiez SESSION et regardez dans le nommage de votre repertoire cible les impacts.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous lancez plusieurs itérations (bouton OK), ce nom se completera du suffixe [1] puis [2] jusqu'à [n] . Le plus grand numéro correspond à la dernière itération.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="inputMethodHints">
        <set>Qt::ImhDialableCharactersOnly</set>
@@ -6693,7 +6693,7 @@ DIAM, SARM, BIOM,...) </string>
        <rect>
         <x>10</x>
         <y>220</y>
-        <width>601</width>
+        <width>591</width>
         <height>41</height>
        </rect>
       </property>
@@ -6795,7 +6795,7 @@ DIAM, SARM, BIOM,...) </string>
        </font>
       </property>
       <property name="text">
-       <string>Version 3.10.8 Beta PDF</string>
+       <string>Version 3.10.8 Beta Enchainement</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_500">
@@ -6997,8 +6997,8 @@ DIAM, SARM, BIOM,...) </string>
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>310</y>
-        <width>601</width>
+        <y>430</y>
+        <width>591</width>
         <height>131</height>
        </rect>
       </property>
@@ -7221,6 +7221,38 @@ p, li { white-space: pre-wrap; }
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit du champ de votre contour qui identifie chacune de vos parcelles. Dans la moyenne Inter Parcellaire, ce champ se nomme NOM_PHY. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Attention : seuls les champs ayant une valeur différente pour chaque parcelle sont proposés.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
      </widget>
+     <widget class="QPushButton" name="ButtonPDF">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>330</x>
+        <y>510</y>
+        <width>41</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="mouseTracking">
+       <bool>false</bool>
+      </property>
+      <property name="toolTip">
+       <string/>
+      </property>
+      <property name="whatsThis">
+       <string/>
+      </property>
+      <property name="text">
+       <string>PDF</string>
+      </property>
+     </widget>
      <zorder>groupBoxArret</zorder>
      <zorder>label_Contributions</zorder>
      <zorder>buttonContribuer</zorder>
@@ -7246,6 +7278,7 @@ p, li { white-space: pre-wrap; }
      <zorder>lab_42</zorder>
      <zorder>fieldPbGdal</zorder>
      <zorder>textBrowserAide</zorder>
+     <zorder>ButtonPDF</zorder>
     </widget>
    </widget>
   </widget>
@@ -7419,7 +7452,7 @@ p, li { white-space: pre-wrap; }
      </font>
     </property>
     <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Déclenchez le calcul de moyenne Inter parcellaire pour le contour et le jeu de données choisis.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Déclenchez le calcul de moyenne Inter parcellaire pour le contour et le jeu de données choisis.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="autoFillBackground">
      <bool>true</bool>
@@ -7491,7 +7524,7 @@ p, li { white-space: pre-wrap; }
      </font>
     </property>
     <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Déclenchez le calcul d'interpolation Intra parcellaire pour le (ou les) champ(s) à interpoler que vous avez choisi(s).&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Déclenchez le calcul d'interpolation Intra parcellaire pour le (ou les) champ(s) à interpoler que vous avez choisi(s).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="autoFillBackground">
      <bool>true</bool>
@@ -7617,7 +7650,7 @@ p, li { white-space: pre-wrap; }
     </rect>
    </property>
    <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Nom de la  dernière session Physiocap. C'est le nom du répertoire tous les entités créées par l'extension et regroupé dans un groupe du panneau de couche de QGIS.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Nom de la dernière session Physiocap. C'est le nom du répertoire tous les entités créées par l'extension et regroupées dans un groupe du panneau de couche de QGIS.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="readOnly">
     <bool>false</bool>
@@ -7657,7 +7690,7 @@ p, li { white-space: pre-wrap; }
     </rect>
    </property>
    <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Nom de la  dernière session Physiocap. C'est le nom du répertoire tous les entités créées par l'extension et regroupé dans un groupe du panneau de couche de QGIS.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit du nom de la campagne (c'est un millesime) qui peut être la vendange avant les mesure ou la vendange après.&lt;br/&gt;Se reporter au paramétrage dans l'onglet Expert, qui explicite l'origine du calcul de la campagne.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="readOnly">
     <bool>false</bool>

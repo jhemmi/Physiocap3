@@ -56,7 +56,6 @@ from qgis.core import ( Qgis, QgsProject, QgsVectorLayer, \
     QgsLayerTreeGroup, QgsRasterLayer, QgsMessageLog,  \
     QgsFeatureRequest, QgsExpression, QgsProcessingFeedback)
     
-
 class PhysiocapIntra( QtWidgets.QDialog):
     """QGIS Pour voir les messages traduits."""
     
@@ -65,15 +64,208 @@ class PhysiocapIntra( QtWidgets.QDialog):
         """Class constructor."""
         print("INTRA init class")
         super( PhysiocapIntra, self).__init__()
+
+##    def exportMap_png(self, raster, champ, ext, nom_parcelle, moyenne):  # generate map as png
+##        # first thing : layout
+##        mapRenderer = iface.mapCanvas().mapRenderer()
+    
+#####    c = (mapRenderer)
+#####    c.setPlotStyle(QgsComposition.Print)
+#####    # add map
+#####    x, y = 100, 20
+#####    w, h = c.paperWidth() - 100, c.paperHeight() - 20
+#####    composerMap = QgsComposerMap(c, x, y, w, h)
+#####    # composerMap.setItemPosition(72, 20)
+#####    composerMap.zoomToExtent(ext)
+#####    c.addItem(composerMap)
+#####    # add titre
+#####    composerLabel = QgsComposerLabel(c)
+#####    if (champ == 'BIOM'):
+#####        composerLabel.setText("Biomasse " + nom_parcelle + "(mm2/metre lineaire)")
+#####    if (champ == 'DIAM'):
+#####        composerLabel.setText("Diametre " + nom_parcelle + "(mm)")
+#####    if (champ == 'NBSARM'):
+#####        composerLabel.setText("Nombre de sarments " + nom_parcelle + " (metre lineaire)")
+#####    if (champ == 'NBSARMM2'):
+#####        composerLabel.setText("NBSARMM2")
+#####    if (champ == 'NBSARCEP'):
+#####        composerLabel.setText("NBSARCEP")
+#####    if (champ == 'BIOMM2'):
+#####        composerLabel.setText("BIOMM2")
+#####    if (champ == 'BIOMGM2'):
+#####        composerLabel.setText("BIOMGM2")
+#####    if (champ == 'BIOMGCEP'):
+#####        composerLabel.setText("BIOMGCEP")
+#####    # composerLabel.adjustSizeToText()
+#####    composerLabel.setFont(QFont("Cambria", 20, QFont.Bold))
+#####    composerLabel.setHAlign(Qt.AlignCenter)
+#####    composerLabel.setVAlign(Qt.AlignCenter)
+#####    composerLabel.setItemPosition(0, 0, c.paperWidth(), 20)
+#####    c.addItem(composerLabel)
+#####    # add legend
+#####    legend = QgsComposerLegend(c)
+#####    # legend.model().setLayerSet(mapRenderer.layerSet())
+#####    layerGroup = QgsLayerTreeGroup()
+#####    #QgsLegendRenderer.setNodeLegendStyle(layerGroup, QgsComposerLegendStyle.Hidden)
+#####    layerGroup.insertLayer(0, raster)
+#####    legend.modelV2().setRootGroup(layerGroup)
+#####
+#####    tree_layer_layer = legend.modelV2().rootGroup().children()
+#####    for item in tree_layer_layer:
+#####        QgsLegendRenderer.setNodeLegendStyle(item, QgsComposerLegendStyle.Hidden)
+#####
+#####    legend.setItemPosition(0, 50)
+#####    c.addItem(legend)
+#####
+#####    # scale bar(echelle)
+#####    item = QgsComposerScaleBar(c)
+#####    item.setStyle('Line Ticks Up')  # optionally modify the style
+#####    item.setComposerMap(composerMap)
+#####    item.applyDefaultSize()
+#####    item.setItemPosition(150, 190)
+#####    c.addItem(item)
+#####    # add the north arrow
+#####
+#####    northarrowIcon = QgsComposerPicture(c)
+#####    # northarrowIcon.setPos(QPointF(10, 20))
+#####    # northarrowIcon.setSceneRect(QrectF(0, 0, 30, 30))
+#####    northarrowIcon.setPicturePath(resolve('NorthArrow_04.png'))
+#####    northarrowIcon.setPictureFile(resolve('NorthArrow_04.png'))
+#####    northarrowIcon.setItemPosition(10, 20, c.paperWidth() / 10, 20)
+#####    northarrowIcon.updateItem()
+#####    c.addItem(northarrowIcon)
+#####
+#####    # add the BIOM/DIAM/NBSARM average
+#####    composerLabel2 = QgsComposerLabel(c)
+#####    composerLabel2.setText("Moyenne : " + moyenne)
+#####    composerLabel2.setFont(QFont("Cambria", 14, QFont.Bold))
+#####    composerLabel2.setHAlign(Qt.AlignCenter)
+#####    composerLabel2.setVAlign(Qt.AlignLeft)
+#####    composerLabel2.setItemPosition(20, 190, c.paperWidth() / 2, 20)
+#####    c.addItem(composerLabel2)
+#####
+#####    # export the map as png
+#####    dpi = c.printResolution()
+#####    dpmm = dpi / 25.4
+#####    width = int(dpmm * c.paperWidth())
+#####    height = int(dpmm * c.paperHeight())
+#####
+#####    # create output image and initialize it
+#####    image = QImage(QSize(width, height), QImage.Format_ARGB32)
+#####    image.setDotsPerMeterX(dpmm * 1000)
+#####    image.setDotsPerMeterY(dpmm * 1000)
+#####    image.fill(0)
+#####
+#####    # render the composition
+#####    imagePainter = QPainter(image)
+#####    sourceArea = QRectF(0, 0, c.paperWidth(), c.paperHeight())
+#####    targetArea = QRectF(0, 0, width, height)
+#####    c.render(imagePainter, targetArea, sourceArea)
+#####    imagePainter.end()
+#####    chemin_image_sortie = ""
+#####    # Verification de l'existance ou création du répertoire cartes
+#####    # Nom_Projet = self.lineEditProjet.text()
+#####    last_project_path = self.settings.value("Physiocap/dernier_repertoire", "xx")
+#####    Repertoire_Donnees_Cibles = self.lineEditDirectoryFiltre.text()
+#####    chemin_projet = os.path.join(Repertoire_Donnees_Cibles, last_project_path)
+#####    chemin_cartes = os.path.join(chemin_projet, REPERTOIRE_CARTES)
+#####    if not (os.path.exists(chemin_cartes)):
+#####        try:
+#####            os.mkdir(
+#####                chemin_cartes)  # ___si le repertoire des cartes(image intraparacellaire ) n existe pas --> le creer
+#####        except:
+#####            raise physiocap_exception_rep(REPERTOIRE_CARTES)
+#####    if (champ == 'BIOM'):
+#####        chemin_image_sortie = chemin_cartes + "/BIOM_" + nom_parcelle.replace(' ', '_') + ".png"
+#####    if (champ == 'DIAM'):
+#####        chemin_image_sortie = chemin_cartes + "/DIAM_" + nom_parcelle.replace(' ', '_') + ".png"
+#####    if (champ == 'NBSARM'):
+#####        chemin_image_sortie = chemin_cartes + "/NBSARM_" + nom_parcelle.replace(' ', '_') + ".png"
+#####    if (champ == 'NBSARMM2'):
+#####        chemin_image_sortie = chemin_cartes + "/NBSARMM2_" + nom_parcelle.replace(' ', '_') + ".png"
+#####    if (champ == 'NBSARCEP'):
+#####        chemin_image_sortie = chemin_cartes + "/NBSARCEP_" + nom_parcelle.replace(' ', '_') + ".png"
+#####    if (champ == 'BIOMM2'):
+#####        chemin_image_sortie = chemin_cartes + "/BIOMM2_" + nom_parcelle.replace(' ', '_') + ".png"
+#####    if (champ == 'BIOMGM2'):
+#####        chemin_image_sortie = chemin_cartes + "/BIOMGM2_" + nom_parcelle.replace(' ', '_') + ".png"
+#####    if (champ == 'BIOMGCEP'):
+#####        chemin_image_sortie = chemin_cartes + "/BIOMGCEP_" + nom_parcelle.replace(' ', '_') + ".png"
+#####    image.save(chemin_image_sortie, "png")
+#####
+
+###         Partie color ramp
+
+###                    if (champ_choisi == 'BIOM'):
+###                        i.append(QgsColorRampShader.ColorRampItem(200, QtGui.QColor('#e9e9d8'), 'BIOM <200'))
+###                        i.append(QgsColorRampShader.ColorRampItem(300, QtGui.QColor('#eff797'), '200< BIOM <300'))
+###
+###                        i.append(QgsColorRampShader.ColorRampItem(350, QtGui.QColor('#9dd798'), '300< BIOM <350'))
+###                        i.append(QgsColorRampShader.ColorRampItem(400, QtGui.QColor('#54b466'), '350< BIOM <400'))
+###                        i.append(QgsColorRampShader.ColorRampItem(450, QtGui.QColor('#1d9340'), '400< BIOM <450'))
+###                        i.append(QgsColorRampShader.ColorRampItem(500, QtGui.QColor('#00741f'), '450< BIOM <500'))
+###
+###                        i.append(QgsColorRampShader.ColorRampItem(600, QtGui.QColor('#244d7a'), '500< BIOM <600'))
+###                        i.append(QgsColorRampShader.ColorRampItem(700, QtGui.QColor('#67387a'), '600< BIOM <700'))
+###                        i.append(QgsColorRampShader.ColorRampItem(800, QtGui.QColor('#78205d'), '700< BIOM <800'))
+###                        i.append(QgsColorRampShader.ColorRampItem(2000, QtGui.QColor('#5e0440'), 'BIOM >800'))
+##############                    if (champ_choisi == 'DIAM'):
+##############                        i.append(QgsColorRampShader.ColorRampItem(7.4, QtGui.QColor('#e9e9d8'), 'DIAM <7.4'))
+##############                        i.append(QgsColorRampShader.ColorRampItem(8.2, QtGui.QColor('#eff797'), '7.4< DIAM <8.2'))
+##############
+##############                        i.append(QgsColorRampShader.ColorRampItem(8.4, QtGui.QColor('#9dd798'), '8.2< DIAM <8.4'))
+##############                        i.append(QgsColorRampShader.ColorRampItem(8.6, QtGui.QColor('#54b466'), '8.4< DIAM <8.6'))
+##############                        i.append(QgsColorRampShader.ColorRampItem(8.8, QtGui.QColor('#1d9340'), '8.6< DIAM <8.8'))
+##############                        i.append(QgsColorRampShader.ColorRampItem(9, QtGui.QColor('#00741f'), '8.8< DIAM <9'))
+##############
+##############                        i.append(QgsColorRampShader.ColorRampItem(9.5, QtGui.QColor('#244d7a'), '9< DIAM <9.5'))
+##############                        i.append(QgsColorRampShader.ColorRampItem(10, QtGui.QColor('#67387a'), '9.5< DIAM <10'))
+##############                        i.append(QgsColorRampShader.ColorRampItem(10.5, QtGui.QColor('#78205d'), '10< DIAM <10.5'))
+##############                        i.append(QgsColorRampShader.ColorRampItem(40, QtGui.QColor('#5e0440'), 'DIAM >10.5'))
+###                    if (champ_choisi == 'NBSARM'):
+###                        i.append(QgsColorRampShader.ColorRampItem(3, QtGui.QColor('#e9e9d8'), 'NBSARM <3'))
+###                        i.append(QgsColorRampShader.ColorRampItem(5.8, QtGui.QColor('#eff797'), '3< NBSARM <5.8'))
+###
+###                        i.append(QgsColorRampShader.ColorRampItem(6.3, QtGui.QColor('#9dd798'), '5.8< NBSARM <6.3'))
+###                        i.append(QgsColorRampShader.ColorRampItem(6.8, QtGui.QColor('#54b466'), '6.3< NBSARM <6.8'))
+###                        i.append(QgsColorRampShader.ColorRampItem(7.4, QtGui.QColor('#1d9340'), '6.8< NBSARM <7.4'))
+###                        i.append(QgsColorRampShader.ColorRampItem(8, QtGui.QColor('#00741f'), '7.4< NBSARM <8'))
+###
+###                        i.append(QgsColorRampShader.ColorRampItem(9, QtGui.QColor('#244d7a'), '8< NBSARM <9'))
+###                        i.append(QgsColorRampShader.ColorRampItem(10, QtGui.QColor('#67387a'), '9< NBSARM <10'))
+###                        i.append(QgsColorRampShader.ColorRampItem(11, QtGui.QColor('#78205d'), '10< NBSARM <11'))
+###                        i.append(QgsColorRampShader.ColorRampItem(40, QtGui.QColor('#5e0440'), 'NBSARM >11'))
+###
+###                    c.setColorRampItemList(i)
+###                    s.setRasterShaderFunction(c)
+###                    ps = QgsSingleBandPseudoColorRenderer(intra_raster.dataProvider(), intra_raster.type(), s)
+###                    intra_raster.setRenderer(ps)
+###                    intra_raster.triggerRepaint()
+###                QgsMapLayerRegistry.instance().addMapLayer(intra_raster, False)
+###
+###                iface.legendInterface().refreshLayerSymbology(intra_raster)
+###                raster_node = vignette_group_intra.addLayer(intra_raster)
+###                iface.mapCanvas().refresh()
+
+
+
+
+
+
+
+
+
+
         
-    def physiocap_affiche_raster_iso( self, dialogue, nom_raster_final, nom_court_raster, le_template_raster, affiche_raster,
+    def physiocap_affiche_raster_iso( self, dialogue, nom_raster_final, nom_court_raster, 
+                    le_template_raster, affiche_raster,
                     nom_iso_final, nom_court_isoligne, le_template_isolignes, affiche_iso,
                     vignette_group_intra, mon_projet):
         """ Affichage du raster et Iso"""
-        leModeDeTrace = dialogue.fieldComboModeTrace.currentText() 
+        #leModeDeTrace = dialogue.fieldComboModeTrace.currentText() 
       
-        #physiocap_log ( "= Template raster {0}".format( le_template_raster), TRACE_INTRA)
-        #physiocap_log ( "= Dans affichage iso final  {0}".format( nom_iso_final), TRACE_INTRA)
+        physiocap_log ( "= Template raster {0}".format( le_template_raster), TRACE_INTRA)
+        physiocap_log ( "= Dans affichage iso final  {0}".format( nom_iso_final), TRACE_INTRA)
       
         if ( nom_raster_final != ""):
             if os.path.exists( nom_raster_final):           
@@ -84,14 +276,15 @@ class PhysiocapIntra( QtWidgets.QDialog):
                             nom_court_isoligne, 'ogr')
                     else:
                         physiocap_log( "=~= {2} {0} ne retrouve pas votre isoligne pour {1}. \nVérifiez votre paramètrage pour isolignes".\
-                            format( PHYSIOCAP_UNI, nom_court_isoligne, PHYSIOCAP_WARNING), leModeDeTrace)
+                            format( PHYSIOCAP_UNI, nom_court_isoligne, PHYSIOCAP_WARNING), TRACE_INTRA)
                         # Bloque tout pour cas particulier : raise physiocap_exception_iso_manquant( nom_court_isoligne)  
                         affiche_iso = "NO"
             else:
                 physiocap_log( "=~= {2} {0} ne retrouve pas votre raster pour {1}".\
-                    format( PHYSIOCAP_UNI, nom_court_raster, PHYSIOCAP_WARNING), leModeDeTrace)
+                    format( PHYSIOCAP_UNI, nom_court_raster, PHYSIOCAP_WARNING), TRACE_INTRA)
                 raise physiocap_exception_raster_manquant( nom_court_raster)     
                 
+            
             if vignette_group_intra != None:
                 if (( affiche_iso == "YES") and ( nom_iso_final != "")):
                     mon_projet.addMapLayer( intra_isoligne, False)
@@ -104,15 +297,19 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     mon_projet.addMapLayer( intra_isoligne)
                 if ( affiche_raster == "YES"): 
                     mon_projet.addMapLayer( intra_raster)
+
+            physiocap_log ( "= AVANT LOAD STYLE {0} RASTER OU ISO".format( le_template_raster), TRACE_INTRA)
         
             if (( affiche_raster == "YES") and 
                 ( os.path.exists( le_template_raster))):
                 intra_raster.loadNamedStyle( le_template_raster)
                 intra_raster.setRefreshOnNotifyEnabled( True)
+                physiocap_log ( "= pendant LOAD STYLE {0} RASTER".format( le_template_raster), TRACE_INTRA)
             if (( affiche_iso == "YES") and ( nom_iso_final != "") and 
                 ( os.path.exists( le_template_isolignes))):
 #                if MACHINE == "Linux":   # JHJH Bypass Bug 19045 QGIS et 13 extension
                 intra_isoligne.loadNamedStyle( le_template_isolignes)
+                physiocap_log ( "= pendant LOAD STYLE {0} isoligne".format( le_template_isolignes), TRACE_INTRA)
         
     def quelle_librairie_interpolation(self, dialogue, versionSAGA):
         """
@@ -575,6 +772,8 @@ class PhysiocapIntra( QtWidgets.QDialog):
                
         # Pour polygone de contour   
         nom_complet_poly = dialogue.comboBoxPolygone.currentText().split( SEPARATEUR_NOEUD)
+        aText = "Nom complet Poly {}".format(nom_complet_poly)
+        physiocap_message_box( dialogue, aText, "information")            
         if ( len( nom_complet_poly) != 2):
             aText = self.tr( "Le polygone de contour n'est pas choisi. ")
             aText = aText + self.tr( "Avez-vous ouvert votre shapefile de contour ?")
@@ -612,14 +811,14 @@ class PhysiocapIntra( QtWidgets.QDialog):
 #                raise physiocap_exception_no_processing( "Pas d'extension Traitement - initialize")               
             versionGDAL = processing.tools.raster.gdal.__version__
             # TODO: ?V3.z Gerer La version et si SAGA Actif
-            versionSAGA = "2.3.2" # processing.algs.saga.SagaUtils.getInstalledVersion()
+            versionSAGA = processing.algs.saga.SagaUtils.getInstalledVersion() # avant "2.3.2"
         except ImportError:
             physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
                 format( PHYSIOCAP_UNI, self.tr("Traitement")), leModeDeTrace)
             raise physiocap_exception_no_processing( "Pas d'extension Traitement")
         except AttributeError:
             # A_TESTER: Vérifier syntaxe en Win 32 bits et attraper cette erreur
-            physiocap_log( self.tr( "{0} nécessite SAGA version 2.3.1 à 2.3.2").\
+            physiocap_log( self.tr( "{0} nécessite SAGA version 2.3.1 ou 2.3.2").\
                 format( PHYSIOCAP_UNI), leModeDeTrace)
             raise physiocap_exception_no_saga( "Erreur attribut")
 

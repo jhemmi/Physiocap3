@@ -80,7 +80,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         Repertoire_Donnees_Brutes = dialogue.lineEditDirectoryPhysiocap.text()
         Repertoire_Donnees_Cibles = dialogue.lineEditDirectoryFiltre.text()
         Nom_Session = dialogue.lineEditSession.text()
-
+        Nom_Profil = dialogue.fieldComboProfilPHY.currentText()
         #Format_vecteur =  dialogue.fieldComboFormats.currentText()
 
         mindiam = int( dialogue.spinBoxMinDiametre.value())
@@ -217,7 +217,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         # Création la première partie du fichier de synthèse
         fichier_resultat_analyse = chemin_base_session + SEPARATEUR_ + FICHIER_RESULTAT
         nom_fichier_synthese, fichier_synthese = physiocap_open_file( fichier_resultat_analyse, chemin_session , "w")
-        fichier_synthese.write( "SYNTHESE PHYSIOCAP\n\n")
+        fichier_synthese.write( "SYNTHESE PHYSIOCAP\nPROFIL{}\n".format( Nom_Profil))
         fichier_synthese.write( "Générée le : ")
         a_time = time.strftime( "%d/%m/%y %H:%M\n",time.localtime())
         fichier_synthese.write( a_time)
@@ -255,6 +255,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
     ##            nom_mid = nom_mid + os.path.basename( fichier_mid) + " & "
     ##        fichier_synthese.write("Liste des fichiers MID : " + nom_mid[:-3] + "\n")
     ##        physiocap_log( "Liste des MID : " + nom_mid[:-3], leModeDeTrace)
+        fichier_synthese.write( "Campagne {}\n".format( campagne))
         
         # Progress BAR 5 %
         dialogue.progressBar.setValue( 5)

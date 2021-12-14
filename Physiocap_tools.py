@@ -70,8 +70,7 @@ except ImportError:
 # MESSAGES & LOG
 def physiocap_message_box( self, text, level="warning"):
     """Send a message box by default Warning"""
-    title = self.tr( "{0} Physiocap").\
-        format( PHYSIOCAP_UNI)
+    title = self.tr( "{0} Physiocap").format( PHYSIOCAP_UNI)
     if level == "about":
         QMessageBox.about( self, title, text)
     elif level == "information":
@@ -84,8 +83,7 @@ def physiocap_message_box( self, text, level="warning"):
 
 def physiocap_question_box( self, text= "Etes-vous sûr(e)? Are you sure ?"):
     """Send a question box """
-    title = self.tr( "{0} Physiocap").\
-        format( PHYSIOCAP_UNI)
+    title = self.tr( "{0} Physiocap").format( PHYSIOCAP_UNI)
     reply = QMessageBox.question(self, title, text,
             QMessageBox.Yes|QMessageBox.Cancel)
     if reply == QMessageBox.Cancel:
@@ -189,14 +187,6 @@ def quel_poly_point_INTRA( self, isRoot = None, node = None ):
         self.comboBoxPoints.clear()
         noeud_en_cours = ""
         noeud = root
-        if le_profil == 'Champagne':
-            # On prend un eventuel shp ou CSV dans rep des données brutes
-            un_vecteur = liste_vecteur_dans_brut( Repertoire_Donnees_Brutes)
-            if len( un_vecteur) > 0:                
-                node_layer = un_vecteur + SEPARATEUR_NOEUD + "présent avec MID"
-                self.comboBoxPolygone.addItem( node_layer)            
-            else:
-                pass
     else:
         # On force root comme le noeud
         noeud = node
@@ -249,6 +239,15 @@ def quel_poly_point_INTRA( self, isRoot = None, node = None ):
                 pass
 #                physiocap_log( "- Layer de type {0} rejeté : {1} ID: ".\
 #                    format( type_layer, child.name(),  child.layerId()), TRACE_TOOLS) 
+    if le_profil == 'Champagne' and nombre_poly == 0:
+        # On prend un eventuel shp ou CSV dans rep des données brutes
+        un_vecteur = liste_vecteur_dans_brut( Repertoire_Donnees_Brutes)
+        if ((un_vecteur != None) and len( un_vecteur) > 0):                
+            node_layer = un_vecteur + SEPARATEUR_NOEUD + "présent avec MID"
+            self.comboBoxPolygone.addItem( node_layer)
+            nombre_poly = 1           
+        else:
+            pass
     return nombre_poly, nombre_point
 
 # Vignobles Moyennes et CSVT
@@ -483,6 +482,16 @@ def quelle_campagne( self, premiere_info_mid):
     physiocap_log( "Campagne {} an {} mois {} pour hemisphere {} et precedent {} devient {}".\
         format( mon_info, annee, mois, nord,  precedent,  str( campagne_int)))
     return str( campagne_int)
+
+def quelle_liste_attributs( self, vecteur):
+    provider = vecteur.dataProvider()
+    field_names = [field.name() for field in provider.fields()]
+    physiocap_log( "Liste de champ a pour type {}".format( type( field_names)))
+    physiocap_log( "Attributs de {} sont {}".format( vecteur.name(), field_names ))
+    
+#    for count, f in enumerate(field_names):
+#        print("{} {}".format(count, f))
+    return field_names
     
 def inclure_vignoble_sur_contour(self, chemin_fichier_convex, ss_groupe=None):
 
@@ -764,7 +773,7 @@ def physiocap_get_layer_by_URI( layerURI ):
     else:
         return None
 
-def physiocap_get_layer_by_name( layerName ):
+def physiocap_get_layer_by_name( layerName):
     """Rend le layer affiché dans le projet QGIS 
     qui est affiché sous le nom layerName"""
     root = QgsProject.instance().layerTreeRoot()
@@ -786,9 +795,9 @@ def physiocap_get_layer_by_name( layerName ):
     else:
         return None
 
-
-def physiocap_get_layer_by_ID( layerID):
+def physiocap_get_layer_by_ID( layerID,  layerName = None):
     """ Retrouve un layer ID dans la map Tree Root
+       Option si layerName est proposé et que l'on ne trouve pas par id, on cherche par nom
     Rend le layer si il est valide
     """
     layer_trouve = None
@@ -805,14 +814,20 @@ def physiocap_get_layer_by_ID( layerID):
             break
     if ( trouve == "YES"):
         if ( le_layer.isValid()):
-            physiocap_log( "OK Couche valide : {0}".format ( le_layer.name()), TRACE_TOOLS)
+            physiocap_log( "=#=#=#=#=#=# OK Couche valide : {0}".format ( le_layer.name()), TRACE_TOOLS)
             return le_layer
         else:
-            physiocap_log( "Couche invalide : {0}".format ( le_layer.name()), TRACE_TOOLS)
+            physiocap_log( "=#=#=#=#=#=#  Couche invalide : {0}".format ( le_layer.name()), TRACE_TOOLS)
             return None
     else:
-        physiocap_log( "Aucune couche retrouvée pour ID : {0}".\
-            format( ( str( layerID))), TRACE_TOOLS)
+        physiocap_log( "=#=#=#=#=#=#  Aucune couche retrouvée pour ID : {0} et par nom ?".\
+            format(  str( layerID)), TRACE_TOOLS)
+        if  layerName != None:
+            physiocap_log( "=#=#=#=#=#=# Recherche par nom : {}".\
+                format( layerName), TRACE_TOOLS)
+            le_layer = physiocap_get_layer_by_name( layerName )
+            # TODO : INTRA ? Ouvrir le layer cas non ID
+            return le_layer
         return None
   
 def quelle_projection_et_lib_demandee( self):
@@ -1012,7 +1027,9 @@ def physiocap_look_for_MID( repertoire, recursif, exclusion="fic_sources"):
     return sorted( MIDs)
 
 def liste_vecteur_dans_brut( Repertoire_Donnees_Brutes):
-    """Cherche premier vecteur (shp puis csv) dans répertoire des données brutes (qui contient MID) """
+    """Cherche premier vecteur (shp puis csv) dans répertoire des données brutes (qui contient MID) 
+    SHP prioritaires sur CSVT """
+    #SHP
     nom_fichiers_recherches = os.path.join( Repertoire_Donnees_Brutes, RECHERCHE_EXTENSION_SHP)
     listeSHPTriee = sorted(glob.glob( nom_fichiers_recherches))
     if len( listeSHPTriee) == 0:
@@ -1020,12 +1037,14 @@ def liste_vecteur_dans_brut( Repertoire_Donnees_Brutes):
     else:
         physiocap_log( "Vecteur de type SHAPEFILE {}".format( listeSHPTriee[0]))
         return os.path.basename( listeSHPTriee[0])        
+    #CSVT
     nom_fichiers_recherches = os.path.join( Repertoire_Donnees_Brutes, RECHERCHE_EXTENSION_CSV)
     listeCSVTriee = sorted(glob.glob( nom_fichiers_recherches))
     if len( listeCSVTriee) == 0:
         physiocap_log( "Aucun vecteur de type CSV dans répertoire des données brutes")
     else:
         return os.path.basename( listeCSVTriee[0])
+    return None
 
 def physiocap_list_MID( repertoire, MIDs, synthese="xx"):
     """Fonction qui liste les MID.
@@ -1602,8 +1621,7 @@ class PhysiocapTools( QtWidgets.QDialog):
 
     def physiocap_tools_log_error( self, aText, level="WARNING"):
         """Send a text to the Physiocap error"""
-        journal_nom = self.tr( "{0} Erreurs").\
-            format( PHYSIOCAP_UNI)
+        journal_nom = self.tr( "{0} Erreurs").format( PHYSIOCAP_UNI)
         if level == "WARNING":
             QgsMessageLog.logMessage( aText, journal_nom, Qgis.Warning)
         else:

@@ -53,10 +53,11 @@ from .Physiocap_intra_interpolation import (PhysiocapIntra)
 from .Physiocap_var_exception import *
 
 from PyQt5 import uic
+from PyQt5.QtXml import QDomDocument
 from PyQt5.QtCore import (QSettings, Qt, QUrl)
 from PyQt5.QtGui import (QPixmap,  QDesktopServices)
 from PyQt5.QtWidgets import (QDialogButtonBox, QDialog, QFileDialog) 
-from qgis.core import (Qgis) # QgsMessageLog) #, QgsProject, QgsMapLayer)   
+from qgis.core import (Qgis, QgsProject, QgsLayout, QgsReadWriteContext) # QgsMessageLog, QgsMapLayer)   
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join( os.path.dirname(__file__), 'Physiocap3_dialog_base.ui'))
 
@@ -78,6 +79,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.plugins_dir = os.path.dirname( self.plugin_dir)
         self.python_dir = os.path.dirname( self.plugins_dir)
         self.gis_dir = os.path.dirname( self.python_dir)
+        
 
         self.dans_Quel_Settings()
         # Remplissage du mode de traces
@@ -94,6 +96,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 if ( modeTrace == leModeDeTrace):
                     self.fieldComboModeTrace.setCurrentIndex( idx)
 
+        physiocap_log( "Mode de trace {}".format( leModeDeTrace),  TRACE_JH)
         #physiocap_log( "Répertoire de QGIS : " +  self.gis_dir, leModeDeTrace)
         physiocap_log( "Répertoire des plugins ou extensions : " +  self.plugins_dir, leModeDeTrace)
        
@@ -104,8 +107,9 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.ButtonFiltrer.pressed.connect(self.slot_accept)
         self.buttonContribuer.pressed.connect(self.slot_AIDE_demander_contribution)
         
-        # Slot Profil
+        # Slot Profil & test PDF
         self.fieldComboProfilPHY.currentIndexChanged[int].connect( self.slot_PROFIL_change )  
+        self.ButtonPDF.pressed.connect(self.slot_INTRA_imprime_PDF)
         
         # slot Vignoble
         # Choix "Autres" pour type d'apport et strategie sol
@@ -1083,7 +1087,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         
         # Cas SagaTIFF
         sagaTIFF = "YES" if self.checkBoxSagaTIFF.isChecked() else "NO"
-        self.settings.setValue("Physiocap/SagaTIFF", sagaTIFF )
+        self.settings.setValue("Expert/SagaTIFF", sagaTIFF )
 
         # Cas du choix SAGA / GDAL
         LIB = "DO NOT KNOW"
@@ -1091,8 +1095,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             LIB = "SAGA"
         else:
             LIB = "GDAL"
-        self.settings.setValue("Physiocap/library", LIB)
-      # Dynamique de saisie de champs
+        self.settings.setValue("Expert/library", LIB)
     
     # Repertoire données brutes :
     def slot_CHEMIN_templates(self):
@@ -1391,11 +1394,13 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             physiocap_error( self, self.tr( "Pas de liste des attributs pour Intra pré définie"))
             return
         
+        physiocap_log( "Passage dans slot_PROFIL_INTRA_maj_attributs_interpolables origine {}".\
+            format( ORIGINE_TRIPLET), TRACE_JH)
         if ORIGINE_TRIPLET == "INIT":
             # Récupérer les choix dans settings pour le cas initial
-            leChoixDiam = self.settings.value("Intra/attributIntraFixe_1", "x1")
-            leChoixSarm = self.settings.value("Intra/attributIntraFixe_2", "x2")
-            leChoixBiom = self.settings.value("Intra/attributIntraFixe_3", "x3")
+            leChoixDiam = self.settings.value("Intra/attributIntraFixe_1", "DIAM")
+            leChoixSarm = self.settings.value("Intra/attributIntraFixe_2", "NBSARM")
+            leChoixBiom = self.settings.value("Intra/attributIntraFixe_3", "BIOM")
             # Retrouver les choix intra précedent (dans intra ou dans préference)        
             leChoixIntra = self.settings.value("Intra/attributIntra", "xx") 
         elif ORIGINE_TRIPLET == "Champagne":
@@ -1494,7 +1499,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Récupérer les choix dans settings 
         profilCourant =  self.fieldComboProfilPHY.currentText()
         if profilCourant == 'Champagne': # ce passage est impossible si GroupIso est false
-            leChoixDiam = self.settings.value("Champagne/attributIntraFixe_1", "BIOM")
+            leChoixDiam = self.settings.value("Champagne/attributIntraFixe_1", "DIAM")
             leChoixSarm = self.settings.value("Champagne/attributIntraFixe_2", "NBSARCEP")
             leChoixBiom = self.settings.value("Champagne/attributIntraFixe_3", "BIOMGCEP")
         else:
@@ -1596,6 +1601,26 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                
         return
         
+    def slot_INTRA_imprime_PDF(self):
+        """ Slot qui imprime un pdf """
+        derniere_session = self.lineEditDerniereSession.text()
+        leProfil = self.fieldComboProfilPHY.currentText()
+        physiocap_log( "Imprime PDF session {} et profil {}".format(derniere_session, leProfil))
+        # Charger un modele qpt dans les composer_template
+        p = QgsProject()
+        miseEnPage = QgsLayout(p)
+        # TODO PDF : parametrer
+        tmpfile = '/media/jean/DATA/jh/.local/share/QGIS/QGIS3/profiles/jhemmi/composer_templates/Physiocap.qpt'
+        with open(tmpfile) as f:
+            template_content = f.read()
+        doc = QDomDocument()
+        doc.setContent(template_content)
+
+        # adding to existing items
+        items, ok = miseEnPage.loadFromTemplate(doc, QgsReadWriteContext(), False)       
+        physiocap_log( "Items de la mise en page {} ".format( items))
+        return   
+  
     def slot_INTRA_interpolation_parcelles(self):
         """ Slot qui fait appel au interpolation Intra Parcelles et traite exceptions """
 
@@ -1785,7 +1810,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             return        
 
         choix_aide_calcul = self.fieldComboAideIso.currentIndex()
-        leModeDeTrace = self.fieldComboModeTrace.currentText()
+        #leModeDeTrace = self.fieldComboModeTrace.currentText()
         # Remettre le bouton intra à enable
         self.ButtonIntra.setEnabled( True)
         
@@ -1959,7 +1984,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                     for mon_champ in mon_provider.fields():
                         nom_champ = mon_champ.name()
                         if mon_champ.type() != 10:
-                            physiocap_log( "type Exclu {} pour {}".format( mon_champ.type(), nom_champ))
+                            #physiocap_log( "type Exclu {} pour {}".format( mon_champ.type(), nom_champ))
                             continue
                         liste_valeurs = mon_provider.uniqueValues( map_champ[ nom_champ])
 
@@ -2126,9 +2151,14 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.groupBoxIntra.setEnabled( True)
         self.groupBoxArret.setEnabled( True)
         self.groupBoxMethode.setEnabled( True)
+        self.ButtonInter.setEnabled( True)
         self.ButtonIntra.setEnabled( True)
         physiocap_log( self.tr( "== {0} a terminé les moyennes inter parcelaire.").\
             format( PHYSIOCAP_UNI), leModeDeTrace)
+
+        # Si OK : chercher à enchainer vers Intra
+        if  self.checkBoxTroisActions.isChecked():
+            self.slot_INTRA_interpolation_parcelles()
 
     def slot_bascule_pas_mesure(self):
         """ Changement de choix Inter PasMesure : 
@@ -2295,10 +2325,9 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         QDialog.reject( self)
                 
     def slot_accept( self ):
-        """Verify when bouton is Filtrer """
-        # Vérifier les valeurs saisies
-        # QT confiance et initialisation par Qsettings sert d'assert sur la
-        # cohérence des variables saisies
+        """Vérifier les valeurs saisies
+         QT confiance et initialisation par Qsettings sert d'assert sur la
+         cohérence des variables saisies"""
         leModeDeTrace = self.fieldComboModeTrace.currentText()
         repertoire_data = self.lineEditDirectoryPhysiocap.text()
         if ((repertoire_data == "") or ( not os.path.exists( repertoire_data))):
@@ -2323,7 +2352,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         
         # On sauve les affichages et rend les bascules pour traitement
         version_3, consolidation, recursif, details, TRACE_HISTO, pasContour = self.memoriser_tous_Settings()
-        physiocap_log( self.tr( "Les détails du vignoble sont {}").format( details), leModeDeTrace)
 
         if recursif == "YES":
             physiocap_log( self.tr( "La recherche des MID fouille l'arbre de données"), leModeDeTrace)

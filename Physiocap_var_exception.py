@@ -44,7 +44,6 @@ if MACHINE == "Linux":
     LE_MODE_PROD = "NO"
 else:
     LE_MODE_PROD = "YES"
-print( 'Mode production vaut ' + LE_MODE_PROD)
 LISTE_PROFIL= [ 'Standard', 'Champagne', 'Fronton', 'IFV Bordeaux']
     
 # LIVRAISON : supprimer en Prod

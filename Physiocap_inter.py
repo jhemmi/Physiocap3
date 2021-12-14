@@ -814,8 +814,7 @@ class PhysiocapInter( QtWidgets.QDialog):
             physiocap_error( self, aText)
             aText = aText + "\n" + self.tr( "Avez-vous créer votre shapefile de contour ?")
             return physiocap_message_box( dialogue, aText)           
-        id_poly = nom_complet_poly[ 1] 
-        vecteur_poly = physiocap_get_layer_by_ID( id_poly)
+        vecteur_poly = physiocap_get_layer_by_ID( nom_complet_poly[ 1], nom_complet_poly[0] )
 
         le_champ_contour = dialogue.fieldComboContours.currentText()
         champ_pb_gdal = dialogue.fieldPbGdal.currentText()
