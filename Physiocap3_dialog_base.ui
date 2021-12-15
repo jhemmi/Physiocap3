@@ -113,7 +113,7 @@
     <enum>QTabWidget::North</enum>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>4</number>
    </property>
    <property name="movable">
     <bool>true</bool>
@@ -6795,7 +6795,7 @@ DIAM, SARM, BIOM,...) </string>
        </font>
       </property>
       <property name="text">
-       <string>Version 3.10.8 Beta Enchainement</string>
+       <string>Version 3.10.85 Beta PDF</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_500">
@@ -6997,7 +6997,7 @@ DIAM, SARM, BIOM,...) </string>
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>430</y>
+        <y>320</y>
         <width>591</width>
         <height>131</height>
        </rect>
@@ -7221,38 +7221,6 @@ p, li { white-space: pre-wrap; }
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit du champ de votre contour qui identifie chacune de vos parcelles. Dans la moyenne Inter Parcellaire, ce champ se nomme NOM_PHY. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Attention : seuls les champs ayant une valeur différente pour chaque parcelle sont proposés.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="ButtonPDF">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>330</x>
-        <y>510</y>
-        <width>41</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>9</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="mouseTracking">
-       <bool>false</bool>
-      </property>
-      <property name="toolTip">
-       <string/>
-      </property>
-      <property name="whatsThis">
-       <string/>
-      </property>
-      <property name="text">
-       <string>PDF</string>
-      </property>
-     </widget>
      <zorder>groupBoxArret</zorder>
      <zorder>label_Contributions</zorder>
      <zorder>buttonContribuer</zorder>
@@ -7278,7 +7246,6 @@ p, li { white-space: pre-wrap; }
      <zorder>lab_42</zorder>
      <zorder>fieldPbGdal</zorder>
      <zorder>textBrowserAide</zorder>
-     <zorder>ButtonPDF</zorder>
     </widget>
    </widget>
   </widget>
@@ -7634,6 +7601,38 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="text">
      <string>Enchaîner les 3 traitements</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ButtonPDF">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>80</y>
+      <width>41</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="mouseTracking">
+     <bool>false</bool>
+    </property>
+    <property name="toolTip">
+     <string/>
+    </property>
+    <property name="whatsThis">
+     <string/>
+    </property>
+    <property name="text">
+     <string>PDF</string>
     </property>
    </widget>
   </widget>

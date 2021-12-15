@@ -162,80 +162,39 @@ class PhysiocapIntra( QtWidgets.QDialog):
 #####    targetArea = QRectF(0, 0, width, height)
 #####    c.render(imagePainter, targetArea, sourceArea)
 #####    imagePainter.end()
-#####    chemin_image_sortie = ""
-#####    # Verification de l'existance ou création du répertoire cartes
-#####    # Nom_Projet = self.lineEditProjet.text()
-#####    last_project_path = self.settings.value("Physiocap/dernier_repertoire", "xx")
-#####    Repertoire_Donnees_Cibles = self.lineEditDirectoryFiltre.text()
-#####    chemin_projet = os.path.join(Repertoire_Donnees_Cibles, last_project_path)
-#####    chemin_cartes = os.path.join(chemin_projet, REPERTOIRE_CARTES)
-#####    if not (os.path.exists(chemin_cartes)):
-#####        try:
-#####            os.mkdir(
-#####                chemin_cartes)  # ___si le repertoire des cartes(image intraparacellaire ) n existe pas --> le creer
-#####        except:
-#####            raise physiocap_exception_rep(REPERTOIRE_CARTES)
-#####    if (champ == 'BIOM'):
-#####        chemin_image_sortie = chemin_cartes + "/BIOM_" + nom_parcelle.replace(' ', '_') + ".png"
-#####    if (champ == 'DIAM'):
-#####        chemin_image_sortie = chemin_cartes + "/DIAM_" + nom_parcelle.replace(' ', '_') + ".png"
-#####    if (champ == 'NBSARM'):
-#####        chemin_image_sortie = chemin_cartes + "/NBSARM_" + nom_parcelle.replace(' ', '_') + ".png"
-#####    if (champ == 'NBSARMM2'):
-#####        chemin_image_sortie = chemin_cartes + "/NBSARMM2_" + nom_parcelle.replace(' ', '_') + ".png"
-#####    if (champ == 'NBSARCEP'):
-#####        chemin_image_sortie = chemin_cartes + "/NBSARCEP_" + nom_parcelle.replace(' ', '_') + ".png"
-#####    if (champ == 'BIOMM2'):
-#####        chemin_image_sortie = chemin_cartes + "/BIOMM2_" + nom_parcelle.replace(' ', '_') + ".png"
-#####    if (champ == 'BIOMGM2'):
-#####        chemin_image_sortie = chemin_cartes + "/BIOMGM2_" + nom_parcelle.replace(' ', '_') + ".png"
-#####    if (champ == 'BIOMGCEP'):
-#####        chemin_image_sortie = chemin_cartes + "/BIOMGCEP_" + nom_parcelle.replace(' ', '_') + ".png"
-#####    image.save(chemin_image_sortie, "png")
-#####
 
-###         Partie color ramp
+#############    chemin_image_sortie = ""
+#############    # Verification de l'existance ou création du répertoire cartes
+#############    # Nom_Projet = self.lineEditProjet.text()
+#############    last_project_path = self.settings.value("Physiocap/dernier_repertoire", "xx")
+#############    Repertoire_Donnees_Cibles = self.lineEditDirectoryFiltre.text()
+#############    chemin_projet = os.path.join(Repertoire_Donnees_Cibles, last_project_path)
+#############    chemin_cartes = os.path.join(chemin_projet, REPERTOIRE_CARTES)
+#############    if not (os.path.exists(chemin_cartes)):
+#############        try:
+#############            os.mkdir(
+#############                chemin_cartes)  # ___si le repertoire des cartes(image intraparacellaire ) n existe pas --> le creer
+#############        except:
+#############            raise physiocap_exception_rep(REPERTOIRE_CARTES)
+#############    if (champ == 'BIOM'):
+#############        chemin_image_sortie = chemin_cartes + "/BIOM_" + nom_parcelle.replace(' ', '_') + ".png"
+#############    if (champ == 'DIAM'):
+#############        chemin_image_sortie = chemin_cartes + "/DIAM_" + nom_parcelle.replace(' ', '_') + ".png"
+#############    if (champ == 'NBSARM'):
+#############        chemin_image_sortie = chemin_cartes + "/NBSARM_" + nom_parcelle.replace(' ', '_') + ".png"
+#############    if (champ == 'NBSARMM2'):
+#############        chemin_image_sortie = chemin_cartes + "/NBSARMM2_" + nom_parcelle.replace(' ', '_') + ".png"
+#############    if (champ == 'NBSARCEP'):
+#############        chemin_image_sortie = chemin_cartes + "/NBSARCEP_" + nom_parcelle.replace(' ', '_') + ".png"
+#############    if (champ == 'BIOMM2'):
+#############        chemin_image_sortie = chemin_cartes + "/BIOMM2_" + nom_parcelle.replace(' ', '_') + ".png"
+#############    if (champ == 'BIOMGM2'):
+#############        chemin_image_sortie = chemin_cartes + "/BIOMGM2_" + nom_parcelle.replace(' ', '_') + ".png"
+#############    if (champ == 'BIOMGCEP'):
+#############        chemin_image_sortie = chemin_cartes + "/BIOMGCEP_" + nom_parcelle.replace(' ', '_') + ".png"
+#############    image.save(chemin_image_sortie, "png")
+#############
 
-###                    if (champ_choisi == 'BIOM'):
-###                        i.append(QgsColorRampShader.ColorRampItem(200, QtGui.QColor('#e9e9d8'), 'BIOM <200'))
-###                        i.append(QgsColorRampShader.ColorRampItem(300, QtGui.QColor('#eff797'), '200< BIOM <300'))
-###
-###                        i.append(QgsColorRampShader.ColorRampItem(350, QtGui.QColor('#9dd798'), '300< BIOM <350'))
-###                        i.append(QgsColorRampShader.ColorRampItem(400, QtGui.QColor('#54b466'), '350< BIOM <400'))
-###                        i.append(QgsColorRampShader.ColorRampItem(450, QtGui.QColor('#1d9340'), '400< BIOM <450'))
-###                        i.append(QgsColorRampShader.ColorRampItem(500, QtGui.QColor('#00741f'), '450< BIOM <500'))
-###
-###                        i.append(QgsColorRampShader.ColorRampItem(600, QtGui.QColor('#244d7a'), '500< BIOM <600'))
-###                        i.append(QgsColorRampShader.ColorRampItem(700, QtGui.QColor('#67387a'), '600< BIOM <700'))
-###                        i.append(QgsColorRampShader.ColorRampItem(800, QtGui.QColor('#78205d'), '700< BIOM <800'))
-###                        i.append(QgsColorRampShader.ColorRampItem(2000, QtGui.QColor('#5e0440'), 'BIOM >800'))
-##############                    if (champ_choisi == 'DIAM'):
-##############                        i.append(QgsColorRampShader.ColorRampItem(7.4, QtGui.QColor('#e9e9d8'), 'DIAM <7.4'))
-##############                        i.append(QgsColorRampShader.ColorRampItem(8.2, QtGui.QColor('#eff797'), '7.4< DIAM <8.2'))
-##############
-##############                        i.append(QgsColorRampShader.ColorRampItem(8.4, QtGui.QColor('#9dd798'), '8.2< DIAM <8.4'))
-##############                        i.append(QgsColorRampShader.ColorRampItem(8.6, QtGui.QColor('#54b466'), '8.4< DIAM <8.6'))
-##############                        i.append(QgsColorRampShader.ColorRampItem(8.8, QtGui.QColor('#1d9340'), '8.6< DIAM <8.8'))
-##############                        i.append(QgsColorRampShader.ColorRampItem(9, QtGui.QColor('#00741f'), '8.8< DIAM <9'))
-##############
-##############                        i.append(QgsColorRampShader.ColorRampItem(9.5, QtGui.QColor('#244d7a'), '9< DIAM <9.5'))
-##############                        i.append(QgsColorRampShader.ColorRampItem(10, QtGui.QColor('#67387a'), '9.5< DIAM <10'))
-##############                        i.append(QgsColorRampShader.ColorRampItem(10.5, QtGui.QColor('#78205d'), '10< DIAM <10.5'))
-##############                        i.append(QgsColorRampShader.ColorRampItem(40, QtGui.QColor('#5e0440'), 'DIAM >10.5'))
-###                    if (champ_choisi == 'NBSARM'):
-###                        i.append(QgsColorRampShader.ColorRampItem(3, QtGui.QColor('#e9e9d8'), 'NBSARM <3'))
-###                        i.append(QgsColorRampShader.ColorRampItem(5.8, QtGui.QColor('#eff797'), '3< NBSARM <5.8'))
-###
-###                        i.append(QgsColorRampShader.ColorRampItem(6.3, QtGui.QColor('#9dd798'), '5.8< NBSARM <6.3'))
-###                        i.append(QgsColorRampShader.ColorRampItem(6.8, QtGui.QColor('#54b466'), '6.3< NBSARM <6.8'))
-###                        i.append(QgsColorRampShader.ColorRampItem(7.4, QtGui.QColor('#1d9340'), '6.8< NBSARM <7.4'))
-###                        i.append(QgsColorRampShader.ColorRampItem(8, QtGui.QColor('#00741f'), '7.4< NBSARM <8'))
-###
-###                        i.append(QgsColorRampShader.ColorRampItem(9, QtGui.QColor('#244d7a'), '8< NBSARM <9'))
-###                        i.append(QgsColorRampShader.ColorRampItem(10, QtGui.QColor('#67387a'), '9< NBSARM <10'))
-###                        i.append(QgsColorRampShader.ColorRampItem(11, QtGui.QColor('#78205d'), '10< NBSARM <11'))
-###                        i.append(QgsColorRampShader.ColorRampItem(40, QtGui.QColor('#5e0440'), 'NBSARM >11'))
-###
 ###                    c.setColorRampItemList(i)
 ###                    s.setRasterShaderFunction(c)
 ###                    ps = QgsSingleBandPseudoColorRenderer(intra_raster.dataProvider(), intra_raster.type(), s)
@@ -246,15 +205,6 @@ class PhysiocapIntra( QtWidgets.QDialog):
 ###                iface.legendInterface().refreshLayerSymbology(intra_raster)
 ###                raster_node = vignette_group_intra.addLayer(intra_raster)
 ###                iface.mapCanvas().refresh()
-
-
-
-
-
-
-
-
-
 
         
     def physiocap_affiche_raster_iso( self, dialogue, nom_raster_final, nom_court_raster, 

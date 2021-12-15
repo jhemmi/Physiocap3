@@ -57,7 +57,7 @@ from PyQt5.QtXml import QDomDocument
 from PyQt5.QtCore import (QSettings, Qt, QUrl)
 from PyQt5.QtGui import (QPixmap,  QDesktopServices)
 from PyQt5.QtWidgets import (QDialogButtonBox, QDialog, QFileDialog) 
-from qgis.core import (Qgis, QgsProject, QgsLayout, QgsReadWriteContext) # QgsMessageLog, QgsMapLayer)   
+from qgis.core import (Qgis, QgsProject, QgsLayout, QgsReadWriteContext, QgsLayoutExporter) # QgsMessageLog, QgsMapLayer)   
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join( os.path.dirname(__file__), 'Physiocap3_dialog_base.ui'))
 
@@ -1607,10 +1607,12 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         leProfil = self.fieldComboProfilPHY.currentText()
         physiocap_log( "Imprime PDF session {} et profil {}".format(derniere_session, leProfil))
         # Charger un modele qpt dans les composer_template
-        p = QgsProject()
+        p = QgsProject.instance()
         miseEnPage = QgsLayout(p)
-        # TODO PDF : parametrer
-        tmpfile = '/media/jean/DATA/jh/.local/share/QGIS/QGIS3/profiles/jhemmi/composer_templates/Physiocap.qpt'
+        miseEnPage.initializeDefaults()
+        
+        # TODO PDF : parametrer ce nom .qpt
+        tmpfile = '/media/jean/DATA/jh/.local/share/QGIS/QGIS3/profiles/jhemmi/composer_templates/MiniPhysiocap.qpt'
         with open(tmpfile) as f:
             template_content = f.read()
         doc = QDomDocument()
@@ -1618,7 +1620,11 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
 
         # adding to existing items
         items, ok = miseEnPage.loadFromTemplate(doc, QgsReadWriteContext(), False)       
-        physiocap_log( "Items de la mise en page {} ".format( items))
+        physiocap_log( "OK de la mise en page {} ".format( ok))
+        item10 = miseEnPage.itemById("10")
+        physiocap_log( "Items 20 de la mise en page {} ".format( item10))
+        exporter = QgsLayoutExporter(miseEnPage)
+        exporter.exportToPdf("/media/jean/DATA/jh/.local/share/QGIS/QGIS3/profiles/jhemmi/composer_templates/test1.pdf", QgsLayoutExporter.PdfExportSettings())
         return   
   
     def slot_INTRA_interpolation_parcelles(self):
