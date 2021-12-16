@@ -42,11 +42,11 @@
  *                                                                         *
 ***************************************************************************/
 """
-from .Physiocap_tools import physiocap_message_box,\
+from .Physiocap_tools import ( physiocap_message_box,\
         physiocap_log, physiocap_error, physiocap_is_only_ascii, \
         physiocap_nom_entite_sans_pb_caractere,  physiocap_nom_entite_avec_pb_caractere, \
         physiocap_rename_existing_file, quelle_projection_et_lib_demandee, \
-        physiocap_get_layer_by_ID
+        quel_sont_vecteurs_choisis)
 
 from .Physiocap_var_exception import *
 
@@ -162,38 +162,6 @@ class PhysiocapIntra( QtWidgets.QDialog):
 #####    targetArea = QRectF(0, 0, width, height)
 #####    c.render(imagePainter, targetArea, sourceArea)
 #####    imagePainter.end()
-
-#############    chemin_image_sortie = ""
-#############    # Verification de l'existance ou création du répertoire cartes
-#############    # Nom_Projet = self.lineEditProjet.text()
-#############    last_project_path = self.settings.value("Physiocap/dernier_repertoire", "xx")
-#############    Repertoire_Donnees_Cibles = self.lineEditDirectoryFiltre.text()
-#############    chemin_projet = os.path.join(Repertoire_Donnees_Cibles, last_project_path)
-#############    chemin_cartes = os.path.join(chemin_projet, REPERTOIRE_CARTES)
-#############    if not (os.path.exists(chemin_cartes)):
-#############        try:
-#############            os.mkdir(
-#############                chemin_cartes)  # ___si le repertoire des cartes(image intraparacellaire ) n existe pas --> le creer
-#############        except:
-#############            raise physiocap_exception_rep(REPERTOIRE_CARTES)
-#############    if (champ == 'BIOM'):
-#############        chemin_image_sortie = chemin_cartes + "/BIOM_" + nom_parcelle.replace(' ', '_') + ".png"
-#############    if (champ == 'DIAM'):
-#############        chemin_image_sortie = chemin_cartes + "/DIAM_" + nom_parcelle.replace(' ', '_') + ".png"
-#############    if (champ == 'NBSARM'):
-#############        chemin_image_sortie = chemin_cartes + "/NBSARM_" + nom_parcelle.replace(' ', '_') + ".png"
-#############    if (champ == 'NBSARMM2'):
-#############        chemin_image_sortie = chemin_cartes + "/NBSARMM2_" + nom_parcelle.replace(' ', '_') + ".png"
-#############    if (champ == 'NBSARCEP'):
-#############        chemin_image_sortie = chemin_cartes + "/NBSARCEP_" + nom_parcelle.replace(' ', '_') + ".png"
-#############    if (champ == 'BIOMM2'):
-#############        chemin_image_sortie = chemin_cartes + "/BIOMM2_" + nom_parcelle.replace(' ', '_') + ".png"
-#############    if (champ == 'BIOMGM2'):
-#############        chemin_image_sortie = chemin_cartes + "/BIOMGM2_" + nom_parcelle.replace(' ', '_') + ".png"
-#############    if (champ == 'BIOMGCEP'):
-#############        chemin_image_sortie = chemin_cartes + "/BIOMGCEP_" + nom_parcelle.replace(' ', '_') + ".png"
-#############    image.save(chemin_image_sortie, "png")
-#############
 
 ###                    c.setColorRampItemList(i)
 ###                    s.setRasterShaderFunction(c)
@@ -702,7 +670,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
 
     def physiocap_interpolation_IntraParcelles( self, dialogue):
         """Interpolation des données de points intra parcellaires"""
-        NOM_PROJET = dialogue.lineEditSession.text()
+        derniere_session = dialogue.lineEditDerniereSession.text()
         leModeDeTrace = dialogue.fieldComboModeTrace.currentText()     
         version_3 = "NO"
         if dialogue.checkBoxV3.isChecked():
@@ -720,35 +688,13 @@ class PhysiocapIntra( QtWidgets.QDialog):
             physiocap_error( self, aText)
             return physiocap_message_box( dialogue, aText, "information")
                
-        # Pour polygone de contour   
-        nom_complet_poly = dialogue.comboBoxPolygone.currentText().split( SEPARATEUR_NOEUD)
-        aText = "Nom complet Poly {}".format(nom_complet_poly)
-        physiocap_message_box( dialogue, aText, "information")            
-        if ( len( nom_complet_poly) != 2):
-            aText = self.tr( "Le polygone de contour n'est pas choisi. ")
-            aText = aText + self.tr( "Avez-vous ouvert votre shapefile de contour ?")
-            physiocap_error( self, aText)
-            return physiocap_message_box( dialogue, aText, "information")            
-        nom_poly = nom_complet_poly[ 0] 
-        id_poly = nom_complet_poly[ 1] 
-        vecteur_poly = physiocap_get_layer_by_ID( id_poly)
+        # Trouver deux vecteurs
+        nom_noeud_arbre, vecteur_point, _, vecteur_poly = quel_sont_vecteurs_choisis( dialogue, "Intra")
 
         # Pour attribut en cours d'interpolation
         le_champ_contour = dialogue.fieldComboContours.currentText()
         champ_pb_gdal = dialogue.fieldPbGdal.currentText()
             
-        # Pour les points
-        nom_complet_point = dialogue.comboBoxPoints.currentText().split( SEPARATEUR_NOEUD)
-        if ( len( nom_complet_point) != 2):
-            aText = self.tr( "Le shape de points n'est pas choisi. ")
-            aText = aText + self.tr( "Lancez le traitement initial - bouton Filtrer les données brutes puis Inter - ")
-            aText = aText + self.tr( "avant de faire votre calcul de Moyenne Intra Parcellaire")
-            physiocap_error( self, aText) 
-            return physiocap_message_box( dialogue, aText, "information")            
-        nom_noeud_arbre = nom_complet_point[ 0] 
-        id_point = nom_complet_point[ 1] 
-        vecteur_point = physiocap_get_layer_by_ID( id_point)
-
         # Vérifier disponibilité de processing (on attend d'etre dans Intra)
         try :
             import processing
@@ -1019,7 +965,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     nom_base_point = os.path.basename( unicode( vecteur_point.name() ) )
                     nom_court_point = nom_base_point + EXTENSION_SHP
                 else:
-                    nom_court_point = NOM_PROJET + NOM_POINTS + EXTENSION_SANS_ZERO + EXT_CRS_SHP   
+                    nom_court_point = derniere_session + NOM_POINTS + EXTENSION_SANS_ZERO + EXT_CRS_SHP   
                 nom_point = os.path.join( chemin_shapes, nom_court_point)                    
 
                 # Vérifier si le point et la vignette existent

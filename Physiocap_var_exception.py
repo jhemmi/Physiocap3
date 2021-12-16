@@ -96,9 +96,10 @@ PHYSIOCAP_TEST1 = "ȧƈƈḗƞŧḗḓ ŧḗẋŧ ƒǿř ŧḗşŧīƞɠ"
 PHYSIOCAP_TEST2 = "ℛℯα∂α♭ℓℯ ♭ʊ☂ η☺т Ѧ$☾ℐℐ"
 
 POSTGRES_NOM = "postgres"
-CSVT_NOM = "CSV avec WKT"
-CSVT_DRIVER = "CSVT"
-CSVT_GEOM = "GeomWKT"  # TODO VERIFIER standard pour QGIS ?
+CSV_NOM = "CSV avec WKT"
+CSV_DELIMITER_POINT_VIRGULE=';'
+CSV_DRIVER = "delimitedtext"
+CSV_GEOM = "geomWKT" 
 GEOJSON_NOM = "GeoJSON"
 GEOJSON_DRIVER = "GeoJSON"  # mes choix  RFC7946=YES  WRITE_BBOX=YES  « GeoJSON - Newline Delimited »  defaut COORDINATE_PRECISION=15
 """
@@ -135,12 +136,11 @@ SHAPEFILE_NOM = "ESRI Shapefile"
 SHAPEFILE_DRIVER = "ESRI Shapefile"
 
 SEPARATEUR_ ="_"
-NOM_PROJET = "PHY" + SEPARATEUR_ # + PHYSIOCAP_TEST4 + SEPARATEUR_
-
+NOM_PAR_DEFAUT = "PHY" + SEPARATEUR_ # pour session et nom PHY
 FORMAT_VECTEUR = [ SHAPEFILE_NOM] #,  POSTGRES_NOM] # "memory"]
 #TODO: PROD liste des formats vecteur en prod à trancher
 if MACHINE == "Linux":
-    FORMAT_VECTEUR_V3 = [ SHAPEFILE_NOM,  CSVT_NOM, GEOJSON_NOM, GEOPACKAGE_NOM] #,  "memory"] # POSTGRES_NOM] 
+    FORMAT_VECTEUR_V3 = [ SHAPEFILE_NOM,  CSV_NOM, GEOJSON_NOM, GEOPACKAGE_NOM] #,  "memory"] # POSTGRES_NOM] 
 else:
     FORMAT_VECTEUR_V3 = [ SHAPEFILE_NOM, GEOPACKAGE_NOM] #,  "memory"] # POSTGRES_NOM] 
     
@@ -331,7 +331,7 @@ COMMUNES_FRONTON=["Fronton", "Villaudric", "Vacquiers", "Villematier", "Castelna
 
 # Spécifique du profil Champagne
 # TODO tester puis sauver en V3
-CHEMIN_TEMPLATES_CIVC="modeleQgis/CIVC_V2"
+CHEMIN_TEMPLATES_CIVC="modeleQgis/Champagne"
 #CRUs et régions dans le groupebox informations agronomiques ___Nadia___
 CRUS_CHAMPAGNE=["AILLEVILLE","ALLEMANT","AMBONNAY","ARCIS-LE-PONSART","ARCONVILLE","ARGANCON", \
 "ARRENTIERES","ARSONVAL","AUBILLY","AVENAY-VAL-D'OR","AVIREY-LINGEY","AVIZE","AY","AZY-SUR-MARNE", \
@@ -384,9 +384,9 @@ REGIONS_CHAMPAGNE=[ "BAR SEQUANNAIS", "BAR SUR AUBOIS", "COTE DES BLANCS", "GRAN
  "REGION DE VERZY VERZENAY", "REGION DE VILLERS MARMERY TREPAIL", "REGION DE VITRY LE FRANCOIS", \
  "VALLEE DE L'ARDRE", "VALLEE DE LA MARNE RIVE DROITE", "VALLEE DE LA MARNE RIVE GAUCHE"]
  
-TYPE_APPORTS=[ "engrais organique","engrais mineral","engrais organo-mineral","amendements","pas d'apport","autres"]
-ENTRETIEN_SOL=[ "enherbement permanent tous les rangs","enherbement permanent un rang sur deux", \
-            "couvert hivernal","travail du sol","sol nu","autres"]
+#TYPE_APPORTS=[ "engrais organique","engrais mineral","engrais organo-mineral","amendements","pas d'apport","autres"]
+#ENTRETIEN_SOL=[ "enherbement permanent tous les rangs","enherbement permanent un rang sur deux", \
+#            "couvert hivernal","travail du sol","sol nu","autres"]
 
 # ###########################
 # Exceptions Physiocap
@@ -428,8 +428,10 @@ class physiocap_exception_vignette_exists( physiocap_exception):
 class physiocap_exception_points_invalid( physiocap_exception):
     pass
 class physiocap_exception_segment_invalid( physiocap_exception):
+    pass 
+class physiocap_exception_agro_obligatoire( physiocap_exception):
     pass    
-    
+   
 # INTRA
 class physiocap_exception_interpolation( physiocap_exception):
     pass

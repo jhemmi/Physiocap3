@@ -44,7 +44,7 @@
 
 from .Physiocap_tools import (physiocap_message_box, \
         physiocap_log_for_error, physiocap_log, physiocap_error, \
-        quel_poly_point_INTRA, quelle_projection_et_lib_demandee, physiocap_nom_entite_avec_pb_caractere, \
+        quel_poly_point_INTER, quelle_projection_et_lib_demandee, physiocap_nom_entite_avec_pb_caractere, \
         physiocap_get_layer_by_name, physiocap_get_layer_by_ID)
 
 from .Physiocap_creer_arbre import (PhysiocapFiltrer)
@@ -80,7 +80,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.python_dir = os.path.dirname( self.plugins_dir)
         self.gis_dir = os.path.dirname( self.python_dir)
         
-
         self.dans_Quel_Settings()
         # Remplissage du mode de traces
         self.fieldComboModeTrace.setCurrentIndex( 0)
@@ -111,18 +110,11 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.fieldComboProfilPHY.currentIndexChanged[int].connect( self.slot_PROFIL_change )  
         self.ButtonPDF.pressed.connect(self.slot_INTRA_imprime_PDF)
         
-        # slot Vignoble
-        # Choix "Autres" pour type d'apport et strategie sol
-        self.comboBoxTypeApportFert.currentIndexChanged[int].connect( self.slot_VIGNOBLE_choix_type_apport)
-        self.comboBoxStrategieSol.currentIndexChanged[int].connect( self.slot_VIGNOBLE_choix_strategie_sol)
-
         # Slot pour données brutes et pour données cibles
         self.toolButtonDirectoryPhysiocap.pressed.connect( self.slot_lecture_repertoire_donnees_brutes )  
         self.toolButtonDirectoryFiltre.pressed.connect( self.slot_lecture_repertoire_donnees_cibles)  
         # Slot pour le groupe vignoble
         self.groupBoxDetailVignoble.clicked.connect( self.slot_bascule_details_vignoble)
-        self.checkBoxInfoVignoble.stateChanged.connect( self.slot_bascule_info_vignoble)
-        self.radioButtonOnglet.toggled.connect( self.slot_bascule_onglet_vignoble)
         # Slot pour le groupe format V3
         self.checkBoxV3.stateChanged.connect( self.slot_bascule_V3)
         self.checkBoxInterPasMesure.stateChanged.connect( self.slot_bascule_pas_mesure)
@@ -153,7 +145,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
 
         self.ButtonIntra.pressed.connect(self.slot_INTRA_interpolation_parcelles)
         self.groupBoxIntra.setEnabled( False)
-        self.groupBoxArret.setEnabled( False)
         self.groupBoxMethode.setEnabled( False)
         self.ButtonIntra.setEnabled( False)
         
@@ -174,8 +165,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         ###############
         self.dans_Quel_Settings()
         # Initialisation des parametres à partir des settings
-        nom_projet = self.settings.value("Physiocap/session", NOM_PROJET)
-        self.lineEditSession.setText( nom_projet)
+        nom_session = self.settings.value("Physiocap/session", NOM_PAR_DEFAUT)
+        self.lineEditSession.setText( nom_session)
         
         if (self.settings.value("Physiocap/recursif") == "YES"):
             self.checkBoxRecursif.setChecked( Qt.Checked)
@@ -276,39 +267,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 if ( un == laTaille):
                     self.comboBoxTaille.setCurrentIndex( idx)
                     physiocap_log( self.tr( "Mode de taille retrouvé"), leModeDeTrace) 
-
-        # Remplissage des conduite sols
-        self.comboBoxStrategieSol.setCurrentIndex( 0)
-        if len( ENTRETIEN_SOL) == 0:
-            self.comboBoxStrategieSol.clear( )
-            physiocap_error( self, self.tr( "Pas de liste d'entretien des sols pré définie"))
-        else:
-            self.comboBoxStrategieSol.clear( )
-            self.comboBoxStrategieSol.addItems( ENTRETIEN_SOL)
-             # Retrouver la commune de  settings
-            self.comboBoxStrategieSol.setCurrentIndex( 0)
-            laStrategie = self.settings.value("Physiocap/StrategieSol", "xx") 
-            for idx, un in enumerate( ENTRETIEN_SOL):
-                if ( un == laStrategie):
-                    self.comboBoxStrategieSol.setCurrentIndex( idx)
-                    physiocap_log( self.tr( "Entretien des  sols retrouvée"), leModeDeTrace) 
-
-        # Remplissage des type de fertilisations
-        self.comboBoxTypeApportFert.setCurrentIndex( 0)
-        if len( TYPE_APPORTS) == 0:
-            self.comboBoxTypeApportFert.clear( )
-            physiocap_error( self, self.tr( "Pas de liste de fertilisation pré définie"))
-        else:
-            self.comboBoxTypeApportFert.clear( )
-            self.comboBoxTypeApportFert.addItems( TYPE_APPORTS)
-             # Retrouver la commune de  settings
-            self.comboBoxTypeApportFert.setCurrentIndex( 0)
-            leTypeFerti = self.settings.value("Physiocap/TypeFerti", "xx") 
-            for idx, un in enumerate( TYPE_APPORTS):
-                if ( un == leTypeFerti):
-                    self.comboBoxTypeApportFert.setCurrentIndex( idx)
-                    physiocap_log( self.tr( "Fertilisation retrouvée"), leModeDeTrace) 
-        
+      
         # Remplissage de la liste de FORMAT_VECTEUR 
         self.fieldComboFormats.setCurrentIndex( 0)         
         if self.checkBoxV3.isChecked():
@@ -473,14 +432,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.spinBoxIsoMax.setValue( int( self.settings.value("Intra/isoMax", 1000 )))
         self.spinBoxNombreIso.setValue( int( self.settings.value("Intra/isoNombre", 5 )))
         self.spinBoxDistanceIso.setValue( int( self.settings.value("Intra/isoDistance", 1 )))
-
-        # Cas de continuation traitement intra
-        self.groupBoxArret.setChecked( Qt.Unchecked)
-        if (self.settings.value("Intra/groupStop") == "YES"):
-            self.groupBoxArret.setChecked( Qt.Checked)    
-        self.fieldComboIntraContinue.setCurrentIndex( int(self.settings.value("Intra/continueIntra", 0)))
-        
-        
+       
         # On initialise le nombre de distance Iso
         self.slot_INTRA_iso_distance()
          
@@ -719,7 +671,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.radioButtonOnglet.setChecked(  Qt.Checked)  
             # Basculer aussi groupBoxVignoble & groupBoxAgroSaisie mais par slot
             self.groupBoxVignoble.setEnabled( True)
-            self.groupBoxAgroSaisie.setEnabled( True)
             self.label_PH.setEnabled( False)            
             self.doubleSpinBoxPH.setEnabled( False)            
             # Saga par defaut et L93
@@ -764,7 +715,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.checkBoxInfoVignoble.setChecked( Qt.Checked)
             self.groupBoxIntra.setEnabled( False)
             self.groupBoxVignoble.setEnabled( True)
-            self.groupBoxAgroSaisie.setEnabled( False)
             self.groupBoxIsolignes.setChecked( Qt.Checked)
             self.groupBoxIsolignes.setEnabled( True)
             self.groupBoxMethode.setEnabled( True)
@@ -781,7 +731,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.checkBoxInfoVignoble.setChecked( Qt.Checked)
             self.groupBoxIntra.setEnabled( True)
             self.groupBoxVignoble.setEnabled( True)
-            self.groupBoxAgroSaisie.setEnabled( True)
             self.label_PH.setEnabled( True)            
             self.doubleSpinBoxPH.setEnabled( True)            
             self.groupBoxExpertOuvert.setEnabled( True)
@@ -908,35 +857,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.settings.setValue("Agro/rendement", float( self.doubleSpinBoxRendement.value()))
         self.settings.setValue("Agro/nb_grappes", int( self.spinBoxNbGrappes.value()))
         self.settings.setValue("Agro/poids_moy_grappes", int( self.spinBoxPoidsMoyenGrappes.value()))
-        # Annee précedente
-        self.settings.setValue("Agro/rendement_N1",  float( self.doubleSpinBoxRendement_N1.value()))
-        self.settings.setValue("Agro/nb_grappes_N1", int( self.spinBoxNbGrappes_N1.value()))
-        self.settings.setValue("Agro/poids_moy_grappes_N1", int( self.spinBoxPoidsMoyenGrappes_N1.value()))
-    ######        choix_user_ind=self.comboBoxTypeApportFert.currentIndex()
-    ######    if(choix_user_ind==liste_apports_nb-1):
-    ######        self.settings.setValue("Agro/type_apports", self.lineEditTypeApportFert_Autres.text().replace(',',' '))#___definir les valeurs des variables : apport ,cas autre à préciser
-    ######    else : 
-    ######        self.settings.setValue("Agro/type_apports", self.comboBoxTypeApportFert.currentText())#___definir les valeurs des variables : type apports fertilisation
-    ######    self.settings.setValue("Agro/produit",self.lineEditProduitFert.text())#___definir les valeurs des variables : produit
-    ######    self.settings.setValue("Agro/dose", self.lineEditDoseFert.text())#___definir les valeurs des variables : dose(t/ha)
-    ######    liste_strategies_nb=len(ENTRETIEN_SOL)
-    ######    choix_user_ind=self.comboBoxStrategieSol.currentIndex()
-    ######    if(choix_user_ind==liste_strategies_nb-1):
-    ######        self.settings.setValue("Agro/strategie_entretien_sol", self.lineEditStrategieSol_Autres.text().replace(',',' '))#___definir les valeurs des variables : strategie entretien sol , cas autre à préciser
-    ######    else : 
-    ######        self.settings.setValue("Agro/strategie_entretien_sol", self.comboBoxStrategieSol.currentText())#___definir les valeurs des variables : strategie entretien de sol
-    ######    self.settings.setValue("Agro/etat_sanitaire", str(self.spinBoxEtatSanitaire_intensite.value())+"*"+str(self.spinBoxEtatSanitaire_frequence.value()))#___definir les valeurs des variables : etat sanitaire intensité*frequance
-
-    #    if self.radioButtonInfoContour.isChecked():
-    #    infoAgro = "Contour"
-    #    self.settings.setValue("Physiocap/info_agro", infoAgro)
-    #    if self.checkBoxGenererContour.isChecked():
-    #        self.settings.setValue("Physiocap/generer_contour", "YES")
-    #    else :
-    #        self.settings.setValue("Physiocap/generer_contour", "NO")
-
         physiocap_log('Les informations agronomiques sont sauvegardées', TRACE_PROFIL) 
-
     
     def memoriser_affichages_styles(self):
         """ Mémoriser les choix d'affichage """        
@@ -1393,9 +1314,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.fieldComboIntra.clear()
             physiocap_error( self, self.tr( "Pas de liste des attributs pour Intra pré définie"))
             return
-        
-        physiocap_log( "Passage dans slot_PROFIL_INTRA_maj_attributs_interpolables origine {}".\
-            format( ORIGINE_TRIPLET), TRACE_JH)
         if ORIGINE_TRIPLET == "INIT":
             # Récupérer les choix dans settings pour le cas initial
             leChoixDiam = self.settings.value("Intra/attributIntraFixe_1", "DIAM")
@@ -1454,7 +1372,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         """ Initialise la box arret / continue"""
 
         if self.checkBoxV3.isChecked():
-            self.groupBoxArret.setEnabled( True)
             if (self.settings.value("Physiocap/groupStop", "YES") == "YES"):
                 self.checkBoxArret.setChecked( Qt.Checked)
             else:
@@ -1471,7 +1388,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 k = k+1
             self.settings.setValue("Physiocap/continueIntra", idx)
         else:
-            self.groupBoxArret.setEnabled( False)
             self.checkBoxArret.setChecked( Qt.Checked)
             self.settings.setValue("Physiocap/groupStop", "YES")
             self.fieldComboIntraContinue.clear()
@@ -1634,7 +1550,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
 
         # TODO Trouver le fichier de points à partie de la session
         nom_complet_point = self.comboBoxPoints.currentText().split( SEPARATEUR_NOEUD)
-        if ( len( nom_complet_point) != 2):
+        if ( len( nom_complet_point) != 3):
             aText = self.tr( "Le shape de points n'est pas choisi. ")
             aText = aText + self.tr( "Créer une nouvelle session Physiocap - bouton Filtrer les données brutes - ")
             aText = aText + self.tr( "avant de faire votre calcul de Moyenne Inter puis Intra Parcellaire")   
@@ -1889,10 +1805,10 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             min_attribut = 99999
             #physiocap_log("Attribut pour Intra >{0}".format( nom_attribut) , TRACE_TOOLS)
             nom_complet_point = self.comboBoxPoints.currentText().split( SEPARATEUR_NOEUD)
-            if (len( nom_complet_point) !=2):
+            if (len( nom_complet_point) !=3):
+                # TODO ERREUR à tracer
                 return
-            #nomProjet = nom_complet_point[0] 
-            idLayer   = nom_complet_point[1]
+            idLayer   = nom_complet_point[2]
             layer = physiocap_get_layer_by_ID( idLayer)
             if layer is not None:
                 try:
@@ -1923,7 +1839,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         """ Rafraichit les listes avant le calcul inter parcelles"""
         nombre_poly = 0
         nombre_point = 0
-        nombre_poly, nombre_point = quel_poly_point_INTRA( self)
+        nombre_poly, nombre_point = quel_poly_point_INTER( self)
         leModeDeTrace = self.fieldComboModeTrace.currentText()
         physiocap_log( "Dans slot_INTER_liste_parcelles : poly >> {}<< et points >> {}<<". \
            format ( nombre_poly,nombre_point), leModeDeTrace)
@@ -1932,7 +1848,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             # A_TESTER: si utile fin inter self.slot_min_max_champ_intra()
             self.slot_PROFIL_INTER_maj_champ_poly_liste()
         if (( nombre_poly > 0) and ( nombre_point > 0)):
-            # Liberer le bouton "moyenne"
+            # Liberer le bouton "Inter"
             self.groupBoxInter.setEnabled( True)
         else:
             self.groupBoxInter.setEnabled( False)
@@ -1972,7 +1888,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 map_champ = mon_provider.fieldNameMap()
                 valeur_unique = "NO"
                 if leProfil == 'Champagne':
-                    # On garde le seul champ nomant les parcelles 
+                    # On garde le seul champ nommant les parcelles 
                     for mon_champ in mon_provider.fields():
                         nom_champ = mon_champ.name()
                         if nom_champ == "Nom_Parcel":
@@ -2026,67 +1942,13 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 mon_provider = None
         else:
             physiocap_log( "Dans recherche des champs uniques : aucun layer", leModeDeTrace)            
-                    
-####  TODO Supprimer  def slot_INTER_INTRA_maj_points_choix( self ):
-####        """ Verify whether the value autorize Inter or Intra"""
-####        nom_complet_point = self.comboBoxPoints.currentText().split( SEPARATEUR_NOEUD)
-####        if ( len( nom_complet_point) != 2):
-####            return
-####            
-####        version_3 = "NO"
-####        if self.checkBoxV3.isChecked():
-####            version_3 = "YES"
-####        
-####        #projet = nom_complet_point[0]
-####        # Chercher dans arbre si la session Inter existe
-####        diametre = nom_complet_point[1] 
-####        layer = physiocap_get_layer_by_ID( diametre)
-####        if layer is not None:
-####            # Avec le diametre, on trouve le repertoire
-####            pro = layer.dataProvider()
-####            chemin_shapes = "chemin vers shapeFile"
-####            if pro.name() != POSTGRES_NOM:
-####                chemin_shapes = os.path.dirname( pro.dataSourceUri())  ;
-####                chemin_session = os.path.dirname(chemin_shapes)  ;
-####                nom_shape = os.path.basename( pro.dataSourceUri())  ;
-####                if ( not os.path.exists( chemin_shapes)):
-####                    raise physiocap_exception_rep( "chemin vers shapeFile")
-####
-####                consolidation = "NO"
-####                if self.checkBoxConsolidation.isChecked():
-####                    consolidation = "YES"                
-####                if (consolidation == "YES"):
-####                    pos_extension = nom_shape.rfind(".")
-####                    nom_vecteur_sans_ext = nom_shape[:pos_extension]
-####                    chemin_vecteur_et_nom = os.path.join( chemin_shapes, nom_vecteur_sans_ext)            
-####                    chemin_inter = os.path.join( chemin_vecteur_et_nom, VIGNETTES_INTER)
-####                else:
-####                    if version_3 == "NO":
-####                        chemin_inter = os.path.join( chemin_shapes, VIGNETTES_INTER)
-####                    else:
-####                        chemin_inter = os.path.join( chemin_session, REPERTOIRE_INTER_V3)
-####                if (os.path.exists( chemin_inter)):
-####                    # On aiguille vers Intra
-####                    self.groupBoxIntra.setEnabled( True)
-####                    self.groupBoxArret.setEnabled( True)
-####                    self.groupBoxMethode.setEnabled( True)
-####                    self.ButtonIntra.setEnabled( True)
-####                    self.ButtonInter.setEnabled( False)
-####
-####                else:
-####                    # On aiguille vers Inter
-####                    self.groupBoxIntra.setEnabled( False)
-####                    self.groupBoxArret.setEnabled( False)
-####                    self.groupBoxMethode.setEnabled( False)
-####                    self.ButtonIntra.setEnabled( False)
-####                    self.ButtonInter.setEnabled( True)
-                              
+                                                  
     def slot_INTER_moyennes_parcelles(self):
         """ Slot qui fait appel au traitement Inter Parcelles et traite exceptions """
        
         leModeDeTrace = self.fieldComboModeTrace.currentText()
         nom_complet_point = self.comboBoxPoints.currentText().split( SEPARATEUR_NOEUD)
-        if ( len( nom_complet_point) != 2):
+        if ( len( nom_complet_point) != 3):
             aText = self.tr( "Le shape de points n'est pas choisi. ")
             aText = aText + self.tr( "Créer une nouvelle session Physiocap - bouton Filtrer les données brutes - ")
             aText = aText + self.tr( "avant de faire votre calcul de Moyenne Inter Parcellaire")
@@ -2116,6 +1978,17 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             aText = aText + self.tr( "Vous ne pouvez pas redemander ce calcul Inter : vous devez détruire le groupe ") 
             aText = aText + self.tr( "ou créer une nouvelle session Physiocap")
             physiocap_error( self, aText, "CRITICAL")
+            return physiocap_message_box( self, aText, "information" )
+        except physiocap_exception_agro_obligatoire as e:
+            physiocap_log_for_error( self)
+            aText = self.tr( "SUIVI AGRO KO : la couche vecteur de votre session ne contient pas un attribut {0}. ").\
+                format( e)
+            aText = aText + self.tr( "Vérifier le vecteur choisi pour décrire vos contours et vos données AGRO ")
+            aText = aText + self.tr( "dans Onglet Calcul puis Moyenne Inter Parcellaire" )
+            aText = aText + self.tr( "les champs Campagne, Nom_Parcel, interrang (cm), intercep (cm), \
+                hauteur (cm) et densite_sarment sont obligatoires",   )
+            physiocap_error( self, aText, "CRITICAL")
+            physiocap_message_box( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
         except physiocap_exception_points_invalid as e:
             physiocap_log_for_error( self)
@@ -2155,7 +2028,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Fin de capture des erreurs Physiocap        
         
         self.groupBoxIntra.setEnabled( True)
-        self.groupBoxArret.setEnabled( True)
         self.groupBoxMethode.setEnabled( True)
         self.ButtonInter.setEnabled( True)
         self.ButtonIntra.setEnabled( True)
@@ -2229,15 +2101,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         else:
             self.groupBoxContourInter.setEnabled( True)
         
-    def slot_bascule_onglet_vignoble(self):
-        """ Changer acces à l'onglet vignoble"""
-        if  self.radioButtonOnglet.isChecked():
-            self.groupBoxVignoble.setEnabled( True)
-            self.groupBoxAgroSaisie.setEnabled( True)
-        else:
-            self.groupBoxVignoble.setEnabled( False)    
-            self.groupBoxAgroSaisie.setEnabled( False) 
-
     def slot_bascule_details_vignoble(self):
     # Calcul aide et sortie
         """ Changement de demande pour les details vignoble : 
@@ -2250,20 +2113,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.groupBoxVignoble.setEnabled( True)
         else:
             self.groupBoxVignoble.setEnabled( False)    
-
-    def slot_bascule_info_vignoble(self):
-    # Calcul aide et sortie
-        """ Changement de demande pour les info vignoble : 
-        on dégrise le groupe Vignoble que si le choix est onglet
-        """ 
-        # appel des attributs INTRA
-        self.slot_PROFIL_INTRA_maj_attributs_interpolables( "DYNAMIQUE")
-        self.slot_PROFIL_INTRA_maj_triplet_interpolables()
-        if  self.radioButtonOnglet.isChecked():
-            self.groupBoxAgroSaisie.setEnabled( True)
-        else:
-            self.groupBoxAgroSaisie.setEnabled( False)    
-            
+          
     def slot_calcul_densite( self):
         # Densité pied /ha
         interrang  = int( self.spinBoxInterrangs.value())

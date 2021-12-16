@@ -43,8 +43,8 @@ from .Physiocap_tools import ( physiocap_message_box, physiocap_question_box,\
         physiocap_log, physiocap_error, physiocap_write_in_synthese, \
         physiocap_rename_existing_file, physiocap_rename_create_dir, physiocap_open_file, \
         physiocap_look_for_MID, physiocap_list_MID, physiocap_csv_vers_vecteur, 
-        quel_poly_point_INTRA, generer_contour_depuis_points, quelle_campagne
-        ) 
+        quel_poly_point_INTER, generer_contour_depuis_points, quelle_campagne, assert_campagne
+        )
         
 from .Physiocap_CIVC import (physiocap_assert_csv, physiocap_ferme_csv, \
         physiocap_fichier_histo, physiocap_tracer_histo, physiocap_filtrer
@@ -235,7 +235,8 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
 #        physiocap_log( self.tr( "{} Liste MIDs {}").\
 #                format( PHYSIOCAP_UNI, info_mid), leModeDeTrace)
 
-        campagne = quelle_campagne( dialogue, info_mid[0])
+        campagne_debut = quelle_campagne( dialogue, info_mid[0])
+        campagne = assert_campagne( dialogue, campagne_debut, info_mid[-1])        
         dialogue.lineEditCampagne.setText( campagne)
         
         for all_info in info_mid:
@@ -666,6 +667,6 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         # Fin 
         physiocap_log( self.tr( "{0} {1} a affiché les couches demandées dans le groupe {2}").\
             format( PHYSIOCAP_INFO , PHYSIOCAP_UNI, chemin_base_session), leModeDeTrace)
-        quel_poly_point_INTRA( dialogue)
+        quel_poly_point_INTER( dialogue)
 
         return 0 
