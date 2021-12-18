@@ -1979,17 +1979,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             aText = aText + self.tr( "ou créer une nouvelle session Physiocap")
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
-        except physiocap_exception_agro_obligatoire as e:
-            physiocap_log_for_error( self)
-            aText = self.tr( "SUIVI AGRO KO : la couche vecteur de votre session ne contient pas un attribut {0}. ").\
-                format( e)
-            aText = aText + self.tr( "Vérifier le vecteur choisi pour décrire vos contours et vos données AGRO ")
-            aText = aText + self.tr( "dans Onglet Calcul puis Moyenne Inter Parcellaire" )
-            aText = aText + self.tr( "les champs Campagne, Nom_Parcel, interrang (cm), intercep (cm), \
-                hauteur (cm) et densite_sarment sont obligatoires",   )
-            physiocap_error( self, aText, "CRITICAL")
-            physiocap_message_box( self, aText, "CRITICAL")
-            return physiocap_message_box( self, aText, "information" )
         except physiocap_exception_points_invalid as e:
             physiocap_log_for_error( self)
             aText = self.tr( "La couche de points de la session {0} ne contient pas les attributs attendus. ").\
@@ -2248,8 +2237,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             return physiocap_message_box( self, aText, "information" )
         except physiocap_exception_err_csv as e:
             physiocap_log_for_error( self)
-            aText = self.tr( "Erreurs dans les données brutes {0}").\
-                format( e)
+            aText = self.tr( "{0}").format( e)
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
         except physiocap_exception_trop_err_csv as e:
@@ -2290,6 +2278,15 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             aText = self.tr( "Erreur bloquante durant création des segments : {0}").\
                 format( e)
             physiocap_error( self, aText, "CRITICAL")
+            return physiocap_message_box( self, aText, "information" )
+        except physiocap_exception_agro_obligatoire as e:
+            physiocap_log_for_error( self)
+            aText = self.tr( "INFORMATIONS AGRO KO : la couche vecteur de votre session ne contient pas un attribut {0}. ").\
+                format( e)
+            aText = aText + self.tr( "Vérifier le vecteur choisi pour décrire vos contours et vos données AGRO ")
+            aText = aText + self.tr( "dans Onglet Calcul puis Moyenne Inter Parcellaire" )
+            physiocap_error( self, aText, "CRITICAL")
+            physiocap_message_box( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
 
         except physiocap_exception_stop_user:

@@ -421,7 +421,9 @@ class physiocap_exception_calcul_segment_invalid( physiocap_exception):
     pass
 class physiocap_exception_stop_user( physiocap_exception):
     pass  
-
+class physiocap_exception_agro_obligatoire( physiocap_exception):
+    pass
+    
 #INTER
 class physiocap_exception_vignette_exists( physiocap_exception):
     pass
@@ -429,8 +431,7 @@ class physiocap_exception_points_invalid( physiocap_exception):
     pass
 class physiocap_exception_segment_invalid( physiocap_exception):
     pass 
-class physiocap_exception_agro_obligatoire( physiocap_exception):
-    pass    
+    
    
 # INTRA
 class physiocap_exception_interpolation( physiocap_exception):

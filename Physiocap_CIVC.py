@@ -40,14 +40,15 @@
 ***************************************************************************/
 """
 
-from .Physiocap_tools import ( physiocap_log, physiocap_error, \
+from .Physiocap_tools import ( physiocap_log, physiocap_error, physiocap_message_box, \
     quelle_projection_et_lib_demandee, physiocap_segment_vers_vecteur, \
-    controler_champs_agro_obligatoire, quel_sont_vecteurs_choisis, liste_vecteur_dans_brut) 
+    assert_champs_agro_obligatoires, quel_type_vecteur, quel_sont_vecteurs_choisis, \
+    quel_vecteur_dans_donnees_brutes) 
 from .Physiocap_var_exception import *
 
 #from PyQt5.QtCore import QVariant
 from qgis.core import ( Qgis, QgsCoordinateReferenceSystem, QgsCoordinateTransform,  \
-        QgsPointXY, QgsMessageLog,  QgsFeatureRequest)
+        QgsPointXY, QgsGeometry, QgsMessageLog, QgsFeatureRequest)
 try :
     import matplotlib
     import matplotlib.pyplot as plt
@@ -218,51 +219,59 @@ def physiocap_ferme_csv( csv_sans_0, csv_avec_0, csv_0_seul, diametre_filtre, er
     return
 
 #AGRO
-def info_agro_poly( num_poly, lesParcellesAgro, les_infos_agronomique):
+def calcul_detail_avec_info_agro_poly( num_poly, lesParcellesAgro, les_infos_agronomique, nbsarm,  biom):
     """ Calcul detaillé du point selon les valeurs agronomique de la parcelle"""
-    # Assert 
-    if len(lesParcellesAgro) != len(les_infos_agronomique):
-        aMsg = "{} Erreur bloquante cherche de points dans contour agro : listes incohérentes {} parcelles &  {} infos agro ". \
-                format ( PHYSIOCAP_STOP,  len(lesParcellesAgro), len(les_vecteurs_agronomique))
-        physiocap_error( self, aMsg )
-    physiocap_log( "Parcelle {} info agro {}".format( lesParcellesAgro[num_poly], les_infos_agronomique[num_poly]),  TRACE_JH)
-    eer = les_infos_agronomique[num_poly][ "interrangs"]
-    eec = les_infos_agronomique[num_poly][ "interceps"]
-    hv  = les_infos_agronomique[num_poly][ "hauteur"]
-    d   = les_infos_agronomique[num_poly][ "densite"]
-    nbsarmm2 = nbsarm/eer*100
-    nbsarcep = nbsarm*eec/100
-    biommm2 = biom/eer*100
-    biomgm2 = biom*d*hv/eer
-    biomgcep = biom*d*hv*eec/100/100
+    physiocap_log( "{} Parcelle {} info agro {}".format( num_poly, lesParcellesAgro[num_poly], les_infos_agronomique[num_poly]),  TRACE_JH)
+    try:
+        eer = les_infos_agronomique[ num_poly][ "interrangs"]
+        eec = les_infos_agronomique[ num_poly][ "interceps"]
+        hv  = les_infos_agronomique[ num_poly][ "hauteur"]
+        d   = les_infos_agronomique[ num_poly][ "densite"]
+        #physiocap_log("ecart rang {}".format(eer),  TRACE_JH)
+        nbsarmm2 = nbsarm/eer*100
+        nbsarcep = nbsarm*eec/100
+        biommm2 = biom/eer*100
+        biomgm2 = biom*d*hv/eer
+        biomgcep = biom*d*hv*eec/100/100
+    except:
+        physiocap_log("Exception durant les calculs détaillées pour le poly {}".format( num_poly),  TRACE_JH)
+        raise
     return nbsarmm2, nbsarcep, biommm2, biomgm2, biomgcep
     
-def point_est_dans_un_poly( self, le_point_projete, lesParcellesAgro, les_vecteurs_agronomique):
+def quel_poly_me_contient( self, le_point_projete, lesParcellesAgro, les_vecteurs_agronomique):
     """ Recherche d'un poly de contour qui contient le point"""
     # Assert 
     if len(lesParcellesAgro) != len(les_vecteurs_agronomique):
-        aMsg = "{} Erreur bloquante cherche de points dans contour agro : listes incohérentes {} parcelles &  {} geoms". \
-                format ( PHYSIOCAP_STOP,  len(lesParcellesAgro), len(les_vecteurs_agronomique))
+        aMsg = "{} Attention incohérence dans votre contour agro : {} parcelles ne correspond pas à {} géométries". \
+                format ( PHYSIOCAP_WARNING,  len(lesParcellesAgro), len(les_vecteurs_agronomique))
         physiocap_error( self, aMsg )
     for num_contour, nom_contour in enumerate(lesParcellesAgro):
-        une_geom_poly = les_vecteurs_agronomique[ num_contour]
-        physiocap_log( "Type de geom {}".format( type(une_geom_poly)),  TRACE_JH)
-        physiocap_log( "Type de point {}".format( type(le_point_projete)),  TRACE_JH)
-        if le_point_projete.within( une_geom_poly):
-            return num_contour
+        try :
+            une_geom_poly = les_vecteurs_agronomique[ num_contour]
+            #physiocap_log("Avant quel_type_vecteur poly",  TRACE_JH)
+            quel_type_vecteur( self, une_geom_poly)
+            point_geom = QgsGeometry.fromPointXY( le_point_projete) 
+            if point_geom.within( une_geom_poly):
+                #physiocap_log("Polygone trouvé")
+                return num_contour
+        except:
+            physiocap_log("Exception durant recherche point dans poly")
+            raise
     return -1
-def capturer_info_agro(self): 
+    
+def memoriser_info_agro(self): 
     """ Trouver les informations agro de toutes les parcelles"""
     le_profil =  self.fieldComboProfilPHY.currentText()
     repertoire_data = self.lineEditDirectoryPhysiocap.text()
     if le_profil == 'Champagne':
         # On prend un eventuel shp ou CSV dans rep des données brutes
-        nom_vecteur, nom_court_vecteur,  libelle = liste_vecteur_dans_brut( repertoire_data)
+        nom_vecteur, nom_court_vecteur,  libelle = quel_vecteur_dans_donnees_brutes( repertoire_data)
         if ((nom_vecteur != None) and len( nom_vecteur) > 0):                
             node_layer = nom_court_vecteur + SEPARATEUR_NOEUD + libelle + \
                 SEPARATEUR_NOEUD + nom_vecteur
             self.comboBoxPolygone.addItem( node_layer)
     _, _, origine_poly, vecteur_poly = quel_sont_vecteurs_choisis( self, "Filtrer")
+
     if ( vecteur_poly == None) or ( not vecteur_poly.isValid()):
         aText = self.tr( "Le contour précisant vos données agronomiques n'est pas valide pour QGIS. Vérifiez-le dans QGIS=> Vecteur => Vérifier la validité ")
         aText = aText + self.tr( "Créer une nouvelle session Physiocap - bouton Filtrer les données brutes - ")
@@ -271,10 +280,10 @@ def capturer_info_agro(self):
 
     champsVignobleOrdonnes, champs_vignoble_requis, champs_vignoble_requis_fichier, dictEnteteVignoble, \
         champExistants, lesParcellesAgro, modele_agro_retenu = \
-        controler_champs_agro_obligatoire( self, vecteur_poly)
+        assert_champs_agro_obligatoires( self, vecteur_poly)
 
     les_infos_agronomique = []
-    les_vecteurs_agronomique = []
+    les_geometries_agronomique = []
     infos_agronomique_en_cours = {} # Conteneur avec le nom des champs
     # CSV
     if origine_poly == "AGRO_CSV":
@@ -283,6 +292,7 @@ def capturer_info_agro(self):
     if origine_poly == "AGRO_SHP":
         indice_dict_Entete = 2
         nom_champ_geom = "geom"
+    physiocap_log( "Type de vecteur {} et geom attendu{}".format( origine_poly, nom_champ_geom))
     for un_contour in vecteur_poly.getFeatures(QgsFeatureRequest().addOrderBy( champs_vignoble_requis_fichier[1])):
         # CSV
         nom_parcelle = dictEnteteVignoble[champsVignobleOrdonnes[1]][indice_dict_Entete]
@@ -291,23 +301,38 @@ def capturer_info_agro(self):
             continue
         for pos_champ, le_champ in enumerate( champs_vignoble_requis):
             champ_fichier = champs_vignoble_requis_fichier[ pos_champ]
-            physiocap_log(" Champ de la liste des champrequisfichier vaut {}".\
-                format( champ_fichier),  TRACE_JH)
-            physiocap_log(" Champ dans dictEnteteVignoble de le_champ vaut {}".\
-                format( dictEnteteVignoble[le_champ]),  TRACE_JH)
+#            physiocap_log(" Champ de la liste des champs_vignoble_requis vaut {}".\
+#                format( le_champ),  TRACE_JH)
+#            physiocap_log(" Champ de la liste des champrequisfichier vaut {}".\
+#                format( champ_fichier),  TRACE_JH)
             nom_champ = dictEnteteVignoble[ le_champ][indice_dict_Entete]
             physiocap_log(" Nom du champ de dictEnteteVignoble vaut {}".\
                 format( nom_champ),  TRACE_JH)
-            # TODO DURCIR tester les types
-            #type_attendu = dictEnteteVignoble[ champ][1]
-            infos_agronomique_en_cours[ le_champ] = un_contour[ champ_fichier]
+            try:
+                # TODO DURCIR  tester les types
+                #type_attendu = dictEnteteVignoble[ champ][1]
+                infos_agronomique_en_cours[ le_champ] = un_contour[ champ_fichier]
+            except:
+                # TODO DURCIR Attraper exception champ non existant dans contour et tester les types
+                raise physiocap_exception_agro_obligatoire( "{} obligatoire (les champs obligatoires sont {}".\
+                    format( champ_fichier, champs_vignoble_requis_fichier))
         les_infos_agronomique.append( infos_agronomique_en_cours) 
         infos_agronomique_en_cours = {}
-        les_vecteurs_agronomique.append(  un_contour[ nom_champ_geom])
-    return lesParcellesAgro, les_vecteurs_agronomique, les_infos_agronomique
+        if origine_poly == "AGRO_CSV":
+            try:
+                les_geometries_agronomique.append(  un_contour.geometry())
+            except:
+                physiocap_error("Contour CSV n'a pas de géométrie")
+                raise
+        else:
+            les_geometries_agronomique.append(  un_contour.geometry())
+    physiocap_log( "Synthèse Info Agro : {}".format( les_infos_agronomique))
+    physiocap_log( "Synthèse geom : {}".format( les_geometries_agronomique))
+
+    return lesParcellesAgro, les_geometries_agronomique, les_infos_agronomique
     
 # Fonction de filtrage et traitement des données
-def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
+def physiocap_filtrer(self, nom_court_csv_concat, src, csv_sans_0, csv_avec_0, csv_0_seul,
     nom_dir_segment, nom_session, chemin_session, 
     diametre_filtre, nom_fichier_synthese, err, 
     mindiam, maxdiam, max_sarments_metre, 
@@ -322,8 +347,9 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
     Le résultat est écrit au fur et à mesure dans les fichiers 
     csv_sans_0, csv_avec_0 et depuis v3 dans csv_0_seul mais aussi diametre_filtre 
     La synthese est allongé
-    "details" pilote l'ecriture de 5 parametres ou de la totalité des 10 parametres 
-    """
+    "details" pilote l'ecriture de 5 parametres ou de la totalité des 10 parametres au unités détaillées
+    qui nécessite 4 champs (interrangs interceps densite_sarment hauteur de vegetation)
+    Ces champs proviennent de l'onglet Agronomie (jusqu'à V3.10.4) et maintenant depuis un contour "Agro" """
     leModeDeTrace = self.fieldComboModeTrace.currentText()    
     # S'il n'existe pas de données parcellaire, le script travaille avec les données brutes
     titre = ""
@@ -338,9 +364,9 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
     else:
         #S'il existe des données parcellaire, le script travaille avec les données brutes et les données calculées
         titre = titre_sans_detail + titre_partie_details
-        # TODO signaler Information à la parcelle
+        # TODO ? Signaler information à la parcelle dans synthese
         if self.checkBoxInfoVignoble.isChecked() and self.radioButtonContour.isChecked():
-            lesParcellesAgro, les_vecteurs_agronomique, les_infos_agronomique = capturer_info_agro(self)
+            lesParcellesAgro, les_vecteurs_agronomique, les_infos_agronomique = memoriser_info_agro(self)
 
     # Ecriture de l'entete pour tous les cas
     csv_sans_0.write("{0}\n".format( titre)) 
@@ -369,6 +395,7 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
     # Récuperer le CRS choisi, les extensions et le calculateur de distance
     distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
     laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( self)
+    tracer_une_fois = 0
 
     for numero_point, ligne_brute in enumerate( lignes_brutes):
         if not ligne_brute: break 
@@ -575,136 +602,146 @@ def physiocap_filtrer(self,  src, csv_sans_0, csv_avec_0, csv_0_seul,
             # monter directemenr exception
             raise
 
+#        try: # On filtre vraiement           
+        if details == "NO" :
+            if len(diamsF)==0: # si le nombre de diamètre après filtrage = 0 alors pas de mesures
+                nbsarm = 0
+                nbsart = 0
+                diam =0
+                biom = 0
+                # Ecrire les seuls_0 et aussi les points avec 0
+                if version_3 == "NO":
+                    csv_0_seul.write("%.7f%s%.7f%s%.7f%s%.7f%s%i%s%i%s%i%s%s%s%0.2f\n" \
+                        %(XY[0],";",XY[1],";",XY_L93[0],";",XY_L93[1],";",nbsarm,";",diam ,";",biom,";",result[0],";",XY[7]))  # on écrit la ligne dans le csv avec ZERO SEUL
+                    csv_avec_0.write("%.7f%s%.7f%s%.7f%s%.7f%s%i%s%i%s%i%s%s%s%0.2f\n" \
+                        %(XY[0],";",XY[1],";",XY_L93[0],";",XY_L93[1],";",nbsarm,";",diam ,";",biom,";",result[0],";",XY[7]))  # on écrit la ligne dans le fcsv avec ZERO
+                else:   # V3 on ajoute altitude, pdop, distance au point precedent et la dérive
+                        # puis AZIMUTH et NBSART = 0
+                    a_ecrire = "{0};{1:.7f};{2:.7f};{3:.7f};{4:.7f}; \
+                                {5:.2f};{6:.2f};{7:.2f};{8:.2f};{9:.2f};0;0;0;0;{10};{11:.7f}\n". \
+                            format(numero_point, XY[0],XY[1],XY_L93[0],XY_L93[1], \
+                                XY[2],XY[5],ma_distance,derive,mon_azimuth,       result[0],XY[7])
+                    csv_0_seul.write( a_ecrire)  
+                    csv_avec_0.write( a_ecrire)
 
-        try: # On filtre vraiement           
-            if details == "NO" :
-                if len(diamsF)==0: # si le nombre de diamètre après filtrage = 0 alors pas de mesures
+            elif comptage==NB_VIRGULES and len(diamsF)>0 : # si le nombre de diamètre après filtrage != 0 alors mesures
+                # Nombre sarment total 
+                nbsart  = len(diamsF)
+                if XY[7] != 0: # Si vitesse non nulle
+                    nbsarm = len(diamsF)/(XY[7]*1000/3600)
+                else:
                     nbsarm = 0
-                    nbsart = 0
-                    diam =0
-                    biom = 0
-                    # Ecrire les seuls_0 et aussi les points avec 0
+                if nbsarm > 1 and nbsarm < max_sarments_metre :                   
+                    diam =sum(diamsF)/len(diamsF)
+                    biom = 3.1416*(diam/2)*(diam/2)*nbsarm
                     if version_3 == "NO":
-                        csv_0_seul.write("%.7f%s%.7f%s%.7f%s%.7f%s%i%s%i%s%i%s%s%s%0.2f\n" \
-                            %(XY[0],";",XY[1],";",XY_L93[0],";",XY_L93[1],";",nbsarm,";",diam ,";",biom,";",result[0],";",XY[7]))  # on écrit la ligne dans le csv avec ZERO SEUL
-                        csv_avec_0.write("%.7f%s%.7f%s%.7f%s%.7f%s%i%s%i%s%i%s%s%s%0.2f\n" \
-                            %(XY[0],";",XY[1],";",XY_L93[0],";",XY_L93[1],";",nbsarm,";",diam ,";",biom,";",result[0],";",XY[7]))  # on écrit la ligne dans le fcsv avec ZERO
-                    else:   # V3 on ajoute altitude, pdop, distance au point precedent et la dérive
-                            # puis AZIMUTH et NBSART = 0
+                        csv_avec_0.write("%.7f%s%.7f%s%.7f%s%.7f%s%0.2f%s%.2f%s%.2f%s%s%s%0.2f\n" \
+                            %(XY[0],";",XY[1],";",XY_L93[0],";",XY_L93[1],";",nbsarm,";",diam,";",biom,";",result[0],";",XY[7])) # on écrit la ligne dans le csv avec ZERO
+                        csv_sans_0.write("%.7f%s%.7f%s%.7f%s%.7f%s%0.2f%s%.2f%s%.2f%s%s%s%0.2f\n" \
+                            %(XY[0],";",XY[1],";",XY_L93[0],";",XY_L93[1],";",nbsarm,";",diam,";",biom,";",result[0],";",XY[7])) # on écrit la ligne dans le csv sans ZERO
+                    else: # V3 on ajoute altitude, pdop,distance au point precedent et risque de dérive
+                          # puis AZIMUTH et NBSART
                         a_ecrire = "{0};{1:.7f};{2:.7f};{3:.7f};{4:.7f}; \
-                                    {5:.2f};{6:.2f};{7:.2f};{8:.2f};{9:.2f};0;0;0;0;{10};{11:.7f}\n". \
-                                format(numero_point, XY[0],XY[1],XY_L93[0],XY_L93[1], \
-                                    XY[2],XY[5],ma_distance,derive,mon_azimuth,       result[0],XY[7])
-                        csv_0_seul.write( a_ecrire)  
-                        csv_avec_0.write( a_ecrire)
+                            {5:.2f};{6:.2f};{7:.2f};{8:.2f};{9:.2f};{10}; \
+                            {11:.2f}; {12:.2f};{13:.2f};{14};{15:.7f}\n". \
+                            format( numero_point, XY[0],  XY[1], XY_L93[0] ,XY_L93[1], \
+                                XY[2],XY[5],ma_distance,derive,mon_azimuth,nbsart, \
+                                nbsarm,diam,biom,result[0],XY[7])
+                        csv_avec_0.write( a_ecrire) 
+                        csv_sans_0.write(a_ecrire)   
 
-                elif comptage==NB_VIRGULES and len(diamsF)>0 : # si le nombre de diamètre après filtrage != 0 alors mesures
-                    # Nombre sarment total 
-                    nbsart  = len(diamsF)
-                    if XY[7] != 0: # Si vitesse non nulle
-                        nbsarm = len(diamsF)/(XY[7]*1000/3600)
-                    else:
-                        nbsarm = 0
-                    if nbsarm > 1 and nbsarm < max_sarments_metre :                   
-                        diam =sum(diamsF)/len(diamsF)
-                        biom = 3.1416*(diam/2)*(diam/2)*nbsarm
-                        if version_3 == "NO":
-                            csv_avec_0.write("%.7f%s%.7f%s%.7f%s%.7f%s%0.2f%s%.2f%s%.2f%s%s%s%0.2f\n" \
-                                %(XY[0],";",XY[1],";",XY_L93[0],";",XY_L93[1],";",nbsarm,";",diam,";",biom,";",result[0],";",XY[7])) # on écrit la ligne dans le csv avec ZERO
-                            csv_sans_0.write("%.7f%s%.7f%s%.7f%s%.7f%s%0.2f%s%.2f%s%.2f%s%s%s%0.2f\n" \
-                                %(XY[0],";",XY[1],";",XY_L93[0],";",XY_L93[1],";",nbsarm,";",diam,";",biom,";",result[0],";",XY[7])) # on écrit la ligne dans le csv sans ZERO
-                        else: # V3 on ajoute altitude, pdop,distance au point precedent et risque de dérive
-                              # puis AZIMUTH et NBSART
-                            a_ecrire = "{0};{1:.7f};{2:.7f};{3:.7f};{4:.7f}; \
-                                {5:.2f};{6:.2f};{7:.2f};{8:.2f};{9:.2f};{10}; \
-                                {11:.2f}; {12:.2f};{13:.2f};{14};{15:.7f}\n". \
-                                format( numero_point, XY[0],  XY[1], XY_L93[0] ,XY_L93[1], \
-                                    XY[2],XY[5],ma_distance,derive,mon_azimuth,nbsart, \
-                                    nbsarm,diam,biom,result[0],XY[7])
-                            csv_avec_0.write( a_ecrire) 
-                            csv_sans_0.write(a_ecrire)   
+                    for n in range(len(diamsF)) :
+                        diametre_filtre.write("%f%s" %(diamsF[n],";"))
+        elif details == "YES" :
+            if len(diamsF)==0: # si le nombre de diamètre après filtrage = 0 alors pas de mesures
+                nbsart = 0
+                nbsarm = 0
+                diam =0
+                biom = 0
+                nbsarmm2 = 0
+                nbsarcep = 0
+                biommm2 = 0
+                biomgm2 = 0
+                biomgcep = 0
+                if version_3 == "NO":
+                    csv_0_seul.write("%.7f%s%.7f%s%.7f%s%.7f%s%i%s%i%s%i%s%s%s%0.2f%s%i%s%i%s%i%s%i%s%i\n" \
+                    %(XY[0],";",XY[1],";",XY_L93[0],";",XY_L93[1],";",nbsarm,";",diam ,";",biom,";",result[0],";",XY[7],";",nbsarmm2,";",nbsarcep,";",biommm2,";",biomgm2,";",biomgcep))  
+                    csv_avec_0.write("%.7f%s%.7f%s%.7f%s%.7f%s%i%s%i%s%i%s%s%s%0.2f%s%i%s%i%s%i%s%i%s%i\n" \
+                    %(XY[0],";",XY[1],";",XY_L93[0],";",XY_L93[1],";",nbsarm,";",diam ,";",biom,";",result[0],";",XY[7],";",nbsarmm2,";",nbsarcep,";",biommm2,";",biomgm2,";",biomgcep)) 
+                else: # Q3 on ajoute altitude, pdop, distance au point precedent et la dérive
+                        # puis AZIMUTH et NBSART = 0
+                    a_ecrire = "{0};{1:.7f};{2:.7f};{3:.7f};{4:.7f}; \
+                                {5:.2f};{6:.2f};{7:.2f};{8:.2f};{9:.2f};0;0;0;0;{10};{11:.7f}". \
+                            format(numero_point, XY[0],XY[1],XY_L93[0],XY_L93[1], 
+                                XY[2],XY[5],ma_distance,derive,mon_azimuth,       result[0],XY[7])
+                    a_ecrire_detail = ";0;0;0;0;0\n"                     
+                    a_ecrire_complet = a_ecrire + a_ecrire_detail
+                    csv_0_seul.write( a_ecrire_complet)  
+                    csv_avec_0.write(a_ecrire_complet)
 
-                        for n in range(len(diamsF)) :
-                            diametre_filtre.write("%f%s" %(diamsF[n],";"))
-            elif details == "YES" :
-                if len(diamsF)==0: # si le nombre de diamètre après filtrage = 0 alors pas de mesures
-                    nbsart = 0
+            elif comptage==NB_VIRGULES and len(diamsF)>0 : # si le nombre de diamètre après filtrage != 0 alors mesures
+                nbsart  = len(diamsF)
+                if XY[7] != 0:
+                    nbsarm = len(diamsF)/(XY[7]*1000/3600)
+                else:
                     nbsarm = 0
-                    diam =0
-                    biom = 0
-                    nbsarmm2 = 0
-                    nbsarcep = 0
-                    biommm2 = 0
-                    biomgm2 = 0
-                    biomgcep = 0
+                if nbsarm > 1 and nbsarm < max_sarments_metre :                   
+                    diam =sum(diamsF)/len(diamsF)
+                    biom=3.1416*(diam/2)*(diam/2)*nbsarm
+                    # CAS INFO AGRO par parcelles
+                    if self.checkBoxInfoVignoble.isChecked() and self.radioButtonContour.isChecked():
+                        num_poly = quel_poly_me_contient( self, le_point_projete, \
+                            lesParcellesAgro, les_vecteurs_agronomique)
+                        if num_poly < 0 and tracer_une_fois < 2:
+                            if tracer_une_fois == 0:
+                                physiocap_log("Point hors parcellaire", leModeDeTrace, Warning)
+                            else:
+                                physiocap_log("Point(s) hors parcellaire", leModeDeTrace, Warning)
+                            tracer_une_fois + 1
+                    if self.checkBoxInfoVignoble.isChecked() and self.radioButtonContour.isChecked() \
+                        and num_poly >= 0:    
+                        nbsarmm2, nbsarcep, biommm2, biomgm2, biomgcep = \
+                            calcul_detail_avec_info_agro_poly( num_poly, lesParcellesAgro, \
+                                les_infos_agronomique, nbsarm,  biom)
+                    else:
+                        nbsarmm2 = nbsarm/eer*100
+                        nbsarcep = nbsarm*eec/100
+                        biommm2 = biom/eer*100
+                        biomgm2 = biom*d*hv/eer
+                        biomgcep = biom*d*hv*eec/100/100
                     if version_3 == "NO":
-                        csv_0_seul.write("%.7f%s%.7f%s%.7f%s%.7f%s%i%s%i%s%i%s%s%s%0.2f%s%i%s%i%s%i%s%i%s%i\n" \
-                        %(XY[0],";",XY[1],";",XY_L93[0],";",XY_L93[1],";",nbsarm,";",diam ,";",biom,";",result[0],";",XY[7],";",nbsarmm2,";",nbsarcep,";",biommm2,";",biomgm2,";",biomgcep))  
-                        csv_avec_0.write("%.7f%s%.7f%s%.7f%s%.7f%s%i%s%i%s%i%s%s%s%0.2f%s%i%s%i%s%i%s%i%s%i\n" \
+                        csv_avec_0.write("%.7f%s%.7f%s%.7f%s%.7f%s%.2f%s%.2f%s%.2f%s%s%s%.2f%s%.2f%s%.2f%s%.2f%s%.2f%s%.2f\n" \
+                        %(XY[0],";",XY[1],";",XY_L93[0],";",XY_L93[1],";",nbsarm,";",diam ,";",biom,";",result[0],";",XY[7],";",nbsarmm2,";",nbsarcep,";",biommm2,";",biomgm2,";",biomgcep))
+                        csv_sans_0.write("%.7f%s%.7f%s%.7f%s%.7f%s%.2f%s%.2f%s%.2f%s%s%s%.2f%s%.2f%s%.2f%s%.2f%s%.2f%s%.2f\n" \
                         %(XY[0],";",XY[1],";",XY_L93[0],";",XY_L93[1],";",nbsarm,";",diam ,";",biom,";",result[0],";",XY[7],";",nbsarmm2,";",nbsarcep,";",biommm2,";",biomgm2,";",biomgcep)) 
-                    else: # Q3 on ajoute altitude, pdop, distance au point precedent et la dérive
-                            # puis AZIMUTH et NBSART = 0
+                    else: # Q3 on ajoute altitude, pdop,distance au point precedent et risque de dérive
+                          # puis AZIMUTH et NBSART
                         a_ecrire = "{0};{1:.7f};{2:.7f};{3:.7f};{4:.7f}; \
-                                    {5:.2f};{6:.2f};{7:.2f};{8:.2f};{9:.2f};0;0;0;0;{10};{11:.7f}". \
-                                format(numero_point, XY[0],XY[1],XY_L93[0],XY_L93[1], 
-                                    XY[2],XY[5],ma_distance,derive,mon_azimuth,       result[0],XY[7])
-                        a_ecrire_detail = ";0;0;0;0;0\n"                     
+                            {5:.2f};{6:.2f};{7:.2f};{8:.2f};{9:.2f};{10}; \
+                            {11:.2f}; {12:.2f};{13:.2f};{14};{15:.7f}". \
+                            format( numero_point, XY[0],  XY[1], XY_L93[0] ,XY_L93[1],
+                                XY[2],XY[5],ma_distance,derive,mon_azimuth,nbsart,
+                                nbsarm,diam,biom,result[0],XY[7])
+                        a_ecrire_detail = ";{0:.7f};{1:.7f};{2:.7f};{3:.7f};{4:.7f}\n". \
+                            format( nbsarmm2, nbsarcep,biommm2,biomgm2,biomgcep)
                         a_ecrire_complet = a_ecrire + a_ecrire_detail
-                        csv_0_seul.write( a_ecrire_complet)  
-                        csv_avec_0.write(a_ecrire_complet)
+                        csv_avec_0.write( a_ecrire_complet) 
+                        csv_sans_0.write(a_ecrire_complet) 
 
-                elif comptage==NB_VIRGULES and len(diamsF)>0 : # si le nombre de diamètre après filtrage != 0 alors mesures
-                    nbsart  = len(diamsF)
-                    if XY[7] != 0:
-                        nbsarm = len(diamsF)/(XY[7]*1000/3600)
-                    else:
-                        nbsarm = 0
-                    if nbsarm > 1 and nbsarm < max_sarments_metre :                   
-                        diam =sum(diamsF)/len(diamsF)
-                        biom=3.1416*(diam/2)*(diam/2)*nbsarm
-                        # CAS INFO AGRO PAr parcelles
-                        if self.checkBoxInfoVignoble.isChecked() and self.radioButtonContour.isChecked():
-                           num_poly = point_est_dans_un_poly( self, le_point_projete, \
-                                lesParcellesAgro, les_vecteurs_agronomique)
-                        if self.checkBoxInfoVignoble.isChecked() and self.radioButtonContour.isChecked() \
-                            and num_poly >= 0:    
-                            nbsarmm2, nbsarcep, biommm2, biomgm2, biomgcep = info_agro_poly( num_poly, lesParcellesAgro, les_infos_agronomique)
-                        else:
-                            nbsarmm2 = nbsarm/eer*100
-                            nbsarcep = nbsarm*eec/100
-                            biommm2 = biom/eer*100
-                            biomgm2 = biom*d*hv/eer
-                            biomgcep = biom*d*hv*eec/100/100
-                        if version_3 == "NO":
-                            csv_avec_0.write("%.7f%s%.7f%s%.7f%s%.7f%s%.2f%s%.2f%s%.2f%s%s%s%.2f%s%.2f%s%.2f%s%.2f%s%.2f%s%.2f\n" \
-                            %(XY[0],";",XY[1],";",XY_L93[0],";",XY_L93[1],";",nbsarm,";",diam ,";",biom,";",result[0],";",XY[7],";",nbsarmm2,";",nbsarcep,";",biommm2,";",biomgm2,";",biomgcep))
-                            csv_sans_0.write("%.7f%s%.7f%s%.7f%s%.7f%s%.2f%s%.2f%s%.2f%s%s%s%.2f%s%.2f%s%.2f%s%.2f%s%.2f%s%.2f\n" \
-                            %(XY[0],";",XY[1],";",XY_L93[0],";",XY_L93[1],";",nbsarm,";",diam ,";",biom,";",result[0],";",XY[7],";",nbsarmm2,";",nbsarcep,";",biommm2,";",biomgm2,";",biomgcep)) 
-                        else: # Q3 on ajoute altitude, pdop,distance au point precedent et risque de dérive
-                              # puis AZIMUTH et NBSART
-                            a_ecrire = "{0};{1:.7f};{2:.7f};{3:.7f};{4:.7f}; \
-                                {5:.2f};{6:.2f};{7:.2f};{8:.2f};{9:.2f};{10}; \
-                                {11:.2f}; {12:.2f};{13:.2f};{14};{15:.7f}". \
-                                format( numero_point, XY[0],  XY[1], XY_L93[0] ,XY_L93[1],
-                                    XY[2],XY[5],ma_distance,derive,mon_azimuth,nbsart,
-                                    nbsarm,diam,biom,result[0],XY[7])
-                            a_ecrire_detail = ";{0:.7f};{1:.7f};{2:.7f};{3:.7f};{4:.7f}\n". \
-                                format( nbsarmm2, nbsarcep,biommm2,biomgm2,biomgcep)
-                            a_ecrire_complet = a_ecrire + a_ecrire_detail
-                            csv_avec_0.write( a_ecrire_complet) 
-                            csv_sans_0.write(a_ecrire_complet) 
+                    # Memorise diametre filtré pour histo
+                    for n in range(len(diamsF)) :
+                        diametre_filtre.write("%f%s" %(diamsF[n],";"))
 
-                        # Memorise diametre filtré pour histo
-                        for n in range(len(diamsF)) :
-                            diametre_filtre.write("%f%s" %(diamsF[n],";"))
-
-        except :
-            aMsg = "{0} Erreur bloquante durant filtrage : pour la ligne brute numéro {1}". \
-                format ( PHYSIOCAP_STOP,  numero_point)
-            physiocap_error( self, aMsg )
-            err.write( aMsg) # on écrit la ligne dans le fichier ERREUR
-            # Pour monter directement exception 
-            raise physiocap_exception_err_csv( nom_court_csv_concat)
+#        except :
+#            aMsg = "{0} Erreur bloquante durant filtrage : pour la ligne brute numéro {1} dans le csv {2}".\
+#                format ( PHYSIOCAP_STOP,  numero_point, nom_court_csv_concat)
+#            aMsg = aMsg + ". Origine de l'erreur se situe dans les données MIDs (à identifier et à corriger dans le répertoire des données brutes)"
+#            err.write( aMsg) # on écrit la ligne dans le fichier ERREUR
+#            # Fermeture du fichier destination
+#            physiocap_ferme_csv( csv_sans_0, csv_avec_0, csv_0_seul, diametre_filtre, err, src)
+#            # Pour monter directement exception 
+#            physiocap_error( self, aMsg, "CRITICAL")
+#            raise physiocap_exception_err_csv( aMsg)
 
     if version_3 == "NO":
         vecteur_segment = None

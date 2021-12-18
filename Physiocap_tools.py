@@ -171,9 +171,8 @@ def quel_type_vecteur( self, vector):
         geomType = QgsWkbTypes.geometryType( geomWkbType) 
         geomTypeText = QgsWkbTypes.geometryDisplayString( geomType)
         geomWkbTypeText = QgsWkbTypes.displayString( geomWkbType)
-        
-        # physiocap_log( "-- Vector Text {0} type geom {1} et WkbType {2}".\
-        #    format( geomTypeText, geomType,  geomWkbType), TRACE_TOOLS)
+        physiocap_log( "-- Vector Text {0} type geom {1} et WkbType {2}".\
+            format( geomTypeText, geomType,  geomWkbType), TRACE_JH)
         return geomTypeText, geomWkbTypeText, geomWkbType,  geomWkbMultiType  
     except:
 #        physiocap_error( self, self.tr("Warning : couche (layer) {0} n'est ni (is nor) point, ni (nor) polygone").\
@@ -299,7 +298,8 @@ def quel_poly_point_INTER( self, isRoot = None, node = None ):
 #                    format( type_layer, child.name(),  child.layerId()), TRACE_TOOLS) 
     if le_profil == 'Champagne' and nombre_poly == 0:
         # On prend un eventuel shp ou CSV dans rep des données brutes
-        nom_vecteur, nom_court_vecteur,  libelle = liste_vecteur_dans_brut( Repertoire_Donnees_Brutes)
+        nom_vecteur, nom_court_vecteur,  libelle = \
+            quel_vecteur_dans_donnees_brutes( Repertoire_Donnees_Brutes)
         if ((nom_vecteur != None) and len( nom_vecteur) > 0):                
             node_layer = nom_court_vecteur + SEPARATEUR_NOEUD + libelle + \
                 SEPARATEUR_NOEUD + nom_vecteur
@@ -602,7 +602,7 @@ def inclure_vignoble_sur_contour(self, chemin_fichier_convex, ss_groupe=None):
     return chemin_fichier_convex
 
 # Fonction pour générer le CSVT : csv avec info agro, moyenne et geometrie en WKT
-def controler_champs_agro_obligatoire( dialogue, vecteur_poly):
+def assert_champs_agro_obligatoires( dialogue, vecteur_poly):
     # Controler les champs obligatoires
     champsVignobleOrdonnes, champs_vignoble_requis, champs_vignoble_requis_fichier, dictEnteteVignoble = \
         structure_informations_vignoble( dialogue)
@@ -1036,7 +1036,7 @@ def physiocap_open_file( nom_court, chemin, type_ouverture="w"):
 
 
 # Fonction pour vérifier le fichier csv    
-def physiocap_look_for_MID( repertoire, recursif, exclusion="fic_sources"):
+def quel_MID_dans_donnees_brutes( repertoire, recursif, exclusion="fic_sources"):
     """Fonction de recherche des ".MID". 
     Si recursif vaut "Oui", on scrute les sous repertoires à la recheche de MID 
     mais on exclut le repertoire de Exclusion dont on ignore les MID 
@@ -1056,7 +1056,7 @@ def physiocap_look_for_MID( repertoire, recursif, exclusion="fic_sources"):
                 MIDs.append( os.path.join( root, name_file))
     return sorted( MIDs)
 
-def liste_vecteur_dans_brut( Repertoire_Donnees_Brutes):
+def quel_vecteur_dans_donnees_brutes( Repertoire_Donnees_Brutes):
     """Cherche premier vecteur (shp puis csv) dans répertoire des données brutes (qui contient MID) 
     SHP prioritaires sur CSVT """
     #SHP
@@ -1076,7 +1076,7 @@ def liste_vecteur_dans_brut( Repertoire_Donnees_Brutes):
         return listeCSVTriee[0], os.path.basename( listeCSVTriee[0]), "CSV NON OUVERT DANS QGIS"
     return None, None
 
-def physiocap_list_MID( repertoire, MIDs, synthese="xx"):
+def lister_MIDs_pour_synthese( repertoire, MIDs, synthese="xx"):
     """Fonction qui liste les MID.
     En entrée la liste des MIDs avec leurs nom complet
     nom court, taille en ligne, centroide GPS, vitesse moyenne
@@ -1438,7 +1438,7 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
                         # Niveau de detail demandé
                         # assert sur len row
                         if len(row) != 14:
-                            uText = "Le nombre de colonnes : {0} du cvs ne permet pas le calcul détaillé - lors création du shape {1}".\
+                            uText = "Le nombre de colonnes : {0} du cvs ne permet pas le calcul détaillé - lors création du vecteur {1}".\
                                 format( len(row),  nom_court_vecteur)
                             raise physiocap_exception_err_csv(  uText)
                         nbsarmm2.append(float(row[9]))
@@ -1448,7 +1448,7 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
                         biomgcep.append(float(row[13]))
                     else:
                         if len(row) != 21:
-                            uText = "Le nombre de colonnes : {0} du cvs ne permet pas le calcul détaillé - lors création dushape {1}".\
+                            uText = "Le nombre de colonnes : {0} du cvs ne permet pas le calcul détaillé - lors création du vecteur {1}".\
                                 format( len(row),  nom_court_vecteur)
                             raise physiocap_exception_err_csv( uText)
                         nbsarmm2.append(float(row[16]))
@@ -1637,7 +1637,6 @@ class PhysiocapTools( QtWidgets.QDialog):
     """QGIS Pour voir les messages traduits."""
     def __init__(self, parent=None):
         """Class constructor."""
-        print("TOOLS init class")
         super( PhysiocapTools, self).__init__()
         
     def physiocap_tools_log_for_error( self):

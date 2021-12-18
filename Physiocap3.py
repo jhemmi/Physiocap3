@@ -196,6 +196,7 @@ class Physiocap3:
         # Run the dialog event loop
         result = self.dlg.exec() #       result = self.dlg.exec_()
         # See if OK was pressed
+        # TODO : fermeture de tous les fichiers ?
 ##        physiocap_message_box( self.dlg, "Dans Physiocap.run apres dial_exec <" +
 ##                               str(result ) + ">",
 ##                               "information" )        

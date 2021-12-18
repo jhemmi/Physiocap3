@@ -42,9 +42,8 @@
 from .Physiocap_tools import ( physiocap_message_box, physiocap_question_box,\
         physiocap_log, physiocap_error, physiocap_write_in_synthese, \
         physiocap_rename_existing_file, physiocap_rename_create_dir, physiocap_open_file, \
-        physiocap_look_for_MID, physiocap_list_MID, physiocap_csv_vers_vecteur, 
-        quel_poly_point_INTER, generer_contour_depuis_points, quelle_campagne, assert_campagne
-        )
+        physiocap_csv_vers_vecteur, lister_MIDs_pour_synthese, quel_MID_dans_donnees_brutes, quelle_campagne, assert_campagne, \
+        quel_poly_point_INTER, generer_contour_depuis_points) 
         
 from .Physiocap_CIVC import (physiocap_assert_csv, physiocap_ferme_csv, \
         physiocap_fichier_histo, physiocap_tracer_histo, physiocap_filtrer
@@ -170,7 +169,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         # le Tri pour retomber dans l'ordre de Physiocap_V8
         if ( recursif == "YES"):
             # On appelle la fonction de recherche récursive
-            listeTriee = physiocap_look_for_MID( Repertoire_Donnees_Brutes, "YES", REPERTOIRE_SOURCES)
+            listeTriee = quel_MID_dans_donnees_brutes( Repertoire_Donnees_Brutes, "YES", REPERTOIRE_SOURCES)
         else:
             # Non recursif
             listeTriee = sorted(glob.glob( nom_fichiers_recherches))
@@ -231,10 +230,9 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         if (CENTROIDES == "YES"):
             fichier_synthese.write("\nCentroïdes")
         fichier_synthese.write("\n")
-        info_mid = physiocap_list_MID( Repertoire_Donnees_Brutes, listeTriee)
+        info_mid = lister_MIDs_pour_synthese( Repertoire_Donnees_Brutes, listeTriee)
 #        physiocap_log( self.tr( "{} Liste MIDs {}").\
 #                format( PHYSIOCAP_UNI, info_mid), leModeDeTrace)
-
         campagne_debut = quelle_campagne( dialogue, info_mid[0])
         campagne = assert_campagne( dialogue, campagne_debut, info_mid[-1])        
         dialogue.lineEditCampagne.setText( campagne)
@@ -440,7 +438,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         #################            
         try:
             nom_layer_segment,  nom_layer_segment_brise = physiocap_filtrer( dialogue,
-                csv_concat, csv_sans_0, csv_avec_0, csv_0_seul, 
+                nom_court_csv_concat, csv_concat, csv_sans_0, csv_avec_0, csv_0_seul, 
                 nom_dir_vecteur_segment, Nom_Session, chemin_session, 
                 diametre_filtre, nom_fichier_synthese, erreur, 
                 mindiam, maxdiam, max_sarments_metre, 
@@ -452,9 +450,13 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             physiocap_ferme_csv( csv_sans_0, csv_avec_0, csv_0_seul, diametre_filtre, erreur, csv_concat)
         #################
         except physiocap_exception_err_csv as e: 
+            # TODO MID identifier le mid probable info_mid et modulo 600 lignes
+            aMsg = "{0} Erreur bloquante durant filtrage dans le csv {1}".\
+                format ( PHYSIOCAP_STOP, nom_court_csv_concat)
+            aMsg = aMsg + ". Origine de l'erreur se situe dans les données MIDs (à identifier et à corriger dans le répertoire des données brutes)"
             # Fermeture du fichier destination
             physiocap_ferme_csv( csv_sans_0, csv_avec_0, csv_0_seul, diametre_filtre, erreur, csv_concat)
-            raise physiocap_exception_err_csv( nom_court_csv_concat)
+            raise physiocap_exception_err_csv( aMsg)
         # On remonte les autres exceptions
         except:
             raise

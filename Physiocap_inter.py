@@ -45,7 +45,7 @@ from .Physiocap_tools import (physiocap_message_box,\
         physiocap_log, physiocap_error,  \
         physiocap_nom_entite_sans_pb_caractere, physiocap_rename_existing_file,  \
         quelle_projection_et_lib_demandee, physiocap_create_projection_file, \
-        physiocap_get_layer_by_URI, controler_champs_agro_obligatoire,  \
+        physiocap_get_layer_by_URI, assert_champs_agro_obligatoires,  \
         creer_csvt_source_onglet, quel_sont_vecteurs_choisis)       #physiocap_vecteur_vers_gpkg, \
 
 from .Physiocap_var_exception import *
@@ -949,7 +949,7 @@ class PhysiocapInter( QtWidgets.QDialog):
 
             champsVignobleOrdonnes, champsVignobleRequisFormat, dictEnteteVignoble, \
                 champExistants, lesParcellesAgro, modele_agro_retenu = \
-                controler_champs_agro_obligatoire( dialogue, vecteur_poly)
+                assert_champs_agro_obligatoires( dialogue, vecteur_poly)
 
 
         # CONTAINEUR DES TOUS LES CONTOURS
