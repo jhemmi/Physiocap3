@@ -171,8 +171,8 @@ def quel_type_vecteur( self, vector):
         geomType = QgsWkbTypes.geometryType( geomWkbType) 
         geomTypeText = QgsWkbTypes.geometryDisplayString( geomType)
         geomWkbTypeText = QgsWkbTypes.displayString( geomWkbType)
-        physiocap_log( "-- Vector Text {0} type geom {1} et WkbType {2}".\
-            format( geomTypeText, geomType,  geomWkbType), TRACE_JH)
+#        physiocap_log( "-- Vecteur Text {0} type geom {1} et WkbType {2}".\
+#            format( geomTypeText, geomType,  geomWkbType), TRACE_JH)
         return geomTypeText, geomWkbTypeText, geomWkbType,  geomWkbMultiType  
     except:
 #        physiocap_error( self, self.tr("Warning : couche (layer) {0} n'est ni (is nor) point, ni (nor) polygone").\
@@ -232,7 +232,7 @@ def quel_poly_point_INTER( self, isRoot = None, node = None ):
     #leModeDeTrace = self.fieldComboModeTrace.currentText() 
     derniere_session = self.lineEditDerniereSession.text()
     Repertoire_Donnees_Brutes = self.lineEditDirectoryPhysiocap.text()
-    le_profil =  self.fieldComboProfilPHY.currentText()
+    Nom_Profil =  self.fieldComboProfilPHY.currentText()
     nombre_poly = 0
     nombre_point = 0
    
@@ -296,7 +296,7 @@ def quel_poly_point_INTER( self, isRoot = None, node = None ):
                 pass
 #                physiocap_log( "- Layer de type {0} rejeté : {1} ID: ".\
 #                    format( type_layer, child.name(),  child.layerId()), TRACE_TOOLS) 
-    if le_profil == 'Champagne' and nombre_poly == 0:
+    if Nom_Profil == 'Champagne' and nombre_poly == 0:
         # On prend un eventuel shp ou CSV dans rep des données brutes
         nom_vecteur, nom_court_vecteur,  libelle = \
             quel_vecteur_dans_donnees_brutes( Repertoire_Donnees_Brutes)
@@ -419,6 +419,160 @@ def quelles_informations_vignoble_source_onglet( self, format_sortie ='CSV'):
         listeInfo.append( dictInfoVignoble[ unChamp])
     physiocap_log( "La Liste Agro : {}".format(listeInfo), TRACE_TOOLS)
     return champsVignobleOrdonnes, champs_vignoble_requis_fichier,  dictInfoVignoble, listeInfo,  dictEnteteVignoble, listeEntete
+
+def quel_qml_existe( qml_court, repertoire_template, repertoire_secours):
+    """ Rend le template qui existe"""
+    le_template = os.path.join( repertoire_template, qml_court)
+    if ( os.path.exists( le_template)):
+        return le_template
+    else:
+        le_template = os.path.join( repertoire_secours, qml_court)
+        if ( os.path.exists( le_template)):
+            return le_template
+    return None
+
+def quel_CHEMIN_templates(self):
+    self.dans_Quel_Settings()
+    Nom_Profil =  self.fieldComboProfilPHY.currentText()
+    # Remplissage de la liste de CHEMIN_TEMPLATES
+    self.fieldComboThematiques.setCurrentIndex( 0)   
+    if len( CHEMIN_TEMPLATES) == 0:
+        self.fieldComboThematiques.clear( )
+        aText = self.tr( "Pas de répertoire de thématiques pré définie")
+        physiocap_log( aText, leModeDeTrace)
+        physiocap_error( self, aText)
+    else:
+        leChoixDeThematiques = int( self.settings.value("Style/leChoixDeThematiques", 0)) 
+        # Cas inital
+        CHEMIN_TEMPLATES_USER = []
+        self.fieldComboThematiques.clear( )
+        CHEMIN_TEMPLATES_COURT = os.path.join( self.plugin_dir, CHEMIN_TEMPLATES[0])
+        if Nom_Profil == 'Champagne':
+            chemin_qml = os.path.join( CHEMIN_TEMPLATES_COURT, Nom_Profil)
+            CHEMIN_TEMPLATES_USER.append( chemin_qml)
+            chemin_secours = os.path.join( CHEMIN_TEMPLATES_COURT, 'Standard')
+        else:
+            chemin_qml = os.path.join( CHEMIN_TEMPLATES_COURT, 'Standard')
+            chemin_secours = chemin_qml
+            CHEMIN_TEMPLATES_USER.append( chemin_qml)
+        # On donne le chemin QGIS ou celui présent dans les preferences
+        if leChoixDeThematiques == 1:
+            chemin_preference_court = self.settings.value("Style/leDirThematiques", \
+                os.path.join( self.gis_dir, CHEMIN_TEMPLATES[1]))
+        else:
+            # TODO : cas QGIS pour le premier cas
+            chemin_preference_court = os.path.join( self.gis_dir, CHEMIN_TEMPLATES[1])
+        chemin_preference = os.path.join( chemin_preference_court, 'Standard')                
+        CHEMIN_TEMPLATES_USER.append( chemin_preference)
+        self.fieldComboThematiques.addItems( CHEMIN_TEMPLATES_USER )
+
+        # Le combo a déjà été rempli, on retrouve le choix
+        self.fieldComboThematiques.setCurrentIndex( leChoixDeThematiques)
+        if ( leChoixDeThematiques == 1): 
+            # Qans le cas où l'utilisateur a pris la main sur ces qml
+            # autorisation de modifier les noms de qml
+            self.groupBoxThematiques.setEnabled( True)
+            # Renommage V3
+            themeDiametre = self.settings.value("Style/themeDiametre", "Filtre diamètre")
+            self.lineEditThematiqueDiametre.setText( themeDiametre )
+            themeSarment = self.settings.value("Style/themeSarment", "Filtre sarment")
+            self.lineEditThematiqueSarment.setText( themeSarment )
+            themeBiomasse = self.settings.value("Style/themeBiomasse", "Filtre biomasse")
+            self.lineEditThematiqueBiomasse.setText( themeBiomasse )
+            themeVitesse = self.settings.value("Style/themeVitesse", "Filtre vitesse")
+            self.lineEditThematiqueVitesse.setText( themeVitesse )
+            themePasMesure = self.settings.value("Style/themePasMesure", "Filtre pas de mesure")
+            self.lineEditThematiquePasMesure.setText( themePasMesure )
+            themeSegment = self.settings.value("Style/themeSegment", "Filtre segment")
+            self.lineEditThematiqueSegment.setText( themeSegment )
+            themeSegmentBrise = self.settings.value("Style/themeSegmentBrise", "Filtre segment brisé")
+            self.lineEditThematiqueSegmentBrise.setText( themeSegmentBrise )
+            themeContour = self.settings.value("Style/themeContour", "Contours")
+            self.lineEditThematiqueContour.setText( themeContour )
+            # Inter
+            themeDiametre = self.settings.value("Style/themeInterDiametre", "Inter diamètre")
+            self.lineEditThematiqueInterDiametre.setText( themeDiametre )
+            themeSarment = self.settings.value("Style/themeInterSarment", "Inter sarment")
+            self.lineEditThematiqueInterSarment.setText( themeSarment )
+            themeBiomasse = self.settings.value("Style/themeInterBiomasse", "Inter biomasse")
+            self.lineEditThematiqueInterBiomasse.setText( themeBiomasse )
+
+            themeAltitude = self.settings.value("Style/themeInterAltitude", "Inter altitude")
+            self.lineEditThematiqueInterAltitude.setText( themeAltitude )
+            # inter Libelle
+            themeLibelle = self.settings.value("Style/themeInterLibelle", "Inter parcelles")
+            self.lineEditThematiqueInterLibelle.setText( themeLibelle )
+            # inter moyenne et points
+            themeMoyenne = self.settings.value("Style/themeInterMoyenne", "Inter parcelle")
+            self.lineEditThematiqueInterMoyenne.setText( themeMoyenne )
+            themePoints = self.settings.value("Style/themeInterPoints", "Filtre diamètre 3D")
+            self.lineEditThematiqueInterPoints.setText( themePoints )
+            themeInterPasMesure = self.settings.value("Style/themeInterPasMesure", "Inter pieds manquants")
+            self.lineEditThematiqueInterPasMesure.setText( themeInterPasMesure )
+            themeSegment = self.settings.value("Style/themeInterSegment", "Inter Segment")
+            self.lineEditThematiqueInterSegment.setText( themeSegment )
+            themeSegmentBrise = self.settings.value("Style/themeInterSegmentBrise", "Inter Segment Brise")
+            self.lineEditThematiqueInterSegmentBrise.setText( themeSegmentBrise )
+            # intra
+            themeIso = self.settings.value("Style/themeIntraIso", "Isolignes")
+            self.lineEditThematiqueIntraIso.setText( themeIso )
+            themeImage = self.settings.value("Style/themeIntraImage", "Intra")
+            self.lineEditThematiqueIntraImage.setText( themeImage )
+            themePDF = self.settings.value("Style/themeIntraPDF", "PDF")
+            self.lineEditThematiqueIntraPDF.setText( themePDF )
+        else:
+            # Cas répertoire du plugin
+            self.groupBoxThematiques.setEnabled( False)
+            # Remettre les nom de thematiques par defaut 
+            self.lineEditThematiqueDiametre.setText("Filtre diamètre")
+            self.settings.setValue("Style/themeDiametre", "Filtre diamètre")
+            self.lineEditThematiqueSarment.setText("Filtre sarment")
+            self.settings.setValue("Style/themeSarment", "Filtre sarment")
+            self.lineEditThematiqueBiomasse.setText("Filtre biomasse")
+            self.settings.setValue("Style/themeBiomasse", "Filtre biomasse")
+            self.lineEditThematiqueVitesse.setText("Filtre vitesse")
+            self.settings.setValue("Style/themeVitesse", "Filtre vitesse")
+            self.lineEditThematiquePasMesure.setText("Filtre pas de mesure")
+            self.settings.setValue("Style/themePasMesure", "Filtre pas de mesure")
+            self.lineEditThematiqueSegment.setText("Filtre segment")
+            self.settings.setValue("Style/themeSegment","Filtre segment")
+            self.lineEditThematiqueSegmentBrise.setText("Filtre segment brisé")
+            self.settings.setValue("Style/themeSegmentBrise","Filtre segment brisé")
+            self.lineEditThematiqueContour.setText("Contours")
+            self.settings.setValue("Style/themeContour","Contours")
+            # Inter
+            self.lineEditThematiqueInterDiametre.setText("Inter diamètre")
+            self.settings.setValue("Style/themeInterDiametre", "Inter diamètre")
+            self.lineEditThematiqueInterSarment.setText("Inter sarment")
+            self.settings.setValue("Style/themeInterSarment", "Inter sarment")
+            self.lineEditThematiqueInterBiomasse.setText("Inter biomasse")
+            self.settings.setValue("Style/themeInterBiomasse", "Inter biomasse")
+
+            self.lineEditThematiqueInterAltitude.setText("Inter altitude")
+            self.settings.setValue("Style/themeInterAltitude", "Inter altitude")
+            
+            self.lineEditThematiqueInterLibelle.setText("Inter parcelles")
+            self.settings.setValue("Style/themeInterLibelle", "Inter parcelles")
+            # inter moyenne et points
+            self.lineEditThematiqueInterMoyenne.setText("Inter parcelle")
+            self.settings.setValue("Style/themeInterMoyenne", "Inter parcelle")
+            self.lineEditThematiqueInterPoints.setText("Filtre diamètre 3D")
+            self.settings.setValue("Style/themeInterPoints", "Filtre diamètre 3D")     
+            self.lineEditThematiqueInterPasMesure.setText("Inter pieds manquants")
+            self.settings.setValue("Style/themeInterPasMesure", "Inter pieds manquants")
+            self.lineEditThematiqueInterSegment.setText("Inter segment")
+            self.settings.setValue("Style/themeInterSegment", "Inter segment")
+            self.lineEditThematiqueInterSegmentBrise.setText("Inter segment brisé")
+            self.settings.setValue("Style/themeInterSegmentBrise", "Inter segment brisé")
+            # Intra
+            self.lineEditThematiqueIntraIso.setText("Isolignes")
+            self.settings.setValue("Style/themeIntraIso", "Isolignes")
+            self.lineEditThematiqueIntraImage.setText("Intra")
+            self.settings.setValue("Style/themeIntraImage", "Intra")
+            self.lineEditThematiqueIntraPDF.setText( "PDF" )
+            self.settings.setValue("Style/themeIntraPDF", "PDF")
+    return chemin_qml, chemin_secours
+
 
 def quel_nom_CSVT( self):
     """Rend les nom du CSVT """
@@ -613,7 +767,7 @@ def assert_champs_agro_obligatoires( dialogue, vecteur_poly):
                 format(champ, champs_vignoble_requis_fichier))
     # Retrouver les campagne-parcelle qui servent d'informations
     nombre_contours = 0
-    lesParcellesAgro = []
+    les_parcelles_agro = []
     liste_uniques = []
     modele_agro_retenu = {}
     # TODO CAMPAGNE Trier nom et campagne( ? Coallenscence ie champs_vignoble_requis_fichier[0]) et vérifier cas NULL
@@ -624,12 +778,12 @@ def assert_champs_agro_obligatoires( dialogue, vecteur_poly):
         #physiocap_log( "Parcelle {} campagne {}".format( un_nom,une_campagne), TRACE_JH)
         if nombre_contours == 0:
             parcelle_en_cours = un_nom
-            lesParcellesAgro.append(un_nom)
+            les_parcelles_agro.append(un_nom)
         if un_nom != parcelle_en_cours:
             # memoriser le dernier utile pour info agro
             modele_agro_retenu[ parcelle_en_cours] = nom_unique # le precedent
             parcelle_en_cours = un_nom
-            lesParcellesAgro.append(un_nom)
+            les_parcelles_agro.append(un_nom)
         nom_unique = "{1}{2}{0}{3}{0}{4}".format( SEPARATEUR_NOEUD, \
             NOM_PAR_DEFAUT, nombre_contours,  une_campagne, un_nom)
         liste_uniques.append( nom_unique)
@@ -637,8 +791,8 @@ def assert_champs_agro_obligatoires( dialogue, vecteur_poly):
     # le dernier
     modele_agro_retenu[ parcelle_en_cours] = nom_unique # le precedent
     #physiocap_log( "Liste tous {0}".format( liste_uniques), TRACE_JH)
-    #physiocap_log( "Liste parcelles agro {0}".format( lesParcellesAgro), TRACE_JH)
-    for parcelle in lesParcellesAgro:
+    #physiocap_log( "Liste parcelles agro {0}".format( les_parcelles_agro), TRACE_JH)
+    for parcelle in les_parcelles_agro:
         try:
             un_unique = modele_agro_retenu[ parcelle]
             physiocap_log( "Parcelle {} retenue pour agro {}".format( parcelle, un_unique), TRACE_JH)
@@ -646,7 +800,7 @@ def assert_champs_agro_obligatoires( dialogue, vecteur_poly):
             physiocap_error( "Parcelle {} orpheline de données agro ".format( parcelle), TRACE_JH)
             pass
     return champsVignobleOrdonnes, champs_vignoble_requis, champs_vignoble_requis_fichier, dictEnteteVignoble, \
-                champExistants, lesParcellesAgro, modele_agro_retenu        
+                champExistants, les_parcelles_agro, modele_agro_retenu        
 
 def creer_csvt_source_onglet( self, les_parcelles,  les_geoms_poly, les_moyennes_par_contour):
     """Créer CSVT avec les informations de moyenne & l'onglet Agronomie"""
@@ -844,10 +998,8 @@ def physiocap_get_layer_by_ID( layerID,  layerName = None):
             break
     if ( trouve == "YES"):
         if ( le_layer.isValid()):
-            physiocap_log( "=#=#=#=#=#=# OK Couche valide : {0}".format ( le_layer.name()), TRACE_TOOLS)
             return le_layer
         else:
-            physiocap_log( "=#=#=#=#=#=#  Couche invalide : {0}".format ( le_layer.name()), TRACE_TOOLS)
             return None
     else:
         physiocap_log( "=#=#=#=#=#=#  Aucune couche retrouvée pour ID : {0} et par nom ?".\

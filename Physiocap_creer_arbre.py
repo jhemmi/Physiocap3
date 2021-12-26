@@ -43,7 +43,8 @@ from .Physiocap_tools import ( physiocap_message_box, physiocap_question_box,\
         physiocap_log, physiocap_error, physiocap_write_in_synthese, \
         physiocap_rename_existing_file, physiocap_rename_create_dir, physiocap_open_file, \
         physiocap_csv_vers_vecteur, lister_MIDs_pour_synthese, quel_MID_dans_donnees_brutes, quelle_campagne, assert_campagne, \
-        quel_poly_point_INTER, generer_contour_depuis_points) 
+        quel_poly_point_INTER, quel_CHEMIN_templates, quel_qml_existe, \
+        generer_contour_depuis_points) 
         
 from .Physiocap_CIVC import (physiocap_assert_csv, physiocap_ferme_csv, \
         physiocap_fichier_histo, physiocap_tracer_histo, physiocap_filtrer
@@ -557,7 +558,8 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         sous_groupe = root.addGroup( chemin_base_session)
         
         # Récupérer des styles pour chaque shape
-        dir_template = dialogue.fieldComboThematiques.currentText()
+        repertoire_template,  repertoire_secours = quel_CHEMIN_templates( dialogue)
+        #dir_template = dialogue.fieldComboThematiques.currentText()
         # Affichage des différents shapes dans QGIS
         SHAPE_A_AFFICHER = []
         qml_is = ""
@@ -605,37 +607,14 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             SHAPE_A_AFFICHER.append( (nom_layer_segment_brise, 'SEGMENT BRISE', qml_is))
 
         for shapename, titre, un_template in SHAPE_A_AFFICHER:
-##            if ( dialogue.fieldComboFormats.currentText() == POSTGRES_NOM ):
-##                uri_nom = physiocap_quel_uriname( dialogue)
-##                #physiocap_log( "URI nom : " +  uri_nom, leModeDeTrace)
-##                uri_modele = physiocap_get_uri_by_layer( dialogue, uri_nom )
-##                if uri_modele != None:
-##                    uri_connect, uri_deb, uri_srid, uri_fin = physiocap_tester_uri( dialogue, uri_modele)            
-##                    nom_court_shp = os.path.basename( shapename)
-##                    #TABLES = "public." + nom_court_shp
-##                    uri = uri_deb +  uri_srid + \
-##                       " key='gid' type='POINTS' table=" + nom_court_shp[ :-4] + " (geom) sql="            
-##    ##              "dbname='testpostgis' host='localhost' port='5432'" + \
-##    ##              " user='postgres' password='postgres' SRID='2154'" + \
-##    ##              " key='gid' type='POINTS' table=" + nom_court_shp[ :-4] + " (geom) sql="
-##    ##                physiocap_log( "Création dans POSTGRES : >>" + uri + "<<", leModeDeTrace)
-##    ##                vectorPG = QgsVectorLayer( uri, titre, POSTGRES_NOM)
-##                else:
-##                    aText = self.tr( "Pas de connecteur vers Postgres : {0}. On continue avec des shapefiles").\
-##                         format ((str( uri_nom)))
-##                    physiocap_log( aText, leModeDeTrace)
-##                    # Remettre le choix vers ESRI shape file
-##                    dialogue.fieldComboFormats.setCurrentIndex( 0)
-
             vector = QgsVectorLayer( shapename, titre, 'ogr')
             mon_projet.addMapLayer( vector, False)
             # Ajouter le vecteur dans un groupe
             sous_groupe.addLayer( vector)
-            le_template = os.path.join( dir_template, un_template)
-            if ( os.path.exists( le_template)):
-                #physiocap_log( "Physiocap le template : " + os.path.basename( le_template), TRACE_TOOLS)
-                vector.loadNamedStyle( le_template)
-        
+            le_template = quel_qml_existe( un_template, repertoire_template, repertoire_secours)
+            if ( le_template != None ):
+                vector.loadNamedStyle( le_template) 
+
         # Fichier de synthese dans la fenetre resultats   
         fichier_synthese = open(nom_fichier_synthese, "r")
         while True :

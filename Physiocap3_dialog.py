@@ -44,7 +44,8 @@
 
 from .Physiocap_tools import (physiocap_message_box, \
         physiocap_log_for_error, physiocap_log, physiocap_error, \
-        quel_poly_point_INTER, quelle_projection_et_lib_demandee, physiocap_nom_entite_avec_pb_caractere, \
+        quel_CHEMIN_templates, quel_poly_point_INTER, quelle_projection_et_lib_demandee, \
+        physiocap_nom_entite_avec_pb_caractere, \
         physiocap_get_layer_by_name, physiocap_get_layer_by_ID)
 
 from .Physiocap_creer_arbre import (PhysiocapFiltrer)
@@ -197,6 +198,27 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         else:
             self.checkBoxConsolidation.setChecked( Qt.Unchecked)
 
+        # Remplissage des profils
+        self.fieldComboProfilPHY.setCurrentIndex( 0) 
+        if len( LISTE_PROFIL) == 0:
+            self.fieldComboProfilPHY.clear( )
+            physiocap_error( self, self.tr( "Pas de liste des profils pré définie"))
+        else:
+            self.fieldComboProfilPHY.clear( )
+            self.fieldComboProfilPHY.addItems( LISTE_PROFIL)
+             # Retrouver le profil de  settings
+            self.fieldComboProfilPHY.setCurrentIndex( 0)
+            leProfil = self.settings.value("Physiocap/leProfilPHY", "xx") 
+            for idx, un in enumerate( LISTE_PROFIL):
+                if ( un == leProfil):
+                    self.fieldComboProfilPHY.setCurrentIndex( idx)
+                    physiocap_log( self.tr( "Profil retrouvé"), TRACE_PROFIL) 
+
+        # Affichages
+        self.lire_affichages()
+        # Agro
+        self.lire_agro()
+
         # SAGA GDAL
         if (self.settings.value("Expert/library") == "SAGA"):
             self.radioButtonSAGA.setChecked(  Qt.Checked)
@@ -220,53 +242,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Remettre vide le textEditSynthese
         self.textEditSynthese.clear()
         
-        # Remplissage des profils
-        self.fieldComboProfilPHY.setCurrentIndex( 0) 
-        if len( LISTE_PROFIL) == 0:
-            self.fieldComboProfilPHY.clear( )
-            physiocap_error( self, self.tr( "Pas de liste des profils pré définie"))
-        else:
-            self.fieldComboProfilPHY.clear( )
-            self.fieldComboProfilPHY.addItems( LISTE_PROFIL)
-             # Retrouver le profil de  settings
-            self.fieldComboProfilPHY.setCurrentIndex( 0)
-            leProfil = self.settings.value("Physiocap/leProfilPHY", "xx") 
-            for idx, un in enumerate( LISTE_PROFIL):
-                if ( un == leProfil):
-                    self.fieldComboProfilPHY.setCurrentIndex( idx)
-                    physiocap_log( self.tr( "Profil retrouvé"), TRACE_PROFIL) 
-
-        # Remplissage des cepages
-        self.comboBoxCepage.setCurrentIndex( 0)
-        if len( CEPAGES) == 0:
-            self.comboBoxCepage.clear( )
-            physiocap_error( self, self.tr( "Pas de liste de cépages pré définie"))
-        else:
-            self.comboBoxCepage.clear( )
-            self.comboBoxCepage.addItems( CEPAGES)
-             # Retrouver la cépage de  settings
-            self.comboBoxCepage.setCurrentIndex( 0)
-            leCepage = self.settings.value("Agro/leCepage", "xx") 
-            for idx, un in enumerate( CEPAGES):
-                if ( un == leCepage):
-                    self.comboBoxCepage.setCurrentIndex( idx)
-                    physiocap_log( self.tr( "Cépage retrouvé"), TRACE_PROFIL) 
-
-        # Remplissage des modes de taille
-        self.comboBoxTaille.setCurrentIndex( 0)
-        if len( TAILLES) == 0:
-            self.comboBoxTaille.clear( )
-            physiocap_error( self, self.tr( "Pas de liste dmode de taille pré définie"))
-        else:
-            self.comboBoxTaille.clear( )
-            self.comboBoxTaille.addItems( TAILLES)
-             # Retrouver le mode de taille de  settings
-            self.comboBoxTaille.setCurrentIndex( 0)
-            laTaille = self.settings.value("Physiocap/Physiocap/laTaille", "xx") 
-            for idx, un in enumerate( TAILLES):
-                if ( un == laTaille):
-                    self.comboBoxTaille.setCurrentIndex( idx)
-                    physiocap_log( self.tr( "Mode de taille retrouvé"), leModeDeTrace) 
       
         # Remplissage de la liste de FORMAT_VECTEUR 
         self.fieldComboFormats.setCurrentIndex( 0)         
@@ -318,9 +293,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.slot_calcul_densite()
         self.spinBoxHauteur.setValue( int( self.settings.value("Physiocap/hauteur", 90 )))
         self.doubleSpinBoxDensite.setValue( float( self.settings.value("Physiocap/densite", 0.9 )))
-        
-        # TODO initialiser les champs de vignoble (apres RDV de Constante decembre
-        
+      
         # Remplissage de la liste de SHAPE Filtre
         # DIAMETRE : Cas unique
         self.fieldComboShapeDiametre.clear( )
@@ -434,106 +407,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.spinBoxDistanceIso.setValue( int( self.settings.value("Intra/isoDistance", 1 )))
        
         # On initialise le nombre de distance Iso
-        self.slot_INTRA_iso_distance()
-         
-        # Choix d'affichage généraux
-        # TOUJOURS le diametre qui est necessaire à "Inter" comme points
-        self.checkBoxDiametre.setChecked( Qt.Checked)
-        # Tous les autres on peut les choisir 
-        if (self.settings.value("Affichage/FiltrerSarment", "NO") == "YES"):
-            self.checkBoxSarment.setChecked( Qt.Checked)
-        else:
-            self.checkBoxSarment.setChecked( Qt.Unchecked)
-        if (self.settings.value("Affichage/FiltrerBiomasse", "NO") == "YES"):
-            self.checkBoxBiomasse.setChecked( Qt.Checked)
-        else:
-            self.checkBoxBiomasse.setChecked( Qt.Unchecked)
-        if (self.settings.value("Affichage/FiltrerVitesse", "NO") == "YES"):
-            self.checkBoxVitesse.setChecked( Qt.Checked)
-        else:
-            self.checkBoxVitesse.setChecked( Qt.Unchecked)        
-        # Toujours pas_mesure qui est necessaire à "Inter"
-        self.checkBoxPasMesure.setChecked( Qt.Checked)
-        self.checkBoxSegmentBrise.setChecked( Qt.Checked)
-        if (self.settings.value("Affichage/FiltrerSegment", "NO") == "YES"):
-            self.checkBoxSegment.setChecked( Qt.Checked)
-        else:
-            self.checkBoxSegment.setChecked( Qt.Unchecked)
-        if (self.settings.value("Affichage/GenererContour", "NO") == "YES"):
-            self.checkBoxContour.setChecked( Qt.Checked)
-        else:
-            self.checkBoxContour.setChecked( Qt.Unchecked)
-            
-        # Choix d'affichage Inter
-        if (self.settings.value("Affichage/InterDiametre", "YES") == "YES"):
-            self.checkBoxInterDiametre.setChecked( Qt.Checked)
-        else:
-            self.checkBoxInterDiametre.setChecked( Qt.Unchecked)
-        if (self.settings.value("Affichage/InterSarment", "NO") == "YES"):
-            self.checkBoxInterSarment.setChecked( Qt.Checked)
-        else:
-            self.checkBoxInterSarment.setChecked( Qt.Unchecked)
-        if (self.settings.value("Affichage/InterBiomasse", "YES") == "YES"):
-            self.checkBoxInterBiomasse.setChecked( Qt.Checked)
-        else:
-            self.checkBoxInterBiomasse.setChecked( Qt.Unchecked)
-        if (self.settings.value("Affichage/InterAltitude", "NO") == "YES"):
-            self.checkBoxInterAltitude.setChecked( Qt.Checked)
-        else:
-            self.checkBoxInterAltitude.setChecked( Qt.Unchecked)
-        # Toujours interpoint qui est necessaire à "Inter"
-        self.checkBoxInterLibelle.setChecked( Qt.Checked)     
-        if (self.settings.value("Affichage/InterPoints", "NO") == "YES"):
-            self.checkBoxInterPoints.setChecked( Qt.Checked)
-        else:
-            self.checkBoxInterPoints.setChecked( Qt.Unchecked)        
-        if (self.settings.value("Affichage/InterMoyennes", "NO") == "YES"):
-            self.checkBoxInterMoyennes.setChecked( Qt.Checked)
-        else:
-            self.checkBoxInterMoyennes.setChecked( Qt.Unchecked)        
-        if (self.settings.value("Affichage/InterPasMesure", "YES") == "YES"):
-            self.checkBoxInterPasMesure.setChecked( Qt.Checked)
-            self.checkBoxInterPasMesureDetails.setEnabled( True)
-            if (self.settings.value("Affichage/InterPasMesureDetails", "NO") == "YES"):
-                self.checkBoxInterPasMesureDetails.setChecked( Qt.Checked)
-        else:
-            self.checkBoxInterPasMesure.setChecked( Qt.Unchecked)
-            self.checkBoxInterPasMesureDetails.setChecked( Qt.Unchecked)
-            self.checkBoxInterPasMesureDetails.setEnabled( False)
-
-        if (self.settings.value("Affichage/InterSegment", "YES") == "YES"):
-            self.checkBoxInterSegment.setChecked( Qt.Checked)
-            self.checkBoxInterSegmentDetails.setEnabled( True)
-            if (self.settings.value("Affichage/InterSegmentDetails", "NO") == "YES"):
-                self.checkBoxInterSegmentDetails.setChecked( Qt.Checked)
-        else:
-            self.checkBoxInterSegment.setChecked( Qt.Unchecked)
-            self.checkBoxInterSegmentDetails.setChecked( Qt.Unchecked)
-            self.checkBoxInterSegmentDetails.setEnabled( False)
-
-        if (self.settings.value("Affichage/InterSegmentBrise", "YES") == "YES"):
-            self.checkBoxInterSegmentBrise.setChecked( Qt.Checked)
-            self.checkBoxInterSegmentBriseDetails.setEnabled( True)
-            if (self.settings.value("Affichage/InterSegmentBriseDetails", "NO") == "YES"):
-                self.checkBoxInterSegmentBriseDetails.setChecked( Qt.Checked)
-        else:
-            self.checkBoxInterSegmentBrise.setChecked( Qt.Unchecked)        
-            self.checkBoxInterSegmentBriseDetails.setChecked( Qt.Unchecked)
-            self.checkBoxInterSegmentBriseDetails.setEnabled( False)
-
-        # Choix d'affichage Intra 
-        if (self.settings.value("Affichage/IntraUnSeul", "YES") == "YES"):
-            self.checkBoxIntraUnSeul.setChecked( Qt.Checked)
-        else:
-            self.checkBoxIntraUnSeul.setChecked( Qt.Unchecked)
-        if (self.settings.value("Affichage/IntraIsos", "NO") == "YES"):
-            self.checkBoxIntraIsos.setChecked( Qt.Checked)
-        else:
-            self.checkBoxIntraIsos.setChecked( Qt.Unchecked)
-        if (self.settings.value("Affichage/IntraImages", "NO") == "YES"):
-            self.checkBoxIntraImages.setChecked( Qt.Checked)
-        else:
-            self.checkBoxIntraImages.setChecked( Qt.Unchecked)
+        self.slot_INTRA_iso_distance()         
 
         # Calcul dynamique de la densité
         self.spinBoxInterrangs.valueChanged.connect( self.slot_calcul_densite)
@@ -589,74 +463,16 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
     # ################
     # PROFIL et mise en settings
     def slot_PROFIL_change(self):
-        leModeDeTrace = self.fieldComboModeTrace.currentText()
-        profilCourant =  self.fieldComboProfilPHY.currentText()
         self.dans_Quel_Settings()
+        #leModeDeTrace = self.fieldComboModeTrace.currentText()
+        Nom_Profil =  self.fieldComboProfilPHY.currentText()
         # CAS Particulier de chargement spécifique à certain profil, 
         # On surcharge le contenu de la config sans la perdre 
         
         # Cas des templates de champagne 
-        # TODO: "PDF" Trouver une troisieme voie pour les templates : ni standard, ni nouveau repertoire user
-        if  profilCourant == 'Champagne':
-            CHEMIN_TEMPLATES = []
-            CHEMIN_TEMPLATES.append( CHEMIN_TEMPLATES_CIVC)
-        else:
-            # TODO: "PROFIL" faire un slot pour chaque parametre de remplissage
-            pass    
-        self.slot_CHEMIN_templates()
-        
-        # Remplissage des Region
-        self.comboBoxRegion.setCurrentIndex( 0)
-        if  profilCourant == 'Champagne':
-            LISTE_REGION = REGIONS_CHAMPAGNE
-        elif profilCourant == 'Fronton':
-            LISTE_REGION = ['Vins du Sud Ouest']
-        else:
-            # TODO: "PROFIL" regions
-            LISTE_REGION = ['_']
-        if len( LISTE_REGION) == 0:
-            self.comboBoxRegion.clear( )
-            physiocap_error( self, self.tr( "Pas de liste des régions pré définie"), TRACE_PROFIL)
-        else:
-            self.comboBoxRegion.clear( )
-            self.comboBoxRegion.addItems( LISTE_REGION)
-             # Retrouver la commune de  settings
-            self.comboBoxRegion.setCurrentIndex( 0)
-            laRegion = self.settings.value("Physiocap/laRegion", "xx") 
-            #print('REGION_CHAMPAGNE=[')
-            for idx, une in enumerate( LISTE_REGION):
-                #print( ' "{}",'.format(une))
-                if ( une == laRegion):
-                    self.comboBoxCommune.setCurrentIndex( idx)
-                    physiocap_log( self.tr( "Région retrouvée"), leModeDeTrace, TRACE_PROFIL) 
+        _, _ = quel_CHEMIN_templates( self)
 
-        # Remplissage des communes
-        # TODO commune par région ?
-        self.comboBoxCommune.setCurrentIndex( 0)
-        if  profilCourant in [ 'Champagne', 'Fronton']:
-            if profilCourant == 'Champagne':
-                LISTE_COMMUNES = sorted( CRUS_CHAMPAGNE)
-            elif profilCourant == 'Fronton':
-                LISTE_COMMUNES = COMMUNES_FRONTON
-            else:
-                LISTE_COMMUNES = ['_']
-            if len( LISTE_COMMUNES) == 0:
-                self.comboBoxCommune.clear( )
-                physiocap_error( self, self.tr( "Pas de liste des communes pré définie"))
-            else:
-                self.comboBoxCommune.clear( )
-                self.comboBoxCommune.addItems( ["_"] + LISTE_COMMUNES)
-                 # Retrouver la commune de  settings
-                self.comboBoxCommune.setCurrentIndex( 0)
-                laCommune = self.settings.value("Physiocap/laCommune", "xx") 
-                #print('COMMUNE_X=[')
-                for idx, une in enumerate( LISTE_COMMUNES):
-                    #print( ' "{}",'.format(une))
-                    if ( une == laCommune):
-                        self.comboBoxCommune.setCurrentIndex( idx)
-                        physiocap_log( self.tr( "Commune retrouvée"), leModeDeTrace) 
-
-        if  profilCourant == 'Champagne':
+        if  Nom_Profil == 'Champagne':
             # Fixer valeur de filtrer et bloquer filtre
             self.spinBoxMinDiametre.setValue( 4)
             self.spinBoxMaxDiametre.setValue( 18)
@@ -677,6 +493,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.radioButtonSAGA.setChecked(  Qt.Checked)
             self.checkBoxSagaTIFF.setChecked( Qt.Checked)
             self.radioButtonL93.setChecked(  Qt.Checked)
+            self.groupBoxThemaTrace.setEnabled( True)
             # initialisation sans sauvegarde dans profil
             self.spinBoxIsoMin_Fixe_DIAM.setValue( int( self.settings.value("Champagne/isoMinFixe_1", 7 )))
             self.spinBoxIsoMax_Fixe_DIAM.setValue( int( self.settings.value("Champagne/isoMaxFixe_1", 11 )))
@@ -688,7 +505,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.spinBoxIsoMax_Fixe_BIOM.setValue( int( self.settings.value("Champagne/isoMaxFixe_3", 1000 )))
             self.spinBoxIsoDistance_Fixe_BIOM.setValue( int( self.settings.value("Champagne/isoDistanceFixe_3", 200 )))
             # un seul triplet pour intra DIAM BIOMGCEP NBSARCEP est code dans ce slot
-            self.slot_PROFIL_INTRA_maj_attributs_interpolables( profilCourant)
+            self.slot_PROFIL_INTRA_maj_attributs_interpolables( Nom_Profil)
             
             # TODO PDF 
             self.checkBoxIntraPDF.setChecked( Qt.Checked)
@@ -701,7 +518,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.groupBoxExpertOuvert.setEnabled( False)
             self.groupBoxSegment.setEnabled( False)
             # TODO : Limiter cepage
-        elif profilCourant == 'Fronton':
+        elif Nom_Profil == 'Fronton':
             self.spinBoxMinDiametre.setValue( 3)
             self.spinBoxMaxDiametre.setValue( 22)
             self.spinBoxMaxSarmentsParMetre.setValue( 25)
@@ -714,13 +531,14 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.groupBoxDetailVignoble.setChecked( Qt.Checked)
             self.checkBoxInfoVignoble.setChecked( Qt.Checked)
             self.groupBoxIntra.setEnabled( False)
+            self.groupBoxThemaTrace.setEnabled( False)
             self.groupBoxVignoble.setEnabled( True)
             self.groupBoxIsolignes.setChecked( Qt.Checked)
             self.groupBoxIsolignes.setEnabled( True)
             self.groupBoxMethode.setEnabled( True)
             self.groupBoxExpertOuvert.setEnabled( False)
             self.groupBoxSegment.setEnabled( True)
-        elif profilCourant == 'Standard':
+        elif Nom_Profil == 'Standard':
             self.spinBoxMinDiametre.setValue( 4)
             self.spinBoxMaxDiametre.setValue( 18)
             self.spinBoxMaxSarmentsParMetre.setValue( 25)
@@ -734,13 +552,14 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.label_PH.setEnabled( True)            
             self.doubleSpinBoxPH.setEnabled( True)            
             self.groupBoxExpertOuvert.setEnabled( True)
+            self.groupBoxThemaTrace.setEnabled( True)
             self.groupBoxIsolignes.setChecked( Qt.Checked)
             self.groupBoxIsolignes.setEnabled( True)
         else:
             physiocap_error( "Dans slot_PROFIL {} est inconnu ". \
-            format ( profilCourant), TRACE_PROFIL)
+            format ( Nom_Profil), TRACE_PROFIL)
         physiocap_log( "PROFIL {} pris en compte ". \
-            format ( profilCourant), TRACE_PROFIL)
+            format ( Nom_Profil), TRACE_PROFIL)
 
     def dans_Quel_Settings( self, nomSettings=PHYSIOCAP_NOM_3):
         self.settings= QSettings(PHYSIOCAP_NOM, nomSettings)
@@ -835,6 +654,94 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         physiocap_log('Les informations expertes sont sauvegardées', TRACE_PROFIL) 
         return version_3, consolidation, leModeDeTrace
         
+    def lire_agro( self):
+        # Informations agronomiques (inspiré de ___Nadia___)
+        self.dans_Quel_Settings()
+        Nom_Profil =  self.fieldComboProfilPHY.currentText()
+
+        self.lineEditNomParcelle.setText( self.settings.setValue("Agro/nom_parcelle", "_"))
+        self.spinBoxAnneePlant.setValue( int( self.settings.value("Agro/annee_plantation", 2000 )))
+               
+        # Remplissage des Region
+        self.comboBoxRegion.setCurrentIndex( 0)
+        if  Nom_Profil == 'Champagne':
+            LISTE_REGION = REGIONS_CHAMPAGNE
+        elif Nom_Profil == 'Fronton':
+            LISTE_REGION = ['Vins du Sud Ouest']
+        else:
+            # TODO: "PROFIL" regions
+            LISTE_REGION = ['_']
+        if len( LISTE_REGION) == 0:
+            self.comboBoxRegion.clear( )
+            physiocap_error( self, self.tr( "Pas de liste des régions pré définie"), TRACE_PROFIL)
+        else:
+            self.comboBoxRegion.clear( )
+            self.comboBoxRegion.addItems( LISTE_REGION)
+             # Retrouver la commune de  settings
+            self.comboBoxRegion.setCurrentIndex( 0)
+            laRegion = self.settings.value("Agro/laRegion", "xx") 
+            for idx, une in enumerate( LISTE_REGION):
+                if ( une == laRegion):
+                    self.comboBoxRegion.setCurrentIndex( idx)
+                    physiocap_log( self.tr( "Région retrouvée"), leModeDeTrace, TRACE_PROFIL) 
+
+        self.spinBoxInterrangs.setValue( int( self.settings.value("Agro/interrangs", 100 )))
+        self.spinBoxInterceps.setValue( int( self.settings.value("Agro/interceps", 100 )))
+        self.spinBoxHauteur.setValue( int( self.settings.value("Agro/hauteur", 100 )))
+        self.doubleSpinBoxDensite.setValue( float( self.settings.value("Agro/densite", 0.9 )))
+
+        # Remplissage des communes
+        self.comboBoxCommune.setCurrentIndex( 0)
+        if  Nom_Profil in [ 'Champagne', 'Fronton']:
+            if Nom_Profil == 'Champagne':
+                LISTE_COMMUNES = sorted( CRUS_CHAMPAGNE)
+            elif Nom_Profil == 'Fronton':
+                LISTE_COMMUNES = COMMUNES_FRONTON
+            else:
+                LISTE_COMMUNES = ['_']
+            if len( LISTE_COMMUNES) == 0:
+                self.comboBoxCommune.clear( )
+                physiocap_error( self, self.tr( "Pas de liste des communes pré définie"))
+            else:
+                self.comboBoxCommune.clear( )
+                self.comboBoxCommune.addItems( ["_"] + LISTE_COMMUNES)
+                 # Retrouver la commune de  settings
+                self.comboBoxCommune.setCurrentIndex( 0)
+                laCommune = self.settings.value("Agro/laCommune", "xx") 
+                #print('COMMUNE_X=[')
+                for idx, une in enumerate( LISTE_COMMUNES):
+                    #print( ' "{}",'.format(une))
+                    if ( une == laCommune):
+                        self.comboBoxCommune.setCurrentIndex( idx)
+                        physiocap_log( self.tr( "Commune retrouvée"), leModeDeTrace) 
+        
+        self.lineEditClone.setText( self.settings.setValue("Agro/clone", "inconnu"))
+        self.lineEditPorteGreffe.setText( self.settings.setValue("Agro/porte_greffe", "inconnu"))
+
+        # Remplissage des tailles
+        self.comboBoxTaille.setCurrentIndex( 0) 
+        if len( LISTE_TAILLES) == 0:
+            self.comboBoxTaille.clear( )
+            physiocap_error( self, self.tr( "Pas de liste des tailles pré définie"))
+        else:
+            self.comboBoxTaille.clear( )
+            self.comboBoxTaille.addItems( LISTE_TAILLES)
+             # Retrouver le profil de  settings
+            self.comboBoxTaille.setCurrentIndex( 0)
+            laTaille = self.settings.value("Agro/taille", "xx") 
+            for idx, un in enumerate( LISTE_TAILLES):
+                if ( un == laTaille):
+                    self.comboBoxTaille.setCurrentIndex( idx)
+
+        self.spinBoxArgile.setValue( int( self.settings.value("Agro/sol_argiles", 20 )))
+        self.doubleSpinBoxMO.setValue( float( self.settings.value("Agro/sol_mo", 0.5 )))
+        self.spinBoxCsurN.setValue( int( self.settings.value("Agro/sol_CsurN", 20 )))
+        self.doubleSpinBoxPH.setValue( float( self.settings.value("Agro/sol_PH", 7 )))
+        self.doubleSpinBoxRendement.setValue( float( self.settings.value("Agro/rendement", 50 )))
+        self.spinBoxNbGrappes.setValue( int( self.settings.value("Agro/nb_grappes", 80 )))
+        self.spinBoxPoidsMoyenGrappes.setValue( int( self.settings.value("Agro/poids_moy_grappes", 180 )))
+        physiocap_log('Les informations agronomiques sont lues', TRACE_PROFIL) 
+
     def memoriser_agro( self):
         # Informations agronomiques (inspiré de ___Nadia___)
         self.dans_Quel_Settings()
@@ -850,7 +757,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.settings.setValue("Agro/clone",self.lineEditClone.text())#___définir les valeurs des variables : clone
         self.settings.setValue("Agro/porte_greffe", self.lineEditPorteGreffe.text())#___definir les valeurs des variables : porte-greffe
         self.settings.setValue("Agro/laTaille", self.comboBoxTaille.currentText())
-        self.settings.setValue("Agro/sol_argile", int( self.spinBoxInterrangs.value()))
+        self.settings.setValue("Agro/sol_argile", int( self.spinBoxArgile.value()))
         self.settings.setValue("Agro/sol_mo", float( self.doubleSpinBoxMO.value()))
         self.settings.setValue("Agro/sol_CsurN", int( self.spinBoxCsurN.value()))
         self.settings.setValue("Agro/sol_PH", float( self.doubleSpinBoxPH.value()))
@@ -858,7 +765,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.settings.setValue("Agro/nb_grappes", int( self.spinBoxNbGrappes.value()))
         self.settings.setValue("Agro/poids_moy_grappes", int( self.spinBoxPoidsMoyenGrappes.value()))
         physiocap_log('Les informations agronomiques sont sauvegardées', TRACE_PROFIL) 
-    
+
     def memoriser_affichages_styles(self):
         """ Mémoriser les choix d'affichage """        
         # Sauver les affichages cas généraux
@@ -962,6 +869,107 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.settings.setValue("Style/themeIntraImage", self.lineEditThematiqueIntraImage.text())
         self.settings.setValue("Style/themeIntraPDF", self.lineEditThematiqueIntraPDF.text())
 
+    def lire_affichages( self):         
+        self.dans_Quel_Settings()
+        # Choix d'affichage généraux
+        # TOUJOURS le diametre qui est necessaire à "Inter" comme points
+        self.checkBoxDiametre.setChecked( Qt.Checked)
+        # Tous les autres on peut les choisir 
+        if (self.settings.value("Affichage/FiltrerSarment", "NO") == "YES"):
+            self.checkBoxSarment.setChecked( Qt.Checked)
+        else:
+            self.checkBoxSarment.setChecked( Qt.Unchecked)
+        if (self.settings.value("Affichage/FiltrerBiomasse", "NO") == "YES"):
+            self.checkBoxBiomasse.setChecked( Qt.Checked)
+        else:
+            self.checkBoxBiomasse.setChecked( Qt.Unchecked)
+        if (self.settings.value("Affichage/FiltrerVitesse", "NO") == "YES"):
+            self.checkBoxVitesse.setChecked( Qt.Checked)
+        else:
+            self.checkBoxVitesse.setChecked( Qt.Unchecked)        
+        # Toujours pas_mesure qui est necessaire à "Inter"
+        self.checkBoxPasMesure.setChecked( Qt.Checked)
+        self.checkBoxSegmentBrise.setChecked( Qt.Checked)
+        if (self.settings.value("Affichage/FiltrerSegment", "NO") == "YES"):
+            self.checkBoxSegment.setChecked( Qt.Checked)
+        else:
+            self.checkBoxSegment.setChecked( Qt.Unchecked)
+        if (self.settings.value("Affichage/GenererContour", "NO") == "YES"):
+            self.checkBoxContour.setChecked( Qt.Checked)
+        else:
+            self.checkBoxContour.setChecked( Qt.Unchecked)
+            
+        # Choix d'affichage Inter
+        if (self.settings.value("Affichage/InterDiametre", "YES") == "YES"):
+            self.checkBoxInterDiametre.setChecked( Qt.Checked)
+        else:
+            self.checkBoxInterDiametre.setChecked( Qt.Unchecked)
+        if (self.settings.value("Affichage/InterSarment", "NO") == "YES"):
+            self.checkBoxInterSarment.setChecked( Qt.Checked)
+        else:
+            self.checkBoxInterSarment.setChecked( Qt.Unchecked)
+        if (self.settings.value("Affichage/InterBiomasse", "YES") == "YES"):
+            self.checkBoxInterBiomasse.setChecked( Qt.Checked)
+        else:
+            self.checkBoxInterBiomasse.setChecked( Qt.Unchecked)
+        if (self.settings.value("Affichage/InterAltitude", "NO") == "YES"):
+            self.checkBoxInterAltitude.setChecked( Qt.Checked)
+        else:
+            self.checkBoxInterAltitude.setChecked( Qt.Unchecked)
+        # Toujours interpoint qui est necessaire à "Inter"
+        self.checkBoxInterLibelle.setChecked( Qt.Checked)     
+        if (self.settings.value("Affichage/InterPoints", "NO") == "YES"):
+            self.checkBoxInterPoints.setChecked( Qt.Checked)
+        else:
+            self.checkBoxInterPoints.setChecked( Qt.Unchecked)        
+        if (self.settings.value("Affichage/InterMoyennes", "NO") == "YES"):
+            self.checkBoxInterMoyennes.setChecked( Qt.Checked)
+        else:
+            self.checkBoxInterMoyennes.setChecked( Qt.Unchecked)        
+        if (self.settings.value("Affichage/InterPasMesure", "YES") == "YES"):
+            self.checkBoxInterPasMesure.setChecked( Qt.Checked)
+            self.checkBoxInterPasMesureDetails.setEnabled( True)
+            if (self.settings.value("Affichage/InterPasMesureDetails", "NO") == "YES"):
+                self.checkBoxInterPasMesureDetails.setChecked( Qt.Checked)
+        else:
+            self.checkBoxInterPasMesure.setChecked( Qt.Unchecked)
+            self.checkBoxInterPasMesureDetails.setChecked( Qt.Unchecked)
+            self.checkBoxInterPasMesureDetails.setEnabled( False)
+
+        if (self.settings.value("Affichage/InterSegment", "YES") == "YES"):
+            self.checkBoxInterSegment.setChecked( Qt.Checked)
+            self.checkBoxInterSegmentDetails.setEnabled( True)
+            if (self.settings.value("Affichage/InterSegmentDetails", "NO") == "YES"):
+                self.checkBoxInterSegmentDetails.setChecked( Qt.Checked)
+        else:
+            self.checkBoxInterSegment.setChecked( Qt.Unchecked)
+            self.checkBoxInterSegmentDetails.setChecked( Qt.Unchecked)
+            self.checkBoxInterSegmentDetails.setEnabled( False)
+
+        if (self.settings.value("Affichage/InterSegmentBrise", "YES") == "YES"):
+            self.checkBoxInterSegmentBrise.setChecked( Qt.Checked)
+            self.checkBoxInterSegmentBriseDetails.setEnabled( True)
+            if (self.settings.value("Affichage/InterSegmentBriseDetails", "NO") == "YES"):
+                self.checkBoxInterSegmentBriseDetails.setChecked( Qt.Checked)
+        else:
+            self.checkBoxInterSegmentBrise.setChecked( Qt.Unchecked)        
+            self.checkBoxInterSegmentBriseDetails.setChecked( Qt.Unchecked)
+            self.checkBoxInterSegmentBriseDetails.setEnabled( False)
+
+        # Choix d'affichage Intra 
+        if (self.settings.value("Affichage/IntraUnSeul", "YES") == "YES"):
+            self.checkBoxIntraUnSeul.setChecked( Qt.Checked)
+        else:
+            self.checkBoxIntraUnSeul.setChecked( Qt.Unchecked)
+        if (self.settings.value("Affichage/IntraIsos", "NO") == "YES"):
+            self.checkBoxIntraIsos.setChecked( Qt.Checked)
+        else:
+            self.checkBoxIntraIsos.setChecked( Qt.Unchecked)
+        if (self.settings.value("Affichage/IntraImages", "NO") == "YES"):
+            self.checkBoxIntraImages.setChecked( Qt.Checked)
+        else:
+            self.checkBoxIntraImages.setChecked( Qt.Unchecked)
+
     def memoriser_saisies_InterIntraParcelles(self):
         """ Mémorise les saisies inter et intra """
 
@@ -1017,139 +1025,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         else:
             LIB = "GDAL"
         self.settings.setValue("Expert/library", LIB)
-    
-    # Repertoire données brutes :
-    def slot_CHEMIN_templates(self):
-        self.dans_Quel_Settings()
-        # Remplissage de la liste de CHEMIN_TEMPLATES
-        self.fieldComboThematiques.setCurrentIndex( 0)   
-        if len( CHEMIN_TEMPLATES) == 0:
-            self.fieldComboThematiques.clear( )
-            aText = self.tr( "Pas de répertoire de thématiques pré définie")
-            physiocap_log( aText, leModeDeTrace)
-            physiocap_error( self, aText)
-        else:
-            leChoixDeThematiques = int( self.settings.value("Style/leChoixDeThematiques", 0)) 
-            # Cas inital
-            CHEMIN_TEMPLATES_USER = []
-            self.fieldComboThematiques.clear( )
-            CHEMIN_TEMPLATES_USER.append( os.path.join( self.plugin_dir, CHEMIN_TEMPLATES[0]))
-            # On donne le chemin QGIS ou celui présent dans les preferences
-            if leChoixDeThematiques == 1:
-                chemin_preference = self.settings.value("Style/leDirThematiques", \
-                    os.path.join( self.gis_dir, CHEMIN_TEMPLATES[1]))
-            else:
-                # TODO : verifier ce cas : cas QGIS pour le premier cas
-                chemin_preference = os.path.join( self.gis_dir, CHEMIN_TEMPLATES[1])                
-            CHEMIN_TEMPLATES_USER.append( chemin_preference)
-            self.fieldComboThematiques.addItems( CHEMIN_TEMPLATES_USER )
-
-            # Le combo a déjà été rempli, on retrouve le choix
-            self.fieldComboThematiques.setCurrentIndex( leChoixDeThematiques)
-            if ( leChoixDeThematiques == 1): 
-                # On est dans le cas où l'utilisateur a pris la main sur ces qml
-                # autorisation de modifier les nom de qml
-                self.groupBoxThematiques.setEnabled( True)
-                # Renommage V3
-                themeDiametre = self.settings.value("Style/themeDiametre", "Filtre diamètre")
-                self.lineEditThematiqueDiametre.setText( themeDiametre )
-                themeSarment = self.settings.value("Style/themeSarment", "Filtre sarment")
-                self.lineEditThematiqueSarment.setText( themeSarment )
-                themeBiomasse = self.settings.value("Style/themeBiomasse", "Filtre biomasse")
-                self.lineEditThematiqueBiomasse.setText( themeBiomasse )
-                themeVitesse = self.settings.value("Style/themeVitesse", "Filtre vitesse")
-                self.lineEditThematiqueVitesse.setText( themeVitesse )
-                themePasMesure = self.settings.value("Style/themePasMesure", "Filtre pas de mesure")
-                self.lineEditThematiquePasMesure.setText( themePasMesure )
-                themeSegment = self.settings.value("Style/themeSegment", "Filtre segment")
-                self.lineEditThematiqueSegment.setText( themeSegment )
-                themeSegmentBrise = self.settings.value("Style/themeSegmentBrise", "Filtre segment brisé")
-                self.lineEditThematiqueSegmentBrise.setText( themeSegmentBrise )
-                themeContour = self.settings.value("Style/themeContour", "Contours")
-                self.lineEditThematiqueContour.setText( themeContour )
-                # Inter
-                themeDiametre = self.settings.value("Style/themeInterDiametre", "Inter diamètre")
-                self.lineEditThematiqueInterDiametre.setText( themeDiametre )
-                themeSarment = self.settings.value("Style/themeInterSarment", "Inter sarment")
-                self.lineEditThematiqueInterSarment.setText( themeSarment )
-                themeBiomasse = self.settings.value("Style/themeInterBiomasse", "Inter biomasse")
-                self.lineEditThematiqueInterBiomasse.setText( themeBiomasse )
-
-                themeAltitude = self.settings.value("Style/themeInterAltitude", "Inter altitude")
-                self.lineEditThematiqueInterAltitude.setText( themeAltitude )
-                # inter Libelle
-                themeLibelle = self.settings.value("Style/themeInterLibelle", "Inter parcelles")
-                self.lineEditThematiqueInterLibelle.setText( themeLibelle )
-                # inter moyenne et points
-                themeMoyenne = self.settings.value("Style/themeInterMoyenne", "Inter parcelle")
-                self.lineEditThematiqueInterMoyenne.setText( themeMoyenne )
-                themePoints = self.settings.value("Style/themeInterPoints", "Filtre diamètre 3D")
-                self.lineEditThematiqueInterPoints.setText( themePoints )
-                themeInterPasMesure = self.settings.value("Style/themeInterPasMesure", "Inter pieds manquants")
-                self.lineEditThematiqueInterPasMesure.setText( themeInterPasMesure )
-                themeSegment = self.settings.value("Style/themeInterSegment", "Inter Segment")
-                self.lineEditThematiqueInterSegment.setText( themeSegment )
-                themeSegmentBrise = self.settings.value("Style/themeInterSegmentBrise", "Inter Segment Brise")
-                self.lineEditThematiqueInterSegmentBrise.setText( themeSegmentBrise )
-                # intra
-                themeIso = self.settings.value("Style/themeIntraIso", "Isolignes")
-                self.lineEditThematiqueIntraIso.setText( themeIso )
-                themeImage = self.settings.value("Style/themeIntraImage", "Intra")
-                self.lineEditThematiqueIntraImage.setText( themeImage )
-                themePDF = self.settings.value("Style/themeIntraPDF", "PDF")
-                self.lineEditThematiqueIntraPDF.setText( themePDF )
-            else:
-                # Cas repertoire du plugin
-                self.groupBoxThematiques.setEnabled( False)
-                # Remettre les nom de thematiques par defaut 
-                self.lineEditThematiqueDiametre.setText("Filtre diamètre")
-                self.settings.setValue("Style/themeDiametre", "Filtre diamètre")
-                self.lineEditThematiqueSarment.setText("Filtre sarment")
-                self.settings.setValue("Style/themeSarment", "Filtre sarment")
-                self.lineEditThematiqueBiomasse.setText("Filtre biomasse")
-                self.settings.setValue("Style/themeBiomasse", "Filtre biomasse")
-                self.lineEditThematiqueVitesse.setText("Filtre vitesse")
-                self.settings.setValue("Style/themeVitesse", "Filtre vitesse")
-                self.lineEditThematiquePasMesure.setText("Filtre pas de mesure")
-                self.settings.setValue("Style/themePasMesure", "Filtre pas de mesure")
-                self.lineEditThematiqueSegment.setText("Filtre segment")
-                self.settings.setValue("Style/themeSegment","Filtre segment")
-                self.lineEditThematiqueSegmentBrise.setText("Filtre segment brisé")
-                self.settings.setValue("Style/themeSegmentBrise","Filtre segment brisé")
-                self.lineEditThematiqueContour.setText("Contours")
-                self.settings.setValue("Style/themeContour","Contours")
-                # Inter
-                self.lineEditThematiqueInterDiametre.setText("Inter diamètre")
-                self.settings.setValue("Style/themeInterDiametre", "Inter diamètre")
-                self.lineEditThematiqueInterSarment.setText("Inter sarment")
-                self.settings.setValue("Style/themeInterSarment", "Inter sarment")
-                self.lineEditThematiqueInterBiomasse.setText("Inter biomasse")
-                self.settings.setValue("Style/themeInterBiomasse", "Inter biomasse")
-
-                self.lineEditThematiqueInterAltitude.setText("Inter altitude")
-                self.settings.setValue("Style/themeInterAltitude", "Inter altitude")
-                
-                self.lineEditThematiqueInterLibelle.setText("Inter parcelles")
-                self.settings.setValue("Style/themeInterLibelle", "Inter parcelles")
-                # inter moyenne et points
-                self.lineEditThematiqueInterMoyenne.setText("Inter parcelle")
-                self.settings.setValue("Style/themeInterMoyenne", "Inter parcelle")
-                self.lineEditThematiqueInterPoints.setText("Filtre diamètre 3D")
-                self.settings.setValue("Style/themeInterPoints", "Filtre diamètre 3D")     
-                self.lineEditThematiqueInterPasMesure.setText("Inter pieds manquants")
-                self.settings.setValue("Style/themeInterPasMesure", "Inter pieds manquants")
-                self.lineEditThematiqueInterSegment.setText("Inter segment")
-                self.settings.setValue("Style/themeInterSegment", "Inter segment")
-                self.lineEditThematiqueInterSegmentBrise.setText("Inter segment brisé")
-                self.settings.setValue("Style/themeInterSegmentBrise", "Inter segment brisé")
-                # Intra
-                self.lineEditThematiqueIntraIso.setText("Isolignes")
-                self.settings.setValue("Style/themeIntraIso", "Isolignes")
-                self.lineEditThematiqueIntraImage.setText("Intra")
-                self.settings.setValue("Style/themeIntraImage", "Intra")
-                self.lineEditThematiqueIntraPDF.setText( "PDF" )
-                self.settings.setValue("Style/themeIntraPDF", "PDF")
- 
+        
     def slot_lecture_repertoire_donnees_brutes( self):
         """Quel répertoire pour données brutes"""
         # Récuperer dans setting le nom du dernier ou sinon REPERTOIRE_DONNEES_BRUTES
@@ -1307,7 +1183,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         """ Créer la liste des attributs interpolable
         Cette liste provient de ATTRIBUTS_INTRA et si details ATTRIBUTS_INTRA_DETAILS et gere le cas V3"""
         #leModeDeTrace = self.fieldComboModeTrace.currentText()
-        profilCourant =  self.fieldComboProfilPHY.currentText()
+        Nom_Profil =  self.fieldComboProfilPHY.currentText()
         ATTR_LISTE=[]
 
         if (len( ATTRIBUTS_INTRA) == 0):
@@ -1347,7 +1223,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         
         # Cas de details ATTRIBUTS_INTRA_DETAIL
         if self.groupBoxDetailVignoble.isChecked():
-            if  profilCourant == 'Champagne':
+            if  Nom_Profil == 'Champagne':
                 ATTR_LISTE = ATTR_LISTE + ATTRIBUTS_INTRA_DETAILS
             else:
                 ATTR_LISTE = ATTR_LISTE + ATTRIBUTS_INTRA_DETAILS + ATTRIBUTS_INTRA_DETAILS_PLUS
@@ -1413,8 +1289,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             return
         
         # Récupérer les choix dans settings 
-        profilCourant =  self.fieldComboProfilPHY.currentText()
-        if profilCourant == 'Champagne': # ce passage est impossible si GroupIso est false
+        Nom_Profil =  self.fieldComboProfilPHY.currentText()
+        if Nom_Profil == 'Champagne': # ce passage est impossible si GroupIso est false
             leChoixDiam = self.settings.value("Champagne/attributIntraFixe_1", "DIAM")
             leChoixSarm = self.settings.value("Champagne/attributIntraFixe_2", "NBSARCEP")
             leChoixBiom = self.settings.value("Champagne/attributIntraFixe_3", "BIOMGCEP")
@@ -1432,7 +1308,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         
         # Cas de details ATTRIBUTS_INTRA_DETAIL
         if self.groupBoxDetailVignoble.isChecked():
-            if profilCourant == 'Champagne':
+            if Nom_Profil == 'Champagne':
                 ATTR_LISTE_TRIPLET = ATTR_LISTE_TRIPLET + ATTRIBUTS_INTRA_DETAILS
             else:
                 ATTR_LISTE_TRIPLET = ATTR_LISTE_TRIPLET + ATTRIBUTS_INTRA_DETAILS + ATTRIBUTS_INTRA_DETAILS_PLUS
@@ -2279,6 +2155,12 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 format( e)
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
+        except physiocap_exception_agro_profil as e:
+            aText = "Seul le profil {} permet de préciser vos données agronomiques dans un contour. ".format( e)
+            aText = aText + "Si vous êtes intéressé par cette fonctionnalité, merci de contacter jean@jhemmi.eu. "
+            aText = aText + "Sinon, précisez vos informations vignobles dans l'onglet Agronomie et cochez ""{}".\
+                format( "Onglet Agronomie détaille mon information du vignoble")
+            return physiocap_message_box( self, aText, "information" )        
         except physiocap_exception_agro_obligatoire as e:
             physiocap_log_for_error( self)
             aText = self.tr( "INFORMATIONS AGRO KO : la couche vecteur de votre session ne contient pas un attribut {0}. ").\
@@ -2286,8 +2168,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             aText = aText + self.tr( "Vérifier le vecteur choisi pour décrire vos contours et vos données AGRO ")
             aText = aText + self.tr( "dans Onglet Calcul puis Moyenne Inter Parcellaire" )
             physiocap_error( self, aText, "CRITICAL")
-            physiocap_message_box( self, aText, "CRITICAL")
-            return physiocap_message_box( self, aText, "information" )
+            return physiocap_message_box( self, aText, "CRITICAL" )
 
         except physiocap_exception_stop_user:
             return physiocap_log( \

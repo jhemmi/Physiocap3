@@ -219,9 +219,9 @@ def physiocap_ferme_csv( csv_sans_0, csv_avec_0, csv_0_seul, diametre_filtre, er
     return
 
 #AGRO
-def calcul_detail_avec_info_agro_poly( num_poly, lesParcellesAgro, les_infos_agronomique, nbsarm,  biom):
+def calcul_detail_avec_info_agro_poly( num_poly, les_parcelles_agro, les_infos_agronomique, nbsarm,  biom):
     """ Calcul detaillé du point selon les valeurs agronomique de la parcelle"""
-    physiocap_log( "{} Parcelle {} info agro {}".format( num_poly, lesParcellesAgro[num_poly], les_infos_agronomique[num_poly]),  TRACE_JH)
+    physiocap_log( "{} Parcelle {} info agro {}".format( num_poly, les_parcelles_agro[num_poly], les_infos_agronomique[num_poly]),  TRACE_JH)
     try:
         eer = les_infos_agronomique[ num_poly][ "interrangs"]
         eec = les_infos_agronomique[ num_poly][ "interceps"]
@@ -238,14 +238,14 @@ def calcul_detail_avec_info_agro_poly( num_poly, lesParcellesAgro, les_infos_agr
         raise
     return nbsarmm2, nbsarcep, biommm2, biomgm2, biomgcep
     
-def quel_poly_me_contient( self, le_point_projete, lesParcellesAgro, les_vecteurs_agronomique):
+def quel_poly_me_contient( self, le_point_projete, les_parcelles_agro, les_vecteurs_agronomique):
     """ Recherche d'un poly de contour qui contient le point"""
     # Assert 
-    if len(lesParcellesAgro) != len(les_vecteurs_agronomique):
+    if len( les_parcelles_agro) != len( les_vecteurs_agronomique):
         aMsg = "{} Attention incohérence dans votre contour agro : {} parcelles ne correspond pas à {} géométries". \
-                format ( PHYSIOCAP_WARNING,  len(lesParcellesAgro), len(les_vecteurs_agronomique))
+                format ( PHYSIOCAP_WARNING,  len( les_parcelles_agro), len( les_vecteurs_agronomique))
         physiocap_error( self, aMsg )
-    for num_contour, nom_contour in enumerate(lesParcellesAgro):
+    for num_contour, nom_contour in enumerate( les_parcelles_agro):
         try :
             une_geom_poly = les_vecteurs_agronomique[ num_contour]
             #physiocap_log("Avant quel_type_vecteur poly",  TRACE_JH)
@@ -259,77 +259,81 @@ def quel_poly_me_contient( self, le_point_projete, lesParcellesAgro, les_vecteur
             raise
     return -1
     
-def memoriser_info_agro(self): 
+def quelles_listes_info_agro(self): 
     """ Trouver les informations agro de toutes les parcelles"""
-    le_profil =  self.fieldComboProfilPHY.currentText()
+    Nom_Profil =  self.fieldComboProfilPHY.currentText()
     repertoire_data = self.lineEditDirectoryPhysiocap.text()
-    if le_profil == 'Champagne':
+    if Nom_Profil != 'Champagne':
+        raise physiocap_exception_agro_profil( 'Champagne')
+        return None,  None, None
+    else:
         # On prend un eventuel shp ou CSV dans rep des données brutes
         nom_vecteur, nom_court_vecteur,  libelle = quel_vecteur_dans_donnees_brutes( repertoire_data)
         if ((nom_vecteur != None) and len( nom_vecteur) > 0):                
             node_layer = nom_court_vecteur + SEPARATEUR_NOEUD + libelle + \
                 SEPARATEUR_NOEUD + nom_vecteur
             self.comboBoxPolygone.addItem( node_layer)
-    _, _, origine_poly, vecteur_poly = quel_sont_vecteurs_choisis( self, "Filtrer")
 
-    if ( vecteur_poly == None) or ( not vecteur_poly.isValid()):
-        aText = self.tr( "Le contour précisant vos données agronomiques n'est pas valide pour QGIS. Vérifiez-le dans QGIS=> Vecteur => Vérifier la validité ")
-        aText = aText + self.tr( "Créer une nouvelle session Physiocap - bouton Filtrer les données brutes - ")
-        physiocap_error( self, aText, "CRITICAL")
-        return physiocap_message_box( self, aText, "information" ) 
+        _, _, origine_poly, vecteur_poly = quel_sont_vecteurs_choisis( self, "Filtrer")
 
-    champsVignobleOrdonnes, champs_vignoble_requis, champs_vignoble_requis_fichier, dictEnteteVignoble, \
-        champExistants, lesParcellesAgro, modele_agro_retenu = \
-        assert_champs_agro_obligatoires( self, vecteur_poly)
+        if ( vecteur_poly == None) or ( not vecteur_poly.isValid()):
+            aText = self.tr( "Le contour précisant vos données agronomiques n'est pas valide pour QGIS. Vérifiez-le dans QGIS=> Vecteur => Vérifier la validité ")
+            aText = aText + self.tr( "Créer une nouvelle session Physiocap - bouton Filtrer les données brutes - ")
+            physiocap_error( self, aText, "CRITICAL")
+            return physiocap_message_box( self, aText, "information" ) 
 
-    les_infos_agronomique = []
-    les_geometries_agronomique = []
-    infos_agronomique_en_cours = {} # Conteneur avec le nom des champs
-    # CSV
-    if origine_poly == "AGRO_CSV":
-        indice_dict_Entete = 0
-        nom_champ_geom = CSV_GEOM
-    if origine_poly == "AGRO_SHP":
-        indice_dict_Entete = 2
-        nom_champ_geom = "geom"
-    physiocap_log( "Type de vecteur {} et geom attendu{}".format( origine_poly, nom_champ_geom))
-    for un_contour in vecteur_poly.getFeatures(QgsFeatureRequest().addOrderBy( champs_vignoble_requis_fichier[1])):
+        champsVignobleOrdonnes, champs_vignoble_requis, champs_vignoble_requis_fichier, dictEnteteVignoble, \
+            champExistants, les_parcelles_agro, modele_agro_retenu = \
+            assert_champs_agro_obligatoires( self, vecteur_poly)
+
+        les_infos_agronomique = []
+        les_geometries_agronomique = []
+        infos_agronomique_en_cours = {} # Conteneur avec le nom des champs
         # CSV
-        nom_parcelle = dictEnteteVignoble[champsVignobleOrdonnes[1]][indice_dict_Entete]
-        un_nom = un_contour[ nom_parcelle]
-        if un_nom not in lesParcellesAgro:
-            continue
-        for pos_champ, le_champ in enumerate( champs_vignoble_requis):
-            champ_fichier = champs_vignoble_requis_fichier[ pos_champ]
-#            physiocap_log(" Champ de la liste des champs_vignoble_requis vaut {}".\
-#                format( le_champ),  TRACE_JH)
-#            physiocap_log(" Champ de la liste des champrequisfichier vaut {}".\
-#                format( champ_fichier),  TRACE_JH)
-            nom_champ = dictEnteteVignoble[ le_champ][indice_dict_Entete]
-            physiocap_log(" Nom du champ de dictEnteteVignoble vaut {}".\
-                format( nom_champ),  TRACE_JH)
-            try:
-                # TODO DURCIR  tester les types
-                #type_attendu = dictEnteteVignoble[ champ][1]
-                infos_agronomique_en_cours[ le_champ] = un_contour[ champ_fichier]
-            except:
-                # TODO DURCIR Attraper exception champ non existant dans contour et tester les types
-                raise physiocap_exception_agro_obligatoire( "{} obligatoire (les champs obligatoires sont {}".\
-                    format( champ_fichier, champs_vignoble_requis_fichier))
-        les_infos_agronomique.append( infos_agronomique_en_cours) 
-        infos_agronomique_en_cours = {}
         if origine_poly == "AGRO_CSV":
-            try:
+            indice_dict_Entete = 0
+            nom_champ_geom = CSV_GEOM
+        if origine_poly == "AGRO_SHP":
+            indice_dict_Entete = 2
+            nom_champ_geom = "geom"
+        physiocap_log( "Type de vecteur {} et geom attendu{}".format( origine_poly, nom_champ_geom))
+        for un_contour in vecteur_poly.getFeatures(QgsFeatureRequest().addOrderBy( champs_vignoble_requis_fichier[1])):
+            # CSV
+            nom_parcelle = dictEnteteVignoble[champsVignobleOrdonnes[1]][indice_dict_Entete]
+            un_nom = un_contour[ nom_parcelle]
+            if un_nom not in les_parcelles_agro:
+                continue
+            for pos_champ, le_champ in enumerate( champs_vignoble_requis):
+                champ_fichier = champs_vignoble_requis_fichier[ pos_champ]
+    #            physiocap_log(" Champ de la liste des champs_vignoble_requis vaut {}".\
+    #                format( le_champ),  TRACE_JH)
+    #            physiocap_log(" Champ de la liste des champrequisfichier vaut {}".\
+    #                format( champ_fichier),  TRACE_JH)
+    #            nom_champ = dictEnteteVignoble[ le_champ][indice_dict_Entete]
+    #            physiocap_log(" Nom du champ de dictEnteteVignoble vaut {}".\
+    #                format( nom_champ),  TRACE_JH)
+                try:
+                    # TODO DURCIR  tester les types
+                    #type_attendu = dictEnteteVignoble[ champ][1]
+                    infos_agronomique_en_cours[ le_champ] = un_contour[ champ_fichier]
+                except:
+                    # TODO DURCIR Attraper exception champ non existant dans contour et tester les types
+                    raise physiocap_exception_agro_obligatoire( "{} obligatoire (les champs obligatoires sont {}".\
+                        format( champ_fichier, champs_vignoble_requis_fichier))
+            les_infos_agronomique.append( infos_agronomique_en_cours) 
+            infos_agronomique_en_cours = {}
+            if origine_poly == "AGRO_CSV":
+                try:
+                    les_geometries_agronomique.append(  un_contour.geometry())
+                except:
+                    physiocap_error("Contour CSV n'a pas de géométrie")
+                    raise
+            else:
                 les_geometries_agronomique.append(  un_contour.geometry())
-            except:
-                physiocap_error("Contour CSV n'a pas de géométrie")
-                raise
-        else:
-            les_geometries_agronomique.append(  un_contour.geometry())
-    physiocap_log( "Synthèse Info Agro : {}".format( les_infos_agronomique))
-    physiocap_log( "Synthèse geom : {}".format( les_geometries_agronomique))
+        #physiocap_log( "Synthèse Info Agro : {}".format( les_infos_agronomique))
+        #physiocap_log( "Synthèse geom : {}".format( les_geometries_agronomique))
 
-    return lesParcellesAgro, les_geometries_agronomique, les_infos_agronomique
+        return les_parcelles_agro, les_geometries_agronomique, les_infos_agronomique
     
 # Fonction de filtrage et traitement des données
 def physiocap_filtrer(self, nom_court_csv_concat, src, csv_sans_0, csv_avec_0, csv_0_seul,
@@ -366,8 +370,7 @@ def physiocap_filtrer(self, nom_court_csv_concat, src, csv_sans_0, csv_avec_0, c
         titre = titre_sans_detail + titre_partie_details
         # TODO ? Signaler information à la parcelle dans synthese
         if self.checkBoxInfoVignoble.isChecked() and self.radioButtonContour.isChecked():
-            lesParcellesAgro, les_vecteurs_agronomique, les_infos_agronomique = memoriser_info_agro(self)
-
+            les_parcelles_agro, les_vecteurs_agronomique, les_infos_agronomique = quelles_listes_info_agro(self)
     # Ecriture de l'entete pour tous les cas
     csv_sans_0.write("{0}\n".format( titre)) 
     csv_avec_0.write("{0}\n".format( titre))
@@ -395,7 +398,7 @@ def physiocap_filtrer(self, nom_court_csv_concat, src, csv_sans_0, csv_avec_0, c
     # Récuperer le CRS choisi, les extensions et le calculateur de distance
     distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
     laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( self)
-    tracer_une_fois = 0
+    #tracer_une_fois = 0
 
     for numero_point, ligne_brute in enumerate( lignes_brutes):
         if not ligne_brute: break 
@@ -691,17 +694,17 @@ def physiocap_filtrer(self, nom_court_csv_concat, src, csv_sans_0, csv_avec_0, c
                     # CAS INFO AGRO par parcelles
                     if self.checkBoxInfoVignoble.isChecked() and self.radioButtonContour.isChecked():
                         num_poly = quel_poly_me_contient( self, le_point_projete, \
-                            lesParcellesAgro, les_vecteurs_agronomique)
-                        if num_poly < 0 and tracer_une_fois < 2:
-                            if tracer_une_fois == 0:
-                                physiocap_log("Point hors parcellaire", leModeDeTrace, Warning)
-                            else:
-                                physiocap_log("Point(s) hors parcellaire", leModeDeTrace, Warning)
-                            tracer_une_fois + 1
+                            les_parcelles_agro, les_vecteurs_agronomique)
+###                        if num_poly < 0 and tracer_une_fois < 2:
+###                            if tracer_une_fois == 0:
+###                                physiocap_log("Point hors parcellaire", leModeDeTrace, Warning)
+###                            else:
+###                                physiocap_log("Point(s) hors parcellaire", leModeDeTrace, Warning)
+###                            tracer_une_fois + 1
                     if self.checkBoxInfoVignoble.isChecked() and self.radioButtonContour.isChecked() \
                         and num_poly >= 0:    
                         nbsarmm2, nbsarcep, biommm2, biomgm2, biomgcep = \
-                            calcul_detail_avec_info_agro_poly( num_poly, lesParcellesAgro, \
+                            calcul_detail_avec_info_agro_poly( num_poly, les_parcelles_agro, \
                                 les_infos_agronomique, nbsarm,  biom)
                     else:
                         nbsarmm2 = nbsarm/eer*100

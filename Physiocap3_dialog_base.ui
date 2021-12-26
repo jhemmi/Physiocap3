@@ -2150,7 +2150,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <double>45.000000000000000</double>
       </property>
       <property name="singleStep">
-       <double>5.000000000000000</double>
+       <double>0.500000000000000</double>
       </property>
       <property name="value">
        <double>15.000000000000000</double>

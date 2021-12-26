@@ -84,8 +84,8 @@ CONF_MODEL = test/Physiocap3.conf
 CONF_SAVE = $(CONF_TARGET).sauve
 
 TEMPLATE = modeleQgis
-VERSION_TEMPLATE= Physiocap3
-
+VERSION_STANDARD= Standard
+VERSION_CHAMPAGNE= Champagne
 GPKG = modeleGPKG
 
 PLUGIN_UPLOAD = $(c)/plugin_upload.py
@@ -145,7 +145,8 @@ deploy: compile doc transcompile
 	mkdir -p $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(DATA)
 	mkdir -p $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(HELP)
 	mkdir -p $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(TEMPLATE)
-	mkdir -p $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(TEMPLATE)/$(VERSION_TEMPLATE)
+	mkdir -p $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(TEMPLATE)/$(VERSION_STANDARD)
+	mkdir -p $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(TEMPLATE)/$(VERSION_CHAMPAGNE)
 	mkdir -p $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(GPKG)
 	cp -vf $(PY_FILES) $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)
 	@cp -vf $(UI_FILES) $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)
@@ -154,8 +155,9 @@ deploy: compile doc transcompile
 	@cp -vfr i18n $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)
 	@cp -vf $(HELP_FILES)  $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(HELP)
 	@cp -vf $(DATA_FILES) $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(DATA)
-	@cp -vf $(TEMPLATE)/$(VERSION_TEMPLATE)/*.qml $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(TEMPLATE)/$(VERSION_TEMPLATE)
-	@cp -vf $(TEMPLATE)/$(VERSION_TEMPLATE)/*.qml $(HOME)/$(QGISDIR)/project_templates/Physiocap3
+	@cp -vf $(TEMPLATE)/$(VERSION_STANDARD)/*.qml $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(TEMPLATE)/$(VERSION_STANDARD)
+	@cp -vf $(TEMPLATE)/$(VERSION_CHAMPAGNE)/*.qml $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(TEMPLATE)/$(VERSION_CHAMPAGNE)
+	@cp -vf $(TEMPLATE)/$(VERSION_STANDARD)/*.qml $(HOME)/$(QGISDIR)/project_templates/Physiocap3
 	@cp -vf $(GPKG)/*.gpkg $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(GPKG)
 	# Fin de la copie du plugin Physiocap3
 

@@ -41,10 +41,10 @@
  *                                                                         *
 ***************************************************************************/
 """
-from .Physiocap_tools import (physiocap_message_box,\
-        physiocap_log, physiocap_error,  \
+from .Physiocap_tools import (physiocap_message_box,physiocap_log, physiocap_error,  \
         physiocap_nom_entite_sans_pb_caractere, physiocap_rename_existing_file,  \
-        quelle_projection_et_lib_demandee, physiocap_create_projection_file, \
+        quel_CHEMIN_templates, quel_qml_existe, quelle_projection_et_lib_demandee, \
+        physiocap_create_projection_file, \
         physiocap_get_layer_by_URI, assert_champs_agro_obligatoires,  \
         creer_csvt_source_onglet, quel_sont_vecteurs_choisis)       #physiocap_vecteur_vers_gpkg, \
 
@@ -753,8 +753,6 @@ def physiocap_moyennes_tous_contours( laProjectionCRS, EPSG_NUMBER,
 
     return 0     
 
-                            
-
 class PhysiocapInter( QtWidgets.QDialog):
     """QGIS Pour voir les messages traduits."""
 
@@ -793,19 +791,24 @@ class PhysiocapInter( QtWidgets.QDialog):
         version_3 = "YES" if dialogue.checkBoxV3.isChecked() else "NO"
 
         # Récupérer des styles pour chaque shape dans Affichage
-        #dir_template = os.path.join( os.path.dirname(__file__), 'modeleQgis')       
-        dir_template = dialogue.fieldComboThematiques.currentText()
-        qml_is = dialogue.lineEditThematiqueInterMoyenne.text().strip('"') + EXTENSION_QML
-        le_template_moyenne = os.path.join( dir_template, qml_is)
-        qml_is = dialogue.lineEditThematiqueInterPoints.text().strip('"') + EXTENSION_QML
-        le_template_point = os.path.join( dir_template, qml_is)
+        repertoire_template,  repertoire_secours = quel_CHEMIN_templates( dialogue)
+        #dir_template = dialogue.fieldComboThematiques.currentText()
+        le_template_moyenne = quel_qml_existe( \
+            dialogue.lineEditThematiqueInterMoyenne.text().strip('"') + EXTENSION_QML, \
+            repertoire_template,  repertoire_secours)    
+        le_template_point = quel_qml_existe( \
+            dialogue.lineEditThematiqueInterPoints.text().strip('"') + EXTENSION_QML, \
+            repertoire_template,  repertoire_secours)    
         if version_3 == "YES":
-            qml_is = dialogue.lineEditThematiqueInterPasMesure.text().strip('"') + EXTENSION_QML
-            le_template_sans_mesure = os.path.join( dir_template, qml_is)
-            qml_is = dialogue.lineEditThematiqueInterSegment.text().strip('"') + EXTENSION_QML
-            le_template_segment = os.path.join( dir_template, qml_is)
-            qml_is = dialogue.lineEditThematiqueInterSegmentBrise.text().strip('"') + EXTENSION_QML
-            le_template_segment_brise = os.path.join( dir_template, qml_is)
+            le_template_sans_mesure = quel_qml_existe( \
+                dialogue.lineEditThematiqueInterPasMesure.text().strip('"') + EXTENSION_QML,  \
+                repertoire_template,  repertoire_secours)    
+            le_template_segment = quel_qml_existe( \
+                dialogue.lineEditThematiqueInterSegment.text().strip('"') + EXTENSION_QML,  \
+                repertoire_template,  repertoire_secours)    
+            le_template_segment_brise = quel_qml_existe( \
+                dialogue.lineEditThematiqueInterSegmentBrise.text().strip('"') + EXTENSION_QML,  \
+                repertoire_template,  repertoire_secours)    
         
         # Trouver deux vecteurs
         nom_noeud_arbre, vecteur_point, origine_poly, vecteur_poly = quel_sont_vecteurs_choisis( dialogue, "Inter")
@@ -943,13 +946,13 @@ class PhysiocapInter( QtWidgets.QDialog):
 
         # Progress BAR 20 %
         dialogue.progressBarInter.setValue( 20)
-        # Cas des infos vignoble par fichier 
+        # Cas des INFO AGRO vignoble par fichier 
         if dialogue.checkBoxInfoVignoble.isChecked() and dialogue.radioButtonContour.isChecked():
             dialogue.progressBarInter.setValue( 21)
 
-            champsVignobleOrdonnes, champsVignobleRequisFormat, dictEnteteVignoble, \
-                champExistants, lesParcellesAgro, modele_agro_retenu = \
-                assert_champs_agro_obligatoires( dialogue, vecteur_poly)
+            champsVignobleOrdonnes, champs_vignoble_requis, champs_vignoble_requis_fichier, dictEnteteVignoble, \
+                champExistants, les_parcelles_agro, modele_agro_retenu  = \
+                assert_champs_agro_obligatoires( dialogue, vecteur_poly)       
 
 
         # CONTAINEUR DES TOUS LES CONTOURS
@@ -983,21 +986,17 @@ class PhysiocapInter( QtWidgets.QDialog):
         # Progress BAR 25 %
         dialogue.progressBarInter.setValue( 25)
         
-        # ITERATION PAR CONTOUR : Tri OK
-        if dialogue.checkBoxInfoVignoble.isChecked() and dialogue.radioButtonContour.isChecked():
-            pass
-        else:
-            nombre_contours = 0
-            # TODO Amelioration fonction standard 
-            for f in vecteur_poly.getFeatures():
-                nombre_contours = nombre_contours +1
+        # Amelioration fonction standard featureCount  
+#        for f in vecteur_poly.getFeatures():
+        nombre_contours = vecteur_poly.featureCount()
         physiocap_log ( self.tr( "{0} {1} Début Inter pour {2} contours >>>> ").\
                 format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI, nombre_contours), leModeDeTrace)
         # AGRO
         if dialogue.checkBoxInfoVignoble.isChecked() and dialogue.radioButtonContour.isChecked():
-            ordre_de_tri = champsVignobleRequisFormat[1]
+            ordre_de_tri = champs_vignoble_requis[1]
         else:
             ordre_de_tri = le_champ_contour
+        # ITERATION PAR CONTOUR : Tri OK
         for un_contour in vecteur_poly.getFeatures(QgsFeatureRequest().addOrderBy( ordre_de_tri)):
             id = id + 1
             bar = 75 - int( (nombre_contours - id) / (75-35))
@@ -1009,8 +1008,9 @@ class PhysiocapInter( QtWidgets.QDialog):
                 if origine_poly == "AGRO_SHP":
                     indice_dict_Entete = 2
                 nom_parcelle = dictEnteteVignoble[ champsVignobleOrdonnes[1]][indice_dict_Entete]
+                physiocap_log( "===== ==== ===== La parcelle agro {}".format( nom_parcelle))
                 un_nom = un_contour[ nom_parcelle]
-                if un_nom not in lesParcellesAgro:
+                if un_nom not in les_parcelles_agro:
                     id = id -1
                     continue
                 infos_agronomique_en_cours = {}
@@ -1030,7 +1030,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                     un_nom = NOM_CHAMP_ID + SEPARATEUR_ + str(id)
                     pass
                 
-            physiocap_log ( self.tr( "{0} {1} Début Inter pour {2} >>>> ").\
+            physiocap_log( self.tr( "{0} {1} Début Inter pour {2} >>>> ").\
                 format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI, un_nom), leModeDeTrace)
 
             # Selon cas vis à vis de gdal (controlé dans la fieldPbGdal lors de recherche des champs uniques
@@ -1743,7 +1743,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                 SHAPE_A_AFFICHER.append( (nom_affichage, qml_is, nom_segment_moyenne))
 
             # Afficher les vecteurs choisis dans arbre "projet"
-            for titre, unTemplate, un_nom in SHAPE_A_AFFICHER:
+            for titre, un_template, un_nom in SHAPE_A_AFFICHER:
                 vector = QgsVectorLayer( un_nom, titre, 'ogr')
 
                 # On se positionne dans l'arbre
@@ -1752,12 +1752,10 @@ class PhysiocapInter( QtWidgets.QDialog):
                     vignette_group_inter.addLayer( vector)
                 else:
                     mon_projet.addMapLayer( vector)
-                    
-                le_template = os.path.join( dir_template, unTemplate)
-                if ( os.path.exists( le_template)):
-                    #physiocap_log ( "Physiocap le template : " + os.path.basename( leTemplate) , leModeDeTrace)
+                le_template = quel_qml_existe( un_template, repertoire_template, repertoire_secours)
+                if ( le_template != None ):
                     vector.loadNamedStyle( le_template)  
-      
+                    
         # Progress BAR 90 %
         # INSERTION_CIVC_V2 pour CSV
         dialogue.progressBarInter.setValue( 89)

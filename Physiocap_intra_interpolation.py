@@ -46,7 +46,7 @@ from .Physiocap_tools import ( physiocap_message_box,\
         physiocap_log, physiocap_error, physiocap_is_only_ascii, \
         physiocap_nom_entite_sans_pb_caractere,  physiocap_nom_entite_avec_pb_caractere, \
         physiocap_rename_existing_file, quelle_projection_et_lib_demandee, \
-        quel_sont_vecteurs_choisis)
+        quel_CHEMIN_templates, quel_qml_existe, quel_sont_vecteurs_choisis, assert_champs_agro_obligatoires)
 
 from .Physiocap_var_exception import *
 
@@ -175,16 +175,16 @@ class PhysiocapIntra( QtWidgets.QDialog):
 ###                iface.mapCanvas().refresh()
 
         
+    # TODO: ? en faire une fonction de tools
+    # TODO : prise en compte du profil
     def physiocap_affiche_raster_iso( self, dialogue, nom_raster_final, nom_court_raster, 
                     le_template_raster, affiche_raster,
                     nom_iso_final, nom_court_isoligne, le_template_isolignes, affiche_iso,
                     vignette_group_intra, mon_projet):
         """ Affichage du raster et Iso"""
         #leModeDeTrace = dialogue.fieldComboModeTrace.currentText() 
-      
-        physiocap_log ( "= Template raster {0}".format( le_template_raster), TRACE_INTRA)
-        physiocap_log ( "= Dans affichage iso final  {0}".format( nom_iso_final), TRACE_INTRA)
-      
+        Nom_Profil =  dialogue.fieldComboProfilPHY.currentText()
+        physiocap_log( "=~= Template sont ici {} et pour le profil {}".format( le_template_raster, Nom_Profil))
         if ( nom_raster_final != ""):
             if os.path.exists( nom_raster_final):           
                 intra_raster = QgsRasterLayer( nom_raster_final, nom_court_raster)
@@ -215,19 +215,16 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     mon_projet.addMapLayer( intra_isoligne)
                 if ( affiche_raster == "YES"): 
                     mon_projet.addMapLayer( intra_raster)
-
-            physiocap_log ( "= AVANT LOAD STYLE {0} RASTER OU ISO".format( le_template_raster), TRACE_INTRA)
-        
+      
             if (( affiche_raster == "YES") and 
-                ( os.path.exists( le_template_raster))):
+                ( le_template_raster != None)):
                 intra_raster.loadNamedStyle( le_template_raster)
                 intra_raster.setRefreshOnNotifyEnabled( True)
                 physiocap_log ( "= pendant LOAD STYLE {0} RASTER".format( le_template_raster), TRACE_INTRA)
             if (( affiche_iso == "YES") and ( nom_iso_final != "") and 
-                ( os.path.exists( le_template_isolignes))):
+                ( le_template_isolignes != None)):
 #                if MACHINE == "Linux":   # JHJH Bypass Bug 19045 QGIS et 13 extension
                 intra_isoligne.loadNamedStyle( le_template_isolignes)
-                physiocap_log ( "= pendant LOAD STYLE {0} isoligne".format( le_template_isolignes), TRACE_INTRA)
         
     def quelle_librairie_interpolation(self, dialogue, versionSAGA):
         """
@@ -687,9 +684,16 @@ class PhysiocapIntra( QtWidgets.QDialog):
             aText = self.tr( "Pas de répertoire de données cibles spécifié")
             physiocap_error( self, aText)
             return physiocap_message_box( dialogue, aText, "information")
-               
+            
         # Trouver deux vecteurs
-        nom_noeud_arbre, vecteur_point, _, vecteur_poly = quel_sont_vecteurs_choisis( dialogue, "Intra")
+        nom_noeud_arbre, vecteur_point, origine_poly, vecteur_poly = quel_sont_vecteurs_choisis( dialogue, "Intra")
+
+        # Cas des INFO AGRO vignoble par fichier 
+        if dialogue.checkBoxInfoVignoble.isChecked() and dialogue.radioButtonContour.isChecked():
+            dialogue.progressBarIntra.setValue( 1)
+            champsVignobleOrdonnes, champs_vignoble_requis, champs_vignoble_requis_fichier, dictEnteteVignoble, \
+                champExistants, les_parcelles_agro, modele_agro_retenu  = \
+                assert_champs_agro_obligatoires( dialogue, vecteur_poly)       
 
         # Pour attribut en cours d'interpolation
         le_champ_contour = dialogue.fieldComboContours.currentText()
@@ -698,15 +702,14 @@ class PhysiocapIntra( QtWidgets.QDialog):
         # Vérifier disponibilité de processing (on attend d'etre dans Intra)
         try :
             import processing
-#            try:
-#                from processing.core.Processing import Processing
-#                Processing.initialize()
-#            except:
-#                physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
-#                    format( PHYSIOCAP_UNI, self.tr("Traitement")), leModeDeTrace)
-#                raise physiocap_exception_no_processing( "Pas d'extension Traitement - initialize")               
+            try:
+                from processing.core.Processing import Processing
+                Processing.initialize()
+            except:
+                physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
+                    format( PHYSIOCAP_UNI, self.tr("Traitement")), leModeDeTrace)
+                raise physiocap_exception_no_processing( "Pas d'extension Traitement - initialize")               
             versionGDAL = processing.tools.raster.gdal.__version__
-            # TODO: ?V3.z Gerer La version et si SAGA Actif
             versionSAGA = processing.algs.saga.SagaUtils.getInstalledVersion() # avant "2.3.2"
         except ImportError:
             physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
@@ -718,7 +721,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 format( PHYSIOCAP_UNI), leModeDeTrace)
             raise physiocap_exception_no_saga( "Erreur attribut")
 
-        physiocap_log ( self.tr( "= Version SAGA = %s" % ( versionSAGA)), TRACE_INTRA)
+#        physiocap_log ( self.tr( "= Version SAGA = %s" % ( versionSAGA)), TRACE_INTRA)
         physiocap_log ( self.tr( "= Version GDAL = %s" % ( versionGDAL)), TRACE_INTRA)
 
         physiocap_log( self.tr( "=~= {0} début de l'interpolation des points de {1}").\
@@ -923,15 +926,15 @@ class PhysiocapIntra( QtWidgets.QDialog):
 
             # Récupérer des styles pour chaque shape
             # Pour les templates
-            dir_template = dialogue.fieldComboThematiques.currentText()
-            qml_prefix = dialogue.lineEditThematiqueIntraImage.text().strip('"')
-            nom_intra_attribut = qml_prefix + le_champ_choisi + EXTENSION_QML
-            le_template_raster = os.path.join( dir_template, nom_intra_attribut)
-            qml_prefix = dialogue.lineEditThematiqueIntraIso.text().strip('"')
-            nom_isolignes_attribut = qml_prefix + le_champ_choisi + EXTENSION_QML
-            le_template_isolignes  = os.path.join( dir_template, nom_isolignes_attribut)
-#            physiocap_log( self.tr( "=~= {0} Template raster == {1} ==").\
-#                format( PHYSIOCAP_UNI, le_template_raster), leModeDeTrace)      
+            repertoire_template,  repertoire_secours = quel_CHEMIN_templates( dialogue)
+            le_template_raster = quel_qml_existe( \
+                dialogue.lineEditThematiqueIntraImage.text().strip('"') + le_champ_choisi + EXTENSION_QML,  \
+                repertoire_template,  repertoire_secours)    
+            le_template_isolignes == quel_qml_existe( \
+                dialogue.lineEditThematiqueIntraIso.text().strip('"') + le_champ_choisi + EXTENSION_QML,  \
+                repertoire_template,  repertoire_secours)    
+            physiocap_log( self.tr( "=~= {0} Template raster == {1} ==").\
+                format( PHYSIOCAP_UNI, le_template_raster), leModeDeTrace)      
                 
             # On passe sur le contour général
             contour_avec_point = 0
@@ -1055,11 +1058,23 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 for un_contour in vecteur_poly.getFeatures(): #iterate poly features
                     id_contour = id_contour + 1
                     contours_possibles = contours_possibles + 1
-                    try:
-                        un_nom = un_contour[ le_champ_contour] 
-                    except:
-                        un_nom = NOM_CHAMP_ID + SEPARATEUR_ + str(id_contour)
-                        pass
+
+                    #AGRO 
+                    if dialogue.checkBoxInfoVignoble.isChecked() and dialogue.radioButtonContour.isChecked():
+                        # CSV
+                        if origine_poly == "AGRO_CSV":
+                            indice_dict_Entete = 0
+                        if origine_poly == "AGRO_SHP":
+                            indice_dict_Entete = 2
+                        nom_parcelle = dictEnteteVignoble[ champsVignobleOrdonnes[1]][indice_dict_Entete]
+                        #physiocap_log( "===== ==== ===== La parcelle agro {}".format( nom_parcelle))
+                        un_nom = un_contour[ nom_parcelle]
+                    else:
+                        try:
+                            un_nom = un_contour[ le_champ_contour] 
+                        except:
+                            un_nom = NOM_CHAMP_ID + SEPARATEUR_ + str(id_contour)
+                            pass
 
                     # ###################
                     # Contournement du bug SAGA et caractères spéciaux ==> Interpolation GDAL

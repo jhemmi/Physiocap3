@@ -45,7 +45,6 @@ if MACHINE == "Linux":
 else:
     LE_MODE_PROD = "YES"
 LISTE_PROFIL= [ 'Standard', 'Champagne', 'Fronton', 'IFV Bordeaux']
-    
 # LIVRAISON : supprimer en Prod
 #LE_MODE_PROD = "NO"
 
@@ -304,7 +303,7 @@ ATTRIBUTS_INTRA_DETAILS = ["NBSARMM2", "NBSARCEP", "BIOMGCEP"]
 ATTRIBUTS_INTRA_DETAILS_PLUS = ["BIOMM2", "BIOMGM2"]
 ### si QGIS & version 3 verifier que ces index n'ont pas bougé avec les nouveau attributs 
 ### WHY ATTRIBUTS_INTRA_INDEX = {"DIAM" : 4 ,"NBSARM" : 3 ,"BIOM" : 5,  "NBSARMM2":6, "NBSARCEP":7,"BIOMM2":8, "BIOMGM2":9, "BIOMGCEP":10}
-CHEMIN_TEMPLATES = [ "modeleQgis/Physiocap3", "project_templates/Physiocap3"]
+CHEMIN_TEMPLATES = [ "modeleQgis", "project_templates"]
 
 # Exceptions Physiocap à partir de 30 erreurs sur un fchier mid
 TAUX_LIGNES_ERREUR= 30
@@ -323,15 +322,13 @@ CEPAGES = [ 'Inconnu', 'Airen', 'Alicante', 'Aligote', \
 'Sangiovese', 'Sauvignon', 'Semillon', 'Sultaniye', 'Syrah', \
 'Tempranillo', 'Trebbiano', 'Trebbiano Romagnolo', 'Tribidrag', 'Zinfandel']
 
-TAILLES = [ "Inconnue", "Chablis", "Cordon de Royat", "Cordon libre", "Guyot simple", "Guyot double"]
+LISTE_TAILLES = [ "Inconnue", "Chablis", "Cordon de Royat", "Cordon libre", "Guyot simple", "Guyot double"]
 
 # TODO: vérifier liste Spécifique du profil Fronton
 COMMUNES_FRONTON=["Fronton", "Villaudric", "Vacquiers", "Villematier", "Castelnau d'Estrétefond", "Pompignan", \
     "Grisolles", "Campsas", "Labastide", "Nohic", "Orgueuil"]
 
 # Spécifique du profil Champagne
-# TODO tester puis sauver en V3
-CHEMIN_TEMPLATES_CIVC="modeleQgis/Champagne"
 #CRUs et régions dans le groupebox informations agronomiques ___Nadia___
 CRUS_CHAMPAGNE=["AILLEVILLE","ALLEMANT","AMBONNAY","ARCIS-LE-PONSART","ARCONVILLE","ARGANCON", \
 "ARRENTIERES","ARSONVAL","AUBILLY","AVENAY-VAL-D'OR","AVIREY-LINGEY","AVIZE","AY","AZY-SUR-MARNE", \
@@ -422,6 +419,8 @@ class physiocap_exception_calcul_segment_invalid( physiocap_exception):
 class physiocap_exception_stop_user( physiocap_exception):
     pass  
 class physiocap_exception_agro_obligatoire( physiocap_exception):
+    pass
+class physiocap_exception_agro_profil( physiocap_exception):
     pass
     
 #INTER
