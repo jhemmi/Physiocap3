@@ -930,7 +930,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
             le_template_raster = quel_qml_existe( \
                 dialogue.lineEditThematiqueIntraImage.text().strip('"') + le_champ_choisi + EXTENSION_QML,  \
                 repertoire_template,  repertoire_secours)    
-            le_template_isolignes == quel_qml_existe( \
+            le_template_isolignes = quel_qml_existe( \
                 dialogue.lineEditThematiqueIntraIso.text().strip('"') + le_champ_choisi + EXTENSION_QML,  \
                 repertoire_template,  repertoire_secours)    
             physiocap_log( self.tr( "=~= {0} Template raster == {1} ==").\
