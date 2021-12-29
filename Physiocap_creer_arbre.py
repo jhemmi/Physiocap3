@@ -42,8 +42,9 @@
 from .Physiocap_tools import ( physiocap_message_box, physiocap_question_box,\
         physiocap_log, physiocap_error, physiocap_write_in_synthese, \
         physiocap_rename_existing_file, physiocap_rename_create_dir, physiocap_open_file, \
-        physiocap_csv_vers_vecteur, lister_MIDs_pour_synthese, quel_MID_dans_donnees_brutes, quelle_campagne, assert_campagne, \
-        quel_poly_point_INTER, quel_CHEMIN_templates, quel_qml_existe, \
+        physiocap_csv_vers_vecteur, lister_MIDs_pour_synthese, quel_MID_dans_donnees_brutes, \
+        quelle_campagne, assert_campagne, \
+        quel_poly_point_INTER, quel_chemin_templates, quel_qml_existe, \
         generer_contour_depuis_points) 
         
 from .Physiocap_CIVC import (physiocap_assert_csv, physiocap_ferme_csv, \
@@ -558,7 +559,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         sous_groupe = root.addGroup( chemin_base_session)
         
         # Récupérer des styles pour chaque shape
-        repertoire_template,  repertoire_secours = quel_CHEMIN_templates( dialogue)
+        repertoire_template,  repertoire_secours = quel_chemin_templates( dialogue)
         #dir_template = dialogue.fieldComboThematiques.currentText()
         # Affichage des différents shapes dans QGIS
         SHAPE_A_AFFICHER = []

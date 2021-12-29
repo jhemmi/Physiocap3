@@ -44,7 +44,7 @@
 
 from .Physiocap_tools import (physiocap_message_box, \
         physiocap_log_for_error, physiocap_log, physiocap_error, \
-        quel_CHEMIN_templates, quel_poly_point_INTER, quelle_projection_et_lib_demandee, \
+        quel_chemin_templates, quel_poly_point_INTER, quelle_projection_et_lib_demandee, \
         physiocap_nom_entite_avec_pb_caractere, \
         physiocap_get_layer_by_name, physiocap_get_layer_by_ID)
 
@@ -96,8 +96,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 if ( modeTrace == leModeDeTrace):
                     self.fieldComboModeTrace.setCurrentIndex( idx)
 
-        physiocap_log( "Mode de trace {}".format( leModeDeTrace),  TRACE_JH)
-        #physiocap_log( "Répertoire de QGIS : " +  self.gis_dir, leModeDeTrace)
+        physiocap_log( "Répertoire de QGIS : " +  self.gis_dir, leModeDeTrace)
         physiocap_log( "Répertoire des plugins ou extensions : " +  self.plugins_dir, leModeDeTrace)
        
         # Slot for boutons : ces deux sont déjà sont dans UI
@@ -116,6 +115,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.toolButtonDirectoryFiltre.pressed.connect( self.slot_lecture_repertoire_donnees_cibles)  
         # Slot pour le groupe vignoble
         self.groupBoxDetailVignoble.clicked.connect( self.slot_bascule_details_vignoble)
+        self.radioButtonContour.toggled.connect( self.slot_bascule_onglet_contour)
         # Slot pour le groupe format V3
         self.checkBoxV3.stateChanged.connect( self.slot_bascule_V3)
         self.checkBoxInterPasMesure.stateChanged.connect( self.slot_bascule_pas_mesure)
@@ -123,12 +123,12 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.checkBoxInterSegmentBrise.stateChanged.connect( self.slot_bascule_segment_brise)
         
         # Inter
-        self.checkBoxContourSolo.stateChanged.connect( self.slot_bascule_contour)
+        self.checkBoxContourSolo.stateChanged.connect( self.slot_bascule_sans_contour)
         self.comboBoxPolygone.currentIndexChanged[int].connect( self.slot_PROFIL_INTER_maj_champ_poly_liste )
         self.fieldComboContours.currentIndexChanged[int].connect( self.slot_INTER_change_champ_choisi )
         self.ButtonInter.pressed.connect(self.slot_INTER_moyennes_parcelles)
         self.ButtonInterRefresh.pressed.connect(self.slot_INTER_liste_parcelles)
-        self.groupBoxInter.setEnabled( False)
+        #self.groupBoxInter.setEnabled( False)
         
         # Intra        
         # TODO supprimer self.comboBoxPoints.currentIndexChanged[int].connect( self.slot_INTER_INTRA_maj_points_choix )
@@ -462,30 +462,45 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
     #  Différents SLOT
     # ################
     # PROFIL et mise en settings
-    def slot_PROFIL_change(self):
+    def slot_PROFIL_change( self, forcer_profil = None):
+        """Paramétrage spécifique à chaque profil
+            appel recursif pour forcer à 'standard' pour remettre toujours le profil standard avant de le modifier
+        """
         self.dans_Quel_Settings()
         #leModeDeTrace = self.fieldComboModeTrace.currentText()
-        Nom_Profil =  self.fieldComboProfilPHY.currentText()
-        # CAS Particulier de chargement spécifique à certain profil, 
-        # On surcharge le contenu de la config sans la perdre 
-        
+        if (forcer_profil == None or isinstance( forcer_profil, int)):
+            Nom_Profil =  self.fieldComboProfilPHY.currentText()
+            # On surcharge le contenu de la config sans la perdre 
+            self.slot_PROFIL_change( 'Standard')
+        else:
+            Nom_Profil = forcer_profil
+            #physiocap_log( "==> slot_PROFIL forcer à {}".format ( Nom_Profil), TRACE_PROFIL)
+            
         # Cas des templates de champagne 
-        _, _ = quel_CHEMIN_templates( self)
+        _, _ = quel_chemin_templates( self)
 
         if  Nom_Profil == 'Champagne':
             # Fixer valeur de filtrer et bloquer filtre
+            self.radioButtonNordPrecedent.setChecked( Qt.Checked)
             self.spinBoxMinDiametre.setValue( 4)
             self.spinBoxMaxDiametre.setValue( 18)
             self.spinBoxMaxSarmentsParMetre.setValue( 25)
+            self.spinBoxHauteur.setValue( 90)
+            self.doubleSpinBoxDensite.setValue( 0.9)
             self.groupBoxFiltrer.setEnabled( False)
+            # Inter Intra
             self.groupBoxInter.setEnabled( True)
             self.groupBoxIntra.setEnabled( True)
+            # Autoriser de continuer les cas d'intra
+            self.checkBoxArret.setChecked( Qt.Unchecked)
+            self.fieldComboIntraContinue.clear()
+            self.fieldComboIntraContinue.addItems( ATTR_CONTINUE)        
+            self.fieldComboIntraContinue.setCurrentIndex( 1)
+            # Détail vignoble & agro et enchainer les 3 actions 
             self.checkBoxTroisActions.setChecked( Qt.Checked)
             self.groupBoxDetailVignoble.setChecked( Qt.Checked)
             self.checkBoxInfoVignoble.setChecked( Qt.Checked)
-            # TODO Valider defaut avec Constance
             self.radioButtonOnglet.setChecked(  Qt.Checked)  
-            # Basculer aussi groupBoxVignoble & groupBoxAgroSaisie mais par slot
             self.groupBoxVignoble.setEnabled( True)
             self.label_PH.setEnabled( False)            
             self.doubleSpinBoxPH.setEnabled( False)            
@@ -493,7 +508,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.radioButtonSAGA.setChecked(  Qt.Checked)
             self.checkBoxSagaTIFF.setChecked( Qt.Checked)
             self.radioButtonL93.setChecked(  Qt.Checked)
-            self.groupBoxThemaTrace.setEnabled( True)
+            # Pas de choix de theme
+            self.groupBoxThemaTrace.setEnabled( False)
             # initialisation sans sauvegarde dans profil
             self.spinBoxIsoMin_Fixe_DIAM.setValue( int( self.settings.value("Champagne/isoMinFixe_1", 7 )))
             self.spinBoxIsoMax_Fixe_DIAM.setValue( int( self.settings.value("Champagne/isoMaxFixe_1", 11 )))
@@ -507,7 +523,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             # un seul triplet pour intra DIAM BIOMGCEP NBSARCEP est code dans ce slot
             self.slot_PROFIL_INTRA_maj_attributs_interpolables( Nom_Profil)
             
-            # TODO PDF 
             self.checkBoxIntraPDF.setChecked( Qt.Checked)
             # Pas d'isoligne
             self.checkBoxIntraUnSeul.setChecked( Qt.Unchecked)
@@ -517,8 +532,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.groupBoxMethode.setEnabled( False)
             self.groupBoxExpertOuvert.setEnabled( False)
             self.groupBoxSegment.setEnabled( False)
-            # TODO : Limiter cepage
         elif Nom_Profil == 'Fronton':
+            self.radioButtonNordPrecedent.setChecked( Qt.Unchecked)
             self.spinBoxMinDiametre.setValue( 3)
             self.spinBoxMaxDiametre.setValue( 22)
             self.spinBoxMaxSarmentsParMetre.setValue( 25)
@@ -539,6 +554,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.groupBoxExpertOuvert.setEnabled( False)
             self.groupBoxSegment.setEnabled( True)
         elif Nom_Profil == 'Standard':
+            self.radioButtonNordPrecedent.setChecked( Qt.Checked)
             self.spinBoxMinDiametre.setValue( 4)
             self.spinBoxMaxDiametre.setValue( 18)
             self.spinBoxMaxSarmentsParMetre.setValue( 25)
@@ -548,6 +564,11 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.groupBoxDetailVignoble.setChecked( Qt.Checked)
             self.checkBoxInfoVignoble.setChecked( Qt.Checked)
             self.groupBoxIntra.setEnabled( True)
+            # Autoriser de continuer les cas d'intra
+            self.checkBoxArret.setChecked( Qt.Checked)
+            self.fieldComboIntraContinue.clear()
+            self.fieldComboIntraContinue.addItems( ATTR_CONTINUE)        
+            self.fieldComboIntraContinue.setCurrentIndex( 0)
             self.groupBoxVignoble.setEnabled( True)
             self.label_PH.setEnabled( True)            
             self.doubleSpinBoxPH.setEnabled( True)            
@@ -556,10 +577,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.groupBoxIsolignes.setChecked( Qt.Checked)
             self.groupBoxIsolignes.setEnabled( True)
         else:
-            physiocap_error( "Dans slot_PROFIL {} est inconnu ". \
-            format ( Nom_Profil), TRACE_PROFIL)
-        physiocap_log( "PROFIL {} pris en compte ". \
-            format ( Nom_Profil), TRACE_PROFIL)
+            physiocap_error( "Dans slot_PROFIL {} est inconnu ".format ( Nom_Profil), TRACE_PROFIL)
+        physiocap_log( "PROFIL {} est initialisé".format ( Nom_Profil), TRACE_PROFIL)
 
     def dans_Quel_Settings( self, nomSettings=PHYSIOCAP_NOM_3):
         self.settings= QSettings(PHYSIOCAP_NOM, nomSettings)
@@ -616,8 +635,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.settings.setValue("Champagne/isoMinFixe_3",  self.spinBoxIsoMin_Fixe_BIOM.value())
             self.settings.setValue("Champagne/isoMaxFixe_3",  self.spinBoxIsoMax_Fixe_BIOM.value())
             self.settings.setValue("Champagne/isoDistanceFixe_3",  self.spinBoxIsoDistance_Fixe_BIOM.value())
-            self.settings.setValue("Champagne/Boite_eteintes", ["groupBoxFiltrer", "groupBoxAffichages"])
-            self.settings.setValue("Champagne/Boite_allumées", ["groupBox_select", "groupBoxInter", "groupBoxIntra"])
             physiocap_log('Settings Champagne devient {}'.format(VALEUR_PROFIL_INITIALISE), TRACE_PROFIL)
             self.settings.setValue("Profil/Champagne", VALEUR_PROFIL_INITIALISE)
             
@@ -658,8 +675,9 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Informations agronomiques (inspiré de ___Nadia___)
         self.dans_Quel_Settings()
         Nom_Profil =  self.fieldComboProfilPHY.currentText()
+        leModeDeTrace = self.fieldComboModeTrace.currentText()
 
-        self.lineEditNomParcelle.setText( self.settings.setValue("Agro/nom_parcelle", "_"))
+        self.lineEditNomParcelle.setText( self.settings.value("Agro/nom_parcelle", "_"))
         self.spinBoxAnneePlant.setValue( int( self.settings.value("Agro/annee_plantation", 2000 )))
                
         # Remplissage des Region
@@ -679,11 +697,10 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.comboBoxRegion.addItems( LISTE_REGION)
              # Retrouver la commune de  settings
             self.comboBoxRegion.setCurrentIndex( 0)
-            laRegion = self.settings.value("Agro/laRegion", "xx") 
+            laRegion = self.settings.value("Agro/region", "xx") 
             for idx, une in enumerate( LISTE_REGION):
                 if ( une == laRegion):
                     self.comboBoxRegion.setCurrentIndex( idx)
-                    physiocap_log( self.tr( "Région retrouvée"), leModeDeTrace, TRACE_PROFIL) 
 
         self.spinBoxInterrangs.setValue( int( self.settings.value("Agro/interrangs", 100 )))
         self.spinBoxInterceps.setValue( int( self.settings.value("Agro/interceps", 100 )))
@@ -707,16 +724,29 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 self.comboBoxCommune.addItems( ["_"] + LISTE_COMMUNES)
                  # Retrouver la commune de  settings
                 self.comboBoxCommune.setCurrentIndex( 0)
-                laCommune = self.settings.value("Agro/laCommune", "xx") 
-                #print('COMMUNE_X=[')
+                laCommune = self.settings.value("Agro/commune", "xx") 
                 for idx, une in enumerate( LISTE_COMMUNES):
-                    #print( ' "{}",'.format(une))
                     if ( une == laCommune):
-                        self.comboBoxCommune.setCurrentIndex( idx)
+                        self.comboBoxCommune.setCurrentIndex( idx + 1)  # car _
                         physiocap_log( self.tr( "Commune retrouvée"), leModeDeTrace) 
         
-        self.lineEditClone.setText( self.settings.setValue("Agro/clone", "inconnu"))
-        self.lineEditPorteGreffe.setText( self.settings.setValue("Agro/porte_greffe", "inconnu"))
+        self.lineEditClone.setText( self.settings.value("Agro/clone", "inconnu"))
+        self.lineEditPorteGreffe.setText( self.settings.value("Agro/porte_greffe", "inconnu"))
+
+        # Remplissage des cépages
+        self.comboBoxCepage.setCurrentIndex( 0) 
+        if len( LISTE_CEPAGES) == 0:
+            self.comboBoxCepage.clear( )
+            physiocap_error( self, self.tr( "Pas de liste des cépages pré définie"))
+        else:
+            self.comboBoxCepage.clear( )
+            self.comboBoxCepage.addItems( LISTE_CEPAGES)
+             # Retrouver le profil de  settings
+            self.comboBoxCepage.setCurrentIndex( 0)
+            leCepage = self.settings.value("Agro/cepage", "xx") 
+            for idx, un in enumerate( LISTE_CEPAGES):
+                if ( un == leCepage):
+                    self.comboBoxCepage.setCurrentIndex( idx)
 
         # Remplissage des tailles
         self.comboBoxTaille.setCurrentIndex( 0) 
@@ -733,7 +763,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 if ( un == laTaille):
                     self.comboBoxTaille.setCurrentIndex( idx)
 
-        self.spinBoxArgile.setValue( int( self.settings.value("Agro/sol_argiles", 20 )))
+        self.spinBoxArgile.setValue( int( self.settings.value("Agro/sol_argile", 20 )))
         self.doubleSpinBoxMO.setValue( float( self.settings.value("Agro/sol_mo", 0.5 )))
         self.spinBoxCsurN.setValue( int( self.settings.value("Agro/sol_CsurN", 20 )))
         self.doubleSpinBoxPH.setValue( float( self.settings.value("Agro/sol_PH", 7 )))
@@ -753,10 +783,10 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.settings.setValue("Agro/interceps", int( self.spinBoxInterceps.value()))
         self.settings.setValue("Agro/hauteur", int( self.spinBoxHauteur.value()))
         self.settings.setValue("Agro/densite", float( self.doubleSpinBoxDensite.value()))
-        self.settings.setValue("Agro/leCepage", self.comboBoxCepage.currentText())
+        self.settings.setValue("Agro/cepage", self.comboBoxCepage.currentText())
         self.settings.setValue("Agro/clone",self.lineEditClone.text())#___définir les valeurs des variables : clone
         self.settings.setValue("Agro/porte_greffe", self.lineEditPorteGreffe.text())#___definir les valeurs des variables : porte-greffe
-        self.settings.setValue("Agro/laTaille", self.comboBoxTaille.currentText())
+        self.settings.setValue("Agro/taille", self.comboBoxTaille.currentText())
         self.settings.setValue("Agro/sol_argile", int( self.spinBoxArgile.value()))
         self.settings.setValue("Agro/sol_mo", float( self.doubleSpinBoxMO.value()))
         self.settings.setValue("Agro/sol_CsurN", int( self.spinBoxCsurN.value()))
@@ -834,7 +864,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.settings.setValue("Affichage/IntraIsos", isos )
         images = "YES" if self.checkBoxIntraImages.isChecked() else "NO"
         self.settings.setValue("Affichage/IntraImages", images ) 
-
         
         # Trois parametre INTRA
         self.settings.setValue("Physiocap/leChoixShapeSarment", self.fieldComboShapeSarment.currentIndex())
@@ -1716,18 +1745,17 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         nombre_poly = 0
         nombre_point = 0
         nombre_poly, nombre_point = quel_poly_point_INTER( self)
-        leModeDeTrace = self.fieldComboModeTrace.currentText()
         physiocap_log( "Dans slot_INTER_liste_parcelles : poly >> {}<< et points >> {}<<". \
-           format ( nombre_poly,nombre_point), leModeDeTrace)
+           format ( nombre_poly,nombre_point), TRACE_JH)
 
         if ( nombre_poly > 0):
             # A_TESTER: si utile fin inter self.slot_min_max_champ_intra()
             self.slot_PROFIL_INTER_maj_champ_poly_liste()
         if (( nombre_poly > 0) and ( nombre_point > 0)):
             # Liberer le bouton "Inter"
-            self.groupBoxInter.setEnabled( True)
+            self.ButtonInter.setEnabled( True)
         else:
-            self.groupBoxInter.setEnabled( False)
+            self.ButtonInter.setEnabled( False)
         
         # Mise à jour du commentaire pour le rayon
         self.slot_INTRA_rayon_selon_SCR_LIB()
@@ -1767,9 +1795,12 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                     # On garde le seul champ nommant les parcelles 
                     for mon_champ in mon_provider.fields():
                         nom_champ = mon_champ.name()
+                        physiocap_log( "Champ {}".format( nom_champ),  TRACE_JH)
                         if nom_champ == "Nom_Parcel":
+                            physiocap_log( "Champ nom parcel",  TRACE_JH)
                             liste_valeurs = mon_provider.uniqueValues( map_champ[ nom_champ])
                             valeur_unique = "YES" if nombre_ligne == len( liste_valeurs) else "NO"
+                            physiocap_log( "Champ nom parcel est unique ? {} ".format(valeur_unique),  TRACE_JH)
                             break
                 
                 if valeur_unique == "YES": # cas champagne et champ Nom_Parcel OK
@@ -1782,7 +1813,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                     for mon_champ in mon_provider.fields():
                         nom_champ = mon_champ.name()
                         if mon_champ.type() != 10:
-                            #physiocap_log( "type Exclu {} pour {}".format( mon_champ.type(), nom_champ))
+                            physiocap_log( "type Exclu {} pour {}".format( mon_champ.type(), nom_champ), TRACE_JH)
                             continue
                         liste_valeurs = mon_provider.uniqueValues( map_champ[ nom_champ])
 
@@ -1792,12 +1823,12 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                         else:
                             # Vérifier si les valeurs du field name sont toutes uniques
         #                    physiocap_log( "Unique : field >> {0} \n {1}<<". \
-        #                        format ( nom_champ,  liste_valeurs), leModeDeTrace)
+        #                        format ( nom_champ,  liste_valeurs), TRACE_JH)
                             if nombre_ligne == len( liste_valeurs):
                                 valeur_unique = "YES" 
                             else:
     #                            physiocap_log( "Dans recherche de champ : field >> {0} nombre {1} mais possible {2}". \
-    #                            format ( nom_champ,  len( liste_valeurs),  nombre_ligne), leModeDeTrace)
+    #                            format ( nom_champ,  len( liste_valeurs),  nombre_ligne), TRACE_JH)
                                 valeur_unique = "NO" 
                                 
                         # ne pas remettre NOM_PHY une deuxieme fois
@@ -1817,7 +1848,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                         liste_valeurs={}
                 mon_provider = None
         else:
-            physiocap_log( "Dans recherche des champs uniques : aucun layer", leModeDeTrace)            
+            physiocap_log( "Dans recherche des champs uniques : aucun layer", TRACE_JH)      
                                                   
     def slot_INTER_moyennes_parcelles(self):
         """ Slot qui fait appel au traitement Inter Parcelles et traite exceptions """
@@ -1959,13 +1990,29 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.checkBoxSegmentBrise.setChecked( Qt.Unchecked)
             self.settings.setValue("Affichage/FiltrerSegmentBrise", "N0" )            
 
-    def slot_bascule_contour(self):
+    def slot_bascule_sans_contour(self):
         """ Mode sans contour connu : pas de choix de la couche        """ 
         if self.checkBoxContourSolo.isChecked():
+            if  self.radioButtonContour.isChecked():
+                #Assert
+                aText = "Il est impossible de demander de créer un coutour en déclarant que les informations"
+                aText = aText + " agronomiques proviennent de contours... Les informations vignobles proviennent"
+                aText = aText + " donc de l'Onglet Agronomie"
+                physiocap_message_box( self, aText, "information" )
+                self.radioButtonOnglet.setChecked(  Qt.Checked)
             self.groupBoxContourInter.setEnabled( False)
         else:
             self.groupBoxContourInter.setEnabled( True)
-        
+            self.slot_INTER_liste_parcelles()         
+    
+    def slot_bascule_onglet_contour(self):
+        """ Mode onglet ou contour      """ 
+        if  self.radioButtonOnglet.isChecked():
+            self.groupBoxVignoble.setEnabled( True)
+        else:
+            self.groupBoxVignoble.setEnabled( False)
+            self.slot_INTER_liste_parcelles()         
+
     def slot_bascule_details_vignoble(self):
     # Calcul aide et sortie
         """ Changement de demande pour les details vignoble : 
@@ -1978,7 +2025,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.groupBoxVignoble.setEnabled( True)
         else:
             self.groupBoxVignoble.setEnabled( False)    
-          
+            self.slot_INTER_liste_parcelles()
+            
     def slot_calcul_densite( self):
         # Densité pied /ha
         interrang  = int( self.spinBoxInterrangs.value())

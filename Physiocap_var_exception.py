@@ -308,7 +308,7 @@ CHEMIN_TEMPLATES = [ "modeleQgis", "project_templates"]
 # Exceptions Physiocap à partir de 30 erreurs sur un fchier mid
 TAUX_LIGNES_ERREUR= 30
 
-CEPAGES = [ 'Inconnu', 'Airen', 'Alicante', 'Aligote', \
+LISTE_CEPAGES = [ 'Inconnu', 'Airen', 'Alicante', 'Aligote', \
 'Barbera', 'Blaufrankisch', 'Bobal', \
 'Cabernet Franc', 'Cabernet Sauvignon', 'Castelao', 'Catarratto', 'Cayetana', 'Chardonnay', \
 'Chasselas', 'Chenin', 'Cinsaut', 'Colombard', 'Concord', 'Cot', 'Criolla Grande', \

@@ -316,7 +316,7 @@
      <property name="geometry">
       <rect>
        <x>5</x>
-       <y>0</y>
+       <y>5</y>
        <width>601</width>
        <height>171</height>
       </rect>
@@ -666,7 +666,7 @@
         </rect>
        </property>
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -698,18 +698,18 @@ vos autres données agronomiques</string>
      </property>
      <property name="font">
       <font>
-       <pointsize>11</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
+       <pointsize>1</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
       </font>
      </property>
      <property name="title">
-      <string>Moyennes Inter Parcellaire : précisez vos contours</string>
+      <string/>
      </property>
      <widget class="QGroupBox" name="groupBoxContourInter">
       <property name="geometry">
        <rect>
-        <x>5</x>
+        <x>0</x>
         <y>30</y>
         <width>591</width>
         <height>101</height>
@@ -723,9 +723,9 @@ vos autres données agronomiques</string>
       </property>
       <property name="font">
        <font>
-        <pointsize>1</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
+        <pointsize>11</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
         <kerning>false</kerning>
        </font>
       </property>
@@ -745,7 +745,7 @@ vos autres données agronomiques</string>
        <string notr="true">QLineEdit { margin: 4px }</string>
       </property>
       <property name="title">
-       <string/>
+       <string>Moyennes Inter Parcellaire : précisez vos contours</string>
       </property>
       <property name="checkable">
        <bool>false</bool>
@@ -875,38 +875,38 @@ vos autres données agronomiques</string>
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
        </property>
       </widget>
-      <widget class="QCheckBox" name="checkBoxContourSolo">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>0</y>
-         <width>571</width>
-         <height>26</height>
-        </rect>
-       </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>9</pointsize>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Vous savez pas ce que sont des contours ou vous n'avez pas de contours de votre parcellaire. L'extension peut générer le contour entourant vos mesures Physiocap. Ce contour généré se trouve dans le répertoire cible des données calculées. Il se nomme &amp;quot;contour généré.csv&amp;quot;.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous avez capturé une seule parcelle., cette solution est opérationnelle. Par contre, si vous avez capturés plusieurs ilots :&lt;br/&gt;- si les ilots sont contigüs, le contour généré regroupera tous ces îlots&lt;br/&gt;- si les îlots sont éloignés, le contour généré devient incohérent en particulier pour les interpolation.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : vous pouvez générer un contour incohérent et le modifier dans QGIS pour qu'il deviennent votre couche de contour. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="text">
-        <string>Pas de couche contour : création d'une délimitation à partir des points bruts </string>
-       </property>
-       <property name="checked">
-        <bool>false</bool>
-       </property>
-      </widget>
+     </widget>
+     <widget class="QCheckBox" name="checkBoxContourSolo">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>591</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Vous savez pas ce que sont des contours ou vous n'avez pas de contours de votre parcellaire. L'extension peut générer le contour entourant vos mesures Physiocap. Ce contour généré se trouve dans le répertoire cible des données calculées. Il se nomme &amp;quot;contour généré.csv&amp;quot;.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous avez capturé une seule parcelle., cette solution est opérationnelle. Par contre, si vous avez capturés plusieurs ilots :&lt;br/&gt;- si les ilots sont contigüs, le contour généré regroupera tous ces îlots&lt;br/&gt;- si les îlots sont éloignés, le contour généré devient incohérent en particulier pour les interpolation.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce : vous pouvez générer un contour incohérent et le modifier dans QGIS pour qu'il deviennent votre couche de contour. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="text">
+       <string>Pas de couche contour : création d'une délimitation à partir des points bruts </string>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
+      </property>
      </widget>
     </widget>
     <widget class="QGroupBox" name="groupBoxIntra">
@@ -1316,13 +1316,10 @@ Si vous hésitez, trouvez du conseil. </string>
        <number>2040</number>
       </property>
       <property name="singleStep">
-       <number>2</number>
+       <number>1</number>
       </property>
       <property name="value">
        <number>2000</number>
-      </property>
-      <property name="displayIntegerBase">
-       <number>10</number>
       </property>
      </widget>
      <widget class="QLabel" name="label_8">
@@ -5966,7 +5963,7 @@ DIAM, SARM, BIOM,...) </string>
        <rect>
         <x>50</x>
         <y>284</y>
-        <width>111</width>
+        <width>171</width>
         <height>21</height>
        </rect>
       </property>
@@ -5980,7 +5977,7 @@ DIAM, SARM, BIOM,...) </string>
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Vous aussi contribuez à l'extension qui vous garantit de garder la maîtrise de vos mesures Physiocap. Le capteur vous permet de prendre possession de vos mesures. L'extension vous autorise à rester maître de leurs utilisations.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="text">
-       <string>Contributeurs : </string>
+       <string>Autres contributeurs : </string>
       </property>
      </widget>
      <widget class="QLabel" name="label_CIVC">
@@ -6015,7 +6012,7 @@ DIAM, SARM, BIOM,...) </string>
        </font>
       </property>
       <property name="text">
-       <string>Auteurs :</string>
+       <string>Auteurs</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_501">
@@ -6038,7 +6035,7 @@ DIAM, SARM, BIOM,...) </string>
        </font>
       </property>
       <property name="text">
-       <string>Version 3.10.9 &quot;3 cas lecture agro&quot;</string>
+       <string>Version 3.10.9 &quot;Agro par parcelle&quot;</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_500">
@@ -6138,10 +6135,10 @@ DIAM, SARM, BIOM,...) </string>
      <widget class="QLabel" name="label_504">
       <property name="geometry">
        <rect>
-        <x>220</x>
-        <y>30</y>
-        <width>151</width>
-        <height>21</height>
+        <x>190</x>
+        <y>20</y>
+        <width>331</width>
+        <height>31</height>
        </rect>
       </property>
       <property name="font">
@@ -6151,7 +6148,8 @@ DIAM, SARM, BIOM,...) </string>
        </font>
       </property>
       <property name="text">
-       <string>Contributions pour V3 :</string>
+       <string>Contributions majeures
+Profil champagne                Version 3</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_TAITTINGER">
@@ -6240,7 +6238,7 @@ DIAM, SARM, BIOM,...) </string>
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>320</y>
+        <y>450</y>
         <width>591</width>
         <height>131</height>
        </rect>

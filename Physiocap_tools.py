@@ -47,6 +47,7 @@ from qgis.core import (Qgis, QgsDistanceArea, QgsProject, QgsMessageLog,  \
         QgsProcessingFeedback, QgsVectorLayer) 
 from PyQt5.QtWidgets import QMessageBox
 
+import shutil
 import glob
 try :
     from osgeo import ogr
@@ -349,12 +350,15 @@ def structure_informations_vignoble( self, format_sortie ='CSV'):
     dictEnteteVignoble[ "poids_moy_grappes"]       = [ "Poids_moye", "entier",  "Poids_moye"]      
     dictEnteteVignoble[ "nb_grappes"]       = [ "Nombre_gra", "entier",  "Nombre_gra"]      
     
-    # Requis, on trouve le nom pour chaque cas de format de sortie (CSV ou SHP
+    # Requis, on trouve le nom pour chaque cas de format de sortie (CSV ou SHP)
     champs_vignoble_requis = [ "campagne", "nom_parcelle", "interrangs", "interceps", "hauteur", "densite"]
+    champs_agro_fichier = []
+    for champ in champsVignobleOrdonnes:
+        champs_agro_fichier.append( dictEnteteVignoble[champ][ position_dic])
     champs_vignoble_requis_fichier = []
     for champ in champs_vignoble_requis:
         champs_vignoble_requis_fichier.append( dictEnteteVignoble[champ][ position_dic])
-    return champsVignobleOrdonnes, champs_vignoble_requis, champs_vignoble_requis_fichier, dictEnteteVignoble
+    return champsVignobleOrdonnes, champs_agro_fichier,  champs_vignoble_requis, champs_vignoble_requis_fichier, dictEnteteVignoble
     
 def quelles_informations_vignoble_source_onglet( self, format_sortie ='CSV'):
     """ Mettre les valeurs d'info vignobles dans l'ordre et dans un dict 
@@ -364,7 +368,7 @@ def quelles_informations_vignoble_source_onglet( self, format_sortie ='CSV'):
         position_dic = 0
     else:
         position_dic = 2
-    champsVignobleOrdonnes, champs_vignoble_requis, champs_vignoble_requis_fichier, dictEnteteVignoble \
+    champsVignobleOrdonnes, champs_agro_fichier, champs_vignoble_requis, champs_vignoble_requis_fichier, dictEnteteVignoble \
         = structure_informations_vignoble( self)
     dictInfoVignoble = {}
     valeurNA = ""    
@@ -431,7 +435,7 @@ def quel_qml_existe( qml_court, repertoire_template, repertoire_secours):
             return le_template
     return None
 
-def quel_CHEMIN_templates(self):
+def quel_chemin_templates(self):
     self.dans_Quel_Settings()
     Nom_Profil =  self.fieldComboProfilPHY.currentText()
     # Remplissage de la liste de CHEMIN_TEMPLATES
@@ -680,11 +684,11 @@ def quelle_campagne( self, premiere_info_mid):
 #    precedent = False
 #    if self.radioButtonNordPrecedent.isChecked() or self.radioButtonSudPrecedent.isChecked():
 #    precedent = True
-    hemi = "Nord" if self.radioButtonNordPrecedent.isChecked() else "Sud"
+    hemisphere = "Nord" if self.radioButtonNordPrecedent.isChecked() else "Sud"
     mon_info = premiere_info_mid.split(";")
     date_mid = mon_info[ 2]
     annee, mois = date_mid[0:7].split("-")
-    if hemi == "Nord":
+    if hemisphere == "Nord":
         if mois in ["01", "02", "03", "04"]:
             campagne_int = int( annee) - 1
         else:
@@ -692,7 +696,7 @@ def quelle_campagne( self, premiere_info_mid):
     else: # SUD
         campagne_int = int( annee)
 #    physiocap_log( "Données {} an {} mois {} hémisphere {} : campagne {}".\
-#        format( mon_info, annee, mois, hemi, str( campagne_int)))
+#        format( mon_info, annee, mois, hemisphere, str( campagne_int)))
     return str( campagne_int)
 
 def quelle_liste_attributs( self, vecteur):
@@ -758,7 +762,7 @@ def inclure_vignoble_sur_contour(self, chemin_fichier_convex, ss_groupe=None):
 # Fonction pour générer le CSVT : csv avec info agro, moyenne et geometrie en WKT
 def assert_champs_agro_obligatoires( dialogue, vecteur_poly):
     # Controler les champs obligatoires
-    champsVignobleOrdonnes, champs_vignoble_requis, champs_vignoble_requis_fichier, dictEnteteVignoble = \
+    champsVignobleOrdonnes, champs_agro_fichier, champs_vignoble_requis, champs_vignoble_requis_fichier, dictEnteteVignoble = \
         structure_informations_vignoble( dialogue)
     champExistants = quelle_liste_attributs( dialogue, vecteur_poly) 
     for champ in champs_vignoble_requis_fichier:
@@ -771,7 +775,7 @@ def assert_champs_agro_obligatoires( dialogue, vecteur_poly):
     liste_uniques = []
     modele_agro_retenu = {}
     # TODO CAMPAGNE Trier nom et campagne( ? Coallenscence ie champs_vignoble_requis_fichier[0]) et vérifier cas NULL
-    for un_contour in vecteur_poly.getFeatures(QgsFeatureRequest().\
+    for un_contour in vecteur_poly.getFeatures( QgsFeatureRequest().\
         addOrderBy( champs_vignoble_requis_fichier[1])): #, champs_vignoble_requis_fichier[0])):
         un_nom = un_contour[ champs_vignoble_requis_fichier[1]]
         une_campagne = un_contour[ champs_vignoble_requis_fichier[0]]
@@ -790,8 +794,8 @@ def assert_champs_agro_obligatoires( dialogue, vecteur_poly):
         nombre_contours = nombre_contours + 1
     # le dernier
     modele_agro_retenu[ parcelle_en_cours] = nom_unique # le precedent
-    #physiocap_log( "Liste tous {0}".format( liste_uniques), TRACE_JH)
-    #physiocap_log( "Liste parcelles agro {0}".format( les_parcelles_agro), TRACE_JH)
+    physiocap_log( "Liste tous {0}".format( liste_uniques), TRACE_JH)
+    physiocap_log( "Liste parcelles agro {0}".format( les_parcelles_agro), TRACE_JH)
     for parcelle in les_parcelles_agro:
         try:
             un_unique = modele_agro_retenu[ parcelle]
@@ -799,26 +803,177 @@ def assert_champs_agro_obligatoires( dialogue, vecteur_poly):
         except:
             physiocap_error( "Parcelle {} orpheline de données agro ".format( parcelle), TRACE_JH)
             pass
-    return champsVignobleOrdonnes, champs_vignoble_requis, champs_vignoble_requis_fichier, dictEnteteVignoble, \
+    return champsVignobleOrdonnes, champs_agro_fichier, champs_vignoble_requis, champs_vignoble_requis_fichier, dictEnteteVignoble, \
                 champExistants, les_parcelles_agro, modele_agro_retenu        
 
-def creer_csvt_source_onglet( self, les_parcelles,  les_geoms_poly, les_moyennes_par_contour):
+def quelles_listes_info_agro(self): 
+    """ Trouver les informations agro de toutes les parcelles"""
+    Nom_Profil =  self.fieldComboProfilPHY.currentText()
+    repertoire_data = self.lineEditDirectoryPhysiocap.text()
+    if Nom_Profil != 'Champagne':
+        raise physiocap_exception_agro_profil( 'Champagne')
+        return None,  None, None
+    else:
+        # On prend un eventuel shp ou CSV dans rep des données brutes
+        nom_vecteur, nom_court_vecteur,  libelle = quel_vecteur_dans_donnees_brutes( repertoire_data)
+        if ((nom_vecteur != None) and len( nom_vecteur) > 0):                
+            node_layer = nom_court_vecteur + SEPARATEUR_NOEUD + libelle + \
+                SEPARATEUR_NOEUD + nom_vecteur
+            self.comboBoxPolygone.addItem( node_layer)
+
+        _, _, origine_poly, vecteur_poly = quel_sont_vecteurs_choisis( self, "Filtrer")
+
+        if ( vecteur_poly == None) or ( not vecteur_poly.isValid()):
+            aText = self.tr( "Le contour précisant vos données agronomiques n'est pas valide pour QGIS. Vérifiez-le dans QGIS=> Vecteur => Vérifier la validité ")
+            aText = aText + self.tr( "Créer une nouvelle session Physiocap - bouton Filtrer les données brutes - ")
+            physiocap_error( self, aText, "CRITICAL")
+            return physiocap_message_box( self, aText, "information" ) 
+
+        champsVignobleOrdonnes, champs_agro_fichier, champs_vignoble_requis, champs_vignoble_requis_fichier, dictEnteteVignoble, \
+            champExistants, les_parcelles_agro, modele_agro_retenu = \
+            assert_champs_agro_obligatoires( self, vecteur_poly)
+
+        les_infos_agronomique = []
+        les_infos_vignoble = []
+        les_geometries_agronomique = []
+        infos_agronomique_en_cours = {} # Conteneur avec le nom des champs
+        # CSV
+        if origine_poly == "AGRO_CSV":
+            indice_dict_Entete = 0
+            nom_champ_geom = CSV_GEOM
+        if origine_poly == "AGRO_SHP":
+            indice_dict_Entete = 2
+            nom_champ_geom = "geom"
+        physiocap_log( "Type de vecteur {} et geom attendu{}".format( origine_poly, nom_champ_geom))
+        for un_contour in vecteur_poly.getFeatures(QgsFeatureRequest().addOrderBy( champs_vignoble_requis_fichier[1])):
+            # CSV
+            nom_parcelle = dictEnteteVignoble[champsVignobleOrdonnes[1]][indice_dict_Entete]
+            un_nom = un_contour[ nom_parcelle]
+            if un_nom not in les_parcelles_agro:
+                continue
+            # Champs requis on tester la présence et le type
+            for pos_champ, le_champ in enumerate( champs_vignoble_requis):
+                champ_fichier = champs_vignoble_requis_fichier[ pos_champ]
+                try:
+                    # TODO DURCIR  tester les types
+                    #type_attendu = dictEnteteVignoble[ champ][1]
+                    infos_agronomique_en_cours[ le_champ] = un_contour[ champ_fichier]
+                except:
+                    # TODO DURCIR Attraper exception champ non existant dans contour et tester les types
+                    raise physiocap_exception_agro_obligatoire( "{} obligatoire (les champs obligatoires sont {}".\
+                        format( champ_fichier, champs_vignoble_requis_fichier))
+            les_infos_vignoble.append( infos_agronomique_en_cours)
+            # Autres champs agro
+            for pos_champ, le_champ in enumerate( champs_agro_fichier):
+#                if le_champ in champs_vignoble_requis:
+#                    continue
+                champ_fichier = champs_agro_fichier[ pos_champ]
+                infos_agronomique_en_cours[ champ_fichier] = un_contour[ champ_fichier]
+            les_infos_agronomique.append( infos_agronomique_en_cours)
+            infos_agronomique_en_cours = {}
+            # Geometrie
+            if origine_poly == "AGRO_CSV":
+                try:
+                    les_geometries_agronomique.append(  un_contour.geometry())
+                except:
+                    physiocap_error("Contour CSV n'a pas de géométrie")
+                    raise
+            else:
+                les_geometries_agronomique.append(  un_contour.geometry())
+        physiocap_log( "Synthèse Info Agro : {}".format( les_infos_agronomique),  TRACE_JH)
+        #physiocap_log( "Synthèse geom : {}".format( les_geometries_agronomique))
+
+        return les_parcelles_agro, les_geometries_agronomique, les_infos_agronomique, les_infos_vignoble 
+ 
+
+def ajouter_csvt_source_contour( self, vecteur_poly, les_parcelles,  les_geoms_poly, les_moyennes_par_contour):
+    """Ajouter au CSVT AGRO les informations de moyennes calculées et du vignoble """
+    # Retrouver CSVT pour copie (quid du shp)
+    Repertoire_Donnees_Brutes = self.lineEditDirectoryPhysiocap.text()
+    campagne_en_cours = self.lineEditCampagne.text()
+    nom_vecteur, nom_court_vecteur,  libelle = \
+        quel_vecteur_dans_donnees_brutes( Repertoire_Donnees_Brutes)
+    if ((nom_vecteur != None) and len( nom_vecteur) > 0):
+       if libelle == "CSV NON OUVERT DANS QGIS":                
+            # Copier le CSV de contour
+            _, nom_CSVT = quel_nom_CSVT( self)        
+            shutil.copyfile( nom_vecteur, nom_CSVT)
+       else:
+           aText = "Dans le cas d'un shapefile, le CSVT de synthese n'est pas créé"
+           physiocap_message_box( aText, information)
+
+    # Récuperer les infos agro
+    les_parcelles_agro, les_vecteurs_agronomique, les_infos_agronomique, les_infos_vignoble = quelles_listes_info_agro(self)
+    champsMoyenneOrdonnes, listeEnteteMoyenne = quelles_informations_moyennes()    
+    # pour l'entete mais pas les infos saisie dans onglet
+    champsVignobleOrdonnes, _, dictInfoVignoble, _,  dictEnteteVignoble, listeEntete = \
+        quelles_informations_vignoble_source_onglet( self)    
+##    # ASSERT listes ont la même taille
+##    if (len( listeEntete) != len( listeInfo)):
+##        # TODO warning à logguer
+##        uMsg = "Liste entete CSVT ({}) et info vignoble ({}) n'ont pas la même taille".\
+##            format( len( listeEntete), len( listeInfo))
+##        physiocap_log( uMsg)
+##        return physiocap_error( self, uMsg)
+
+    # ASSERT Le fichier de synthese existe
+    if not os.path.isfile( nom_CSVT):
+        uMsg =u"Le CSVT " + nom_CSVT + " n'existe pas..."
+        physiocap_log( uMsg)
+        return physiocap_error( self, uMsg)
+    else:
+        # Ecriture CSVT avec agro et moyenne
+        fichier_CSVT = open( nom_CSVT, "a")
+        writerCSVT = csv.writer( fichier_CSVT, delimiter=CSV_DELIMITER_POINT_VIRGULE)        
+        # Ecriture de l'entête et des infos vignobles
+        writerCSVT.writerow( listeEntete + listeEnteteMoyenne +   [  CSV_GEOM])
+        # Boucler sur les parcelles
+        for parcelleId,  parcelleNom in enumerate( les_parcelles):
+            physiocap_log ( "AJOUT Physiocap moyenne de {} la {} ieme parcelle a pour diam : {}".
+            format( parcelleNom,  parcelleId, les_moyennes_par_contour[parcelleId].get( 'diam')), TRACE_JH)
+            geomContour = QgsGeometry.fromMultiPolygonXY( les_geoms_poly[ parcelleId])
+            # Calculer geomWKT à partir de geom du contour
+            geomWKT = str( geomContour.asWkt())
+            
+            lesMoyennesOrdonnees = []
+            for unChamp in champsMoyenneOrdonnes:
+                lesMoyennesOrdonnees.append( round( les_moyennes_par_contour[parcelleId].get( unChamp), 2)) 
+            physiocap_log ( "AJOUT Physiocap moyennes du contour {}: {}".\
+                format( les_parcelles[parcelleId], lesMoyennesOrdonnees), TRACE_JH)
+            listeInfo = []
+            for un_champ in listeEntete:
+                if un_champ == 'Nom_Parcel':
+                    listeInfo.append( parcelleNom)
+                    continue
+                if un_champ == 'Campagne':
+                    listeInfo.append( campagne_en_cours)
+                    continue
+                #physiocap_log ( "Champ agro du contour {}".format( un_champ))
+                listeInfo.append( les_infos_agronomique[parcelleId].get( un_champ)) 
+            physiocap_log ( "AJOUT Physiocap agro du contour {}: {}".\
+                format( les_parcelles[parcelleId], listeInfo), TRACE_JH)
+                
+            writerCSVT.writerow( listeInfo  +  lesMoyennesOrdonnees + [ geomWKT])
+        fichier_CSVT.close()
+    
+    return 0
+   
+def creer_csvt_source_onglet( self, les_parcelles, les_geoms_poly, les_moyennes_par_contour):
     """Créer CSVT avec les informations de moyenne & l'onglet Agronomie"""
     #leModeDeTrace = self.fieldComboModeTrace.currentText()
     # Récupération des moyennes du contour
     lesMoyennesOrdonnees = []
     champsMoyenneOrdonnes, listeEnteteMoyenne = quelles_informations_moyennes()    
-    physiocap_log ( "Physiocap parcelles : {}".format( les_parcelles), TRACE_JH)
-    physiocap_log ( "Physiocap moyennes par contour : {}".format( les_moyennes_par_contour), TRACE_JH)
-    #physiocap_log ( "Physiocap geom de contour : {}".format( les_geoms_poly), TRACE_JH)
+    physiocap_log ( "CREER Physiocap parcelles : {}".format( les_parcelles), TRACE_JH)
+    physiocap_log ( "CREER Physiocap moyennes par contour : {}".format( les_moyennes_par_contour), TRACE_JH)
     for parcelleId,  parcelleNom in enumerate( les_parcelles):
-        physiocap_log ( "Physiocap moyenne de {} la {} ieme parcelle a pour diam : {}".
+        physiocap_log ( "CREER Physiocap moyenne de {} la {} ieme parcelle a pour diam : {}".
         format( parcelleNom,  parcelleId, les_moyennes_par_contour[parcelleId].get( 'diam')), TRACE_JH)
         geomContour = QgsGeometry.fromMultiPolygonXY( les_geoms_poly[ parcelleId])
 
         for unChamp in champsMoyenneOrdonnes:
-            lesMoyennesOrdonnees.append( les_moyennes_par_contour[parcelleId].get( unChamp)) 
-    physiocap_log ( "Physiocap moyennes du contour {}: {}".\
+            lesMoyennesOrdonnees.append( round( les_moyennes_par_contour[parcelleId].get( unChamp), 1)) 
+    physiocap_log ( "CREER Physiocap moyennes du contour {}: {}".\
         format( les_parcelles[parcelleId], lesMoyennesOrdonnees), TRACE_JH)
     # Calculer geomWKT à partir de geom du contour
     geomWKT = str( geomContour.asWkt())
@@ -830,7 +985,7 @@ def creer_csvt_source_onglet( self, les_parcelles,  les_geoms_poly, les_moyennes
     # ASSERT listes ont la même taille
     if (len( listeEntete) != len( listeInfo)):
         # TODO warning à logguer
-        uMsg = "Liste entete CSVT ({}) et info vignoble ({}) n'ont pas la même taille".\
+        uMsg = "CREER Liste entete CSVT ({}) et info vignoble ({}) n'ont pas la même taille".\
             format( len( listeEntete), len( listeInfo))
         physiocap_log( uMsg)
         return physiocap_error( self, uMsg)
@@ -843,7 +998,6 @@ def creer_csvt_source_onglet( self, les_parcelles,  les_geoms_poly, les_moyennes
     else:
         # Ecriture CSVT avec agro et moyenne
         fichier_CSVT = open( nom_CSVT, "w")
-    #try:
         writerCSVT = csv.writer( fichier_CSVT, delimiter=CSV_DELIMITER_POINT_VIRGULE)
         # Ecriture de l'entête et des infos vignobles
         writerCSVT.writerow( listeEntete + listeEnteteMoyenne +   [  CSV_GEOM])
@@ -1226,7 +1380,7 @@ def quel_vecteur_dans_donnees_brutes( Repertoire_Donnees_Brutes):
         physiocap_log( "Aucun vecteur de type CSV dans répertoire des données brutes")
     else:
         return listeCSVTriee[0], os.path.basename( listeCSVTriee[0]), "CSV NON OUVERT DANS QGIS"
-    return None, None
+    return None, None, None
 
 def lister_MIDs_pour_synthese( repertoire, MIDs, synthese="xx"):
     """Fonction qui liste les MID.

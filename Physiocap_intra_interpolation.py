@@ -46,7 +46,7 @@ from .Physiocap_tools import ( physiocap_message_box,\
         physiocap_log, physiocap_error, physiocap_is_only_ascii, \
         physiocap_nom_entite_sans_pb_caractere,  physiocap_nom_entite_avec_pb_caractere, \
         physiocap_rename_existing_file, quelle_projection_et_lib_demandee, \
-        quel_CHEMIN_templates, quel_qml_existe, quel_sont_vecteurs_choisis, assert_champs_agro_obligatoires)
+        quel_chemin_templates, quel_qml_existe, quel_sont_vecteurs_choisis, assert_champs_agro_obligatoires)
 
 from .Physiocap_var_exception import *
 
@@ -574,31 +574,35 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     # Cas non tiff
                     nom_raster_final = nom_raster_clippe
             
-            QgsMessageLog.logMessage( "PHYSIOCAP : Avant isolignes SAGA {0}".\
-                format( nom_raster_final), "Processing", Qgis.Warning)
-                                            
-            # On passe ISO si nom_raster_final existe
-            if ( nom_raster_final != ""):
-                le_raster_final = QgsRasterLayer( nom_raster_final, nom_court_raster)                
-                ISO_SAGA = { 'GRID' : le_raster_final,
-                    'VERTEX' : 1,
-                    'ZMIN' : isoMin, 'ZMAX' : isoMax, 
-                    'ZSTEP' : isoInterlignes, 
-                    'CONTOUR' : nom_isoligne }
+            if dialogue.groupBoxIsolignes.isChecked():
+                QgsMessageLog.logMessage( "PHYSIOCAP : Avant isolignes SAGA {0}".\
+                    format( nom_raster_final), "Processing", Qgis.Warning)
+                                                
+                # On passe ISO si nom_raster_final existe
+                if ( nom_raster_final != ""):
+                    le_raster_final = QgsRasterLayer( nom_raster_final, nom_court_raster)                
+                    ISO_SAGA = { 'GRID' : le_raster_final,
+                        'VERTEX' : 1,
+                        'ZMIN' : isoMin, 'ZMAX' : isoMax, 
+                        'ZSTEP' : isoInterlignes, 
+                        'CONTOUR' : nom_isoligne }
+                        
+    #####                # Isolignes
+    #####                iso_dans_poly_brut = processing.runalg("saga:contourlinesfromgrid",
+    #####                    nom_raster_final,
+    #####                    isoMin, isoMax, isoInterlignes,
+    #####                    None)
+                    nom_iso_final = self.physiocap_appel_processing(dialogue, nom_point, \
+                        "ISO_SAGA", "saga:contourlines", \
+                        ISO_SAGA, "CONTOUR")
                     
-#####                # Isolignes
-#####                iso_dans_poly_brut = processing.runalg("saga:contourlinesfromgrid",
-#####                    nom_raster_final,
-#####                    isoMin, isoMax, isoInterlignes,
-#####                    None)
-                nom_iso_final = self.physiocap_appel_processing(dialogue, nom_point, \
-                    "ISO_SAGA", "saga:contourlines", \
-                    ISO_SAGA, "CONTOUR")
-                
-                le_raster_final = None
+                    le_raster_final = None
 
-            physiocap_log( self.tr( "=~= Interpolation SAGA - Fin iso - {0}").\
-                format( nom_iso_final), TRACE_INTRA)   
+                physiocap_log( self.tr( "=~= Interpolation SAGA - Fin iso - {0}").\
+                    format( nom_iso_final), TRACE_INTRA)   
+            else:
+                physiocap_log( self.tr( "=~= Interpolation SAGA - Fin raster - {0}").\
+                    format( nom_raster_final), TRACE_INTRA)   
                 
         elif choix_force_interpolation == "GDAL":
 ##            # Appel GDAL
@@ -645,19 +649,20 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 "CLIP_GDAL", "gdal:cliprasterbymasklayer", \
                 CLIP_GDAL, "OUTPUT")
                          
-            # On passe ETAPE ISO si nom_raster_final existe
-            if ( nom_raster_final != ""):
-                # Isolignes
-                ISO_GDAL = {'INPUT':nom_raster,
-                    'BAND' : 1,
-                    'INTERVAL' : isoInterlignes,
-                    'FIELD_NAME' : 'Z',
-                    'CREATE_3D' : True, 'IGNORE_NODATA' : False, 'NODATA' : 0, 'OFFSET' : 0,
-                    'OUTPUT' : nom_isoligne }
+            if dialogue.groupBoxIsolignes.isChecked():
+                # On passe ETAPE ISO si nom_raster_final existe
+                if ( nom_raster_final != ""):
+                    # Isolignes
+                    ISO_GDAL = {'INPUT':nom_raster,
+                        'BAND' : 1,
+                        'INTERVAL' : isoInterlignes,
+                        'FIELD_NAME' : 'Z',
+                        'CREATE_3D' : True, 'IGNORE_NODATA' : False, 'NODATA' : 0, 'OFFSET' : 0,
+                        'OUTPUT' : nom_isoligne }
 
-                nom_iso_final = self.physiocap_appel_processing( dialogue, nom_point, \
-                "ISO_GDAL", "gdal:contour", \
-                ISO_GDAL, "OUTPUT")
+                    nom_iso_final = self.physiocap_appel_processing( dialogue, nom_point, \
+                    "ISO_GDAL", "gdal:contour", \
+                    ISO_GDAL, "OUTPUT")
                 
         else:
             # Autres choix
@@ -691,8 +696,8 @@ class PhysiocapIntra( QtWidgets.QDialog):
         # Cas des INFO AGRO vignoble par fichier 
         if dialogue.checkBoxInfoVignoble.isChecked() and dialogue.radioButtonContour.isChecked():
             dialogue.progressBarIntra.setValue( 1)
-            champsVignobleOrdonnes, champs_vignoble_requis, champs_vignoble_requis_fichier, dictEnteteVignoble, \
-                champExistants, les_parcelles_agro, modele_agro_retenu  = \
+            champsVignobleOrdonnes, champs_agro_fichier, champs_vignoble_requis, champs_vignoble_requis_fichier, \
+                dictEnteteVignoble, champExistants, les_parcelles_agro, modele_agro_retenu  = \
                 assert_champs_agro_obligatoires( dialogue, vecteur_poly)       
 
         # Pour attribut en cours d'interpolation
@@ -894,8 +899,8 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     leChoixEncours = dialogue.fieldComboIntraDIAM.currentText()
                     if le_champ_choisi != leChoixEncours:
                         raise physiocap_exception_attribut_multiple_incoherent( leChoixEncours)
-                    physiocap_log( self.tr( "=~= {0} Synchro iso == {1} ==").\
-                        format( PHYSIOCAP_UNI, leChoixEncours), leModeDeTrace)                    
+#                    physiocap_log( self.tr( "=~= {0} Synchro iso == {1} ==").\
+#                        format( PHYSIOCAP_UNI, leChoixEncours), leModeDeTrace)                    
                     dialogue.spinBoxIsoMax.setValue( int( dialogue.spinBoxIsoMax_Fixe_DIAM.value()))
                     dialogue.spinBoxIsoMin.setValue( int( dialogue.spinBoxIsoMin_Fixe_DIAM.value()))
                     dialogue.spinBoxDistanceIso.setValue( int( dialogue.spinBoxIsoDistance_Fixe_DIAM.value()))                    
@@ -905,8 +910,8 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     leChoixEncours = dialogue.fieldComboIntraSARM.currentText()
                     if le_champ_choisi != leChoixEncours:
                         raise physiocap_exception_attribut_multiple_incoherent( leChoixEncours)
-                    physiocap_log( self.tr( "=~= {0} Synchro iso == {1} ==").\
-                        format( PHYSIOCAP_UNI, leChoixEncours), leModeDeTrace)                    
+#                    physiocap_log( self.tr( "=~= {0} Synchro iso == {1} ==").\
+#                        format( PHYSIOCAP_UNI, leChoixEncours), leModeDeTrace)                    
                     dialogue.spinBoxIsoMax.setValue( int( dialogue.spinBoxIsoMax_Fixe_SARM.value()))
                     dialogue.spinBoxIsoMin.setValue( int( dialogue.spinBoxIsoMin_Fixe_SARM.value()))
                     dialogue.spinBoxDistanceIso.setValue( int( dialogue.spinBoxIsoDistance_Fixe_SARM.value()))
@@ -916,8 +921,8 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     leChoixEncours = dialogue.fieldComboIntraBIOM.currentText()
                     if le_champ_choisi != leChoixEncours:
                         raise physiocap_exception_attribut_multiple_incoherent( leChoixEncours)
-                    physiocap_log( self.tr( "=~= {0} Synchro iso == {1} ==").\
-                        format( PHYSIOCAP_UNI, leChoixEncours), leModeDeTrace)                    
+#                    physiocap_log( self.tr( "=~= {0} Synchro iso == {1} ==").\
+#                        format( PHYSIOCAP_UNI, leChoixEncours), leModeDeTrace)                    
                     dialogue.spinBoxIsoMax.setValue( int( dialogue.spinBoxIsoMax_Fixe_BIOM.value()))
                     dialogue.spinBoxIsoMin.setValue( int( dialogue.spinBoxIsoMin_Fixe_BIOM.value()))
                     dialogue.spinBoxDistanceIso.setValue( int( dialogue.spinBoxIsoDistance_Fixe_BIOM.value()))
@@ -926,7 +931,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
 
             # Récupérer des styles pour chaque shape
             # Pour les templates
-            repertoire_template,  repertoire_secours = quel_CHEMIN_templates( dialogue)
+            repertoire_template,  repertoire_secours = quel_chemin_templates( dialogue)
             le_template_raster = quel_qml_existe( \
                 dialogue.lineEditThematiqueIntraImage.text().strip('"') + le_champ_choisi + EXTENSION_QML,  \
                 repertoire_template,  repertoire_secours)    
@@ -1181,7 +1186,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     # Progress BAR + un stepBar%
                     positionBar = positionBarInit + ( stepBar * id_contour)    
                     dialogue.progressBarIntra.setValue( positionBar)
-                    physiocap_log( "=~= Barre {0}".format( positionBar) , TRACE_INTRA)                     
+                    #physiocap_log( "=~= Barre {0}".format( positionBar) , TRACE_INTRA)                     
                        
                     if ( id_contour >  0 ):                                            
                         # Affichage dans panneau QGIS                           
