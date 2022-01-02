@@ -992,7 +992,7 @@ def ajouter_csvt_source_contour( self, vecteur_poly, les_parcelles,  les_geoms_p
         else:
             aText = "Dans le cas d'un shapefile AGRO, le CSVT de synthese ne contient pas les "
             aText = aText + "informations agro des autres campagnes"
-            physiocap_message_box( self, aText, "information")
+            physiocap_log( aText, "WARNING")
             exemple_CSV = os.path.join( os.path.join( self.plugin_dir, CHEMIN_DATA), 'exemple_vide_contour_vignoble.csv')        
             if os.path.isfile( exemple_CSV):
                 shutil.copyfile( exemple_CSV, nom_CSV)
