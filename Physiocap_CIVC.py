@@ -221,7 +221,7 @@ def physiocap_ferme_csv( csv_sans_0, csv_avec_0, csv_0_seul, diametre_filtre, er
 def calcul_detail_avec_info_agro_poly( num_poly, les_parcelles_agro, les_infos_vignoble, nbsarm,  biom):
     """ Calcul detaillé du point selon les valeurs agronomique de la parcelle"""
     physiocap_log( "{} Parcelle {} info agro {}".\
-        format( num_poly, les_parcelles_agro[num_poly], les_infos_vignoble[num_poly]),  TRACE_JH)
+        format( num_poly, les_parcelles_agro[num_poly], les_infos_vignoble[num_poly]),  TRACE_AGRO)
     try:
         eer = les_infos_vignoble[ num_poly][ "interrangs"]
         eec = les_infos_vignoble[ num_poly][ "interceps"]
@@ -234,7 +234,7 @@ def calcul_detail_avec_info_agro_poly( num_poly, les_parcelles_agro, les_infos_v
         biomgm2 = biom*d*hv/eer
         biomgcep = biom*d*hv*eec/100/100
     except:
-        physiocap_log("Exception durant les calculs détaillées pour le poly {}".format( num_poly),  TRACE_JH)
+        physiocap_log("Exception durant les calculs détaillées pour le contour {}".format( les_parcelles_agro[num_poly]),  TRACE_JH)
         raise
     return nbsarmm2, nbsarcep, biommm2, biomgm2, biomgcep
     
@@ -294,8 +294,9 @@ def physiocap_filtrer(self, nom_court_csv_concat, src, csv_sans_0, csv_avec_0, c
         # S'il existe des données parcellaire, le script travaille avec les données brutes et les données calculées
         titre = titre_sans_detail + titre_partie_details
         # TODO ? Signaler information à la parcelle dans synthese
-        if self.checkBoxInfoVignoble.isChecked() and self.radioButtonContour.isChecked():
-            les_parcelles_agro, les_vecteurs_agronomique, les_infos_agronomique, les_infos_vignoble = quelles_listes_info_agro(self)
+        if self.groupBoxDetailVignoble.isChecked() and self.checkBoxInfoVignoble.isChecked() and \
+           self.radioButtonContour.isChecked():
+            les_parcelles_agro, les_vecteurs_agronomique, _, les_infos_vignoble = quelles_listes_info_agro(self)
     # Ecriture de l'entete pour tous les cas
     csv_sans_0.write("{0}\n".format( titre)) 
     csv_avec_0.write("{0}\n".format( titre))
@@ -617,7 +618,8 @@ def physiocap_filtrer(self, nom_court_csv_concat, src, csv_sans_0, csv_avec_0, c
                     diam =sum(diamsF)/len(diamsF)
                     biom=3.1416*(diam/2)*(diam/2)*nbsarm
                     # CAS INFO AGRO par parcelles
-                    if self.checkBoxInfoVignoble.isChecked() and self.radioButtonContour.isChecked():
+                    if self.groupBoxDetailVignoble.isChecked() and self.checkBoxInfoVignoble.isChecked() and \
+                        self.radioButtonContour.isChecked():
                         num_poly = quel_poly_me_contient( self, le_point_projete, \
                             les_parcelles_agro, les_vecteurs_agronomique)
 ###                        if num_poly < 0 and tracer_une_fois < 2:
@@ -626,8 +628,8 @@ def physiocap_filtrer(self, nom_court_csv_concat, src, csv_sans_0, csv_avec_0, c
 ###                            else:
 ###                                physiocap_log("Point(s) hors parcellaire", leModeDeTrace, Warning)
 ###                            tracer_une_fois + 1
-                    if self.checkBoxInfoVignoble.isChecked() and self.radioButtonContour.isChecked() \
-                        and num_poly >= 0:    
+                    if self.groupBoxDetailVignoble.isChecked() and self.checkBoxInfoVignoble.isChecked() and \
+                       self.radioButtonContour.isChecked() and num_poly >= 0:    
                         nbsarmm2, nbsarcep, biommm2, biomgm2, biomgcep = \
                             calcul_detail_avec_info_agro_poly( num_poly, les_parcelles_agro, \
                                 les_infos_vignoble, nbsarm,  biom)

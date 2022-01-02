@@ -479,7 +479,7 @@
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit du nom qui identifie votre session de travail. Ce nom sert de répertoire de base pour les données produites par l'extension Physiocap. Il sert aussi de préfixe pour les données créées.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-style:italic; color:#00aa00;&quot;&gt;Astuce 1 : Choisir un nom court, décrivant clairement votre jeu de données.&lt;br/&gt;Astuce 2 : Difficile de matérialiser l'impact de ce nom : choissiez SESSION et regardez dans le nommage de votre repertoire cible les impacts.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Si vous lancez plusieurs itérations (bouton OK), ce nom se completera du suffixe [1] puis [2] jusqu'à [n] . Le plus grand numéro correspond à la dernière itération.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="inputMethodHints">
-       <set>Qt::ImhDialableCharactersOnly</set>
+       <set>Qt::ImhNone</set>
       </property>
       <property name="maxLength">
        <number>50</number>
@@ -496,7 +496,7 @@
        <rect>
         <x>5</x>
         <y>120</y>
-        <width>511</width>
+        <width>571</width>
         <height>21</height>
        </rect>
       </property>
@@ -514,7 +514,7 @@
        </font>
       </property>
       <property name="text">
-       <string>Session Physiocap (nom du répertoire et préfixes des données générées)</string>
+       <string>Session Physiocap (nom en MAJUSCULES du répertoire et préfixes des données générées)</string>
       </property>
      </widget>
     </widget>
@@ -3006,7 +3006,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </rect>
       </property>
       <property name="text">
-       <string>Contour</string>
+       <string>Contour généré</string>
       </property>
       <property name="checked">
        <bool>true</bool>
@@ -3928,7 +3928,7 @@ DIAM, SARM, BIOM,...) </string>
        <string>Arret si le groupe existe</string>
       </property>
      </widget>
-     <widget class="QLabel" name="lab_79">
+     <widget class="QLabel" name="lab_MultiplieRayon">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -5822,7 +5822,7 @@ DIAM, SARM, BIOM,...) </string>
     <widget class="QGroupBox" name="groupBox">
      <property name="geometry">
       <rect>
-       <x>5</x>
+       <x>0</x>
        <y>10</y>
        <width>611</width>
        <height>611</height>
@@ -6266,7 +6266,7 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="geometry">
        <rect>
-        <x>140</x>
+        <x>110</x>
         <y>590</y>
         <width>311</width>
         <height>21</height>
@@ -6418,6 +6418,25 @@ p, li { white-space: pre-wrap; }
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Il s'agit du champ de votre contour qui identifie chacune de vos parcelles. Dans la moyenne Inter Parcellaire, ce champ se nomme NOM_PHY. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Attention : seuls les champs ayant une valeur différente pour chaque parcelle sont proposés.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
      </widget>
+     <widget class="QCheckBox" name="checkBoxDoubleEnteteCSV">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>440</x>
+        <y>586</y>
+        <width>161</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Double entête dans CSV</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
      <zorder>label_Contributions</zorder>
      <zorder>buttonContribuer</zorder>
      <zorder>label_506</zorder>
@@ -6441,6 +6460,7 @@ p, li { white-space: pre-wrap; }
      <zorder>lab_42</zorder>
      <zorder>fieldPbGdal</zorder>
      <zorder>textBrowserAide</zorder>
+     <zorder>checkBoxDoubleEnteteCSV</zorder>
     </widget>
    </widget>
   </widget>

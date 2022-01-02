@@ -131,7 +131,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         #self.groupBoxInter.setEnabled( False)
         
         # Intra        
-        # TODO supprimer self.comboBoxPoints.currentIndexChanged[int].connect( self.slot_INTER_INTRA_maj_points_choix )
         self.fieldComboIntra.currentIndexChanged[int].connect( self.slot_INTRA_min_max_champ )
         self.spinBoxIsoMin_Fixe_DIAM.valueChanged.connect( self.slot_INTRA_DIAM_min_max_fixe )
         self.spinBoxIsoMax_Fixe_DIAM.valueChanged.connect( self.slot_INTRA_DIAM_min_max_fixe )
@@ -490,6 +489,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.groupBoxFiltrer.setEnabled( False)
             # Inter Intra
             self.groupBoxInter.setEnabled( True)
+            self.groupBoxContourInter.setEnabled( True)
             self.groupBoxIntra.setEnabled( True)
             # Autoriser de continuer les cas d'intra
             self.checkBoxArret.setChecked( Qt.Unchecked)
@@ -524,6 +524,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.slot_PROFIL_INTRA_maj_attributs_interpolables( Nom_Profil)
             
             self.checkBoxIntraPDF.setChecked( Qt.Checked)
+            # Afficher le contour généré
+            self.checkBoxContour.setChecked( Qt.Checked)
             # Pas d'isoligne
             self.checkBoxIntraUnSeul.setChecked( Qt.Unchecked)
             self.checkBoxIntraIsos.setChecked( Qt.Unchecked)
@@ -538,14 +540,15 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.spinBoxMaxDiametre.setValue( 22)
             self.spinBoxMaxSarmentsParMetre.setValue( 25)
             self.groupBoxFiltrer.setEnabled( True)
+            self.checkBoxContour.setChecked( Qt.Checked)
             self.groupBoxDetailVignoble.setEnabled( True)
             self.label_PH.setEnabled( True)            
             self.doubleSpinBoxPH.setEnabled( True)            
-            self.groupBoxInter.setEnabled( True)
+            self.groupBoxContourInter.setEnabled( True)
             self.checkBoxTroisActions.setChecked( Qt.Unchecked)
             self.groupBoxDetailVignoble.setChecked( Qt.Checked)
             self.checkBoxInfoVignoble.setChecked( Qt.Checked)
-            self.groupBoxIntra.setEnabled( False)
+            self.groupBoxIntra.setEnabled( False)    # déclencher apres filtrer & inter
             self.groupBoxThemaTrace.setEnabled( False)
             self.groupBoxVignoble.setEnabled( True)
             self.groupBoxIsolignes.setChecked( Qt.Checked)
@@ -559,11 +562,12 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.spinBoxMaxDiametre.setValue( 18)
             self.spinBoxMaxSarmentsParMetre.setValue( 25)
             self.groupBoxFiltrer.setEnabled( True)
-            self.groupBoxInter.setEnabled( True)
+            self.checkBoxContour.setChecked( Qt.Checked)
+            self.groupBoxContourInter.setEnabled( True)   
+            self.groupBoxIntra.setEnabled( False)     # déclencher apres filtrer & inter
             self.checkBoxTroisActions.setChecked( Qt.Unchecked)
             self.groupBoxDetailVignoble.setChecked( Qt.Checked)
             self.checkBoxInfoVignoble.setChecked( Qt.Checked)
-            self.groupBoxIntra.setEnabled( True)
             # Autoriser de continuer les cas d'intra
             self.checkBoxArret.setChecked( Qt.Checked)
             self.fieldComboIntraContinue.clear()
@@ -572,6 +576,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.groupBoxVignoble.setEnabled( True)
             self.label_PH.setEnabled( True)            
             self.doubleSpinBoxPH.setEnabled( True)            
+            self.groupBoxMethode.setEnabled( True)
             self.groupBoxExpertOuvert.setEnabled( True)
             self.groupBoxThemaTrace.setEnabled( True)
             self.groupBoxIsolignes.setChecked( Qt.Checked)
@@ -580,14 +585,14 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             physiocap_error( "Dans slot_PROFIL {} est inconnu ".format ( Nom_Profil), TRACE_PROFIL)
         physiocap_log( "PROFIL {} est initialisé".format ( Nom_Profil), TRACE_PROFIL)
 
-    def dans_Quel_Settings( self, nomSettings=PHYSIOCAP_NOM_3):
+    def dans_Quel_Settings( self, nomSettings=PHYSIOCAP_NOM_3+".4"):
         self.settings= QSettings(PHYSIOCAP_NOM, nomSettings)
         
     def memoriser_tous_Settings( self):
         """ Utilisation des settings de QT
             Organisation des initialisation commence  dans Physiocap puis 
             pour affichage, style, agro, expert, inter & intra 
-            TODO : "PROFIL" bascules
+            TODO: ?V3.x ENVISAGEABLE avec plusieurs profils : "PROFIL" bascules
             Pour les profils, on memorise l'initialisation d'un profil (premier passage) 
                 - dans Profil/nom_du_profil et le dernier profil actif pour les changements.
                 - et dans nom_du_profil/ on conserve les valeurs particulières, les check box ou group box    
@@ -621,17 +626,17 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         VALEUR_PROFIL_INITIALISE = 'Initialisé'
         existeChampagne = self.settings.value("Profil/Champagne", "inconnu")
         if ( existeChampagne ==  "inconnu"):
-            self.settings.setValue("Champagne/attributIntraFixe_1", self.fieldComboIntraDIAM.currentText())
+            self.settings.setValue("Champagne/attributIntraFixe_1", "DIAM")
             self.settings.setValue("Champagne/isoMinFixe_1",  self.spinBoxIsoMin_Fixe_DIAM.value())
             self.settings.setValue("Champagne/isoMaxFixe_1",  self.spinBoxIsoMax_Fixe_DIAM.value())
             self.settings.setValue("Champagne/isoDistanceFixe_1",  self.spinBoxIsoDistance_Fixe_DIAM.value())
 
-            self.settings.setValue("Champagne/attributIntraFixe_2", self.fieldComboIntraSARM.currentText())
+            self.settings.setValue("Champagne/attributIntraFixe_2", "NBSARCEP")
             self.settings.setValue("Champagne/isoMinFixe_2",  self.spinBoxIsoMin_Fixe_SARM.value())
             self.settings.setValue("Champagne/isoMaxFixe_2",  self.spinBoxIsoMax_Fixe_SARM.value())
             self.settings.setValue("Champagne/isoDistanceFixe_2",  self.spinBoxIsoDistance_Fixe_SARM.value())
 
-            self.settings.setValue("Champagne/attributIntraFixe_3", self.fieldComboIntraBIOM.currentText())
+            self.settings.setValue("Champagne/attributIntraFixe_3", "BIOMGCEP")
             self.settings.setValue("Champagne/isoMinFixe_3",  self.spinBoxIsoMin_Fixe_BIOM.value())
             self.settings.setValue("Champagne/isoMaxFixe_3",  self.spinBoxIsoMax_Fixe_BIOM.value())
             self.settings.setValue("Champagne/isoDistanceFixe_3",  self.spinBoxIsoDistance_Fixe_BIOM.value())
@@ -687,7 +692,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         elif Nom_Profil == 'Fronton':
             LISTE_REGION = ['Vins du Sud Ouest']
         else:
-            # TODO: "PROFIL" regions
             LISTE_REGION = ['_']
         if len( LISTE_REGION) == 0:
             self.comboBoxRegion.clear( )
@@ -1113,6 +1117,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
     # INTRA
     def slot_INTRA_DIAM_min_max_fixe( self ):
         """ Vérifie si min et max du choix fixe DIAM sont cohérents"""
+        if not self.groupBoxIsolignes.isChecked():
+            return
         mon_champ = self.fieldComboIntraDIAM.currentText()
         min_entier = round( float ( self.spinBoxIsoMin_Fixe_DIAM.value()))
         le_max = float ( self.spinBoxIsoMax_Fixe_DIAM.value())      
@@ -1124,6 +1130,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         return
     def slot_INTRA_SARM_min_max_fixe( self ):
         """ Vérifie si min et max du choix fixe SARM sont cohérents"""
+        if not self.groupBoxIsolignes.isChecked():
+            return
         mon_champ = self.fieldComboIntraSARM.currentText()
         min_entier = round( float ( self.spinBoxIsoMin_Fixe_SARM.value()))
         le_max = float ( self.spinBoxIsoMax_Fixe_SARM.value())      
@@ -1135,6 +1143,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         return
     def slot_INTRA_BIOM_min_max_fixe( self ):
         """ Vérifie si min et max du choix fixe BIOM sont cohérents"""
+        if not self.groupBoxIsolignes.isChecked():
+            return
         mon_champ = self.fieldComboIntraBIOM.currentText()
         min_entier = round( float ( self.spinBoxIsoMin_Fixe_BIOM.value()))
         le_max = float ( self.spinBoxIsoMax_Fixe_BIOM.value())      
@@ -1159,6 +1169,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         if self.radioButtonSAGA.isChecked():
             self.spinBoxPixel.setEnabled( True)
             self.spinBoxMultiplieRayon.setEnabled( False)
+            self.lab_MultiplieRayon.setEnabled( False)
             if self.radioButtonL93.isChecked():
                 aText = self.tr( "{0} conseille un rayon d'interpolation entre 5 et 15").\
                     format( PHYSIOCAP_UNI)
@@ -1171,6 +1182,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         if self.radioButtonGDAL.isChecked():
             self.spinBoxPixel.setEnabled( False)
             self.spinBoxMultiplieRayon.setEnabled( True)
+            self.lab_MultiplieRayon.setEnabled( True)
             if self.radioButtonL93.isChecked():
                 # Proposer un texte
                 aText = self.tr( "{0} conseille un rayon d'interpolation proche de 5").\
@@ -1368,7 +1380,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         """ 
         Recherche du la distance optimale tenant compte de min et max et du nombre d'intervalle
         """
-        # retrouve sans QT
+        if not self.groupBoxIsolignes.isChecked():
+            return
         #leModeDeTrace = self.fieldComboModeTrace.currentText()
         min_entier = round( float ( self.spinBoxIsoMin.value()))
         le_max = float ( self.spinBoxIsoMax.value())      
@@ -1453,7 +1466,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
 
         leModeDeTrace = self.fieldComboModeTrace.currentText()
 
-        # TODO Trouver le fichier de points à partie de la session
+        # TODO: ?V3.z Trouver le fichier de points à partie de la session
         nom_complet_point = self.comboBoxPoints.currentText().split( SEPARATEUR_NOEUD)
         if ( len( nom_complet_point) != 3):
             aText = self.tr( "Le shape de points n'est pas choisi. ")
@@ -1501,7 +1514,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             physiocap_log_for_error( self)
             aText = self.tr( "L'interpolation n'a pas créé d'image raster pour {0}. ").\
                 format( e)
-            aText = aText + self.tr( "\nVous pouvez contacter le support avec vos traces et données brutes")
+            aText = aText + self.tr( "\nVérifier si le nom de la session ne contient pas d'accents et relancer l'interpolation")
+            aText = aText + self.tr( "\nSinon, vous pouvez contacter le support avec vos traces et données brutes")
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )                
         except physiocap_exception_raster_ou_iso_existe_deja as e:
@@ -1711,7 +1725,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             #physiocap_log("Attribut pour Intra >{0}".format( nom_attribut) , TRACE_TOOLS)
             nom_complet_point = self.comboBoxPoints.currentText().split( SEPARATEUR_NOEUD)
             if (len( nom_complet_point) !=3):
-                # TODO ERREUR à tracer
+                # TODO: ?V3.x ERREUR à tracer
                 return
             idLayer   = nom_complet_point[2]
             layer = physiocap_get_layer_by_ID( idLayer)
@@ -1869,7 +1883,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
            
         try:
             inter = PhysiocapInter( self)
-            # TODO: RENDU bloquer l'affichage self.iface.mapCanvas().setRenderFlag( False )
             inter.physiocap_moyenne_InterParcelles( self)
     
         except physiocap_exception_rep as e:
@@ -1884,6 +1897,14 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             physiocap_log(aText, leModeDeTrace,  "information")
             aText = aText + self.tr( "Vous ne pouvez pas redemander ce calcul Inter : vous devez détruire le groupe ") 
             aText = aText + self.tr( "ou créer une nouvelle session Physiocap")
+            physiocap_error( self, aText, "CRITICAL")
+            return physiocap_message_box( self, aText, "information" )
+        except physiocap_exception_poly_invalid as e:
+            physiocap_log_for_error( self)
+            aText = self.tr( "La couche de contour de la session {0} n'existe pas. ").\
+                format( e)
+            aText = aText + self.tr( "Lancez le traitement initial - bouton Filtrer les données brutes - avant de faire votre ")
+            aText = aText + self.tr( "calcul de Moyenne Inter Parcellaire" )
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
         except physiocap_exception_points_invalid as e:
@@ -1962,6 +1983,13 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         """ 
         set_quoi = True if self.checkBoxV3.isChecked() else False
                 
+        if set_quoi == True and self.radioButtonGDAL.isChecked():
+            set_ellipse = True
+        else:
+            set_ellipse = False
+        self.lineEditDoubleRayon.setEnabled( set_ellipse)
+        self.lineEditDoubleRayon.setEnabled( set_ellipse)
+        
         self.checkBoxSegment.setEnabled( set_quoi)
         self.checkBoxSegmentBrise.setEnabled( set_quoi)
         self.checkBoxInterAltitude.setEnabled( set_quoi)
@@ -2012,6 +2040,13 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         else:
             self.groupBoxVignoble.setEnabled( False)
             self.slot_INTER_liste_parcelles()         
+            if self.checkBoxContourSolo.isChecked():
+                #Assert
+                aText = "Il est impossible de demander de créer un coutour en déclarant que les informations"
+                aText = aText + " agronomiques proviennent de contours... Les informations vignobles proviennent"
+                aText = aText + " donc de l'Onglet Agronomie"
+                physiocap_message_box( self, aText, "information" )
+                self.radioButtonOnglet.setChecked(  Qt.Checked)
 
     def slot_bascule_details_vignoble(self):
     # Calcul aide et sortie
@@ -2051,7 +2086,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Vérifier si le nombre d'utilisation est atteint
         self.dans_Quel_Settings()
         niveau_utilisation = int( self.settings.value("Affichage/Contrib_alert", 0))
-        if ( niveau_utilisation <  500):
+        if ( niveau_utilisation <  1000):
             self.settings.setValue("Affichage/Contrib_alert", niveau_utilisation + 1)
             return
         aText = self.tr( "{0} vous rapelle que ce logiciel ouvert et libre n'est pas exempt de besoins. ").\
@@ -2205,7 +2240,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             return physiocap_message_box( self, aText, "information" )
         except physiocap_exception_agro_profil as e:
             aText = "Seul le profil {} permet de préciser vos données agronomiques dans un contour. ".format( e)
-            aText = aText + "Si vous êtes intéressé par cette fonctionnalité, merci de contacter jean@jhemmi.eu. "
+            aText = aText + "\n" + "Si vous êtes intéressé par cette fonctionnalité, merci de contacter jean@jhemmi.eu. "
             aText = aText + "Sinon, précisez vos informations vignobles dans l'onglet Agronomie et cochez ""{}".\
                 format( "Onglet Agronomie détaille mon information du vignoble")
             return physiocap_message_box( self, aText, "information" )        
@@ -2213,8 +2248,14 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             physiocap_log_for_error( self)
             aText = self.tr( "INFORMATIONS AGRO KO : la couche vecteur de votre session ne contient pas un attribut {0}. ").\
                 format( e)
-            aText = aText + self.tr( "Vérifier le vecteur choisi pour décrire vos contours et vos données AGRO ")
-            aText = aText + self.tr( "dans Onglet Calcul puis Moyenne Inter Parcellaire" )
+            aText = aText +  "\n" + self.tr( "Vérifier le vecteur choisi pour décrire vos contours et vos données AGRO ")
+            physiocap_error( self, aText, "CRITICAL")
+            return physiocap_message_box( self, aText, "CRITICAL" )
+        except physiocap_exception_agro_type_champ as e:
+            physiocap_log_for_error( self)
+            aText = self.tr( "INFORMATIONS AGRO inconsistentes : l'attribut {0}. ").format( e)
+            aText = aText + "\n" + self.tr( "Vérifier le vecteur choisi pour décrire vos contours et vos données AGRO ")
+            aText = aText + "\n" + self.tr( "Le nom du vecteur AGRO est dans Onglet Calcul" )
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "CRITICAL" )
 

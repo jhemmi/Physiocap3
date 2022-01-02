@@ -218,11 +218,11 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         # Création la première partie du fichier de synthèse
         fichier_resultat_analyse = chemin_base_session + SEPARATEUR_ + FICHIER_RESULTAT
         nom_fichier_synthese, fichier_synthese = physiocap_open_file( fichier_resultat_analyse, chemin_session , "w")
-        fichier_synthese.write( "SYNTHESE PHYSIOCAP\nPROFIL{}\n".format( Nom_Profil))
+        fichier_synthese.write( "SYNTHESE PHYSIOCAP3\nPROFIL : {}\n".format( Nom_Profil))
         fichier_synthese.write( "Générée le : ")
         a_time = time.strftime( "%d/%m/%y %H:%M\n",time.localtime())
         fichier_synthese.write( a_time)
-        fichier_synthese.write( "Répertoire de base ")
+        fichier_synthese.write( "Sessioin Physiocap ")
         fichier_synthese.write( chemin_base_session)
         fichier_synthese.write( "\n")
         if (version_3 == "NO"):
@@ -452,7 +452,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             physiocap_ferme_csv( csv_sans_0, csv_avec_0, csv_0_seul, diametre_filtre, erreur, csv_concat)
         #################
         except physiocap_exception_err_csv as e: 
-            # TODO MID identifier le mid probable info_mid et modulo 600 lignes
+            # TODO: ? V3.x MID identifier le mid probable info_mid et modulo 600 lignes
             aMsg = "{0} Erreur bloquante durant filtrage dans le csv {1}".\
                 format ( PHYSIOCAP_STOP, nom_court_csv_concat)
             aMsg = aMsg + ". Origine de l'erreur se situe dans les données MIDs (à identifier et à corriger dans le répertoire des données brutes)"

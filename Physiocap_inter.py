@@ -45,7 +45,7 @@ from .Physiocap_tools import (physiocap_message_box,physiocap_log, physiocap_err
         physiocap_nom_entite_sans_pb_caractere, physiocap_rename_existing_file,  \
         quel_chemin_templates, quel_qml_existe, quelle_projection_et_lib_demandee, \
         physiocap_create_projection_file, physiocap_get_layer_by_URI, \
-        assert_champs_agro_obligatoires,  \
+        assert_champs_agro_obligatoires, assert_parcelle_attendue, quel_indice_entete,  \
         creer_csvt_source_onglet, ajouter_csvt_source_contour, quel_sont_vecteurs_choisis)       #physiocap_vecteur_vers_gpkg, \
 
 from .Physiocap_var_exception import *
@@ -812,6 +812,9 @@ class PhysiocapInter( QtWidgets.QDialog):
         
         # Trouver deux vecteurs
         nom_noeud_arbre, vecteur_point, origine_poly, vecteur_poly = quel_sont_vecteurs_choisis( dialogue, "Inter")
+#        except:
+#            dialogue.slot_INTER_liste_parcelles( "Filtrer")         
+#            nom_noeud_arbre, vecteur_point, origine_poly, vecteur_poly = quel_sont_vecteurs_choisis( dialogue, "Inter")            
         le_champ_contour = dialogue.fieldComboContours.currentText()
         champ_pb_gdal = dialogue.fieldPbGdal.currentText()
 
@@ -834,19 +837,20 @@ class PhysiocapInter( QtWidgets.QDialog):
             return physiocap_message_box( dialogue, aText, "information" )            
 
         # Vérification 
+        if ( vecteur_poly == None) or ( not vecteur_poly.isValid()):
+            aText = self.tr( "Le contour choisi n'est pas valide. ")
+            aText = aText + "\n" + self.tr( "Créer une nouvelle session Physiocap - bouton Filtrer les données brutes - ")
+            aText = aText + "\n" + self.tr( "avant de faire votre calcul de Moyenne Inter Parcellaire")
+            physiocap_error( self, aText, "CRITICAL")
+            return physiocap_message_box( dialogue, aText, "information" ) 
+
         if ( vecteur_point == None) or ( not vecteur_point.isValid()):
-            aText = self.tr( "Le jeu de points choisi n'est pas valide. ")
-            aText = aText + self.tr( "Créer une nouvelle session Physiocap - bouton Filtrer les données brutes - ")
-            aText = aText + self.tr( "avant de faire votre calcul de Moyenne Inter Parcellaire")
+            aText = self.tr( "Le jeu de points choisi n'est pas disponible. ")
+            aText = aText + "\n" + self.tr( "Créer une nouvelle session Physiocap - bouton Filtrer les données brutes - ")
+            aText = aText + "\n" + self.tr( "avant de faire votre calcul de Moyenne Inter Parcellaire")
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( dialogue, aText, "information" )  
 
-        if ( vecteur_poly == None) or ( not vecteur_poly.isValid()):
-            aText = self.tr( "Le contour choisi n'est pas valide. ")
-            aText = aText + self.tr( "Créer une nouvelle session Physiocap - bouton Filtrer les données brutes - ")
-            aText = aText + self.tr( "avant de faire votre calcul de Moyenne Inter Parcellaire")
-            physiocap_error( self, aText, "CRITICAL")
-            return physiocap_message_box( dialogue, aText, "information" ) 
 
         # Vérifier SRCs sont les même entre couches
         crs_poly = vecteur_poly.crs().authid()
@@ -947,9 +951,10 @@ class PhysiocapInter( QtWidgets.QDialog):
         # Progress BAR 20 %
         dialogue.progressBarInter.setValue( 20)
         # Cas des INFO AGRO vignoble par fichier 
-        if dialogue.checkBoxInfoVignoble.isChecked() and dialogue.radioButtonContour.isChecked():
+        if dialogue.groupBoxDetailVignoble.isChecked() and dialogue.checkBoxInfoVignoble.isChecked() and \
+            dialogue.radioButtonContour.isChecked():
             dialogue.progressBarInter.setValue( 21)
-            champsVignobleOrdonnes, champs_agro_fichier, champs_vignoble_requis, champs_vignoble_requis_fichier, \
+            champsVignobleOrdonnes, champs_agro_fichier, _, _, champs_vignoble_requis, champs_vignoble_requis_fichier, \
                 dictEnteteVignoble, champExistants, les_parcelles_agro, modele_agro_retenu  = \
                 assert_champs_agro_obligatoires( dialogue, vecteur_poly)              
 
@@ -988,7 +993,8 @@ class PhysiocapInter( QtWidgets.QDialog):
         physiocap_log ( self.tr( "{0} {1} Début Inter pour {2} contours >>>> ").\
                 format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI, nombre_contours), leModeDeTrace)
         # AGRO
-        if dialogue.checkBoxInfoVignoble.isChecked() and dialogue.radioButtonContour.isChecked():
+        if dialogue.groupBoxDetailVignoble.isChecked() and dialogue.checkBoxInfoVignoble.isChecked() and \
+           dialogue.radioButtonContour.isChecked():
             ordre_de_tri = champs_vignoble_requis[1]
         else:
             ordre_de_tri = le_champ_contour
@@ -998,17 +1004,16 @@ class PhysiocapInter( QtWidgets.QDialog):
             bar = 75 - int( (nombre_contours - id) / (75-35))
             #AGRO 
             if dialogue.checkBoxInfoVignoble.isChecked() and dialogue.radioButtonContour.isChecked():
-                # CSV
-                if origine_poly == "AGRO_CSV":
-                    indice_dict_Entete = 0
-                if origine_poly == "AGRO_SHP":
-                    indice_dict_Entete = 2
-                nom_parcelle = dictEnteteVignoble[ champsVignobleOrdonnes[1]][indice_dict_Entete]
-                physiocap_log( "===== ==== ===== La parcelle agro {}".format( nom_parcelle))
-                un_nom = un_contour[ nom_parcelle]
-                if un_nom not in les_parcelles_agro:
+                indice_dict_Entete = quel_indice_entete( origine_poly)
+                # LIMITATION AUX SEULES PARCELLE AGRO 
+                physiocap_log( "AVANT CAS REJET {}".format("INTER"), TRACE_JH)
+                parcelle_attendue = assert_parcelle_attendue(dialogue, un_contour, les_parcelles_agro, modele_agro_retenu, \
+                        indice_dict_Entete, dictEnteteVignoble, champsVignobleOrdonnes,  "INTER")
+                if parcelle_attendue == None:
                     id = id -1
                     continue
+                les_parcelles_agro.remove( parcelle_attendue)
+                un_nom = parcelle_attendue
                 infos_agronomique_en_cours = {}
                 for pos_champ, champ in enumerate( champsVignobleOrdonnes):
                     nom_champ = dictEnteteVignoble[ champ][indice_dict_Entete]
@@ -1018,7 +1023,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                         infos_agronomique_en_cours[ champ] = un_contour[ nom_champ]
                     else:
                         infos_agronomique_en_cours[ champ] = None
-                les_infos_agronomique.append( infos_agronomique_en_cours)  # TODO ajouter contour
+                les_infos_agronomique.append( infos_agronomique_en_cours) 
             else:
                 try:
                     un_nom = un_contour[ le_champ_contour] #get attribute of poly layer
@@ -1045,10 +1050,10 @@ class PhysiocapInter( QtWidgets.QDialog):
            
             if geomType == QgsWkbTypes.Polygon:
                 physiocap_log ( self.tr( "Couche (Polygone) simple : {0} ".\
-                    format( un_nom)), leModeDeTrace)
+                    format( un_nom)), TRACE_JH)
             elif geomWkbMultiType == QgsWkbTypes.MultiPolygon:
                 physiocap_log ( self.tr("Couche (Polygone) multiple : {0} ".\
-                    format( un_nom)), leModeDeTrace)
+                    format( un_nom)), TRACE_JH)
             else:
                 aText = self.tr( "Cette forme n'est pas un polygone : {0}".\
                     format( un_nom))
@@ -1755,7 +1760,7 @@ class PhysiocapInter( QtWidgets.QDialog):
         # Progress BAR 90 %
         dialogue.progressBarInter.setValue( 89)
         # INSERTION_CIVC_V2 pour CSVT
-        if dialogue.checkBoxInfoVignoble.isChecked():
+        if dialogue.groupBoxDetailVignoble.isChecked() and dialogue.checkBoxInfoVignoble.isChecked():
             if dialogue.radioButtonOnglet.isChecked():
                 dialogue.progressBarInter.setValue( 94)
                 # Créer un CSVT de synthese moyenne et vignoble
@@ -1767,6 +1772,7 @@ class PhysiocapInter( QtWidgets.QDialog):
             if dialogue.radioButtonContour.isChecked():
                 dialogue.progressBarInter.setValue( 92)
                 # Alonger le CSVT de synthese moyenne et vignoble
+                physiocap_log("ICI {}".format( les_parcelles),  TRACE_JH)
                 retour_csv = ajouter_csvt_source_contour( dialogue, vecteur_poly, \
                         les_parcelles, les_geoms_poly, les_moyennes_par_contour)
                 if retour_csv != 0:

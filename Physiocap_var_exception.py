@@ -21,7 +21,7 @@
  *   Physiocap plugin comme PSPY sont mis à disposition selon les termes   *
  *   de la licence Creative Commons                                        *
  *   CC-BY-NC-SA http://creativecommons.org/licenses/by-nc-sa/4.0/         *
- *- Plugin builder et QGIS 3 API et à ce titre porte aussi la licence GNU    *
+ *- Plugin builder et QGIS 3 API et à ce titre porte aussi la licence GNU   *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
@@ -44,7 +44,7 @@ if MACHINE == "Linux":
     LE_MODE_PROD = "NO"
 else:
     LE_MODE_PROD = "YES"
-LISTE_PROFIL= [ 'Standard', 'Champagne', 'Fronton', 'IFV Bordeaux']
+LISTE_PROFIL= [ 'Standard', 'Champagne', 'Fronton'] #, 'IFV Bordeaux']
 # LIVRAISON : supprimer en Prod
 #LE_MODE_PROD = "NO"
 
@@ -62,6 +62,7 @@ TRACE_MIN_MAX  = "Min-Max-Iso"
 TRACE_SEGMENT  = "Segment"
 TRACE_SEGMENT_DECOUPES  = "Découpe"
 TRACE_PROFIL  = "Profil"
+TRACE_AGRO = "INFO-AGRO"
 TRACE_JH  = "aJH"
 TRACE_PG  = "POSTGRES"
 TRACES_A_VOIR = [TRACE_JH, TRACE_PROFIL, TRACE_TOOLS, TRACE_INTRA]
@@ -98,7 +99,7 @@ POSTGRES_NOM = "postgres"
 CSV_NOM = "CSV avec WKT"
 CSV_DELIMITER_POINT_VIRGULE=';'
 CSV_DRIVER = "delimitedtext"
-CSV_GEOM = "geomWKT" 
+CSV_GEOM = "WKT" 
 GEOJSON_NOM = "GeoJSON"
 GEOJSON_DRIVER = "GeoJSON"  # mes choix  RFC7946=YES  WRITE_BBOX=YES  « GeoJSON - Newline Delimited »  defaut COORDINATE_PRECISION=15
 """
@@ -135,11 +136,11 @@ SHAPEFILE_NOM = "ESRI Shapefile"
 SHAPEFILE_DRIVER = "ESRI Shapefile"
 
 SEPARATEUR_ ="_"
-NOM_PAR_DEFAUT = "PHY" + SEPARATEUR_ # pour session et nom PHY
+NOM_PAR_DEFAUT = "PHY" + SEPARATEUR_ # pour session et nom PHY  Attention UPPER
 FORMAT_VECTEUR = [ SHAPEFILE_NOM] #,  POSTGRES_NOM] # "memory"]
-#TODO: PROD liste des formats vecteur en prod à trancher
+#liste des formats vecteur en prod à trancher
 if MACHINE == "Linux":
-    FORMAT_VECTEUR_V3 = [ SHAPEFILE_NOM,  CSV_NOM, GEOJSON_NOM, GEOPACKAGE_NOM] #,  "memory"] # POSTGRES_NOM] 
+    FORMAT_VECTEUR_V3 = [ SHAPEFILE_NOM,   GEOPACKAGE_NOM] # CSV_NOM, GEOJSON_NOM,,  "memory"] # POSTGRES_NOM] 
 else:
     FORMAT_VECTEUR_V3 = [ SHAPEFILE_NOM, GEOPACKAGE_NOM] #,  "memory"] # POSTGRES_NOM] 
     
@@ -186,7 +187,6 @@ CVST_VIGNOBLE="synthese_vignoble"
 REPERTOIRE_SHAPEFILE = "shapefile"
 #REPERTOIRE_SHAPEFILE_V3 = "vecteur"
 
-# TODO : à Vérifier Pas d'affichage des VRT Pas de creation de png sous Linux
 #if MACHINE == "Linux":
 #    EXTENSION_RASTER_SANS_POINT = "png"
 #else:
@@ -304,7 +304,7 @@ ATTRIBUTS_INTRA_DETAILS_PLUS = ["BIOMM2", "BIOMGM2"]
 ### si QGIS & version 3 verifier que ces index n'ont pas bougé avec les nouveau attributs 
 ### WHY ATTRIBUTS_INTRA_INDEX = {"DIAM" : 4 ,"NBSARM" : 3 ,"BIOM" : 5,  "NBSARMM2":6, "NBSARCEP":7,"BIOMM2":8, "BIOMGM2":9, "BIOMGCEP":10}
 CHEMIN_TEMPLATES = [ "modeleQgis", "project_templates"]
-
+CHEMIN_DATA = 'data'
 # Exceptions Physiocap à partir de 30 erreurs sur un fchier mid
 TAUX_LIGNES_ERREUR= 30
 
@@ -324,7 +324,7 @@ LISTE_CEPAGES = [ 'Inconnu', 'Airen', 'Alicante', 'Aligote', \
 
 LISTE_TAILLES = [ "Inconnue", "Chablis", "Cordon de Royat", "Cordon libre", "Guyot simple", "Guyot double"]
 
-# TODO: vérifier liste Spécifique du profil Fronton
+# Vérifier liste Spécifique du profil Fronton
 COMMUNES_FRONTON=["Fronton", "Villaudric", "Vacquiers", "Villematier", "Castelnau d'Estrétefond", "Pompignan", \
     "Grisolles", "Campsas", "Labastide", "Nohic", "Orgueuil"]
 
@@ -420,6 +420,8 @@ class physiocap_exception_stop_user( physiocap_exception):
     pass  
 class physiocap_exception_agro_obligatoire( physiocap_exception):
     pass
+class physiocap_exception_agro_type_champ( physiocap_exception):
+    pass
 class physiocap_exception_agro_profil( physiocap_exception):
     pass
     
@@ -427,6 +429,8 @@ class physiocap_exception_agro_profil( physiocap_exception):
 class physiocap_exception_vignette_exists( physiocap_exception):
     pass
 class physiocap_exception_points_invalid( physiocap_exception):
+    pass
+class physiocap_exception_poly_invalid( physiocap_exception):
     pass
 class physiocap_exception_segment_invalid( physiocap_exception):
     pass 
