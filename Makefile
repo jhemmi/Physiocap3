@@ -61,9 +61,11 @@ UI_FILES = Physiocap3_dialog_base.ui
 
 DATA = data
 DATA_FILES = $(DATA)/01021103.MID $(DATA)/01021103.ERC  \
+	$(DATA)/Agro.shp $(DATA)/Agro.shx $(DATA)/Agro.cpg \
+	$(DATA)/Agro.dbf $(DATA)/Agro.prj \
 	$(DATA)/Contour_L93.shp $(DATA)/Contour_L93.shx \
-	$(DATA)/Contour_L93.dbf $(DATA)/Contour_L93.prj \
-	$(DATA)/Contour_L93.cpg $(DATA)/exemple_contour_vignoble.csv \
+	$(DATA)/Contour_L93.dbf $(DATA)/Contour_L93.prj $(DATA)/Contour_L93.cpg\
+	$(DATA)/exemple_vide_contour_vignoble.csv $(DATA)/exemple_contour_vignoble.csv \
 	$(DATA)/exemple_contour_vignoble.csvt $(DATA)/exemple_contour_vignoble.prj
 	
 EXTRAS = icon.png metadata.txt LICENSE README.md

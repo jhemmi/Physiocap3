@@ -321,10 +321,10 @@ def quelles_informations_moyennes():
     listeEnteteMoyenneSHP = [ "DIAM_AVG", "VITESSE_AV", "BIOMM2", "NBSARMM2", "BIOMGCEP", "NBSARMCEP"]
     return champsMoyenneOrdonnes, listeEnteteMoyenne, listeEnteteMoyenneSHP
 
-def structure_informations_vignoble( self, format_sortie ='CSV'):
+def structure_informations_vignoble( self, format_entre_sortie ='AGRO_CSV'):
     """ Structure des info vignobles dans une liste ordonnée, 
         dans une liste des requis et dans un dict pour les entete et type """ 
-    if format_sortie == 'CSV':
+    if format_entre_sortie == 'AGRO_CSV':
         position_dic = 0
         position_autre = 2
     else:
@@ -352,10 +352,10 @@ def structure_informations_vignoble( self, format_sortie ='CSV'):
     dictEnteteVignoble[ "rendement"]       = [ "Rendement", "Real",  "Rendement"]      
     dictEnteteVignoble[ "poids_moy_grappes"]       = [ "Poids_moye", "Integer",  "Poids_moye"]      
     dictEnteteVignoble[ "nb_grappes"]       = [ "Nombre_gra", "Integer",  "Nombre_gra"]      
-    dictEnteteVignoble[ "interrangs"]   = [ "interrang", "Integer", "Interrang"]
-    dictEnteteVignoble[ "interceps"]    = [ "intercep" , "Integer",  "Intercep"]
-    dictEnteteVignoble[ "hauteur"] = [ "hauteur" , "Integer",  "Hauteur"]
-    dictEnteteVignoble[ "densite"] = [ "densite_sarment", "Real",  "Densite_sa"] 
+    dictEnteteVignoble[ "interrangs"]   = [ "interrang", "Integer", "interrang"]
+    dictEnteteVignoble[ "interceps"]    = [ "intercep" , "Integer",  "intercep"]
+    dictEnteteVignoble[ "hauteur"] = [ "hauteur" , "Integer",  "hauteur"]
+    dictEnteteVignoble[ "densite"] = [ "densite_sarment", "Real",  "densite_sa"] 
     
     # Requis, on trouve le nom pour chaque cas de format de sortie (CSV ou SHP)
     champs_vignoble_requis = [ "campagne", "nom_parcelle", "interrangs", "interceps", "hauteur", "densite"]
@@ -370,18 +370,19 @@ def structure_informations_vignoble( self, format_sortie ='CSV'):
     champs_vignoble_requis_fichier = []
     for champ in champs_vignoble_requis:
         champs_vignoble_requis_fichier.append( dictEnteteVignoble[champ][ position_dic])
-    return champsVignobleOrdonnes, champs_agro_fichier, types_agro, champs_agro_autre_fichier, champs_vignoble_requis, champs_vignoble_requis_fichier, dictEnteteVignoble
+    return champsVignobleOrdonnes, champs_agro_fichier, types_agro, champs_agro_autre_fichier, \
+        champs_vignoble_requis, champs_vignoble_requis_fichier, dictEnteteVignoble
     
-def quelles_informations_vignoble_source_onglet( self, format_sortie ='CSV'):
+def quelles_informations_vignoble_source_onglet( self, format_sortie ='AGRO_CSV'):
     """ Mettre les valeurs d'info vignobles dans l'ordre et dans un dict 
         puis création de deux listes entetes et valeurs pretes à écrite dans 
         CSVT si format_sortie = CSV ou Shape sinon""" 
-    if format_sortie == 'CSV':
+    if format_sortie == 'AGRO_CSV':
         position_dic = 0
     else:
         position_dic = 2
     champsVignobleOrdonnes, champs_agro_fichier, _, _, champs_vignoble_requis, champs_vignoble_requis_fichier, dictEnteteVignoble \
-        = structure_informations_vignoble( self)
+        = structure_informations_vignoble( self, format_sortie)
     dictInfoVignoble = {}
     valeurNA = ""    
     dictInfoVignoble[ "campagne"]       = self.lineEditCampagne.text()
@@ -590,8 +591,8 @@ def quel_chemin_templates(self):
     return chemin_qml, chemin_secours
 
 
-def quel_noms_CSVT( self):
-    """Rend les nom du CSV & CSVT & PRJ"""
+def quel_noms_CSVT_synthese( self):
+    """Rend les nom du CSV & CSVT & PRJ à créer"""
     #leModeDeTrace = self.fieldComboModeTrace.currentText()
     derniere_session = self.lineEditDerniereSession.text()
     chemin_session = os.path.join( self.lineEditDirectoryFiltre.text(), derniere_session)
@@ -826,11 +827,13 @@ def inclure_vignoble_sur_contour(self, chemin_fichier_convex, ss_groupe=None):
     return chemin_fichier_convex
 
 # Fonction pour générer le CSVT : csv avec info agro, moyenne et geometrie en WKT
-def assert_champs_agro_obligatoires( dialogue, vecteur_poly):
-    # Controler les champs obligatoires
+def assert_champs_agro_obligatoires( dialogue, vecteur_poly, origine_poly):
+    """ Controler les champs obligatoires dans CSV ou SHP du fichier agro d'origine 
+        Retrouver les info agro servant de modeles
+    """
     champsVignobleOrdonnes, champs_agro_fichier, type_agro, champs_agro_autre_fichier,  champs_vignoble_requis, \
         champs_vignoble_requis_fichier, dictEnteteVignoble = \
-        structure_informations_vignoble( dialogue)
+        structure_informations_vignoble( dialogue,  origine_poly)
     champExistants = quelle_liste_attributs( dialogue, vecteur_poly) 
     for champ in champs_vignoble_requis_fichier:
         if champ not in champExistants:
@@ -902,7 +905,7 @@ def quelles_listes_info_agro(self):
 
         champsVignobleOrdonnes, champs_agro_fichier, types_agro, _, champs_vignoble_requis, champs_vignoble_requis_fichier, \
             dictEnteteVignoble, champExistants, les_parcelles_agro, modele_agro_retenu = \
-            assert_champs_agro_obligatoires( self, vecteur_poly)
+            assert_champs_agro_obligatoires( self, vecteur_poly, origine_poly)
 
         les_infos_agronomiques_presence = []  # juste pour assertion de présence
         les_infos_agronomique = []
@@ -976,27 +979,31 @@ def quelles_listes_info_agro(self):
  
 def ajouter_csvt_source_contour( self, vecteur_poly, les_parcelles,  les_geoms_poly, les_moyennes_par_contour):
     """Ajouter au CSVT AGRO les informations de moyennes calculées et du vignoble """
-    # Retrouver CSVT pour copie (quid du shp)
+    # Retrouver CSVT ou SHP pour copie (sauf les infos du shp)
     Repertoire_Donnees_Brutes = self.lineEditDirectoryPhysiocap.text()
     campagne_en_cours = self.lineEditCampagne.text()
     nom_vecteur, nom_court_vecteur,  libelle = \
         quel_vecteur_dans_donnees_brutes( Repertoire_Donnees_Brutes)
+    _, nom_CSV, nom_CSVT, nom_PRJ = quel_noms_CSVT_synthese( self)        
     if ((nom_vecteur != None) and len( nom_vecteur) > 0):
-       if libelle == "CSV NON OUVERT DANS QGIS":                
+        if libelle == "CSV NON OUVERT DANS QGIS":                
             # Copier le CSV de contour
-            _, nom_CSV, nom_CSVT, nom_PRJ = quel_noms_CSVT( self)        
             shutil.copyfile( nom_vecteur, nom_CSV)
-            # Base exemple CSV
-            exemple_CSVT = os.path.join( os.path.join( self.plugin_dir, CHEMIN_DATA), 'exemple_contour_vignoble.csvt')        
-            if os.path.isfile( exemple_CSVT):
-                shutil.copyfile( exemple_CSVT, nom_CSVT)
-            # TODO : gerer EPSG pour autres profils
-            exemple_PRJ = os.path.join( os.path.join( self.plugin_dir, CHEMIN_DATA), 'exemple_contour_vignoble.prj')        
-            if os.path.isfile( exemple_PRJ):
-                shutil.copyfile( exemple_PRJ, nom_PRJ)
-       else:
-           aText = "Dans le cas d'un shapefile, le CSVT de synthese n'est pas créé"
-           physiocap_message_box( aText, information)
+        else:
+            aText = "Dans le cas d'un shapefile AGRO, le CSVT de synthese ne contient pas les "
+            aText = aText + "informations agro des autres campagnes"
+            physiocap_message_box( self, aText, "information")
+            exemple_CSV = os.path.join( os.path.join( self.plugin_dir, CHEMIN_DATA), 'exemple_vide_contour_vignoble.csv')        
+            if os.path.isfile( exemple_CSV):
+                shutil.copyfile( exemple_CSV, nom_CSV)
+        # Base exemple CSV
+        exemple_CSVT = os.path.join( os.path.join( self.plugin_dir, CHEMIN_DATA), 'exemple_contour_vignoble.csvt')        
+        if os.path.isfile( exemple_CSVT):
+            shutil.copyfile( exemple_CSVT, nom_CSVT)
+        # TODO : gerer EPSG pour autres profils
+        exemple_PRJ = os.path.join( os.path.join( self.plugin_dir, CHEMIN_DATA), 'exemple_contour_vignoble.prj')        
+        if os.path.isfile( exemple_PRJ):
+            shutil.copyfile( exemple_PRJ, nom_PRJ)
 
     # Récuperer les infos agro
     les_parcelles_agro, les_vecteurs_agronomique, les_infos_agronomique, _ = quelles_listes_info_agro(self)
@@ -1017,7 +1024,7 @@ def ajouter_csvt_source_contour( self, vecteur_poly, les_parcelles,  les_geoms_p
         fichier_CSVT = open( nom_CSV, "a")
         writerCSVT = csv.writer( fichier_CSVT, delimiter=CSV_DELIMITER_POINT_VIRGULE)        
         # Ecriture de l'entête et des infos vignobles
-        if self.checkBoxDoubleEnteteCSV.isChecked():
+        if libelle == "CSV NON OUVERT DANS QGIS" and self.checkBoxDoubleEnteteCSV.isChecked():
             writerCSVT.writerow( [  CSV_GEOM] + listeEntete + listeEnteteMoyenne)
         # Boucler sur les parcelles
         for parcelleId,  parcelleNom in enumerate( les_parcelles):
@@ -1070,7 +1077,7 @@ def creer_csvt_source_onglet( self, les_parcelles, les_geoms_poly, les_moyennes_
     # Calculer geomWKT à partir de geom du contour
     geomWKT = str( geomContour.asWkt())
 
-    _, nom_CSV, nom_CSVT, nom_PRJ = quel_noms_CSVT( self)
+    _, nom_CSV, nom_CSVT, nom_PRJ = quel_noms_CSVT_synthese( self)
     champsVignobleOrdonnes, _, dictInfoVignoble, listeInfo,  dictEnteteVignoble, listeEntete = \
         quelles_informations_vignoble_source_onglet( self)
     

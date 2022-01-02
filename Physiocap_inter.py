@@ -956,7 +956,7 @@ class PhysiocapInter( QtWidgets.QDialog):
             dialogue.progressBarInter.setValue( 21)
             champsVignobleOrdonnes, champs_agro_fichier, _, _, champs_vignoble_requis, champs_vignoble_requis_fichier, \
                 dictEnteteVignoble, champExistants, les_parcelles_agro, modele_agro_retenu  = \
-                assert_champs_agro_obligatoires( dialogue, vecteur_poly)              
+                assert_champs_agro_obligatoires( dialogue, vecteur_poly, origine_poly)              
 
         # CONTAINEUR DES TOUS LES CONTOURS
         # On passe sur les differents contours

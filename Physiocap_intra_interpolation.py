@@ -693,7 +693,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
             dialogue.progressBarIntra.setValue( 1)
             champsVignobleOrdonnes, champs_agro_fichier, _, _, champs_vignoble_requis, champs_vignoble_requis_fichier, \
                 dictEnteteVignoble, champExistants, les_parcelles_agro, modele_agro_retenu  = \
-                assert_champs_agro_obligatoires( dialogue, vecteur_poly)       
+                assert_champs_agro_obligatoires( dialogue, vecteur_poly, origine_poly)       
 
         # Pour attribut en cours d'interpolation
         le_champ_contour = dialogue.fieldComboContours.currentText()
