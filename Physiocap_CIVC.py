@@ -57,6 +57,8 @@ except ImportError:
     aText ="Erreur bloquante : module matplotlib.pyplot n'est pas accessible\n" 
     aText = aText + 'Sous Ubuntu : installez python3-matplotlib par "sudo apt-get install python3-matplotlib"'
     aText = aText + "Sous Fedora : installez python-matplotlib-qt4" 
+    # TODO : à finir ignorer sous Windows ? pas affichage
+    aText = aText + "Sous Windows : ignorez ce message" 
     QgsMessageLog.logMessage( aText, "\u03D5 Erreurs", Qgis.Warning)
 
 try :
