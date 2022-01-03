@@ -523,6 +523,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             # un seul triplet pour intra DIAM BIOMGCEP NBSARCEP est code dans ce slot
             self.slot_PROFIL_INTRA_maj_attributs_interpolables( Nom_Profil)
             
+            self.checkBoxIntraImages.setChecked( Qt.Checked)
             self.checkBoxIntraPDF.setChecked( Qt.Checked)
             # Afficher le contour généré
             self.checkBoxContour.setChecked( Qt.Checked)
@@ -556,6 +557,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.groupBoxMethode.setEnabled( True)
             self.groupBoxExpertOuvert.setEnabled( False)
             self.groupBoxSegment.setEnabled( True)
+            self.checkBoxIntraImages.setChecked( Qt.Checked)
         elif Nom_Profil == 'Standard':
             self.radioButtonNordPrecedent.setChecked( Qt.Checked)
             self.spinBoxMinDiametre.setValue( 4)
@@ -581,6 +583,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.groupBoxThemaTrace.setEnabled( True)
             self.groupBoxIsolignes.setChecked( Qt.Checked)
             self.groupBoxIsolignes.setEnabled( True)
+            self.checkBoxIntraImages.setChecked( Qt.Checked)
         else:
             physiocap_error( "Dans slot_PROFIL {} est inconnu ".format ( Nom_Profil), TRACE_PROFIL)
         physiocap_log( "PROFIL {} est initialisé".format ( Nom_Profil), TRACE_PROFIL)

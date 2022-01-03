@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>624</width>
-    <height>871</height>
+    <width>652</width>
+    <height>1000</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -81,7 +81,7 @@
     <rect>
      <x>0</x>
      <y>80</y>
-     <width>618</width>
+     <width>641</width>
      <height>661</height>
     </rect>
    </property>
@@ -93,7 +93,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>9</pointsize>
+     <pointsize>8</pointsize>
      <weight>50</weight>
      <italic>false</italic>
      <bold>false</bold>
@@ -127,7 +127,7 @@
       <rect>
        <x>5</x>
        <y>180</y>
-       <width>601</width>
+       <width>621</width>
        <height>91</height>
       </rect>
      </property>
@@ -152,7 +152,7 @@
        <rect>
         <x>10</x>
         <y>20</y>
-        <width>321</width>
+        <width>351</width>
         <height>21</height>
        </rect>
       </property>
@@ -236,7 +236,7 @@
        <rect>
         <x>10</x>
         <y>38</y>
-        <width>421</width>
+        <width>481</width>
         <height>21</height>
        </rect>
       </property>
@@ -317,7 +317,7 @@
       <rect>
        <x>5</x>
        <y>5</y>
-       <width>601</width>
+       <width>621</width>
        <height>171</height>
       </rect>
      </property>
@@ -523,7 +523,7 @@
       <rect>
        <x>5</x>
        <y>280</y>
-       <width>601</width>
+       <width>621</width>
        <height>101</height>
       </rect>
      </property>
@@ -609,7 +609,7 @@
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>241</width>
+        <width>351</width>
         <height>22</height>
        </rect>
       </property>
@@ -642,10 +642,10 @@
      <widget class="QGroupBox" name="groupBoxPrecisez">
       <property name="geometry">
        <rect>
-        <x>330</x>
+        <x>380</x>
         <y>-10</y>
-        <width>271</width>
-        <height>71</height>
+        <width>241</width>
+        <height>61</height>
        </rect>
       </property>
       <property name="font">
@@ -659,9 +659,9 @@
       <widget class="QLabel" name="lab_precisez">
        <property name="geometry">
         <rect>
-         <x>0</x>
-         <y>20</y>
-         <width>261</width>
+         <x>10</x>
+         <y>10</y>
+         <width>231</width>
          <height>50</height>
         </rect>
        </property>
@@ -680,9 +680,9 @@
         </font>
        </property>
        <property name="text">
-        <string>Vous devez préciser vos densités de plantation,
-hauteurs de haie foliaire et
-vos autres données agronomiques</string>
+        <string>Vous devez préciser vos densités 
+de plantation, hauteurs de haie foliaire
+et vos autres données agronomiques</string>
        </property>
       </widget>
      </widget>
@@ -692,7 +692,7 @@ vos autres données agronomiques</string>
       <rect>
        <x>5</x>
        <y>390</y>
-       <width>601</width>
+       <width>621</width>
        <height>131</height>
       </rect>
      </property>
@@ -711,7 +711,7 @@ vos autres données agronomiques</string>
        <rect>
         <x>0</x>
         <y>30</y>
-        <width>591</width>
+        <width>621</width>
         <height>101</height>
        </rect>
       </property>
@@ -755,7 +755,7 @@ vos autres données agronomiques</string>
         <rect>
          <x>15</x>
          <y>70</y>
-         <width>311</width>
+         <width>331</width>
          <height>22</height>
         </rect>
        </property>
@@ -771,7 +771,7 @@ vos autres données agronomiques</string>
        </property>
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>400</x>
          <y>70</y>
          <width>171</width>
          <height>22</height>
@@ -794,7 +794,7 @@ vos autres données agronomiques</string>
         <rect>
          <x>15</x>
          <y>50</y>
-         <width>301</width>
+         <width>311</width>
          <height>21</height>
         </rect>
        </property>
@@ -821,7 +821,7 @@ vos autres données agronomiques</string>
         <rect>
          <x>10</x>
          <y>25</y>
-         <width>431</width>
+         <width>581</width>
          <height>21</height>
         </rect>
        </property>
@@ -851,9 +851,9 @@ vos autres données agronomiques</string>
        </property>
        <property name="geometry">
         <rect>
-         <x>320</x>
+         <x>340</x>
          <y>50</y>
-         <width>261</width>
+         <width>281</width>
          <height>21</height>
         </rect>
        </property>
@@ -917,7 +917,7 @@ vos autres données agronomiques</string>
       <rect>
        <x>0</x>
        <y>530</y>
-       <width>601</width>
+       <width>631</width>
        <height>81</height>
       </rect>
      </property>
@@ -958,7 +958,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <rect>
         <x>10</x>
         <y>25</y>
-        <width>541</width>
+        <width>571</width>
         <height>21</height>
        </rect>
       </property>
@@ -982,7 +982,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <rect>
         <x>10</x>
         <y>50</y>
-        <width>301</width>
+        <width>381</width>
         <height>26</height>
        </rect>
       </property>
@@ -1015,9 +1015,9 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="geometry">
        <rect>
-        <x>310</x>
-        <y>52</y>
-        <width>241</width>
+        <x>400</x>
+        <y>50</y>
+        <width>181</width>
         <height>21</height>
        </rect>
       </property>
@@ -1050,8 +1050,8 @@ Si vous hésitez, trouvez du conseil. </string>
       <rect>
        <x>5</x>
        <y>10</y>
-       <width>601</width>
-       <height>331</height>
+       <width>631</width>
+       <height>351</height>
       </rect>
      </property>
      <property name="sizePolicy">
@@ -1085,9 +1085,9 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QComboBox" name="comboBoxCepage">
       <property name="geometry">
        <rect>
-        <x>60</x>
-        <y>182</y>
-        <width>201</width>
+        <x>80</x>
+        <y>212</y>
+        <width>181</width>
         <height>20</height>
        </rect>
       </property>
@@ -1104,7 +1104,7 @@ Si vous hésitez, trouvez du conseil. </string>
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>180</y>
+        <y>210</y>
         <width>61</width>
         <height>21</height>
        </rect>
@@ -1127,8 +1127,8 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QLineEdit" name="lineEditPorteGreffe">
       <property name="geometry">
        <rect>
-        <x>497</x>
-        <y>180</y>
+        <x>520</x>
+        <y>210</y>
         <width>101</width>
         <height>25</height>
        </rect>
@@ -1151,9 +1151,9 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QLabel" name="label_6">
       <property name="geometry">
        <rect>
-        <x>424</x>
-        <y>182</y>
-        <width>71</width>
+        <x>427</x>
+        <y>212</y>
+        <width>91</width>
         <height>22</height>
        </rect>
       </property>
@@ -1170,7 +1170,7 @@ Si vous hésitez, trouvez du conseil. </string>
       <property name="geometry">
        <rect>
         <x>313</x>
-        <y>180</y>
+        <y>210</y>
         <width>101</width>
         <height>25</height>
        </rect>
@@ -1194,7 +1194,7 @@ Si vous hésitez, trouvez du conseil. </string>
       <property name="geometry">
        <rect>
         <x>267</x>
-        <y>182</y>
+        <y>212</y>
         <width>67</width>
         <height>22</height>
        </rect>
@@ -1211,8 +1211,8 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QLabel" name="label_2">
       <property name="geometry">
        <rect>
-        <x>200</x>
-        <y>45</y>
+        <x>230</x>
+        <y>50</y>
         <width>71</width>
         <height>23</height>
        </rect>
@@ -1236,8 +1236,8 @@ Si vous hésitez, trouvez du conseil. </string>
       <property name="geometry">
        <rect>
         <x>3</x>
-        <y>20</y>
-        <width>101</width>
+        <y>25</y>
+        <width>111</width>
         <height>23</height>
        </rect>
       </property>
@@ -1262,8 +1262,8 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QComboBox" name="comboBoxCommune">
       <property name="geometry">
        <rect>
-        <x>270</x>
-        <y>45</y>
+        <x>300</x>
+        <y>50</y>
         <width>325</width>
         <height>22</height>
        </rect>
@@ -1278,8 +1278,8 @@ Si vous hésitez, trouvez du conseil. </string>
       <property name="geometry">
        <rect>
         <x>3</x>
-        <y>45</y>
-        <width>111</width>
+        <y>50</y>
+        <width>121</width>
         <height>23</height>
        </rect>
       </property>
@@ -1301,8 +1301,8 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QSpinBox" name="spinBoxAnneePlant">
       <property name="geometry">
        <rect>
-        <x>120</x>
-        <y>45</y>
+        <x>140</x>
+        <y>50</y>
         <width>71</width>
         <height>23</height>
        </rect>
@@ -1325,9 +1325,9 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QLabel" name="label_8">
       <property name="geometry">
        <rect>
-        <x>200</x>
-        <y>21</y>
-        <width>61</width>
+        <x>230</x>
+        <y>26</y>
+        <width>71</width>
         <height>23</height>
        </rect>
       </property>
@@ -1349,8 +1349,8 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QLabel" name="label_10">
       <property name="geometry">
        <rect>
-        <x>167</x>
-        <y>240</y>
+        <x>180</x>
+        <y>270</y>
         <width>11</width>
         <height>26</height>
        </rect>
@@ -1368,7 +1368,7 @@ Si vous hésitez, trouvez du conseil. </string>
       <property name="geometry">
        <rect>
         <x>37</x>
-        <y>240</y>
+        <y>270</y>
         <width>41</width>
         <height>26</height>
        </rect>
@@ -1385,8 +1385,8 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QLabel" name="label_PH">
       <property name="geometry">
        <rect>
-        <x>467</x>
-        <y>240</y>
+        <x>500</x>
+        <y>270</y>
         <width>21</width>
         <height>26</height>
        </rect>
@@ -1403,8 +1403,8 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QLabel" name="label_11">
       <property name="geometry">
        <rect>
-        <x>187</x>
-        <y>240</y>
+        <x>200</x>
+        <y>270</y>
         <width>24</width>
         <height>26</height>
        </rect>
@@ -1422,7 +1422,7 @@ Si vous hésitez, trouvez du conseil. </string>
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>240</y>
+        <y>270</y>
         <width>31</width>
         <height>26</height>
        </rect>
@@ -1441,8 +1441,8 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QComboBox" name="comboBoxRegion">
       <property name="geometry">
        <rect>
-        <x>270</x>
-        <y>20</y>
+        <x>300</x>
+        <y>25</y>
         <width>325</width>
         <height>22</height>
        </rect>
@@ -1457,7 +1457,7 @@ Si vous hésitez, trouvez du conseil. </string>
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>210</y>
+        <y>240</y>
         <width>121</width>
         <height>21</height>
        </rect>
@@ -1483,7 +1483,7 @@ Si vous hésitez, trouvez du conseil. </string>
       <property name="geometry">
        <rect>
         <x>107</x>
-        <y>210</y>
+        <y>240</y>
         <width>241</width>
         <height>20</height>
        </rect>
@@ -1497,9 +1497,9 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QLabel" name="label_14">
       <property name="geometry">
        <rect>
-        <x>327</x>
-        <y>240</y>
-        <width>21</width>
+        <x>340</x>
+        <y>270</y>
+        <width>41</width>
         <height>26</height>
        </rect>
       </property>
@@ -1516,7 +1516,7 @@ Si vous hésitez, trouvez du conseil. </string>
       <property name="geometry">
        <rect>
         <x>77</x>
-        <y>242</y>
+        <y>272</y>
         <width>91</width>
         <height>21</height>
        </rect>
@@ -1551,8 +1551,8 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QDoubleSpinBox" name="doubleSpinBoxMO">
       <property name="geometry">
        <rect>
-        <x>212</x>
-        <y>242</y>
+        <x>225</x>
+        <y>272</y>
         <width>91</width>
         <height>21</height>
        </rect>
@@ -1587,8 +1587,8 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QSpinBox" name="spinBoxCsurN">
       <property name="geometry">
        <rect>
-        <x>357</x>
-        <y>242</y>
+        <x>390</x>
+        <y>272</y>
         <width>91</width>
         <height>21</height>
        </rect>
@@ -1623,8 +1623,8 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QDoubleSpinBox" name="doubleSpinBoxPH">
       <property name="geometry">
        <rect>
-        <x>497</x>
-        <y>242</y>
+        <x>530</x>
+        <y>272</y>
         <width>91</width>
         <height>21</height>
        </rect>
@@ -1659,8 +1659,8 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QLabel" name="label_12">
       <property name="geometry">
        <rect>
-        <x>307</x>
-        <y>240</y>
+        <x>320</x>
+        <y>270</y>
         <width>11</width>
         <height>26</height>
        </rect>
@@ -1678,14 +1678,14 @@ Si vous hésitez, trouvez du conseil. </string>
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>70</y>
-        <width>591</width>
-        <height>101</height>
+        <y>90</y>
+        <width>631</width>
+        <height>111</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>8</pointsize>
+        <pointsize>10</pointsize>
         <weight>75</weight>
         <italic>true</italic>
         <bold>true</bold>
@@ -1709,13 +1709,13 @@ Si vous hésitez, trouvez du conseil. </string>
         </font>
        </property>
        <property name="text">
-        <string>en pieds/ha</string>
+        <string/>
        </property>
       </widget>
       <widget class="QSpinBox" name="spinBoxInterrangs">
        <property name="geometry">
         <rect>
-         <x>273</x>
+         <x>320</x>
          <y>20</y>
          <width>101</width>
          <height>21</height>
@@ -1744,7 +1744,7 @@ Si vous hésitez, trouvez du conseil. </string>
         <rect>
          <x>3</x>
          <y>41</y>
-         <width>261</width>
+         <width>301</width>
          <height>21</height>
         </rect>
        </property>
@@ -1766,7 +1766,7 @@ Si vous hésitez, trouvez du conseil. </string>
       <widget class="QSpinBox" name="spinBoxHauteur">
        <property name="geometry">
         <rect>
-         <x>273</x>
+         <x>320</x>
          <y>60</y>
          <width>101</width>
          <height>21</height>
@@ -1795,7 +1795,7 @@ Si vous hésitez, trouvez du conseil. </string>
         <rect>
          <x>3</x>
          <y>82</y>
-         <width>231</width>
+         <width>301</width>
          <height>21</height>
         </rect>
        </property>
@@ -1817,7 +1817,7 @@ Si vous hésitez, trouvez du conseil. </string>
       <widget class="QSpinBox" name="spinBoxInterceps">
        <property name="geometry">
         <rect>
-         <x>273</x>
+         <x>320</x>
          <y>40</y>
          <width>101</width>
          <height>21</height>
@@ -1844,7 +1844,7 @@ Si vous hésitez, trouvez du conseil. </string>
       <widget class="QDoubleSpinBox" name="doubleSpinBoxDensite">
        <property name="geometry">
         <rect>
-         <x>273</x>
+         <x>320</x>
          <y>80</y>
          <width>101</width>
          <height>21</height>
@@ -1877,9 +1877,9 @@ Si vous hésitez, trouvez du conseil. </string>
       <widget class="QLabel" name="lab_53">
        <property name="geometry">
         <rect>
-         <x>403</x>
+         <x>440</x>
          <y>20</y>
-         <width>71</width>
+         <width>181</width>
          <height>21</height>
         </rect>
        </property>
@@ -1889,7 +1889,7 @@ Si vous hésitez, trouvez du conseil. </string>
         </font>
        </property>
        <property name="text">
-        <string>Densité :</string>
+        <string>Densité (en pieds/ha)</string>
        </property>
       </widget>
       <widget class="QLabel" name="lab_55">
@@ -1897,7 +1897,7 @@ Si vous hésitez, trouvez du conseil. </string>
         <rect>
          <x>3</x>
          <y>62</y>
-         <width>251</width>
+         <width>301</width>
          <height>21</height>
         </rect>
        </property>
@@ -1922,7 +1922,7 @@ Si vous hésitez, trouvez du conseil. </string>
        </property>
        <property name="geometry">
         <rect>
-         <x>393</x>
+         <x>440</x>
          <y>38</y>
          <width>101</width>
          <height>25</height>
@@ -1948,7 +1948,7 @@ Si vous hésitez, trouvez du conseil. </string>
         <rect>
          <x>3</x>
          <y>20</y>
-         <width>251</width>
+         <width>291</width>
          <height>21</height>
         </rect>
        </property>
@@ -1971,8 +1971,8 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QLineEdit" name="lineEditNomParcelle">
       <property name="geometry">
        <rect>
-        <x>80</x>
-        <y>20</y>
+        <x>110</x>
+        <y>25</y>
         <width>111</width>
         <height>25</height>
        </rect>
@@ -1995,8 +1995,8 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QSpinBox" name="spinBoxPoidsMoyenGrappes">
       <property name="geometry">
        <rect>
-        <x>360</x>
-        <y>290</y>
+        <x>400</x>
+        <y>320</y>
         <width>91</width>
         <height>21</height>
        </rect>
@@ -2031,10 +2031,10 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QLabel" name="label_20">
       <property name="geometry">
        <rect>
-        <x>240</x>
-        <y>270</y>
-        <width>106</width>
-        <height>15</height>
+        <x>270</x>
+        <y>300</y>
+        <width>131</width>
+        <height>16</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -2057,8 +2057,8 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QSpinBox" name="spinBoxNbGrappes">
       <property name="geometry">
        <rect>
-        <x>240</x>
-        <y>290</y>
+        <x>270</x>
+        <y>320</y>
         <width>91</width>
         <height>21</height>
        </rect>
@@ -2093,9 +2093,9 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QLabel" name="label_19">
       <property name="geometry">
        <rect>
-        <x>360</x>
-        <y>270</y>
-        <width>171</width>
+        <x>400</x>
+        <y>300</y>
+        <width>211</width>
         <height>16</height>
        </rect>
       </property>
@@ -2120,8 +2120,8 @@ Si vous hésitez, trouvez du conseil. </string>
      <widget class="QDoubleSpinBox" name="doubleSpinBoxRendement">
       <property name="geometry">
        <rect>
-        <x>120</x>
-        <y>290</y>
+        <x>150</x>
+        <y>320</y>
         <width>91</width>
         <height>21</height>
        </rect>
@@ -2157,8 +2157,8 @@ Si vous hésitez, trouvez du conseil. </string>
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>290</y>
-        <width>110</width>
+        <y>320</y>
+        <width>131</width>
         <height>21</height>
        </rect>
       </property>
@@ -2190,7 +2190,7 @@ Si vous hésitez, trouvez du conseil. </string>
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>601</width>
+       <width>631</width>
        <height>631</height>
       </rect>
      </property>
@@ -2208,7 +2208,7 @@ Si vous hésitez, trouvez du conseil. </string>
       <rect>
        <x>5</x>
        <y>50</y>
-       <width>250</width>
+       <width>281</width>
        <height>250</height>
       </rect>
      </property>
@@ -2222,9 +2222,9 @@ Si vous hésitez, trouvez du conseil. </string>
     <widget class="QLabel" name="label_histo_vitesse">
      <property name="geometry">
       <rect>
-       <x>270</x>
+       <x>300</x>
        <y>50</y>
-       <width>250</width>
+       <width>291</width>
        <height>250</height>
       </rect>
      </property>
@@ -2238,9 +2238,9 @@ Si vous hésitez, trouvez du conseil. </string>
     <widget class="QLabel" name="label_histo_diametre_apres">
      <property name="geometry">
       <rect>
-       <x>270</x>
+       <x>300</x>
        <y>310</y>
-       <width>250</width>
+       <width>291</width>
        <height>250</height>
       </rect>
      </property>
@@ -2272,7 +2272,7 @@ Si vous hésitez, trouvez du conseil. </string>
       <rect>
        <x>5</x>
        <y>310</y>
-       <width>250</width>
+       <width>281</width>
        <height>250</height>
       </rect>
      </property>
@@ -2525,7 +2525,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <string>Images de chaque parcelle</string>
       </property>
       <property name="checked">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
      </widget>
      <widget class="QLabel" name="label_210">
@@ -2577,7 +2577,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <string>Une seule isoligne et image</string>
       </property>
       <property name="checked">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QLabel" name="label_201">
@@ -2761,7 +2761,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <rect>
         <x>0</x>
         <y>110</y>
-        <width>121</width>
+        <width>141</width>
         <height>21</height>
        </rect>
       </property>
@@ -2784,9 +2784,9 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="geometry">
        <rect>
-        <x>120</x>
+        <x>140</x>
         <y>110</y>
-        <width>191</width>
+        <width>171</width>
         <height>20</height>
        </rect>
       </property>
@@ -3018,7 +3018,7 @@ Si vous hésitez, trouvez du conseil. </string>
       <rect>
        <x>360</x>
        <y>0</y>
-       <width>241</width>
+       <width>271</width>
        <height>561</height>
       </rect>
      </property>
@@ -3749,7 +3749,7 @@ DIAM, SARM, BIOM,...) </string>
       <rect>
        <x>5</x>
        <y>570</y>
-       <width>601</width>
+       <width>621</width>
        <height>51</height>
       </rect>
      </property>
@@ -3771,7 +3771,7 @@ DIAM, SARM, BIOM,...) </string>
        <rect>
         <x>10</x>
         <y>20</y>
-        <width>471</width>
+        <width>551</width>
         <height>20</height>
        </rect>
       </property>
@@ -3806,7 +3806,7 @@ DIAM, SARM, BIOM,...) </string>
       <rect>
        <x>5</x>
        <y>10</y>
-       <width>601</width>
+       <width>631</width>
        <height>201</height>
       </rect>
      </property>
@@ -3834,7 +3834,7 @@ DIAM, SARM, BIOM,...) </string>
        <rect>
         <x>10</x>
         <y>60</y>
-        <width>241</width>
+        <width>281</width>
         <height>26</height>
        </rect>
       </property>
@@ -3861,9 +3861,9 @@ DIAM, SARM, BIOM,...) </string>
       </property>
       <property name="geometry">
        <rect>
-        <x>310</x>
+        <x>300</x>
         <y>50</y>
-        <width>231</width>
+        <width>321</width>
         <height>20</height>
        </rect>
       </property>
@@ -3883,7 +3883,7 @@ DIAM, SARM, BIOM,...) </string>
       </property>
       <property name="geometry">
        <rect>
-        <x>310</x>
+        <x>370</x>
         <y>30</y>
         <width>181</width>
         <height>21</height>
@@ -3910,7 +3910,7 @@ DIAM, SARM, BIOM,...) </string>
      <widget class="QCheckBox" name="checkBoxArret">
       <property name="geometry">
        <rect>
-        <x>310</x>
+        <x>370</x>
         <y>10</y>
         <width>201</width>
         <height>26</height>
@@ -3933,7 +3933,7 @@ DIAM, SARM, BIOM,...) </string>
        <rect>
         <x>10</x>
         <y>135</y>
-        <width>271</width>
+        <width>281</width>
         <height>21</height>
        </rect>
       </property>
@@ -3962,7 +3962,7 @@ DIAM, SARM, BIOM,...) </string>
        <rect>
         <x>10</x>
         <y>85</y>
-        <width>251</width>
+        <width>281</width>
         <height>21</height>
        </rect>
       </property>
@@ -4240,7 +4240,7 @@ DIAM, SARM, BIOM,...) </string>
       <rect>
        <x>5</x>
        <y>230</y>
-       <width>601</width>
+       <width>631</width>
        <height>291</height>
       </rect>
      </property>
@@ -4268,7 +4268,7 @@ DIAM, SARM, BIOM,...) </string>
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>591</width>
+        <width>611</width>
         <height>131</height>
        </rect>
       </property>
@@ -4285,7 +4285,7 @@ DIAM, SARM, BIOM,...) </string>
       <widget class="QSpinBox" name="spinBoxIsoMax">
        <property name="geometry">
         <rect>
-         <x>300</x>
+         <x>310</x>
          <y>40</y>
          <width>101</width>
          <height>21</height>
@@ -4312,7 +4312,7 @@ DIAM, SARM, BIOM,...) </string>
       <widget class="QSpinBox" name="spinBoxDistanceIso">
        <property name="geometry">
         <rect>
-         <x>150</x>
+         <x>140</x>
          <y>40</y>
          <width>101</width>
          <height>21</height>
@@ -4342,7 +4342,7 @@ DIAM, SARM, BIOM,...) </string>
        </property>
        <property name="geometry">
         <rect>
-         <x>20</x>
+         <x>10</x>
          <y>90</y>
          <width>511</width>
          <height>31</height>
@@ -4372,7 +4372,7 @@ DIAM, SARM, BIOM,...) </string>
       <widget class="QSpinBox" name="spinBoxIsoMin">
        <property name="geometry">
         <rect>
-         <x>20</x>
+         <x>10</x>
          <y>40</y>
          <width>101</width>
          <height>21</height>
@@ -4399,9 +4399,9 @@ DIAM, SARM, BIOM,...) </string>
       <widget class="QLabel" name="lab_82">
        <property name="geometry">
         <rect>
-         <x>440</x>
+         <x>460</x>
          <y>20</y>
-         <width>111</width>
+         <width>141</width>
          <height>21</height>
         </rect>
        </property>
@@ -4423,9 +4423,9 @@ DIAM, SARM, BIOM,...) </string>
       <widget class="QLabel" name="lab_86">
        <property name="geometry">
         <rect>
-         <x>150</x>
+         <x>140</x>
          <y>20</y>
-         <width>141</width>
+         <width>161</width>
          <height>21</height>
         </rect>
        </property>
@@ -4447,9 +4447,9 @@ DIAM, SARM, BIOM,...) </string>
       <widget class="QLabel" name="lab_83">
        <property name="geometry">
         <rect>
-         <x>300</x>
+         <x>310</x>
          <y>20</y>
-         <width>161</width>
+         <width>131</width>
          <height>21</height>
         </rect>
        </property>
@@ -4471,9 +4471,9 @@ DIAM, SARM, BIOM,...) </string>
       <widget class="QLabel" name="lab_81">
        <property name="geometry">
         <rect>
-         <x>20</x>
+         <x>10</x>
          <y>20</y>
-         <width>111</width>
+         <width>121</width>
          <height>21</height>
         </rect>
        </property>
@@ -4498,7 +4498,7 @@ DIAM, SARM, BIOM,...) </string>
        </property>
        <property name="geometry">
         <rect>
-         <x>20</x>
+         <x>10</x>
          <y>70</y>
          <width>381</width>
          <height>21</height>
@@ -4524,7 +4524,7 @@ DIAM, SARM, BIOM,...) </string>
       <widget class="QSpinBox" name="spinBoxNombreIso">
        <property name="geometry">
         <rect>
-         <x>440</x>
+         <x>460</x>
          <y>40</y>
          <width>101</width>
          <height>21</height>
@@ -4554,7 +4554,7 @@ DIAM, SARM, BIOM,...) </string>
        <rect>
         <x>10</x>
         <y>170</y>
-        <width>591</width>
+        <width>621</width>
         <height>111</height>
        </rect>
       </property>
@@ -4581,7 +4581,7 @@ DIAM, SARM, BIOM,...) </string>
       <widget class="QSpinBox" name="spinBoxIsoMax_Fixe_DIAM">
        <property name="geometry">
         <rect>
-         <x>360</x>
+         <x>460</x>
          <y>40</y>
          <width>101</width>
          <height>21</height>
@@ -4610,9 +4610,9 @@ DIAM, SARM, BIOM,...) </string>
       <widget class="QLabel" name="lab_294">
        <property name="geometry">
         <rect>
-         <x>220</x>
+         <x>310</x>
          <y>20</y>
-         <width>121</width>
+         <width>131</width>
          <height>21</height>
         </rect>
        </property>
@@ -4636,7 +4636,7 @@ DIAM, SARM, BIOM,...) </string>
       <widget class="QSpinBox" name="spinBoxIsoDistance_Fixe_DIAM">
        <property name="geometry">
         <rect>
-         <x>230</x>
+         <x>310</x>
          <y>40</y>
          <width>101</width>
          <height>21</height>
@@ -4665,9 +4665,9 @@ DIAM, SARM, BIOM,...) </string>
       <widget class="QLabel" name="lab_295">
        <property name="geometry">
         <rect>
-         <x>360</x>
+         <x>460</x>
          <y>20</y>
-         <width>101</width>
+         <width>151</width>
          <height>21</height>
         </rect>
        </property>
@@ -4691,9 +4691,9 @@ DIAM, SARM, BIOM,...) </string>
       <widget class="QLabel" name="lab_293">
        <property name="geometry">
         <rect>
-         <x>120</x>
+         <x>140</x>
          <y>20</y>
-         <width>101</width>
+         <width>131</width>
          <height>21</height>
         </rect>
        </property>
@@ -4717,7 +4717,7 @@ DIAM, SARM, BIOM,...) </string>
       <widget class="QSpinBox" name="spinBoxIsoMin_Fixe_DIAM">
        <property name="geometry">
         <rect>
-         <x>120</x>
+         <x>140</x>
          <y>40</y>
          <width>71</width>
          <height>21</height>
@@ -4783,7 +4783,7 @@ DIAM, SARM, BIOM,...) </string>
         <rect>
          <x>0</x>
          <y>20</y>
-         <width>111</width>
+         <width>131</width>
          <height>21</height>
         </rect>
        </property>
@@ -4807,7 +4807,7 @@ DIAM, SARM, BIOM,...) </string>
       <widget class="QSpinBox" name="spinBoxIsoMax_Fixe_SARM">
        <property name="geometry">
         <rect>
-         <x>360</x>
+         <x>460</x>
          <y>60</y>
          <width>101</width>
          <height>21</height>
@@ -4836,7 +4836,7 @@ DIAM, SARM, BIOM,...) </string>
       <widget class="QSpinBox" name="spinBoxIsoMin_Fixe_SARM">
        <property name="geometry">
         <rect>
-         <x>120</x>
+         <x>140</x>
          <y>60</y>
          <width>71</width>
          <height>21</height>
@@ -4865,7 +4865,7 @@ DIAM, SARM, BIOM,...) </string>
       <widget class="QSpinBox" name="spinBoxIsoDistance_Fixe_SARM">
        <property name="geometry">
         <rect>
-         <x>230</x>
+         <x>310</x>
          <y>60</y>
          <width>101</width>
          <height>21</height>
@@ -4929,7 +4929,7 @@ DIAM, SARM, BIOM,...) </string>
       <widget class="QSpinBox" name="spinBoxIsoMax_Fixe_BIOM">
        <property name="geometry">
         <rect>
-         <x>360</x>
+         <x>460</x>
          <y>80</y>
          <width>101</width>
          <height>21</height>
@@ -4958,7 +4958,7 @@ DIAM, SARM, BIOM,...) </string>
       <widget class="QSpinBox" name="spinBoxIsoDistance_Fixe_BIOM">
        <property name="geometry">
         <rect>
-         <x>230</x>
+         <x>310</x>
          <y>80</y>
          <width>101</width>
          <height>21</height>
@@ -5022,7 +5022,7 @@ DIAM, SARM, BIOM,...) </string>
       <widget class="QSpinBox" name="spinBoxIsoMin_Fixe_BIOM">
        <property name="geometry">
         <rect>
-         <x>120</x>
+         <x>140</x>
          <y>80</y>
          <width>71</width>
          <height>21</height>
@@ -5113,10 +5113,10 @@ DIAM, SARM, BIOM,...) </string>
     <widget class="QGroupBox" name="groupBoxSegment">
      <property name="geometry">
       <rect>
-       <x>5</x>
-       <y>115</y>
-       <width>591</width>
-       <height>121</height>
+       <x>0</x>
+       <y>125</y>
+       <width>641</width>
+       <height>131</height>
       </rect>
      </property>
      <property name="font">
@@ -5136,7 +5136,7 @@ DIAM, SARM, BIOM,...) </string>
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>70</y>
+        <y>75</y>
         <width>131</width>
         <height>21</height>
        </rect>
@@ -5165,7 +5165,7 @@ DIAM, SARM, BIOM,...) </string>
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>20</y>
+        <y>25</y>
         <width>70</width>
         <height>21</height>
        </rect>
@@ -5200,7 +5200,7 @@ DIAM, SARM, BIOM,...) </string>
       <property name="geometry">
        <rect>
         <x>150</x>
-        <y>70</y>
+        <y>75</y>
         <width>51</width>
         <height>21</height>
        </rect>
@@ -5235,7 +5235,7 @@ DIAM, SARM, BIOM,...) </string>
       <property name="geometry">
        <rect>
         <x>390</x>
-        <y>70</y>
+        <y>75</y>
         <width>51</width>
         <height>21</height>
        </rect>
@@ -5270,7 +5270,7 @@ DIAM, SARM, BIOM,...) </string>
       <property name="geometry">
        <rect>
         <x>210</x>
-        <y>70</y>
+        <y>75</y>
         <width>171</width>
         <height>21</height>
        </rect>
@@ -5296,7 +5296,7 @@ DIAM, SARM, BIOM,...) </string>
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>45</y>
+        <y>50</y>
         <width>371</width>
         <height>21</height>
        </rect>
@@ -5322,7 +5322,7 @@ DIAM, SARM, BIOM,...) </string>
       <property name="geometry">
        <rect>
         <x>390</x>
-        <y>45</y>
+        <y>50</y>
         <width>51</width>
         <height>21</height>
        </rect>
@@ -5354,7 +5354,7 @@ DIAM, SARM, BIOM,...) </string>
       <property name="geometry">
        <rect>
         <x>90</x>
-        <y>20</y>
+        <y>25</y>
         <width>271</width>
         <height>21</height>
        </rect>
@@ -5383,7 +5383,7 @@ DIAM, SARM, BIOM,...) </string>
       <property name="geometry">
        <rect>
         <x>390</x>
-        <y>20</y>
+        <y>25</y>
         <width>70</width>
         <height>21</height>
        </rect>
@@ -5421,7 +5421,7 @@ DIAM, SARM, BIOM,...) </string>
       <property name="geometry">
        <rect>
         <x>390</x>
-        <y>95</y>
+        <y>100</y>
         <width>51</width>
         <height>21</height>
        </rect>
@@ -5453,7 +5453,7 @@ DIAM, SARM, BIOM,...) </string>
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>95</y>
+        <y>100</y>
         <width>351</width>
         <height>21</height>
        </rect>
@@ -5479,9 +5479,9 @@ DIAM, SARM, BIOM,...) </string>
     <widget class="QGroupBox" name="groupBoxInterIntraExpert">
      <property name="geometry">
       <rect>
-       <x>5</x>
-       <y>240</y>
-       <width>591</width>
+       <x>0</x>
+       <y>260</y>
+       <width>641</width>
        <height>51</height>
       </rect>
      </property>
@@ -5524,7 +5524,7 @@ DIAM, SARM, BIOM,...) </string>
       <rect>
        <x>5</x>
        <y>10</y>
-       <width>591</width>
+       <width>631</width>
        <height>101</height>
       </rect>
      </property>
@@ -5669,13 +5669,13 @@ DIAM, SARM, BIOM,...) </string>
        <rect>
         <x>230</x>
         <y>50</y>
-        <width>221</width>
+        <width>141</width>
         <height>26</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>9</pointsize>
+        <pointsize>8</pointsize>
         <weight>50</weight>
         <italic>false</italic>
         <bold>false</bold>
@@ -5698,7 +5698,7 @@ DIAM, SARM, BIOM,...) </string>
      <widget class="QRadioButton" name="radioButtonGPS">
       <property name="geometry">
        <rect>
-        <x>360</x>
+        <x>380</x>
         <y>50</y>
         <width>211</width>
         <height>26</height>
@@ -5706,7 +5706,7 @@ DIAM, SARM, BIOM,...) </string>
       </property>
       <property name="font">
        <font>
-        <pointsize>9</pointsize>
+        <pointsize>8</pointsize>
         <weight>50</weight>
         <bold>false</bold>
         <stylestrategy>PreferDefault</stylestrategy>
@@ -5726,9 +5726,9 @@ DIAM, SARM, BIOM,...) </string>
     <widget class="QGroupBox" name="groupBoxCampagne">
      <property name="geometry">
       <rect>
-       <x>5</x>
-       <y>300</y>
-       <width>591</width>
+       <x>0</x>
+       <y>320</y>
+       <width>641</width>
        <height>81</height>
       </rect>
      </property>
@@ -5753,7 +5753,7 @@ DIAM, SARM, BIOM,...) </string>
        <rect>
         <x>10</x>
         <y>20</y>
-        <width>561</width>
+        <width>621</width>
         <height>26</height>
        </rect>
       </property>
@@ -5787,7 +5787,7 @@ DIAM, SARM, BIOM,...) </string>
        <rect>
         <x>10</x>
         <y>40</y>
-        <width>561</width>
+        <width>621</width>
         <height>26</height>
        </rect>
       </property>
@@ -5824,7 +5824,7 @@ DIAM, SARM, BIOM,...) </string>
       <rect>
        <x>0</x>
        <y>10</y>
-       <width>611</width>
+       <width>691</width>
        <height>611</height>
       </rect>
      </property>
@@ -5933,7 +5933,7 @@ DIAM, SARM, BIOM,...) </string>
        <rect>
         <x>10</x>
         <y>220</y>
-        <width>591</width>
+        <width>621</width>
         <height>41</height>
        </rect>
       </property>
@@ -5983,9 +5983,9 @@ DIAM, SARM, BIOM,...) </string>
      <widget class="QLabel" name="label_CIVC">
       <property name="geometry">
        <rect>
-        <x>180</x>
+        <x>190</x>
         <y>50</y>
-        <width>121</width>
+        <width>111</width>
         <height>121</height>
        </rect>
       </property>
@@ -6000,7 +6000,7 @@ DIAM, SARM, BIOM,...) </string>
       <property name="geometry">
        <rect>
         <x>70</x>
-        <y>30</y>
+        <y>25</y>
         <width>91</width>
         <height>21</height>
        </rect>
@@ -6021,9 +6021,9 @@ DIAM, SARM, BIOM,...) </string>
       </property>
       <property name="geometry">
        <rect>
-        <x>290</x>
+        <x>330</x>
         <y>0</y>
-        <width>211</width>
+        <width>311</width>
         <height>20</height>
        </rect>
       </property>
@@ -6035,7 +6035,7 @@ DIAM, SARM, BIOM,...) </string>
        </font>
       </property>
       <property name="text">
-       <string>Version 3.10.9 &quot;Agro par parcelle&quot;</string>
+       <string>Version 3.10.99B &quot;Agro par parcelle&quot;</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_500">
@@ -6043,7 +6043,7 @@ DIAM, SARM, BIOM,...) </string>
        <rect>
         <x>20</x>
         <y>0</y>
-        <width>231</width>
+        <width>281</width>
         <height>21</height>
        </rect>
       </property>
@@ -6136,9 +6136,9 @@ DIAM, SARM, BIOM,...) </string>
       <property name="geometry">
        <rect>
         <x>190</x>
-        <y>20</y>
-        <width>331</width>
-        <height>31</height>
+        <y>25</y>
+        <width>391</width>
+        <height>21</height>
        </rect>
       </property>
       <property name="font">
@@ -6148,14 +6148,13 @@ DIAM, SARM, BIOM,...) </string>
        </font>
       </property>
       <property name="text">
-       <string>Contributions majeures
-Profil champagne                Version 3</string>
+       <string>Contribution profil Champagne &amp; version 3</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_TAITTINGER">
       <property name="geometry">
        <rect>
-        <x>320</x>
+        <x>440</x>
         <y>50</y>
         <width>121</width>
         <height>121</height>
@@ -6239,7 +6238,7 @@ Profil champagne                Version 3</string>
        <rect>
         <x>10</x>
         <y>450</y>
-        <width>591</width>
+        <width>621</width>
         <height>131</height>
        </rect>
       </property>
@@ -6253,11 +6252,11 @@ Profil champagne                Version 3</string>
        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:9pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Cantarell'; font-size:10pt;&quot;&gt;Utilisez le bouton &lt;/span&gt;&lt;span style=&quot; font-family:'Cantarell'; font-size:10pt; font-weight:600;&quot;&gt;Aide&lt;/span&gt;&lt;span style=&quot; font-family:'Cantarell'; font-size:10pt;&quot;&gt; pour accéder aux documentations, à la license et au suivi des évolutions sous le Wiki de l'extension. &lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Cantarell'; font-size:10pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Cantarell'; font-size:10pt;&quot;&gt;N'hésitez pas à y poster vos questions, proposition d'évolutions et retour de problèmes.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Cantarell'; font-size:10pt;&quot;&gt;N'hésitez pas à poster vos questions, propositions d'évolutions et retours de problèmes.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
      </widget>
      <widget class="QComboBox" name="fieldComboModeTrace">
@@ -6266,9 +6265,9 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="geometry">
        <rect>
-        <x>110</x>
+        <x>130</x>
         <y>590</y>
-        <width>311</width>
+        <width>271</width>
         <height>21</height>
        </rect>
       </property>
@@ -6300,7 +6299,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>590</y>
-        <width>131</width>
+        <width>111</width>
         <height>21</height>
        </rect>
       </property>
@@ -6424,14 +6423,14 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="geometry">
        <rect>
-        <x>440</x>
-        <y>586</y>
-        <width>161</width>
+        <x>450</x>
+        <y>590</y>
+        <width>171</width>
         <height>26</height>
        </rect>
       </property>
       <property name="text">
-       <string>Double entête dans CSV</string>
+       <string>Double entête dans CSVT</string>
       </property>
       <property name="checked">
        <bool>false</bool>
@@ -6469,6 +6468,7 @@ p, li { white-space: pre-wrap; }
        <string>PDF</string>
       </property>
      </widget>
+     <zorder>ButtonPDF</zorder>
      <zorder>label_Contributions</zorder>
      <zorder>buttonContribuer</zorder>
      <zorder>label_506</zorder>
@@ -6491,9 +6491,8 @@ p, li { white-space: pre-wrap; }
      <zorder>comboBoxPoints</zorder>
      <zorder>lab_42</zorder>
      <zorder>fieldPbGdal</zorder>
-     <zorder>textBrowserAide</zorder>
      <zorder>checkBoxDoubleEnteteCSV</zorder>
-     <zorder>ButtonPDF</zorder>
+     <zorder>textBrowserAide</zorder>
     </widget>
    </widget>
   </widget>
@@ -6571,7 +6570,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>740</y>
-     <width>621</width>
+     <width>631</width>
      <height>111</height>
     </rect>
    </property>
