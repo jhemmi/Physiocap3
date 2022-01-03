@@ -6044,7 +6044,7 @@ DIAM, SARM, BIOM,...) </string>
        </font>
       </property>
       <property name="text">
-       <string>Version 3.10.99B &quot;Agro par parcelle&quot;</string>
+       <string>Version 3.10.14B &quot;Agro par parcelle&quot;</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_500">
