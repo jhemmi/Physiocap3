@@ -91,13 +91,13 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.fieldComboModeTrace.clear( )
             self.fieldComboModeTrace.addItems( MODE_TRACE )
             # Retrouver le mode de trace dans  settings
-            leModeDeTrace = self.settings.value("Expert/leModeDeTrace", TRACE_TOUT)
+            leModeDeTrace = self.settings.value("Expert/leModeDeTrace", TRACE_MINI)
             for idx, modeTrace in enumerate( MODE_TRACE):
                 if ( modeTrace == leModeDeTrace):
                     self.fieldComboModeTrace.setCurrentIndex( idx)
 
-        physiocap_log( "Répertoire de QGIS : " +  self.gis_dir, leModeDeTrace)
-        physiocap_log( "Répertoire des plugins ou extensions : " +  self.plugins_dir, leModeDeTrace)
+        #physiocap_log( "Répertoire de QGIS : " +  self.gis_dir, leModeDeTrace)
+        physiocap_log( "Répertoire des extensions (plugins) : " +  self.plugins_dir, leModeDeTrace)
        
         # Slot for boutons : ces deux sont déjà sont dans UI
         ##self.buttonBox.button( QDialogButtonBox.Ok ).pressed.connect(self.accept)
