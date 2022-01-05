@@ -6445,6 +6445,39 @@ p, li { white-space: pre-wrap; }
        <bool>false</bool>
       </property>
      </widget>
+     <widget class="QPushButton" name="ButtonPDF">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>560</x>
+        <y>540</y>
+        <width>41</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="mouseTracking">
+       <bool>false</bool>
+      </property>
+      <property name="toolTip">
+       <string/>
+      </property>
+      <property name="whatsThis">
+       <string/>
+      </property>
+      <property name="text">
+       <string>PDF</string>
+      </property>
+     </widget>
+     <zorder>ButtonPDF</zorder>
      <zorder>label_Contributions</zorder>
      <zorder>buttonContribuer</zorder>
      <zorder>label_506</zorder>
@@ -6824,38 +6857,6 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="text">
      <string>Enchaîner les 3 traitements</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="ButtonPDF">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>580</x>
-      <y>80</y>
-      <width>41</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="mouseTracking">
-     <bool>false</bool>
-    </property>
-    <property name="toolTip">
-     <string/>
-    </property>
-    <property name="whatsThis">
-     <string/>
-    </property>
-    <property name="text">
-     <string>PDF</string>
     </property>
    </widget>
   </widget>

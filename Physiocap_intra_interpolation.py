@@ -57,7 +57,7 @@ from PyQt5.QtCore import Qt
 from qgis.core import ( Qgis, QgsProject, QgsVectorLayer, \
     QgsLayerTreeGroup, QgsRasterLayer, QgsMessageLog,  \
     QgsFeatureRequest, QgsExpression, QgsProcessingFeedback,  \
-    QgsLayout, QgsReadWriteContext, QgsLayoutExporter, QgsLayerTree)
+    QgsRectangle, QgsLayout, QgsReadWriteContext, QgsLayoutExporter, QgsLayerTree)
 
 class PhysiocapIntra( QtWidgets.QDialog):
     """QGIS Pour voir les messages traduits."""
@@ -177,15 +177,26 @@ class PhysiocapIntra( QtWidgets.QDialog):
 ###                raster_node = vignette_group_intra.addLayer(intra_raster)
 ###                iface.mapCanvas().refresh()
 
-    def dump_noeuds_legende(self, itemLegende,  libelle = "Modèle de la légende"):
-        le_modele = itemLegende.model()
+    def dump_noeuds_legende(self, le_modele,  libelle = "Modèle de la légende"):
         if le_modele == None:
             physiocap_log( "{} : la légende sans noeud".format( libelle), TRACE_PDF)
         else:
-            physiocap_log( "{} : le modele contient {} noeuds".format( libelle, le_modele.rowCount()), TRACE_PDF)
+            physiocap_log( "{} : le modele contient {} niveau".format( libelle, le_modele.rowCount()), TRACE_PDF)
             for un_noeud in le_modele.children():
-                #physiocap_log( "{} : le noeud a un nom {}".format( libelle, un_noeud.name()), TRACE_PDF)
-                physiocap_log( "{} : le noeud a un nom {}".format( libelle, dir( un_noeud)), TRACE_PDF)
+                print( un_noeud.__class__)
+                print( "==============================")
+                print( dir( un_noeud))
+                print( "==============================")
+                print( type( un_noeud))                
+                print( "==============================")
+                print( "==============================")
+                physiocap_log( "{} : le noeud a une classe {}".format( libelle, un_noeud.__class__), TRACE_PDF)
+                physiocap_log( "{} : le noeud a un parent {}".format( libelle, dir( un_noeud.parent)), TRACE_PDF)
+                physiocap_log( "{} : la noeud a un dump {}".format( libelle, un_noeud.dumpObjectInfo), TRACE_PDF)
+                #physiocap_log( "{} : le noeud a un nom {}".format( libelle, dir( un_noeud)), TRACE_PDF)
+                physiocap_log( "{} : la noeud a une property {}".format( libelle, dir( un_noeud.property)), TRACE_PDF)
+##                for sous_noeud in un_noeud.children():
+##                    physiocap_log( "== {} : le sous_noeud a un nom {}".format( libelle, sous_noeud.objectName), TRACE_PDF)
                 
     def dump_couches(self, itemCarte,  libelle = "Pour PDF"):
         les_couches = itemCarte.layers()
@@ -194,9 +205,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
         else:
             physiocap_log( "{} : la carte a {} couches".format( libelle, len(  les_couches)), TRACE_PDF)
             for une_couche in les_couches:
-                physiocap_log( "{} : la couche a un dump {}".format( libelle, une_couche.objectName()), TRACE_PDF)
-                physiocap_log( "{} : la couche a un dump {}".format( libelle, une_couche.property()), TRACE_PDF)
-                physiocap_log( "{} : la couche a un dump {}".format( libelle, une_couche.dumpObjectInfo()), TRACE_PDF)
+                physiocap_log( "{} : la couche a un nom {}".format( libelle, une_couche.name()), TRACE_PDF)
 
     def imprimer_raster( self, dialogue, nom_raster_final, nom_court_raster, 
                     nom_parcelle='parcelle', nom_attribut='DIAM', moyenne = 9999):
@@ -251,8 +260,12 @@ class PhysiocapIntra( QtWidgets.QDialog):
             itemMoyenne.setText( "Moyenne : {}".format( moyenne))
             # raster dans la carte 
             itemCarte = miseEnPage.itemById( "Carte")
-            self.dump_couches( itemCarte)
+            #self.dump_couches( itemCarte)
             itemCarte.setLayers( mes_couches)
+            # Reglage Extend
+            rect = QgsRectangle(  mes_couches[0].extent())
+            rect.scale(1.0)
+            itemCarte.zoomToExtent(rect)
             self.dump_couches( itemCarte,  "APRES")
 
             physiocap_log( "PDF : la carte se nomme {} ".format( itemCarte.id()), TRACE_PDF)
@@ -262,9 +275,9 @@ class PhysiocapIntra( QtWidgets.QDialog):
             layerTree = QgsLayerTree()
             layerTree.addLayer( mes_couches[0])
             itemLegende.model().setRootGroup(layerTree)
-            self.dump_noeuds_legende( itemLegende)
-            physiocap_log( "PDF : la {} contient \n{} ".format( itemLegende.id(),  dir( itemLegende)), TRACE_PDF)
-            #physiocap_log( "PDF : la légende se nomme {} ".format( itemLegende.id()), TRACE_PDF)
+            #self.dump_noeuds_legende( itemLegende.model().setRootGroup(layerTree))
+            #physiocap_log( "PDF : la {} contient \n{} ".format( itemLegende.id(),  dir( itemLegende)), TRACE_PDF)
+            physiocap_log( "PDF : la légende se nomme {} ".format( itemLegende.id()), TRACE_PDF)
 
             exporter = QgsLayoutExporter(miseEnPage)
             exporter.exportToPdf(nom_pdf, QgsLayoutExporter.PdfExportSettings())
