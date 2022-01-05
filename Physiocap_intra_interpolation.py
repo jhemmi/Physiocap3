@@ -52,18 +52,20 @@ from .Physiocap_tools import ( physiocap_message_box,\
 from .Physiocap_var_exception import *
 
 from PyQt5 import QtWidgets
+from PyQt5.QtXml import QDomDocument
 from PyQt5.QtCore import Qt
 from qgis.core import ( Qgis, QgsProject, QgsVectorLayer, \
     QgsLayerTreeGroup, QgsRasterLayer, QgsMessageLog,  \
-    QgsFeatureRequest, QgsExpression, QgsProcessingFeedback)
-    
+    QgsFeatureRequest, QgsExpression, QgsProcessingFeedback,  \
+    QgsLayout, QgsReadWriteContext, QgsLayoutExporter, QgsLayerTree)
+
 class PhysiocapIntra( QtWidgets.QDialog):
     """QGIS Pour voir les messages traduits."""
     
     
     def __init__(self, parent=None):
         """Class constructor."""
-        print("INTRA init class")
+        #print("INTRA init class")
         super( PhysiocapIntra, self).__init__()
 
 ##    def exportMap_png(self, raster, champ, ext, nom_parcelle, moyenne):  # generate map as png
@@ -175,7 +177,100 @@ class PhysiocapIntra( QtWidgets.QDialog):
 ###                raster_node = vignette_group_intra.addLayer(intra_raster)
 ###                iface.mapCanvas().refresh()
 
-    def physiocap_affiche_raster_iso( self, dialogue, nom_raster_final, nom_court_raster, 
+    def dump_noeuds_legende(self, itemLegende,  libelle = "Modèle de la légende"):
+        le_modele = itemLegende.model()
+        if le_modele == None:
+            physiocap_log( "{} : la légende sans noeud".format( libelle), TRACE_PDF)
+        else:
+            physiocap_log( "{} : le modele contient {} noeuds".format( libelle, le_modele.rowCount()), TRACE_PDF)
+            for un_noeud in le_modele.children():
+                #physiocap_log( "{} : le noeud a un nom {}".format( libelle, un_noeud.name()), TRACE_PDF)
+                physiocap_log( "{} : le noeud a un nom {}".format( libelle, dir( un_noeud)), TRACE_PDF)
+                
+    def dump_couches(self, itemCarte,  libelle = "Pour PDF"):
+        les_couches = itemCarte.layers()
+        if les_couches == None:
+            physiocap_log( "{} : la carte sans couche".format( libelle), TRACE_PDF)
+        else:
+            physiocap_log( "{} : la carte a {} couches".format( libelle, len(  les_couches)), TRACE_PDF)
+            for une_couche in les_couches:
+                physiocap_log( "{} : la couche a un dump {}".format( libelle, une_couche.objectName()), TRACE_PDF)
+                physiocap_log( "{} : la couche a un dump {}".format( libelle, une_couche.property()), TRACE_PDF)
+                physiocap_log( "{} : la couche a un dump {}".format( libelle, une_couche.dumpObjectInfo()), TRACE_PDF)
+
+    def imprimer_raster( self, dialogue, nom_raster_final, nom_court_raster, 
+                    nom_parcelle='parcelle', nom_attribut='DIAM', moyenne = 9999):
+        """ Impression PDF du raster"""
+        leModeDeTrace = dialogue.fieldComboModeTrace.currentText() 
+        derniere_session = dialogue.lineEditDerniereSession.text()
+        repertoire_resultat = dialogue.lineEditDirectoryFiltre.text()
+        chemin_session = os.path.join( repertoire_resultat, derniere_session)
+        profil_physiocap = dialogue.fieldComboProfilPHY.currentText()
+        chemin_pdf = os.path.join( chemin_session, "cartes")
+        if not os.path.exists( chemin_pdf):           
+            os.mkdir( chemin_pdf)
+        nom_pdf = os.path.join( chemin_pdf, nom_attribut + SEPARATEUR_+ nom_parcelle + EXTENSION_PDF)
+        if os.path.exists( nom_pdf):           
+            return physiocap_error( "Pour {1} et parcelle {0}, le PDF existe déjà {2}".\
+                format( nom_parcelle, nom_attribut, nom_pdf))
+
+        # Charger un modele qpt dans les composer_template
+        chemin = os.path.join( dialogue.gis_dir, 'composer_templates')
+        # TODO: PDF : parametrer ce nom profil.qpt
+        tmpfile = os.path.join( chemin, profil_physiocap + EXTENSION_QPT)
+        if not os.path.exists( tmpfile):
+            chemin_modele = os.path.join( dialogue.plugin_dir,'ModeleQGIS')
+            chemin = os.path.join( chemin_modele,'Mise en page')
+            modele_file = os.path.join( chemin, profil_physiocap + EXTENSION_QPT)
+            # TODO : assert exist
+            # Copier le template
+            shutil.copy( modele_file, tmpfile)
+        with open(tmpfile) as f:
+            template_content = f.read()
+        doc = QDomDocument()
+        doc.setContent(template_content)
+
+        if ( nom_raster_final != ""):
+            if not os.path.exists( nom_raster_final):           
+                physiocap_log( "=~= {2} {0} ne retrouve pas votre raster {1} pour impresssion PDF".\
+                    format( PHYSIOCAP_UNI, nom_court_raster, PHYSIOCAP_WARNING), TRACE_INTRA)
+                raise physiocap_exception_raster_manquant( nom_court_raster)     
+
+            p = QgsProject.instance()
+            miseEnPage = QgsLayout( p)
+            miseEnPage.initializeDefaults()
+            mes_couches = QgsProject.instance().mapLayersByName( nom_court_raster)
+            
+            # Customisation des items Titre Moyenne 
+            items, ok = miseEnPage.loadFromTemplate(doc, QgsReadWriteContext(), False)       
+            #physiocap_log( "PDF : OK de la mise en page {} ".format( ok), TRACE_PDF)
+            itemTitre = miseEnPage.itemById( "Titre")
+            libelle, unite = DICT_ATTRTIBUT_UNITE[ nom_attribut]
+            itemTitre.setText( "Parcelle {1} - {0} ({2})".format( libelle, nom_parcelle, unite))
+            itemMoyenne = miseEnPage.itemById( "Moyenne")
+            itemMoyenne.setText( "Moyenne : {}".format( moyenne))
+            # raster dans la carte 
+            itemCarte = miseEnPage.itemById( "Carte")
+            self.dump_couches( itemCarte)
+            itemCarte.setLayers( mes_couches)
+            self.dump_couches( itemCarte,  "APRES")
+
+            physiocap_log( "PDF : la carte se nomme {} ".format( itemCarte.id()), TRACE_PDF)
+            # Légende
+            itemLegende = miseEnPage.itemById( "Légende")
+            # OK mais toutes les entrées dans légende : itemLegende.setLinkedMap( itemCarte) 
+            layerTree = QgsLayerTree()
+            layerTree.addLayer( mes_couches[0])
+            itemLegende.model().setRootGroup(layerTree)
+            self.dump_noeuds_legende( itemLegende)
+            physiocap_log( "PDF : la {} contient \n{} ".format( itemLegende.id(),  dir( itemLegende)), TRACE_PDF)
+            #physiocap_log( "PDF : la légende se nomme {} ".format( itemLegende.id()), TRACE_PDF)
+
+            exporter = QgsLayoutExporter(miseEnPage)
+            exporter.exportToPdf(nom_pdf, QgsLayoutExporter.PdfExportSettings())
+            physiocap_log( "Impression en PDF (au format {}) pour attribut {} et parcelle {}".format( profil_physiocap, nom_attribut, nom_parcelle), leModeDeTrace)
+        
+    def afficher_raster_iso( self, dialogue, nom_raster_final, nom_court_raster, 
                     le_template_raster, affiche_raster,
                     nom_iso_final, nom_court_isoligne, le_template_isolignes, affiche_iso,
                     vignette_group_intra, mon_projet):
@@ -306,7 +401,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         format( lettre_algo, algo_court, produit_algo), TRACE_INTRA)
         return produit_algo
         
-    def physiocap_creer_raster_iso( self, dialogue, choix_interpolation, choix_force_interpolation, 
+    def creer_raster_iso( self, dialogue, choix_interpolation, choix_force_interpolation, 
                 nom_noeud_arbre, chemin_raster, chemin_iso,
                 nom_court_vignette, nom_vignette, nom_court_point, nom_point,
                 le_champ_choisi, le_choix_INTRA_continue, le_nom_entite_libere):
@@ -997,7 +1092,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         
                         nouveau = "NON"
                         nouveau, nom_raster_final, nom_court_raster, nom_iso_final, nom_court_isoligne = \
-                            self.physiocap_creer_raster_iso( dialogue, choix_interpolation, choix_interpolation, 
+                            self.creer_raster_iso( dialogue, choix_interpolation, choix_interpolation, 
                             nom_noeud_arbre, chemin_raster, chemin_iso,  
                             nom_court_vignette, nom_vignette, nom_court_point, nom_point,
                             le_champ_choisi, le_choix_INTRA_continue, le_nom_entite_libere) 
@@ -1043,7 +1138,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     # Affichage dans panneau QGIS                           
                     if ( dialogue.checkBoxIntraUnSeul.isChecked()):
                         if nouveau == "NOUVEAUX":
-                            self.physiocap_affiche_raster_iso( dialogue, \
+                            self.afficher_raster_iso( dialogue, \
                                 nom_raster_final, nom_court_raster, le_template_raster, "YES",
                                 nom_iso_final, nom_court_isoligne, le_template_isolignes, "YES",
                                 vignette_group_intra, mon_projet)
@@ -1163,7 +1258,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
         ##            physiocap_log( "=~= Points CHAQUE - nom  : " + nom_point , TRACE_INTRA)
                         nouveau = "NON"
                         nouveau, nom_raster_final, nom_court_raster, nom_iso_final, nom_court_isoligne = \
-                            self.physiocap_creer_raster_iso( dialogue, choix_interpolation, choix_definitif_interpolation, 
+                            self.creer_raster_iso( dialogue, choix_interpolation, choix_definitif_interpolation, 
                             nom_noeud_arbre, chemin_raster, chemin_iso,
                             nom_court_vignette, nom_vignette, nom_court_point, nom_point,
                             le_champ_choisi, le_choix_INTRA_continue, le_nom_entite_libere)
@@ -1180,7 +1275,6 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         pass
                     # Fin de capture des err        
                     
-                    
                     # Progress BAR + un stepBar%
                     positionBar = positionBarInit + ( stepBar * id_contour)    
                     dialogue.progressBarIntra.setValue( positionBar)
@@ -1195,11 +1289,9 @@ class PhysiocapIntra( QtWidgets.QDialog):
                                 # modifier les noms courts raster et iso
                                 longueur_nom_arbre = len(nom_noeud_arbre)
                                 nom_court_raster_ori = nom_court_raster
-                                # nom_court_raster = nom_court_raster_ori[0:longueur_nom_arbre +1] + \
                                 nom_court_raster = shape_point_sans_extension + \
                                     nom_court_raster_ori[longueur_nom_arbre:]
                                 nom_court_isoligne_ori = nom_court_isoligne
-                                # nom_court_isoligne = nom_court_isoligne_ori[0:longueur_nom_arbre +1] + \
                                 nom_court_isoligne = shape_point_sans_extension + \
                                     nom_court_isoligne_ori[longueur_nom_arbre:]
 
@@ -1212,14 +1304,18 @@ class PhysiocapIntra( QtWidgets.QDialog):
                             if nouveau == "NOUVEAUX":
 #                                physiocap_log ( self.tr( "=~= Affichage résultat d'interpolation de {0} <<<< vignette {1}").\
 #                                    format( le_nom_entite_libere, vignette_group_intra ), "OGR")
-                                self.physiocap_affiche_raster_iso( dialogue, \
+                                self.afficher_raster_iso( dialogue, \
                                     nom_raster_final, nom_court_raster, le_template_raster, afficheRaster,
                                     nom_iso_final, nom_court_isoligne, le_template_isolignes, afficheIso,
                                     vignette_group_intra, mon_projet)
                         physiocap_log ( self.tr( "=~= Fin Interpolation de {0} <<<<").\
                             format( un_nom), leModeDeTrace)
 
-            # TODO PDF
+                        # TODO PDF
+                        if  dialogue.checkBoxIntraPDF.isChecked():
+                            self.imprimer_raster( dialogue, nom_raster_final, nom_court_raster, \
+                                    un_nom, le_champ_choisi)
+
 
             if ( contour_avec_point >  0 ):                                            
                 physiocap_log( self.tr( "=~= Fin des {0}/{1} interpolation(s) intra parcellaire").\

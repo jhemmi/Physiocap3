@@ -143,8 +143,8 @@ def physiocap_log( aText, modeTrace = TRACE_PAS,  level = "INFO"):
             if LE_MODE_PROD == "YES":
                 pass
             else:
-                if modeTrace in TRACES_A_VOIR:
-                    journal_nom = modeTrace
+                if modeTrace in TRACES_MASQUEES:
+                    return #journal_nom = modeTrace
                 else:
                     journal_nom = "{0} {1}".format( PHYSIOCAP_UNI, modeTrace)
                 QgsMessageLog.logMessage( aText, journal_nom, Qgis.Info)

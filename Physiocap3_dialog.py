@@ -58,7 +58,7 @@ from PyQt5.QtXml import QDomDocument
 from PyQt5.QtCore import (QSettings, Qt, QUrl)
 from PyQt5.QtGui import (QPixmap,  QDesktopServices)
 from PyQt5.QtWidgets import (QDialogButtonBox, QDialog, QFileDialog) 
-from qgis.core import (Qgis, QgsProject, QgsLayout, QgsReadWriteContext, QgsLayoutExporter) # QgsMessageLog, QgsMapLayer)   
+from qgis.core import (Qgis, QgsProject, QgsLayout, QgsReadWriteContext, QgsLayoutExporter, QgsUserProfileManager) # QgsMessageLog, QgsMapLayer)   
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join( os.path.dirname(__file__), 'Physiocap3_dialog_base.ui'))
 
@@ -1438,18 +1438,31 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                
         return
         
-    def slot_INTRA_imprime_PDF(self):
+    def slot_INTRA_imprime_PDF(self, parcelle="La parcelle", info_moyenne="La moyenne", info_agro="Infos aronomique" ):
         """ Slot qui imprime un pdf """
         derniere_session = self.lineEditDerniereSession.text()
-        leProfil = self.fieldComboProfilPHY.currentText()
-        physiocap_log( "Imprime PDF session {} et profil {}".format(derniere_session, leProfil))
+        profil_physiocap = self.fieldComboProfilPHY.currentText()
+        physiocap_log( "Imprime PDF session {} et profil {}".format(derniere_session, profil_physiocap), TRACE_PDF)
         # Charger un modele qpt dans les composer_template
         p = QgsProject.instance()
         miseEnPage = QgsLayout(p)
         miseEnPage.initializeDefaults()
         
-        # TODO PDF : parametrer ce nom .qpt
-        tmpfile = '/media/jean/DATA/jh/.local/share/QGIS/QGIS3/profiles/jhemmi/composer_templates/MiniPhysiocap.qpt'
+        repertoire_qgis3 = self.gis_dir
+        profil_user = QgsUserProfileManager().defaultProfileName()  #userProfile() #defaultProfileName() 	
+        physiocap_log( "Chemin {} et profil utilisateur{}".format( repertoire_qgis3, profil_user), TRACE_PDF)
+        
+        #chemin = '/media/jean/DATA/jh/.local/share/QGIS/QGIS3/profiles/jhemmi/composer_templates'
+
+        chemin = os.path.join( self.gis_dir,'composer_templates')
+        # TODO: PDF : parametrer ce nom profil.qpt
+        tmpfile = os.path.join( chemin,'MiniPhysiocap.qpt')
+        if not os.path.exists( tmpfile):
+            chemin_modele = os.path.join( self.plugin_dir,'ModeleQGIS')
+            chemin = os.path.join( chemin_modele,'Mise en page')
+            modele_file = os.path.join( chemin, profil_physiocap + EXTENSION_QPT)
+            # Copier le template
+            shutil.copy( modele_file, tmpfile)
         with open(tmpfile) as f:
             template_content = f.read()
         doc = QDomDocument()
@@ -1457,9 +1470,12 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
 
         # adding to existing items
         items, ok = miseEnPage.loadFromTemplate(doc, QgsReadWriteContext(), False)       
-        physiocap_log( "OK de la mise en page {} ".format( ok))
-        item10 = miseEnPage.itemById("10")
-        physiocap_log( "Items 20 de la mise en page {} ".format( item10))
+        physiocap_log( "OK de la mise en page {} ".format( ok), TRACE_PDF)
+        itemTitre = miseEnPage.itemById("Titre")
+        itemTitre.setText( "Mon Titre {}".format( parcelle))
+        itemMoyenne = miseEnPage.itemById("Moyenne")
+        itemMoyenne.setText( info_moyenne)
+        physiocap_log( "Items Titre de la mise en page {} ".format( dir(itemTitre)), TRACE_PDF)
         exporter = QgsLayoutExporter(miseEnPage)
         exporter.exportToPdf("/media/jean/DATA/jh/.local/share/QGIS/QGIS3/profiles/jhemmi/composer_templates/test1.pdf", QgsLayoutExporter.PdfExportSettings())
         return   

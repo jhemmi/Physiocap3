@@ -46,7 +46,7 @@ else:
     LE_MODE_PROD = "YES"
 LISTE_PROFIL= [ 'Standard', 'Champagne', 'Fronton'] #, 'IFV Bordeaux']
 # LIVRAISON : supprimer en Prod
-LE_MODE_PROD = "YES"
+#LE_MODE_PROD = "YES"
 
 # En prod CENTROIDES vaut NO
 CENTROIDES = "NO"  # CENTROIDES YES est pour voir les centroides dans la synthese
@@ -64,8 +64,9 @@ TRACE_SEGMENT_DECOUPES  = "Découpe"
 TRACE_PROFIL  = "Profil"
 TRACE_AGRO = "INFO-AGRO"
 TRACE_JH  = "aJH"
+TRACE_PDF  = "PDF"
 TRACE_PG  = "POSTGRES"
-TRACES_A_VOIR = [TRACE_JH, TRACE_PROFIL, TRACE_TOOLS, TRACE_INTRA]
+TRACES_MASQUEES = [TRACE_JH, TRACE_AGRO, TRACE_SEGMENT, TRACE_PG, TRACE_MIN_MAX, TRACE_PROFIL, TRACE_TOOLS, TRACE_INTRA]
 
 REPERTOIRE_DONNEES_BRUTES = "Choisissez votre chemin"
 PHYSIOCAP_NOM = "Physiocap"
@@ -154,6 +155,7 @@ NB_VIRGULES = 58
 
 EXTENSION_CSV = ".csv"
 EXTENSION_CSVT = ".csvt"
+EXTENSION_PDF = ".pdf"
 EXTENSION_GEOJSON = ".geojson"
 EXTENSION_SHP = ".shp"
 EXTENSION_PRJ = ".prj"
@@ -196,6 +198,7 @@ EXTENSION_RASTER_SAGA_SANS_POINT = "sdat"
 EXTENSION_RASTER_SAGA = "." + EXTENSION_RASTER_SAGA_SANS_POINT
 
 EXTENSION_QML = ".qml"
+EXTENSION_QPT = ".qpt"
 
 EXTENSION_AVEC_ZERO_V2 = SEPARATEUR_ + "0"
 # Nom plus explicite pour V3
@@ -303,6 +306,19 @@ ATTRIBUTS_INTRA_DETAILS = ["NBSARMM2", "NBSARCEP", "BIOMGCEP"]
 ATTRIBUTS_INTRA_DETAILS_PLUS = ["BIOMM2", "BIOMGM2"]
 ### si QGIS & version 3 verifier que ces index n'ont pas bougé avec les nouveau attributs 
 ### WHY ATTRIBUTS_INTRA_INDEX = {"DIAM" : 4 ,"NBSARM" : 3 ,"BIOM" : 5,  "NBSARMM2":6, "NBSARCEP":7,"BIOMM2":8, "BIOMGM2":9, "BIOMGCEP":10}
+DICT_ATTRTIBUT_UNITE={
+'DIAM' : ( "Diamètre", "mm"),
+'NBSARM' : ( "Nombre de sarments", "Sarment/m linéaire"),
+'BIOM' : ( "Biomasse", "mm²/m linéaire"),
+'NBSARMM2' : ( "Nombre de sarments par m²", "Sarment/m²"),
+'NBSARCEP' : ( "Nombre de sarments par ceps", "Sarment/cep"),
+'BIOMM2' : ( "Surface de bois", "mm²/m² "),
+'BIOMGM2' : ( "Biomasse", "g/m²"),
+'BIOMGCEP' : ( "Biomasse par ceps", "g/cep"),
+'VITESSE' : ( "Vitesse", "km/h"),
+'ALTITUDE' : ( "Altitude", "m"),
+}
+
 CHEMIN_TEMPLATES = [ "modeleQgis", "project_templates"]
 CHEMIN_DATA = 'data'
 # Exceptions Physiocap à partir de 30 erreurs sur un fchier mid
