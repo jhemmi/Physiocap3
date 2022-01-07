@@ -45,8 +45,7 @@
 from .Physiocap_tools import (physiocap_message_box, \
         physiocap_log_for_error, physiocap_log, physiocap_error, \
         quel_chemin_templates, quel_poly_point_INTER, quelle_projection_et_lib_demandee, \
-        physiocap_nom_entite_avec_pb_caractere, \
-        physiocap_get_layer_by_name, physiocap_get_layer_by_ID)
+        physiocap_nom_entite_avec_pb_caractere, physiocap_get_layer_by_name, physiocap_get_layer_by_ID)
 
 from .Physiocap_creer_arbre import (PhysiocapFiltrer)
 from .Physiocap_inter import (PhysiocapInter)

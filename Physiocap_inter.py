@@ -465,11 +465,10 @@ def physiocap_point_un_contour( laProjectionCRS, EPSG_NUMBER, nom_point, nom_prj
     les_champs.append(QgsField("BIOM", QVariant.Double,"double", 10,2)) 
     if version_3 == "YES":
         les_champs.append(QgsField("ALTITUDE", QVariant.Double,"double", 10,2)) 
-                                                            # TODO BUG probable Valider syntaxe 10.2 ou 10.1
         les_champs.append(QgsField("PDOP", QVariant.Double,"double", 10,2)) 
         les_champs.append(QgsField("DISTANCE", QVariant.Double,"double", 10,2)) 
-        les_champs.append(QgsField("DERIVE", QVariant.Double,"double", 10.1)) 
-        les_champs.append(QgsField("AZIMUTH", QVariant.Double,"double", 10.1)) 
+        les_champs.append(QgsField("DERIVE", QVariant.Double,"double", 10,1)) 
+        les_champs.append(QgsField("AZIMUTH", QVariant.Double,"double", 10,1)) 
         les_champs.append(QgsField("NBSART",QVariant.Int, "integer", 10))
     if details == "YES":
         # Niveau de detail demandé
@@ -812,9 +811,6 @@ class PhysiocapInter( QtWidgets.QDialog):
         
         # Trouver deux vecteurs
         nom_noeud_arbre, vecteur_point, origine_poly, vecteur_poly = quel_sont_vecteurs_choisis( dialogue, "Inter")
-#        except:
-#            dialogue.slot_INTER_liste_parcelles( "Filtrer")         
-#            nom_noeud_arbre, vecteur_point, origine_poly, vecteur_poly = quel_sont_vecteurs_choisis( dialogue, "Inter")            
         le_champ_contour = dialogue.fieldComboContours.currentText()
         champ_pb_gdal = dialogue.fieldPbGdal.currentText()
 
@@ -1023,6 +1019,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                         infos_agronomique_en_cours[ champ] = un_contour[ nom_champ]
                     else:
                         infos_agronomique_en_cours[ champ] = None
+                # TODO ? V3.z stocker ces données agro dans moyennes du contour
                 les_infos_agronomique.append( infos_agronomique_en_cours) 
             else:
                 try:

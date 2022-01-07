@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
+""""
 /***********************************************************************
  Physiocap_intra_interpolation
                                  A QGIS 3 plugin
@@ -68,115 +68,6 @@ class PhysiocapIntra( QtWidgets.QDialog):
         #print("INTRA init class")
         super( PhysiocapIntra, self).__init__()
 
-##    def exportMap_png(self, raster, champ, ext, nom_parcelle, moyenne):  # generate map as png
-##        # first thing : layout
-##        mapRenderer = iface.mapCanvas().mapRenderer()
-    
-#####    c = (mapRenderer)
-#####    c.setPlotStyle(QgsComposition.Print)
-#####    # add map
-#####    x, y = 100, 20
-#####    w, h = c.paperWidth() - 100, c.paperHeight() - 20
-#####    composerMap = QgsComposerMap(c, x, y, w, h)
-#####    # composerMap.setItemPosition(72, 20)
-#####    composerMap.zoomToExtent(ext)
-#####    c.addItem(composerMap)
-#####    # add titre
-#####    composerLabel = QgsComposerLabel(c)
-#####    if (champ == 'BIOM'):
-#####        composerLabel.setText("Biomasse " + nom_parcelle + "(mm2/metre lineaire)")
-#####    if (champ == 'DIAM'):
-#####        composerLabel.setText("Diametre " + nom_parcelle + "(mm)")
-#####    if (champ == 'NBSARM'):
-#####        composerLabel.setText("Nombre de sarments " + nom_parcelle + " (metre lineaire)")
-#####    if (champ == 'NBSARMM2'):
-#####        composerLabel.setText("NBSARMM2")
-#####    if (champ == 'NBSARCEP'):
-#####        composerLabel.setText("NBSARCEP")
-#####    if (champ == 'BIOMM2'):
-#####        composerLabel.setText("BIOMM2")
-#####    if (champ == 'BIOMGM2'):
-#####        composerLabel.setText("BIOMGM2")
-#####    if (champ == 'BIOMGCEP'):
-#####        composerLabel.setText("BIOMGCEP")
-#####    # composerLabel.adjustSizeToText()
-#####    composerLabel.setFont(QFont("Cambria", 20, QFont.Bold))
-#####    composerLabel.setHAlign(Qt.AlignCenter)
-#####    composerLabel.setVAlign(Qt.AlignCenter)
-#####    composerLabel.setItemPosition(0, 0, c.paperWidth(), 20)
-#####    c.addItem(composerLabel)
-#####    # add legend
-#####    legend = QgsComposerLegend(c)
-#####    # legend.model().setLayerSet(mapRenderer.layerSet())
-#####    layerGroup = QgsLayerTreeGroup()
-#####    #QgsLegendRenderer.setNodeLegendStyle(layerGroup, QgsComposerLegendStyle.Hidden)
-#####    layerGroup.insertLayer(0, raster)
-#####    legend.modelV2().setRootGroup(layerGroup)
-#####
-#####    tree_layer_layer = legend.modelV2().rootGroup().children()
-#####    for item in tree_layer_layer:
-#####        QgsLegendRenderer.setNodeLegendStyle(item, QgsComposerLegendStyle.Hidden)
-#####
-#####    legend.setItemPosition(0, 50)
-#####    c.addItem(legend)
-#####
-#####    # scale bar(echelle)
-#####    item = QgsComposerScaleBar(c)
-#####    item.setStyle('Line Ticks Up')  # optionally modify the style
-#####    item.setComposerMap(composerMap)
-#####    item.applyDefaultSize()
-#####    item.setItemPosition(150, 190)
-#####    c.addItem(item)
-#####    # add the north arrow
-#####
-#####    northarrowIcon = QgsComposerPicture(c)
-#####    # northarrowIcon.setPos(QPointF(10, 20))
-#####    # northarrowIcon.setSceneRect(QrectF(0, 0, 30, 30))
-#####    northarrowIcon.setPicturePath(resolve('NorthArrow_04.png'))
-#####    northarrowIcon.setPictureFile(resolve('NorthArrow_04.png'))
-#####    northarrowIcon.setItemPosition(10, 20, c.paperWidth() / 10, 20)
-#####    northarrowIcon.updateItem()
-#####    c.addItem(northarrowIcon)
-#####
-#####    # add the BIOM/DIAM/NBSARM average
-#####    composerLabel2 = QgsComposerLabel(c)
-#####    composerLabel2.setText("Moyenne : " + moyenne)
-#####    composerLabel2.setFont(QFont("Cambria", 14, QFont.Bold))
-#####    composerLabel2.setHAlign(Qt.AlignCenter)
-#####    composerLabel2.setVAlign(Qt.AlignLeft)
-#####    composerLabel2.setItemPosition(20, 190, c.paperWidth() / 2, 20)
-#####    c.addItem(composerLabel2)
-#####
-#####    # export the map as png
-#####    dpi = c.printResolution()
-#####    dpmm = dpi / 25.4
-#####    width = int(dpmm * c.paperWidth())
-#####    height = int(dpmm * c.paperHeight())
-#####
-#####    # create output image and initialize it
-#####    image = QImage(QSize(width, height), QImage.Format_ARGB32)
-#####    image.setDotsPerMeterX(dpmm * 1000)
-#####    image.setDotsPerMeterY(dpmm * 1000)
-#####    image.fill(0)
-#####
-#####    # render the composition
-#####    imagePainter = QPainter(image)
-#####    sourceArea = QRectF(0, 0, c.paperWidth(), c.paperHeight())
-#####    targetArea = QRectF(0, 0, width, height)
-#####    c.render(imagePainter, targetArea, sourceArea)
-#####    imagePainter.end()
-
-###                    c.setColorRampItemList(i)
-###                    s.setRasterShaderFunction(c)
-###                    ps = QgsSingleBandPseudoColorRenderer(intra_raster.dataProvider(), intra_raster.type(), s)
-###                    intra_raster.setRenderer(ps)
-###                    intra_raster.triggerRepaint()
-###                QgsMapLayerRegistry.instance().addMapLayer(intra_raster, False)
-###
-###                iface.legendInterface().refreshLayerSymbology(intra_raster)
-###                raster_node = vignette_group_intra.addLayer(intra_raster)
-###                iface.mapCanvas().refresh()
-
     def dump_noeuds_legende(self, le_modele,  libelle = "Modèle de la légende"):
         if le_modele == None:
             physiocap_log( "{} : la légende sans noeud".format( libelle), TRACE_PDF)
@@ -184,11 +75,8 @@ class PhysiocapIntra( QtWidgets.QDialog):
             physiocap_log( "{} : le modele contient {} niveau".format( libelle, le_modele.rowCount()), TRACE_PDF)
             for un_noeud in le_modele.children():
                 print( un_noeud.__class__)
-                print( "==============================")
                 print( dir( un_noeud))
-                print( "==============================")
                 print( type( un_noeud))                
-                print( "==============================")
                 print( "==============================")
                 physiocap_log( "{} : le noeud a une classe {}".format( libelle, un_noeud.__class__), TRACE_PDF)
                 physiocap_log( "{} : le noeud a un parent {}".format( libelle, dir( un_noeud.parent)), TRACE_PDF)
@@ -208,7 +96,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 physiocap_log( "{} : la couche a un nom {}".format( libelle, une_couche.name()), TRACE_PDF)
 
     def imprimer_raster( self, dialogue, nom_raster_final, nom_court_raster, 
-                    nom_parcelle='parcelle', nom_attribut='DIAM', moyenne = 9999):
+                    nom_parcelle, nom_attribut, moyenne = 'Inconnue'):
         """ Impression PDF du raster"""
         leModeDeTrace = dialogue.fieldComboModeTrace.currentText() 
         derniere_session = dialogue.lineEditDerniereSession.text()
@@ -260,13 +148,12 @@ class PhysiocapIntra( QtWidgets.QDialog):
             itemMoyenne.setText( "Moyenne : {}".format( moyenne))
             # raster dans la carte 
             itemCarte = miseEnPage.itemById( "Carte")
-            #self.dump_couches( itemCarte)
             itemCarte.setLayers( mes_couches)
             # Reglage Extend
             rect = QgsRectangle(  mes_couches[0].extent())
             rect.scale(1.0)
             itemCarte.zoomToExtent(rect)
-            self.dump_couches( itemCarte,  "APRES")
+            #self.dump_couches( itemCarte,  "APRES")
 
             physiocap_log( "PDF : la carte se nomme {} ".format( itemCarte.id()), TRACE_PDF)
             # Légende
@@ -348,7 +235,8 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 versionNum = round( (float(unite) + float(dixieme)/10 + float(centieme)/100 ), 2)
                 physiocap_log ( self.tr( "= Version SAGA = {0}".format( versionNum)), TRACE_TOOLS)
 
-            if ( versionNum >= 2.31) and ( versionNum <= 2.32):
+            # TODO : test SAGA Windows
+            if (( versionNum >= 2.31) and ( versionNum <= 2.32)) or versionNum == 7.82:
                 physiocap_log ( self.tr( "= Version SAGA OK : {0}".format( versionSAGA)), TRACE_INTRA)
                 PROCESSING_INTERPOLATION = "SAGA"
             else:
@@ -731,7 +619,6 @@ class PhysiocapIntra( QtWidgets.QDialog):
             nom_raster_produit = self.physiocap_appel_processing( dialogue, nom_point, \
                 "IDW_GDAL", "gdal:gridinversedistance", \
                 IDW_GDAL, "OUTPUT")  
-                
           
             QgsMessageLog.logMessage( "PHYSIOCAP : Avant clip GDAL", "Processing", Qgis.Warning)
 
@@ -997,7 +884,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                dialogue.radioButtonContour.isChecked():
                 les_parcelles_agro_suivi = les_parcelles_agro.copy()
             # Si plusieurs champs choisis : récupérer le parametres fixe présent Affichage
-            if len( les_champs_INTRA_choisis) > 1:
+            if ((len( les_champs_INTRA_choisis) > 1) and ( dialogue.checkBoxIntraIsos.isChecked())):
                 # Forcer pour éviter le calcul d'aide
                 dialogue.fieldComboAideIso.setCurrentIndex( 2) 
                 if idx == 0:
@@ -1055,16 +942,20 @@ class PhysiocapIntra( QtWidgets.QDialog):
             # #####################
             # Cas d'une image seule
             # #####################
+            # Nom du Shape moyenne de toutes les vignettes
+            # nom visible ici nom_vecteur_contour = vecteur_poly.name()
+            nom_court_du_contour = os.path.basename( nom_vecteur_contour + EXTENSION_SHP)
+            nom_court_vignette_toutes = nom_noeud_arbre + NOM_MOYENNE + nom_court_du_contour
+            nom_vignette_toutes = os.path.join( chemin_vignettes, nom_court_vignette_toutes)        
+            vignette_toutes_vecteur = None
+            if (os.path.exists( nom_vignette_toutes)):
+                vignette_toutes_vecteur = QgsVectorLayer( nom_vignette_toutes, nom_court_vignette_toutes, 'ogr')
+                
             # A_TESTER: Selon la taille, éviter ce calcul Intra et remplacer par un merge des tif et isolignes
             if ( dialogue.checkBoxIntraUnSeul.isChecked() and 
                 choix_interpolation != "GDAL") :
                 contours_possibles = contours_possibles + 1
 
-                # Nom du Shape moyenne et de sa vignette dans l'arbre
-                # nom visible ici nom_vecteur_contour = vecteur_poly.name()
-                nom_court_du_contour = os.path.basename( nom_vecteur_contour + EXTENSION_SHP)
-                nom_court_vignette = nom_noeud_arbre + NOM_MOYENNE + nom_court_du_contour
-                nom_vignette = os.path.join( chemin_vignettes, nom_court_vignette)        
                                                        
                 # Nom point 
                 if consolidation == "YES" :
@@ -1084,13 +975,13 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 nom_point = os.path.join( chemin_shapes, nom_court_point)                    
 
                 # Vérifier si le point et la vignette existent
-                if not (os.path.exists( nom_vignette)):
+                if not (os.path.exists( nom_vignette_toutes)):
                     physiocap_log( self.tr( "=~=  Pas d'interpolation, Vignette absente : {0}").\
-                        format( nom_vignette), TRACE_INTRA)
+                        format( nom_vignette_toutes), TRACE_INTRA)
                 if not (os.path.exists( nom_point)):
                     physiocap_log( self.tr( "=~=  Pas d'interpolation, Points absents : {0}").\
                         format( nom_point), TRACE_INTRA)
-                else:
+                if (os.path.exists( nom_vignette_toutes)) and (os.path.exists( nom_point)):
                     try:
                         # ###############
                         # Calcul raster et iso
@@ -1107,12 +998,11 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         nouveau, nom_raster_final, nom_court_raster, nom_iso_final, nom_court_isoligne = \
                             self.creer_raster_iso( dialogue, choix_interpolation, choix_interpolation, 
                             nom_noeud_arbre, chemin_raster, chemin_iso,  
-                            nom_court_vignette, nom_vignette, nom_court_point, nom_point,
+                            nom_court_vignette_toutes, nom_vignette_toutes, nom_court_point, nom_point,
                             le_champ_choisi, le_choix_INTRA_continue, le_nom_entite_libere) 
                         contour_avec_point = contour_avec_point + 1
                     except physiocap_exception_windows_value_ascii as e:
-                        aText = self.tr( "La valeur {0} a ").\
-                            format( e)
+                        aText = self.tr( "La valeur {0} a ").format( e)
                         aText = aText + self.tr( "des caractères (non ascii) incompatibles avec l'interpolation SAGA.")
                         aText = aText + self.tr( "Erreur bloquante sous Windows qui empêche de traiter cette interpolation.")
                         physiocap_error( self, aText, "CRITICAL")        
@@ -1164,10 +1054,9 @@ class PhysiocapIntra( QtWidgets.QDialog):
             # Eviter de tourner en Intra sur chaque parcelle
             if (( dialogue.checkBoxIntraIsos.isChecked()) or 
                         ( dialogue.checkBoxIntraImages.isChecked())):        
-
                 # On tourne sur les contours qui ont été crée par Inter
                 id_contour = 0
-                for un_contour in vecteur_poly.getFeatures(): #iterate poly features
+                for un_contour in vecteur_poly.getFeatures(): 
                     id_contour = id_contour + 1
                     contours_possibles = contours_possibles + 1
                     # LIMITATION AUX SEULES PARCELLE AGRO 
@@ -1199,9 +1088,9 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         physiocap_log( aText, leModeDeTrace)
                         choix_definitif_interpolation = "GDAL" 
                     else:
-#                        aText = self.tr( "\nUn nom {0} est ascii compatible : {1}").\
-#                                format( un_nom,  physiocap_is_only_ascii( un_nom))
-#                        physiocap_log( aText, leModeDeTrace)
+####                        aText = self.tr( "\nUn nom {0} est ascii compatible : {1}").\
+####                                format( un_nom,  physiocap_is_only_ascii( un_nom))
+####                        physiocap_log( aText, leModeDeTrace)
                         choix_definitif_interpolation = choix_interpolation 
 
                     # ###################
@@ -1293,8 +1182,8 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     dialogue.progressBarIntra.setValue( positionBar)
                     #physiocap_log( "=~= Barre {0}".format( positionBar) , TRACE_INTRA)                     
                        
+                    # Affichage dans panneau des couches QGIS                           
                     if ( id_contour >  0 ):                                            
-                        # Affichage dans panneau QGIS                           
                         if (( dialogue.checkBoxIntraIsos.isChecked()) or 
                             ( dialogue.checkBoxIntraImages.isChecked())):
 
@@ -1324,10 +1213,16 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         physiocap_log ( self.tr( "=~= Fin Interpolation de {0} <<<<").\
                             format( un_nom), leModeDeTrace)
 
-                        # TODO PDF
+                        # Impression PDF
                         if  dialogue.checkBoxIntraPDF.isChecked():
+                            moyenne = 'Inconnue'
+                            for un_contour in vignette_toutes_vecteur.getFeatures():
+                                if un_contour[ CHAMP_NOM_PHY] != un_nom:
+                                    continue
+                                moyenne = un_contour[ le_champ_choisi]
+                                break
                             self.imprimer_raster( dialogue, nom_raster_final, nom_court_raster, \
-                                    un_nom, le_champ_choisi)
+                                    un_nom, le_champ_choisi, moyenne)
 
 
             if ( contour_avec_point >  0 ):                                            

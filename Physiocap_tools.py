@@ -144,7 +144,8 @@ def physiocap_log( aText, modeTrace = TRACE_PAS,  level = "INFO"):
                 pass
             else:
                 if modeTrace in TRACES_MASQUEES:
-                    return #journal_nom = modeTrace
+                    #return #
+                    journal_nom = modeTrace
                 else:
                     journal_nom = "{0} {1}".format( PHYSIOCAP_UNI, modeTrace)
                 QgsMessageLog.logMessage( aText, journal_nom, Qgis.Info)
@@ -206,7 +207,6 @@ def quel_sont_vecteurs_choisis( self, source = "Intra"):
 #            aText = aText + "\n" + self.tr( "Créer une nouvelle session Physiocap - bouton Filtrer les données brutes - ")
 #            physiocap_message_box( self, aText)
             return derniere_session, None, None, None 
-            #raise physiocap_exception_poly_invalid( derniere_session)
         if source == "Filtrer":
             return derniere_session, None, origine_poly, vecteur_poly
 
@@ -308,8 +308,18 @@ def quel_poly_point_INTER( self, isRoot = None, node = None ):
         if ((nom_vecteur != None) and len( nom_vecteur) > 0):                
             node_layer = nom_court_vecteur + SEPARATEUR_NOEUD + libelle + \
                 SEPARATEUR_NOEUD + nom_vecteur
+            self.comboBoxPolygone.clear()
             self.comboBoxPolygone.addItem( node_layer)
-            nombre_poly = 1           
+            nombre_poly = 1
+            # Assert vecteur poly champ obligatoire
+            _, _, origine_poly, vecteur_poly = quel_sont_vecteurs_choisis( self, "Filtrer")
+            physiocap_log("Dans quel_poly_point_INTER origine est {} pour vecteur {}".\
+                format( origine_poly, vecteur_poly.name()), TRACE_JH)
+            try:
+                _, champs_agro_fichier, _, _, champs_vignoble_requis, champs_vignoble_requis_fichier, _, _, _, _ = \
+                    assert_champs_agro_obligatoires( self, vecteur_poly, origine_poly)
+            except physiocap_exception_agro_obligatoire as e:
+                physiocap_message_box( self, e, 'information')
         else:
             pass
     return nombre_poly, nombre_point
@@ -1478,6 +1488,7 @@ def quel_vecteur_dans_donnees_brutes( Repertoire_Donnees_Brutes):
         physiocap_log( "Aucun vecteur de type SHAPEFILE dans répertoire des données brutes", TRACE_JH)
     else:
         physiocap_log( "Vecteur de type SHAPEFILE {}".format( listeSHPTriee[0]))
+        
         return listeSHPTriee[0], os.path.basename( listeSHPTriee[0]), "SHAPE NON OUVERT DANS QGIS"        
     #CSVT
     nom_fichiers_recherches = os.path.join( Repertoire_Donnees_Brutes, RECHERCHE_EXTENSION_CSV)

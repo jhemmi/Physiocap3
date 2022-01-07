@@ -89,6 +89,7 @@ CONF_MODEL = test/Physiocap3.conf
 CONF_SAVE = $(CONF_TARGET).sauve
 
 TEMPLATE = modeleQgis
+LAYOUT = Mise_en_page
 VERSION_STANDARD= Standard
 VERSION_CHAMPAGNE= Champagne
 GPKG = modeleGPKG
@@ -140,7 +141,7 @@ test: compile transcompile
 deploy: compile doc transcompile
 	@echo
 	@echo "------------------------------------------"
-	@echo "Deploying plugin to your .qgis2 directory."
+	@echo "Deploying plugin to your QGIS3 directory."
 	@echo "------------------------------------------"
 	# The deploy  target only works on unix like operating system where
 	# the Python plugin directory is located at:
@@ -150,6 +151,7 @@ deploy: compile doc transcompile
 	mkdir -p $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(DATA)
 	mkdir -p $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(HELP)
 	mkdir -p $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(TEMPLATE)
+	mkdir -p $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(TEMPLATE)/$(LAYOUT)
 	mkdir -p $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(TEMPLATE)/$(VERSION_STANDARD)
 	mkdir -p $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(TEMPLATE)/$(VERSION_CHAMPAGNE)
 	mkdir -p $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(GPKG)
@@ -160,6 +162,7 @@ deploy: compile doc transcompile
 	@cp -vfr i18n $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)
 	@cp -vf $(HELP_FILES)  $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(HELP)
 	@cp -vf $(DATA_FILES) $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(DATA)
+	@cp -vf $(TEMPLATE)/$(LAYOUT)/*.qpt $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(TEMPLATE)/$(LAYOUT)
 	@cp -vf $(TEMPLATE)/$(VERSION_STANDARD)/*.qml $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(TEMPLATE)/$(VERSION_STANDARD)
 	@cp -vf $(TEMPLATE)/$(VERSION_CHAMPAGNE)/*.qml $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(TEMPLATE)/$(VERSION_CHAMPAGNE)
 	@cp -vf $(TEMPLATE)/$(VERSION_STANDARD)/*.qml $(HOME)/$(QGISDIR)/project_templates/Physiocap3
