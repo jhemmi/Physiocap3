@@ -319,7 +319,8 @@ def quel_poly_point_INTER( self, isRoot = None, node = None ):
                 _, champs_agro_fichier, _, _, champs_vignoble_requis, champs_vignoble_requis_fichier, _, _, _, _ = \
                     assert_champs_agro_obligatoires( self, vecteur_poly, origine_poly)
             except physiocap_exception_agro_obligatoire as e:
-                physiocap_message_box( self, e, 'information')
+                aText = "{}".format(e)
+                physiocap_message_box( self, aText, 'information')
         else:
             pass
     return nombre_poly, nombre_point
