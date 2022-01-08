@@ -59,6 +59,8 @@ from qgis.core import ( Qgis, QgsProject, QgsVectorLayer, \
     QgsFeatureRequest, QgsExpression, QgsProcessingFeedback,  \
     QgsRectangle, QgsLayout, QgsReadWriteContext, QgsLayoutExporter, QgsLayerTree)
 
+import shutil
+
 class PhysiocapIntra( QtWidgets.QDialog):
     """QGIS Pour voir les messages traduits."""
     
