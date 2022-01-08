@@ -991,7 +991,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <rect>
         <x>10</x>
         <y>50</y>
-        <width>381</width>
+        <width>431</width>
         <height>26</height>
        </rect>
       </property>
@@ -1012,7 +1012,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Vous pouvez choisir de calculer l'interpolation pour toutes les parcelles de votre contour ou choisir une seule parcelle.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="text">
-       <string>Cartographiez toutes les parcelles ou précisez</string>
+       <string>Cartographiez toutes les parcelles ou précisez un contour</string>
       </property>
       <property name="checked">
        <bool>true</bool>
@@ -1024,9 +1024,9 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="geometry">
        <rect>
-        <x>400</x>
+        <x>450</x>
         <y>50</y>
-        <width>221</width>
+        <width>171</width>
         <height>21</height>
        </rect>
       </property>
@@ -5986,7 +5986,7 @@ DIAM, SARM, BIOM,...) </string>
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Vous aussi contribuez à l'extension qui vous garantit de garder la maîtrise de vos mesures Physiocap. Le capteur vous permet de prendre possession de vos mesures. L'extension vous autorise à rester maître de leurs utilisations.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="text">
-       <string>Autres contributeurs : </string>
+       <string>Autres contributeurs</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_CIVC">
@@ -6032,7 +6032,7 @@ DIAM, SARM, BIOM,...) </string>
        <rect>
         <x>330</x>
         <y>0</y>
-        <width>311</width>
+        <width>301</width>
         <height>20</height>
        </rect>
       </property>
@@ -6052,7 +6052,7 @@ DIAM, SARM, BIOM,...) </string>
        <rect>
         <x>20</x>
         <y>0</y>
-        <width>281</width>
+        <width>301</width>
         <height>21</height>
        </rect>
       </property>
@@ -6164,9 +6164,9 @@ DIAM, SARM, BIOM,...) </string>
       <property name="geometry">
        <rect>
         <x>440</x>
-        <y>60</y>
-        <width>91</width>
-        <height>101</height>
+        <y>50</y>
+        <width>121</width>
+        <height>121</height>
        </rect>
       </property>
       <property name="text">

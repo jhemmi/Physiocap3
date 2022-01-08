@@ -141,6 +141,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.fieldComboIntraDIAM.currentIndexChanged[int].connect( self.slot_PROFIL_INTRA_maj_attributs_interpolables)
         self.fieldComboIntraSARM.currentIndexChanged[int].connect( self.slot_PROFIL_INTRA_maj_attributs_interpolables)
         self.fieldComboIntraBIOM.currentIndexChanged[int].connect( self.slot_PROFIL_INTRA_maj_attributs_interpolables)
+        self.checkBoxToutes.stateChanged.connect( self.slot_bascule_intra_toutes)
 
         self.ButtonIntra.pressed.connect(self.slot_INTRA_interpolation_parcelles)
         self.groupBoxIntra.setEnabled( False)
@@ -1972,6 +1973,17 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Si OK : chercher à enchainer vers Intra
         if  self.checkBoxTroisActions.isChecked():
             self.slot_INTRA_interpolation_parcelles()
+
+
+    def slot_bascule_intra_toutes(self):
+        """ Changement de choix Intra toutes parcelle libere la liste de choix 
+        """ 
+        set_quoi = False
+        if self.checkBoxToutes.isChecked():
+            set_quoi = False
+        else:
+            set_quoi = True            
+        self.fieldComboParcelleIntra.setEnabled( set_quoi)
 
     def slot_bascule_pas_mesure(self):
         """ Changement de choix Inter PasMesure : 

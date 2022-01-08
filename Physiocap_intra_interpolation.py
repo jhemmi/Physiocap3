@@ -712,7 +712,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
             raise physiocap_exception_no_processing( "Pas d'extension Traitement")
         except AttributeError:
             # A_TESTER: Vérifier syntaxe en Win 32 bits et attraper cette erreur
-            physiocap_log( self.tr( "{0} nécessite SAGA version 2.3.1 ou 2.3.2").\
+            physiocap_log( self.tr( "{0} nécessite SAGA version 2.3.1 ou 2.3.2 (attribute error)").\
                 format( PHYSIOCAP_UNI), leModeDeTrace)
             raise physiocap_exception_no_saga( "Erreur attribut")
 
@@ -1059,6 +1059,10 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 for un_contour in vecteur_poly.getFeatures(): 
                     id_contour = id_contour + 1
                     contours_possibles = contours_possibles + 1
+                    if not dialogue.checkBoxToutes.isChecked():
+                        if un_contour != dialogue.fieldComboParcelleIntra.currentText():
+                            physiocap_log( "On ignore parcelle {} non demandée".format( un_contour), leModeDeTrace)
+                            continue
                     # LIMITATION AUX SEULES PARCELLE AGRO 
                     if dialogue.groupBoxDetailVignoble.isChecked() and dialogue.checkBoxInfoVignoble.isChecked() and \
                        dialogue.radioButtonContour.isChecked():

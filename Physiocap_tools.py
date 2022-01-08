@@ -316,11 +316,16 @@ def quel_poly_point_INTER( self, isRoot = None, node = None ):
             physiocap_log("Dans quel_poly_point_INTER origine est {} pour vecteur {}".\
                 format( origine_poly, vecteur_poly.name()), TRACE_JH)
             try:
-                _, champs_agro_fichier, _, _, champs_vignoble_requis, champs_vignoble_requis_fichier, _, _, _, _ = \
+                _, champs_agro_fichier, _, _, champs_vignoble_requis, champs_vignoble_requis_fichier, _, _, les_parcelles_agro, _ = \
                     assert_champs_agro_obligatoires( self, vecteur_poly, origine_poly)
             except physiocap_exception_agro_obligatoire as e:
                 aText = "{}".format(e)
                 physiocap_message_box( self, aText, 'information')
+            if les_parcelles_agro != None and len( les_parcelles_agro) > 0:
+                # Remplir la liste des parcelles diponibles : fieldComboParcelleIntra
+                self.fieldComboParcelleIntra.clear()
+                for parcelle in les_parcelles_agro:
+                    self.fieldComboParcelleIntra.addItem( parcelle)
         else:
             pass
     return nombre_poly, nombre_point
