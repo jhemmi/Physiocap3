@@ -119,7 +119,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
         tmpfile = os.path.join( chemin, profil_physiocap + EXTENSION_QPT)
         if not os.path.exists( tmpfile):
             chemin_modele = os.path.join( dialogue.plugin_dir,'ModeleQGIS')
-            chemin = os.path.join( chemin_modele,'Mise en page')
+            chemin = os.path.join( chemin_modele,'Mise_en_page')
             modele_file = os.path.join( chemin, profil_physiocap + EXTENSION_QPT)
             # TODO : assert exist
             # Copier le template
