@@ -314,8 +314,8 @@ class PhysiocapIntra( QtWidgets.QDialog):
         leModeDeTrace = dialogue.fieldComboModeTrace.currentText() 
      
         # Trace des entités en entrée
-        physiocap_log( self.tr( "=~= Nom ==>> {0} <<==").\
-            format(  le_nom_entite_libere), leModeDeTrace)
+#        physiocap_log( self.tr( "=~= Nom ==>> {0} <<==").\
+#            format(  le_nom_entite_libere), leModeDeTrace)
 #        physiocap_log( self.tr( "Vignette (moyenne Inter) {0} et chemin à la vignette \n{1}").\
 #            format( nom_court_vignette, nom_vignette), TRACE_INTRA)
 #        physiocap_log( self.tr( "Point {0} et chemin aux points \n{1}").\
@@ -711,7 +711,6 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 format( PHYSIOCAP_UNI, self.tr("Traitement")), leModeDeTrace)
             raise physiocap_exception_no_processing( "Pas d'extension Traitement")
         except AttributeError:
-            # A_TESTER: Vérifier syntaxe en Win 32 bits et attraper cette erreur
             physiocap_log( self.tr( "{0} nécessite SAGA version 2.3.1 ou 2.3.2 (attribute error)").\
                 format( PHYSIOCAP_UNI), leModeDeTrace)
             raise physiocap_exception_no_saga( "Erreur attribut")
@@ -1059,10 +1058,6 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 for un_contour in vecteur_poly.getFeatures(): 
                     id_contour = id_contour + 1
                     contours_possibles = contours_possibles + 1
-                    if not dialogue.checkBoxToutes.isChecked():
-                        if un_contour != dialogue.fieldComboParcelleIntra.currentText():
-                            physiocap_log( "On ignore parcelle {} non demandée".format( un_contour), leModeDeTrace)
-                            continue
                     # LIMITATION AUX SEULES PARCELLE AGRO 
                     if dialogue.groupBoxDetailVignoble.isChecked() and dialogue.checkBoxInfoVignoble.isChecked() and \
                        dialogue.radioButtonContour.isChecked():
@@ -1071,6 +1066,11 @@ class PhysiocapIntra( QtWidgets.QDialog):
                             indice_dict_Entete, dictEnteteVignoble, champsVignobleOrdonnes)
                         if parcelle_attendue == None:
                             continue
+                        # Eventuelment à la parcelle choisie    
+                        if not dialogue.checkBoxToutes.isChecked():
+                            if parcelle_attendue != dialogue.fieldComboParcelleIntra.currentText():
+                                physiocap_log( "On ignore parcelle {} non demandée".format( parcelle_attendue), TRACE_INTRA)
+                                continue
                         les_parcelles_agro_suivi.remove( parcelle_attendue)
                         un_nom = parcelle_attendue
                     else:
@@ -1112,7 +1112,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         format( PHYSIOCAP_UNI, un_nom), leModeDeTrace)
                         raise physiocap_exception_probleme_caractere_librairie( le_nom_entite_libere)
                         
-                    physiocap_log ( self.tr( "=~= {0} Début d'interpolation de {1} index {2} >>>>").\
+                    physiocap_log ( self.tr( "=~= {0} Début d'interpolation de {1} (index {2}) >>>>").\
                         format( PHYSIOCAP_UNI, un_nom,  id_contour), leModeDeTrace)
 
                     # Nom du Shape moyenne 
@@ -1246,11 +1246,13 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 aText = aText + self.tr( "Un changement a eu lieu depuis votre calcul inter parcellaire.")       
                 aText = aText + self.tr( "\nVérifiez votre choix de jeu de mesures.")       
                 aText = aText + self.tr( "\nVérifiez le champ identifiant votre contour.")       
+                dialogue.ButtonInter.setEnabled( True)
                 physiocap_log( aText, leModeDeTrace)
                 return physiocap_message_box( dialogue, aText, "information")
             
         dialogue.progressBarIntra.setValue( 100)
-        if  dialogue.checkBoxTroisActions.isChecked():
+        dialogue.ButtonIntra.setEnabled( True)
+        if  dialogue.checkBoxTroisActions.isChecked():                                            
             return physiocap_message_box( dialogue, 
                         self.tr( "Fin de l'enchainement des 3 traitements pour la session {}".format( derniere_session)),
                         "information")

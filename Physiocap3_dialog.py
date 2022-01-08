@@ -218,6 +218,11 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Agro
         self.lire_agro()
 
+        if ( self.settings.value("Intra/toutesParcelles") == "NO"):
+            self.checkBoxToutes.setChecked( Qt.Unchecked)
+        else:
+            self.checkBoxToutes.setChecked( Qt.Checked)
+            
         # SAGA GDAL
         if (self.settings.value("Expert/library") == "SAGA"):
             self.radioButtonSAGA.setChecked(  Qt.Checked)
@@ -241,7 +246,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Remettre vide le textEditSynthese
         self.textEditSynthese.clear()
         
-      
         # Remplissage de la liste de FORMAT_VECTEUR 
         self.fieldComboFormats.setCurrentIndex( 0)         
         if self.checkBoxV3.isChecked():
@@ -1016,6 +1020,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.settings.setValue("Inter/attributpbGDAL", self.fieldPbGdal.currentText())
 
         self.settings.setValue("Intra/attributIntra", self.fieldComboIntra.currentText())
+        toutes_parcelles = "YES" if self.checkBoxToutes.isChecked() else "NO"
+        self.settings.setValue("Intra/toutesParcelles", toutes_parcelles)
         self.settings.setValue("Intra/continueIntra", self.fieldComboIntraContinue.currentIndex())
         self.settings.setValue("Intra/powerIntra", float( self.spinBoxPower.value()))
         self.settings.setValue("Intra/rayonIntra", float( self.spinBoxDoubleRayon.value()))
@@ -1966,7 +1972,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.groupBoxIntra.setEnabled( True)
         self.groupBoxMethode.setEnabled( True)
         self.ButtonInter.setEnabled( True)
-        self.ButtonIntra.setEnabled( True)
+        self.ButtonIntra.setEnabled( False)
         physiocap_log( self.tr( "== {0} a terminé les moyennes inter parcelaire.").\
             format( PHYSIOCAP_UNI), leModeDeTrace)
 
@@ -2300,6 +2306,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             pass
         # Fin de capture des erreurs Physiocap
         if ( retour == 0 ):
+            self.ButtonInter.setEnabled( True)
+            self.ButtonIntra.setEnabled( False)
             physiocap_log( self.tr( "** {0} est prêt pour calcul Inter parcellaire - Onglet Parcelles").\
                 format( PHYSIOCAP_UNI), leModeDeTrace)
 

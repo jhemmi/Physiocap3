@@ -144,8 +144,7 @@ def physiocap_log( aText, modeTrace = TRACE_PAS,  level = "INFO"):
                 pass
             else:
                 if modeTrace in TRACES_MASQUEES:
-                    #return #
-                    journal_nom = modeTrace
+                    return #journal_nom = modeTrace
                 else:
                     journal_nom = "{0} {1}".format( PHYSIOCAP_UNI, modeTrace)
                 QgsMessageLog.logMessage( aText, journal_nom, Qgis.Info)
@@ -645,6 +644,13 @@ def generer_contour_depuis_points( self, nom_fichier_shape_sans_0,  mids_trie):
     # Vérifier disponibilité de processing
     try :
         import processing
+        try:
+            from processing.core.Processing import Processing
+            Processing.initialize()
+        except:
+            physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
+                format( PHYSIOCAP_UNI, self.tr("Traitement")), leModeDeTrace)
+            raise physiocap_exception_no_processing( "Pas d'extension Traitement - initialize")               
     except ImportError:
         physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
                 format( PHYSIOCAP_UNI, self.tr("Traitement")), leModeDeTrace)

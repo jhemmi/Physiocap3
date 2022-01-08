@@ -35,7 +35,7 @@ repository=https://github.com/jhemmi/Physiocap3
 
 # Uncomment the following line and add your changelog:
 changelog=
-  V3.10.14B Profil Champagne MID to contour Enchainement 
+  V3.10.14 PDF CSVT_synthesys MID_to_contour Profil Champagne Enchainement
   V3.10.4 Correction #18 Translation EN
   V3.10.0 Correction #17 QGIS 3.10
   V3.4.1  Consolidation for data 

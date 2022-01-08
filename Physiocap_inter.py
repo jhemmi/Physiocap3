@@ -1769,20 +1769,20 @@ class PhysiocapInter( QtWidgets.QDialog):
             if dialogue.radioButtonContour.isChecked():
                 dialogue.progressBarInter.setValue( 92)
                 # Alonger le CSVT de synthese moyenne et vignoble
-                physiocap_log("ICI {}".format( les_parcelles),  TRACE_JH)
+                #physiocap_log("ICI {}".format( les_parcelles),  TRACE_JH)
                 retour_csv = ajouter_csvt_source_contour( dialogue, vecteur_poly, \
                         les_parcelles, les_geoms_poly, les_moyennes_par_contour)
                 if retour_csv != 0:
                     return physiocap_error(self, self.tr( \
                         "Erreur bloquante : problème lors de l'ajout des moyennes au CSVT "))
-                
-                
-        
+    
         # Progress BAR 100 %
         dialogue.progressBarInter.setValue( 100)
 
+        if nombre_contours > 0:
+            dialogue.ButtonIntra.setEnabled( True)
         # FIN CREATION PUIS AFFICHAGE DES VECTEURS DE TOUS CONTOURS
-        if  dialogue.checkBoxTroisActions.isChecked():
+        if  dialogue.checkBoxTroisActions.isChecked() and nombre_contours > 0:
             return physiocap_log ( self.tr( "{0} {1} Fin Inter pour {2} contours >>>> ").\
                 format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI, nombre_contours), leModeDeTrace)
         else:
