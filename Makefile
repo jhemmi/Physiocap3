@@ -88,7 +88,7 @@ CONF_TARGET = $(HOME)/.config/Physiocap/Physiocap3.conf
 CONF_MODEL = test/Physiocap3.conf
 CONF_SAVE = $(CONF_TARGET).sauve
 
-TEMPLATE = modeleQgis
+TEMPLATE = modeleQGIS
 LAYOUT = Mise_en_page
 VERSION_STANDARD= Standard
 VERSION_CHAMPAGNE= Champagne
@@ -146,7 +146,7 @@ deploy: compile doc transcompile
 	# The deploy  target only works on unix like operating system where
 	# the Python plugin directory is located at:
 	# $(HOME)/$(QGISDIR)/python/plugins
-	mkdir -p $(HOME)/$(QGISDIR)/project_templates/$(PLUGINNAME)
+	#mkdir -p $(HOME)/$(QGISDIR)/project_templates/$(PLUGINNAME)
 	mkdir -p $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)
 	mkdir -p $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(DATA)
 	mkdir -p $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(HELP)
@@ -165,7 +165,7 @@ deploy: compile doc transcompile
 	@cp -vf $(TEMPLATE)/$(LAYOUT)/*.qpt $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(TEMPLATE)/$(LAYOUT)
 	@cp -vf $(TEMPLATE)/$(VERSION_STANDARD)/*.qml $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(TEMPLATE)/$(VERSION_STANDARD)
 	@cp -vf $(TEMPLATE)/$(VERSION_CHAMPAGNE)/*.qml $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(TEMPLATE)/$(VERSION_CHAMPAGNE)
-	@cp -vf $(TEMPLATE)/$(VERSION_STANDARD)/*.qml $(HOME)/$(QGISDIR)/project_templates/Physiocap3
+	#@cp -vf $(TEMPLATE)/$(VERSION_STANDARD)/*.qml $(HOME)/$(QGISDIR)/project_templates/$(PLUGINNAME)
 	@cp -vf $(GPKG)/*.gpkg $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(GPKG)
 	# Fin de la copie du plugin Physiocap3
 
