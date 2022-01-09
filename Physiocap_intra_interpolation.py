@@ -211,8 +211,14 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 if ( affiche_raster == "YES"): 
                     mon_projet.addMapLayer( intra_raster)
       
-            if (( affiche_raster == "YES") and 
-                ( le_template_raster != None)):
+            if (( affiche_raster == "YES") and ( le_template_raster != None)):
+                provider = intra_raster.dataProvider()
+                physiocap_log ( "= avant set NoData bande {0} RASTER".format( intra_raster.bandCount()), TRACE_INTRA)
+                physiocap_log ( "= avant set NoData bande {0} RASTER".format( intra_raster.bandName( 1)), TRACE_INTRA)
+                # Pour transparence
+                provider.setNoDataValue(1, -99999)
+                #intra_raster.setDataProvider( # bad provider)
+                physiocap_log ( "= Avant LOAD STYLE {0} RASTER".format( le_template_raster), TRACE_INTRA)                
                 intra_raster.loadNamedStyle( le_template_raster)
                 intra_raster.setRefreshOnNotifyEnabled( True)
                 #physiocap_log ( "= pendant LOAD STYLE {0} RASTER".format( le_template_raster), TRACE_INTRA)
