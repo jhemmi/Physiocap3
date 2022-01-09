@@ -319,7 +319,7 @@ DICT_ATTRTIBUT_UNITE={
 'ALTITUDE' : ( "Altitude", "m"),
 }
 
-CHEMIN_TEMPLATES = [ "modeleQgis", "project_templates"]
+CHEMIN_TEMPLATES = [ "modeleQGIS", "project_templates"]
 CHEMIN_DATA = 'data'
 # Exceptions Physiocap à partir de 30 erreurs sur un fchier mid
 TAUX_LIGNES_ERREUR= 30
