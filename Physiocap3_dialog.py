@@ -220,7 +220,9 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.checkBoxToutes.setChecked( Qt.Unchecked)
         else:
             self.checkBoxToutes.setChecked( Qt.Checked)
-            
+
+        self.ButtonInter.setEnabled( False)
+        self.ButtonIntra.setEnabled( False)            
         # SAGA GDAL
         if (self.settings.value("Expert/library") == "SAGA"):
             self.radioButtonSAGA.setChecked(  Qt.Checked)
@@ -1599,6 +1601,12 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             aText = aText + self.tr( "Modifiez ce nom en supprimant ce(s) caractère(s) dans vos contours et relancez les traitements inter et/ou intra.")
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
+        except physiocap_exception_agro_no_pdf_modele as e:
+            physiocap_log_for_error( self)
+            aText = self.tr( "Le modèle pour l'impression {0} est absent.").format( e)
+            aText = aText + self.tr( "Contacter jhemmi.eu pour créer un modele pour les impressions PDF.")
+            physiocap_error( self, aText, "CRITICAL")
+            return physiocap_message_box( self, aText, "information" )
 
 ##        except x as e:
 ##            physiocap_log_for_error( self)
@@ -1928,7 +1936,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.groupBoxIntra.setEnabled( True)
         self.groupBoxMethode.setEnabled( True)
         self.ButtonInter.setEnabled( True)
-        self.ButtonIntra.setEnabled( False)
+        self.ButtonIntra.setEnabled( True)
         physiocap_log( self.tr( "== {0} a terminé les moyennes inter parcelaire.").\
             format( PHYSIOCAP_UNI), leModeDeTrace)
 

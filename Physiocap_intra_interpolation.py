@@ -114,15 +114,16 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 format( nom_parcelle, nom_attribut, nom_pdf))
 
         # Charger un modele qpt dans les composer_template
-        chemin = os.path.join( dialogue.gis_dir, 'composer_templates')
-        tmpfile = os.path.join( chemin, profil_physiocap + EXTENSION_QPT)
+        chemin_composer = os.path.join( dialogue.gis_dir, 'composer_templates')
+        tmpfile = os.path.join( chemin_composer, profil_physiocap + EXTENSION_QPT)
         if not os.path.exists( tmpfile):
             chemin_modele = os.path.join( dialogue.plugin_dir,'modeleQGIS')
             chemin = os.path.join( chemin_modele,'Mise_en_page')
             modele_file = os.path.join( chemin, profil_physiocap + EXTENSION_QPT)
-            # TODO : assert exist
+            if not os.path.exists( modele_file):
+                raise physiocap_exception_agro_no_pdf_modele( modele_file)
             # Copier le template
-            shutil.copy( modele_file, chemin)
+            shutil.copy( modele_file, chemin_composer)
         with open(tmpfile) as f:
             template_content = f.read()
         doc = QDomDocument()

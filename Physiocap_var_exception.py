@@ -440,6 +440,8 @@ class physiocap_exception_agro_type_champ( physiocap_exception):
     pass
 class physiocap_exception_agro_profil( physiocap_exception):
     pass
+class physiocap_exception_agro_no_pdf_modele( physiocap_exception):
+    pass
     
 #INTER
 class physiocap_exception_vignette_exists( physiocap_exception):
