@@ -46,7 +46,7 @@ else:
     LE_MODE_PROD = "YES"
 LISTE_PROFIL= [ 'Standard', 'Champagne', 'Fronton'] #, 'IFV Bordeaux']
 # LIVRAISON : supprimer en Prod
-LE_MODE_PROD = "YES"
+#LE_MODE_PROD = "YES"
 
 # En prod CENTROIDES vaut NO
 CENTROIDES = "NO"  # CENTROIDES YES est pour voir les centroides dans la synthese

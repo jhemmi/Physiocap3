@@ -144,7 +144,7 @@ def physiocap_log( aText, modeTrace = TRACE_PAS,  level = "INFO"):
                 pass
             else:
                 if modeTrace in TRACES_MASQUEES:
-                    return #journal_nom = modeTrace
+                    journal_nom = modeTrace
                 else:
                     journal_nom = "{0} {1}".format( PHYSIOCAP_UNI, modeTrace)
                 QgsMessageLog.logMessage( aText, journal_nom, Qgis.Info)
@@ -935,13 +935,15 @@ def quelles_listes_info_agro(self):
         les_geometries_agronomique = []
         infos_agronomique_en_cours = {} # Conteneur provisoire
         # CSV
+        nom_champ_geom = "inconnu"
+
         if origine_poly == "AGRO_CSV":
             indice_dict_Entete = 0
             nom_champ_geom = CSV_GEOM
         if origine_poly == "AGRO_SHP":
             indice_dict_Entete = 2
             nom_champ_geom = "geom"
-        physiocap_log( "Vecteur AGRO de format {} et géométrie attendue {}".format( origine_poly, nom_champ_geom))
+        physiocap_log( "Vecteur AGRO de format {} et géométrie attendue {}".format( origine_poly, nom_champ_geom),  TRACE_JH)
         for un_contour in vecteur_poly.getFeatures(QgsFeatureRequest().addOrderBy( champs_vignoble_requis_fichier[1])):
             # CSV
             nom_parcelle = dictEnteteVignoble[champsVignobleOrdonnes[1]][indice_dict_Entete]

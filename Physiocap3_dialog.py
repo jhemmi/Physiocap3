@@ -56,7 +56,7 @@ from PyQt5 import uic
 from PyQt5.QtCore import (QSettings, Qt, QUrl)
 from PyQt5.QtGui import (QPixmap,  QDesktopServices)
 from PyQt5.QtWidgets import (QDialogButtonBox, QDialog, QFileDialog) 
-from qgis.core import (Qgis)
+from qgis.core import (Qgis, QgsVectorLayer)
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join( os.path.dirname(__file__), 'Physiocap3_dialog_base.ui'))
 
@@ -1620,6 +1620,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         finally:
             pass
         # Fin de capture des erreurs Physiocap        
+        # RENDU quel iface ? self.iface.mapCanvas().setRenderFlag( True )
         physiocap_log( self.tr( "=~= {0} a terminé toutes les interpolations intra parcelaire.").\
             format( PHYSIOCAP_UNI), leModeDeTrace, "INTRA")
 
@@ -1771,16 +1772,19 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
     def slot_PROFIL_INTER_maj_champ_poly_liste( self ):
         """ Creer une liste de champs (fieldCombo Box) à valuer values pour le vecteur courant"""
         leProfil = self.fieldComboProfilPHY.currentText()
-        leModeDeTrace = self.fieldComboModeTrace.currentText()
+        #leModeDeTrace = self.fieldComboModeTrace.currentText()
         nom_complet_poly = self.comboBoxPolygone.currentText().split( SEPARATEUR_NOEUD)
         inputLayer = nom_complet_poly[0] 
 
         self.fieldComboContours.clear()
         self.fieldPbGdal.clear()
-        #physiocap_log( "Dans recherche de champ : layer >> {0}<<". \
-        #   format ( inputLayer), leModeDeTrace)
+        physiocap_log( "Dans recherche de champ : layer >> {0}<<". \
+           format ( inputLayer), TRACE_JH)
 
         layer = physiocap_get_layer_by_name( inputLayer)
+        if layer is None:
+            layer = QgsVectorLayer( nom_complet_poly[2], nom_complet_poly[0], 'ogr')
+
         # Initialisation avec CHAMP_NOM_PHY = NOM_PHY
         self.fieldPbGdal.addItem( "NO" )                                
         self.fieldComboContours.addItem( CHAMP_NOM_PHY)
@@ -1802,8 +1806,10 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                         if nom_champ == "Nom_Parcel":
                             physiocap_log( "Champ nom parcel",  TRACE_JH)
                             liste_valeurs = mon_provider.uniqueValues( map_champ[ nom_champ])
-                            valeur_unique = "YES" if nombre_ligne == len( liste_valeurs) else "NO"
+                            valeur_unique = "YES" if nombre_ligne - 1 == len( liste_valeurs) else "NO"
                             physiocap_log( "Champ nom parcel est unique ? {} ".format(valeur_unique),  TRACE_JH)
+                            physiocap_log( "nombre champ {} attendu et uniques {} ".\
+                                format(nombre_ligne, len( liste_valeurs)),  TRACE_JH)
                             break
                 
                 if valeur_unique == "YES": # cas champagne et champ Nom_Parcel OK
@@ -1819,21 +1825,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                             physiocap_log( "type Exclu {} pour {}".format( mon_champ.type(), nom_champ), TRACE_JH)
                             continue
                         liste_valeurs = mon_provider.uniqueValues( map_champ[ nom_champ])
+                        valeur_unique = "YES" if nombre_ligne - 1 == len( liste_valeurs) else "NO"
 
-                        if leModeDeTrace == TRACE_PAS:
-                            # Raccourci si aucun trace, on suppose toutes les valeurs sont uniques
-                            valeur_unique = "YES" 
-                        else:
-                            # Vérifier si les valeurs du field name sont toutes uniques
-        #                    physiocap_log( "Unique : field >> {0} \n {1}<<". \
-        #                        format ( nom_champ,  liste_valeurs), TRACE_JH)
-                            if nombre_ligne == len( liste_valeurs):
-                                valeur_unique = "YES" 
-                            else:
-    #                            physiocap_log( "Dans recherche de champ : field >> {0} nombre {1} mais possible {2}". \
-    #                            format ( nom_champ,  len( liste_valeurs),  nombre_ligne), TRACE_JH)
-                                valeur_unique = "NO" 
-                                
                         # ne pas remettre NOM_PHY une deuxieme fois
                         if valeur_unique == "YES" and nom_champ != CHAMP_NOM_PHY:
                             valeur_pb_GDAL = "NO"
@@ -1929,7 +1922,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         except:
             raise
         finally:
-            # TODO: RENDU again self.iface.mapCanvas().setRenderFlag( True )
             pass
         # Fin de capture des erreurs Physiocap        
         
@@ -1944,6 +1936,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         if  self.checkBoxTroisActions.isChecked():
             self.slot_INTRA_interpolation_parcelles()
 
+####        else:
+####            # TODO: RENDU again self.iface.mapCanvas().setRenderFlag( True )
 
     def slot_bascule_intra_toutes(self):
         """ Changement de choix Intra toutes parcelle libere la liste de choix 

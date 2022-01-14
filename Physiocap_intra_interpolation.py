@@ -64,7 +64,6 @@ import shutil
 class PhysiocapIntra( QtWidgets.QDialog):
     """QGIS Pour voir les messages traduits."""
     
-    
     def __init__(self, parent=None):
         """Class constructor."""
         #print("INTRA init class")
@@ -76,10 +75,10 @@ class PhysiocapIntra( QtWidgets.QDialog):
         else:
             physiocap_log( "{} : le modele contient {} niveau".format( libelle, le_modele.rowCount()), TRACE_PDF)
             for un_noeud in le_modele.children():
-                print( un_noeud.__class__)
-                print( dir( un_noeud))
-                print( type( un_noeud))                
-                print( "==============================")
+#                print( un_noeud.__class__)
+#                print( dir( un_noeud))
+#                print( type( un_noeud))                
+#                print( "==============================")
                 physiocap_log( "{} : le noeud a une classe {}".format( libelle, un_noeud.__class__), TRACE_PDF)
                 physiocap_log( "{} : le noeud a un parent {}".format( libelle, dir( un_noeud.parent)), TRACE_PDF)
                 physiocap_log( "{} : la noeud a un dump {}".format( libelle, un_noeud.dumpObjectInfo), TRACE_PDF)
@@ -212,15 +211,17 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     mon_projet.addMapLayer( intra_raster)
       
             if (( affiche_raster == "YES") and ( le_template_raster != None)):
-                provider = intra_raster.dataProvider()
-                physiocap_log ( "= avant set NoData bande {0} RASTER".format( intra_raster.bandCount()), TRACE_INTRA)
-                physiocap_log ( "= avant set NoData bande {0} RASTER".format( intra_raster.bandName( 1)), TRACE_INTRA)
+#                physiocap_log ( "= avant set NoData bande {0} RASTER".format( intra_raster.bandCount()), TRACE_INTRA)
+#                physiocap_log ( "= avant set NoData bande {0} RASTER".format( intra_raster.bandName( 1)), TRACE_INTRA)
                 # Pour transparence
-                provider.setNoDataValue(1, -99999)
-                #intra_raster.setDataProvider( # bad provider)
-                physiocap_log ( "= Avant LOAD STYLE {0} RASTER".format( le_template_raster), TRACE_INTRA)                
+#                provider = intra_raster.dataProvider()
+#                provider.setNoDataValue(1, -99999)
+#                if hasattr( intra_raster, "setCacheImage"):
+#                    intra_raster.setCacheImage( None)
+#                intra_raster.setRefreshOnNotifyEnabled( True)
                 intra_raster.loadNamedStyle( le_template_raster)
-                intra_raster.setRefreshOnNotifyEnabled( True)
+#                intra_raster.repaintRequested()
+#                intra_raster.triggerRepaint()
                 #physiocap_log ( "= pendant LOAD STYLE {0} RASTER".format( le_template_raster), TRACE_INTRA)
             if (( affiche_iso == "YES") and ( nom_iso_final != "") and 
                 ( le_template_isolignes != None)):
@@ -243,8 +244,8 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 versionNum = round( (float(unite) + float(dixieme)/10 + float(centieme)/100 ), 2)
                 physiocap_log ( self.tr( "= Version SAGA = {0}".format( versionNum)), TRACE_TOOLS)
 
-            # TODO : test SAGA Windows
-            if (( versionNum >= 2.31) and ( versionNum <= 2.32)) or versionNum == 7.82:
+            # TODO : test SAGA Windows 7.82
+            if (( versionNum >= 2.31) and ( versionNum <= 2.32)): # or versionNum == 7.82:
                 physiocap_log ( self.tr( "= Version SAGA OK : {0}".format( versionSAGA)), TRACE_INTRA)
                 PROCESSING_INTERPOLATION = "SAGA"
             else:
@@ -563,8 +564,9 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     # GDAL translate pour créer le TIFF
                     le_raster_translate = QgsRasterLayer( nom_raster_clippe, "Raster_Translate_temporaire")                
                     QgsMessageLog.logMessage( "PHYSIOCAP : Avant GDAL translate pour le TIFF", "Processing", Qgis.Warning)
+                    #   'NODATA':0,
                     TRANSLATE_TIFF = { 'INPUT' : le_raster_translate,
-                        'NODATA':0,
+                        'NODATA':-99999,
                         'COPY_SUBDATASETS':False,
                         'OPTIONS':'',
                         'DATA_TYPE':6,
@@ -634,7 +636,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
             if ( nom_raster_produit != ""):
                 CLIP_GDAL = {'INPUT':nom_raster_produit,
                     'MASK':nom_vignette,
-                    'NODATA':0,
+                    'NODATA':-99999,
                     'ALPHA_BAND':False,
                     'CROP_TO_CUTLINE':True,
                     'KEEP_RESOLUTION':True,
@@ -1066,6 +1068,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 for un_contour in vecteur_poly.getFeatures(): 
                     id_contour = id_contour + 1
                     contours_possibles = contours_possibles + 1
+                    
                     # LIMITATION AUX SEULES PARCELLE AGRO 
                     if dialogue.groupBoxDetailVignoble.isChecked() and dialogue.checkBoxInfoVignoble.isChecked() and \
                        dialogue.radioButtonContour.isChecked():
@@ -1088,6 +1091,19 @@ class PhysiocapIntra( QtWidgets.QDialog):
                             un_nom = NOM_CHAMP_ID + SEPARATEUR_ + str(id_contour)
                             pass
 
+                    # Limitation si densité de points inférieur au seuil
+                    le_seuil = dialogue.spinBoxDensiteMinimale.value()
+                    une_densite = 0
+                    for une_moyenne in vignette_toutes_vecteur.getFeatures():
+                        if une_moyenne[ CHAMP_NOM_PHY] != un_nom:
+                            continue
+                        une_densite = une_moyenne[ "MESURE_HA"]
+                        break
+                    if une_densite < le_seuil:
+                        physiocap_log( "On ignore parcelle {} : densité de points {} est inférieure au seuil {}".\
+                            format( un_nom, une_densite, le_seuil), TRACE_INTRA)
+                        continue
+
                     # ###################
                     # Contournement du bug SAGA et caractères spéciaux ==> Interpolation GDAL
                     # ###################                    
@@ -1095,8 +1111,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     if choix_interpolation == "SAGA" and not physiocap_is_only_ascii( un_nom):
                         aText =  self.tr("=~= {0} {1} ne peut pas dialoguer avec SAGA et des caractères non ascii.\n").\
                                 format( PHYSIOCAP_WARNING, PHYSIOCAP_UNI)
-                        aText = aText + self.tr( "L'interpolation de {0} doit être réalisée par GDAL").\
-                                format( un_nom)
+                        aText = aText + self.tr( "L'interpolation de {0} doit être réalisée par GDAL").format( un_nom)
                         physiocap_log( aText, leModeDeTrace)
                         choix_definitif_interpolation = "GDAL" 
                     else:
