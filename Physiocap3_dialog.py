@@ -223,7 +223,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
 
         self.ButtonInter.setEnabled( False)
         self.ButtonIntra.setEnabled( False)            
-        # SAGA GDAL
+        self.spinBoxDensiteMinimale.setValue( int( self.settings.value( "Intra/densiteMinimale", 500)))
         if (self.settings.value("Expert/library") == "SAGA"):
             self.radioButtonSAGA.setChecked(  Qt.Checked)
             self.spinBoxPower.setEnabled( False)
@@ -1023,6 +1023,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         toutes_parcelles = "YES" if self.checkBoxToutes.isChecked() else "NO"
         self.settings.setValue("Intra/toutesParcelles", toutes_parcelles)
         self.settings.setValue("Intra/continueIntra", self.fieldComboIntraContinue.currentIndex())
+        self.settings.setValue("Intra/densiteMinimale", float( self.spinBoxDensiteMinimale.value()))
         self.settings.setValue("Intra/powerIntra", float( self.spinBoxPower.value()))
         self.settings.setValue("Intra/rayonIntra", float( self.spinBoxDoubleRayon.value()))
         self.settings.setValue("Intra/pixelIntra", float( self.spinBoxPixel.value()))
@@ -1806,7 +1807,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                         if nom_champ == "Nom_Parcel":
                             physiocap_log( "Champ nom parcel",  TRACE_JH)
                             liste_valeurs = mon_provider.uniqueValues( map_champ[ nom_champ])
-                            valeur_unique = "YES" if nombre_ligne - 1 == len( liste_valeurs) else "NO"
+                            valeur_unique = "YES" if nombre_ligne == len( liste_valeurs) else "NO"
                             physiocap_log( "Champ nom parcel est unique ? {} ".format(valeur_unique),  TRACE_JH)
                             physiocap_log( "nombre champ {} attendu et uniques {} ".\
                                 format(nombre_ligne, len( liste_valeurs)),  TRACE_JH)
@@ -1825,7 +1826,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                             physiocap_log( "type Exclu {} pour {}".format( mon_champ.type(), nom_champ), TRACE_JH)
                             continue
                         liste_valeurs = mon_provider.uniqueValues( map_champ[ nom_champ])
-                        valeur_unique = "YES" if nombre_ligne - 1 == len( liste_valeurs) else "NO"
+                        valeur_unique = "YES" if nombre_ligne == len( liste_valeurs) else "NO"
 
                         # ne pas remettre NOM_PHY une deuxieme fois
                         if valeur_unique == "YES" and nom_champ != CHAMP_NOM_PHY:

@@ -109,8 +109,10 @@ class PhysiocapIntra( QtWidgets.QDialog):
             os.mkdir( chemin_pdf)
         nom_pdf = os.path.join( chemin_pdf, nom_attribut + SEPARATEUR_+ nom_parcelle + EXTENSION_PDF)
         if os.path.exists( nom_pdf):           
-            return physiocap_error( "Pour {1} et parcelle {0}, le PDF existe déjà {2}".\
-                format( nom_parcelle, nom_attribut, nom_pdf))
+            physiocap_log( "PDF existe pour {} et parcelle {}".\
+                format( nom_attribut, nom_parcelle),  TRACE_JH)
+            return physiocap_error( "Pour {} et parcelle {}, le PDF existe déjà {}".\
+                format( nom_attribut, nom_parcelle, nom_pdf))
 
         # Charger un modele qpt dans les composer_template
         chemin_composer = os.path.join( dialogue.gis_dir, 'composer_templates')
@@ -1082,7 +1084,11 @@ class PhysiocapIntra( QtWidgets.QDialog):
                             if parcelle_attendue != dialogue.fieldComboParcelleIntra.currentText():
                                 physiocap_log( "On ignore parcelle {} non demandée".format( parcelle_attendue), TRACE_INTRA)
                                 continue
-                        les_parcelles_agro_suivi.remove( parcelle_attendue)
+                        if parcelle_attendue in les_parcelles_agro_suivi:
+                            les_parcelles_agro_suivi.remove( parcelle_attendue)
+                        else:
+                            physiocap_log( "Parcelle {} n'est pas attendue".format( parcelle_attendue), TRACE_JH)
+                            
                         un_nom = parcelle_attendue
                     else:
                         try:
