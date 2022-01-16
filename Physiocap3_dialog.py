@@ -1783,7 +1783,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
            format ( inputLayer), TRACE_JH)
 
         layer = physiocap_get_layer_by_name( inputLayer)
-        if layer is None:
+        if layer is None and len(nom_complet_poly) == 3:
             layer = QgsVectorLayer( nom_complet_poly[2], nom_complet_poly[0], 'ogr')
 
         # Initialisation avec CHAMP_NOM_PHY = NOM_PHY
