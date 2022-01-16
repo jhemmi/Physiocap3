@@ -883,7 +883,10 @@ class PhysiocapIntra( QtWidgets.QDialog):
         i_entite = i_forme * len( les_champs_INTRA_choisis)
 #        physiocap_log( self.tr( "=~= Nombre de formes {0} soit : {1} à dessiner et {2} entites avec les champs ").\
 #            format( i_forme_min,  i_forme, i_entite ), TRACE_INTRA)
-        stepBar = int( 60 / i_entite)
+        if i_entite > 60:
+            stepBar = int( i_entite / 60)
+        else:
+            stepBar = int( 60 / i_entite)
         positionBar = 5
         
         for idx, le_champ_choisi in enumerate( les_champs_INTRA_choisis):
