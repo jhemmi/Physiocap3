@@ -109,9 +109,9 @@ class PhysiocapIntra( QtWidgets.QDialog):
             os.mkdir( chemin_pdf)
         nom_pdf = os.path.join( chemin_pdf, nom_attribut + SEPARATEUR_+ nom_parcelle + EXTENSION_PDF)
         if os.path.exists( nom_pdf):           
-            physiocap_log( "PDF existe pour {} et parcelle {}".\
-                format( nom_attribut, nom_parcelle),  TRACE_JH)
-            return physiocap_error( "Pour {} et parcelle {}, le PDF existe déjà {}".\
+            physiocap_log( "PDF existe déjà pour {} et parcelle {}".\
+                format( nom_attribut, nom_parcelle),  leModeDeTrace)
+            return physiocap_error( self, "Pour {} et parcelle {}, le PDF existe déjà {}".\
                 format( nom_attribut, nom_parcelle, nom_pdf))
 
         # Charger un modele qpt dans les composer_template
@@ -156,18 +156,14 @@ class PhysiocapIntra( QtWidgets.QDialog):
             rect = QgsRectangle(  mes_couches[0].extent())
             rect.scale(1.0)
             itemCarte.zoomToExtent(rect)
-            #self.dump_couches( itemCarte,  "APRES")
 
-            physiocap_log( "PDF : la carte se nomme {} ".format( itemCarte.id()), TRACE_PDF)
             # Légende
             itemLegende = miseEnPage.itemById( "Légende")
             # OK mais toutes les entrées dans légende : itemLegende.setLinkedMap( itemCarte) 
             layerTree = QgsLayerTree()
             layerTree.addLayer( mes_couches[0])
             itemLegende.model().setRootGroup(layerTree)
-            #self.dump_noeuds_legende( itemLegende.model().setRootGroup(layerTree))
             #physiocap_log( "PDF : la {} contient \n{} ".format( itemLegende.id(),  dir( itemLegende)), TRACE_PDF)
-            physiocap_log( "PDF : la légende se nomme {} ".format( itemLegende.id()), TRACE_PDF)
 
             exporter = QgsLayoutExporter(miseEnPage)
             exporter.exportToPdf(nom_pdf, QgsLayoutExporter.PdfExportSettings())
@@ -874,8 +870,14 @@ class PhysiocapIntra( QtWidgets.QDialog):
         i_forme_min = vecteur_poly.featureCount()
         nombre_calcul_max = i_forme_min * len( les_champs_INTRA_choisis) 
         id_bar = 0
+        barre = 1
+        if nombre_calcul_max > (85-20):
+            progress_step = int( nombre_calcul_max / (85-20))
+        else:
+            progress_step = 0
+        progress_bar = 20
+        dialogue.progressBarIntra.setValue( 5)
         for idx, le_champ_choisi in enumerate( les_champs_INTRA_choisis):
-            dialogue.progressBarIntra.setValue( 5)
             # Pour chaque attribut à interpoler
             physiocap_log( self.tr( "=~= {0} Champ choisi == {1} est le {2} parmi {3} ==").\
                 format( PHYSIOCAP_UNI, le_champ_choisi, idx+1, len( les_champs_INTRA_choisis)), leModeDeTrace)
@@ -1052,17 +1054,17 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         ( dialogue.checkBoxIntraImages.isChecked())):        
                 # On tourne sur les contours qui ont été crée par Inter
                 id_contour = 0
-                barre = 1
-                progress_step = int( nombre_calcul_max / (90-20))
-                progress_bar = 20
                 for un_contour in vecteur_poly.getFeatures(): 
                     id_bar = id_bar + 1
-                    # Progress BAR de 20 à 80 %
-                    if ( id_bar > barre * progress_step):
+                    # Progress BAR de 20 à 85 %
+                    if nombre_calcul_max > (85-20) and ( id_bar > barre * progress_step):
                         progress_bar = progress_bar + 1
                         barre = barre + 1
-                        if progress_bar % 5 == 0 or nombre_calcul_max < 10:
-                            dialogue.progressBarIntra.setValue( progress_bar)  
+                    else:
+                        progress_bar = progress_bar + int( (85-20) / nombre_calcul_max) 
+                        
+                    if progress_bar % 5 == 0 or nombre_calcul_max < 10:
+                        dialogue.progressBarIntra.setValue( progress_bar)  
 
                     id_contour = id_contour + 1
                     contours_possibles = contours_possibles + 1
@@ -1249,8 +1251,6 @@ class PhysiocapIntra( QtWidgets.QDialog):
                             self.imprimer_raster( dialogue, nom_raster_final, nom_court_raster, \
                                     un_nom, le_champ_choisi, moyenne)
 
-
-            dialogue.progressBarIntra.setValue( 95)
             if ( contour_avec_point >  0 ):                                            
                 physiocap_log( self.tr( "=~= Fin des {0}/{1} interpolation(s) intra parcellaire").\
                     format( str(contour_avec_point), str( contours_possibles)), leModeDeTrace)
