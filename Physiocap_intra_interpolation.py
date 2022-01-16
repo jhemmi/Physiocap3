@@ -872,24 +872,10 @@ class PhysiocapIntra( QtWidgets.QDialog):
         dialogue.progressBarIntra.setValue( 4)
         # Compter le nombre de formes pour la barre d'avancement
         i_forme_min = vecteur_poly.featureCount()
-        # Affinage selon les demandes de tous et/ou de chaque
-        if  (( dialogue.checkBoxIntraUnSeul.isChecked()) and \
-             (( dialogue.checkBoxIntraIsos.isChecked()) or \
-              ( dialogue.checkBoxIntraImages.isChecked()))):
-            i_forme = i_forme_min * 2
-        else:
-            i_forme = i_forme_min
-        # Multiplier par le nombre d'attribut 
-        i_entite = i_forme * len( les_champs_INTRA_choisis)
-#        physiocap_log( self.tr( "=~= Nombre de formes {0} soit : {1} à dessiner et {2} entites avec les champs ").\
-#            format( i_forme_min,  i_forme, i_entite ), TRACE_INTRA)
-        if i_entite > 60:
-            stepBar = int( i_entite / 60)
-        else:
-            stepBar = int( 60 / i_entite)
-        positionBar = 5
-        
+        nombre_calcul_max = i_forme_min * len( les_champs_INTRA_choisis) 
+        id_bar = 0
         for idx, le_champ_choisi in enumerate( les_champs_INTRA_choisis):
+            dialogue.progressBarIntra.setValue( 5)
             # Pour chaque attribut à interpoler
             physiocap_log( self.tr( "=~= {0} Champ choisi == {1} est le {2} parmi {3} ==").\
                 format( PHYSIOCAP_UNI, le_champ_choisi, idx+1, len( les_champs_INTRA_choisis)), leModeDeTrace)
@@ -996,6 +982,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     physiocap_log( self.tr( "=~=  Pas d'interpolation, Points absents : {0}").\
                         format( nom_point), TRACE_INTRA)
                 if (os.path.exists( nom_vignette_toutes)) and (os.path.exists( nom_point)):
+                    dialogue.progressBarIntra.setValue( 20)
                     try:
                         # ###############
                         # Calcul raster et iso
@@ -1060,17 +1047,23 @@ class PhysiocapIntra( QtWidgets.QDialog):
                                 nom_iso_final, nom_court_isoligne, le_template_isolignes, "YES",
                                 vignette_group_intra, mon_projet)
 
-            # Progress BAR + un stepBar%
-            positionBar = positionBar + ( stepBar * i_forme_min)     
-            dialogue.progressBarIntra.setValue( positionBar)
-            positionBarInit = positionBar
-
             # Eviter de tourner en Intra sur chaque parcelle
             if (( dialogue.checkBoxIntraIsos.isChecked()) or 
                         ( dialogue.checkBoxIntraImages.isChecked())):        
                 # On tourne sur les contours qui ont été crée par Inter
                 id_contour = 0
+                barre = 1
+                progress_step = int( nombre_calcul_max / (80-20))
+                progress_bar = 20
                 for un_contour in vecteur_poly.getFeatures(): 
+                    id_bar = id_bar + 1
+                    # Progress BAR de 20 à 80 %
+                    if ( id_bar > barre * progress_step):
+                        progress_bar = progress_bar + 1
+                        barre = barre + 1
+                        if progress_bar % 5 == 0:
+                            dialogue.progressBarIntra.setValue( progress_bar)  
+
                     id_contour = id_contour + 1
                     contours_possibles = contours_possibles + 1
                     
@@ -1213,10 +1206,8 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         pass
                     # Fin de capture des err        
                     
-                    # Progress BAR + un stepBar%
-                    positionBar = positionBarInit + ( stepBar * id_contour)    
-                    dialogue.progressBarIntra.setValue( positionBar)
-                    #physiocap_log( "=~= Barre {0}".format( positionBar) , TRACE_INTRA)                     
+                    # Progress BAR 
+                    dialogue.progressBarIntra.setValue( 88)
                        
                     # Affichage dans panneau des couches QGIS                           
                     if ( id_contour >  0 ):                                            

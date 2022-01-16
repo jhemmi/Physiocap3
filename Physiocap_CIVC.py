@@ -335,7 +335,8 @@ def physiocap_filtrer(self, nom_court_csv_concat, src, csv_sans_0, csv_avec_0, c
         if ( numero_point > barre * progress_step):
             progress_bar = progress_bar + 1
             barre = barre + 1
-            self.progressBar.setValue( progress_bar)  
+            if progress_bar % 5 == 0:
+                self.progressBar.setValue( progress_bar)  
 
         comptage = ligne_brute.count(",") # compte le nombre de virgules
         result = ligne_brute.split(",") # split en fonction des virgules

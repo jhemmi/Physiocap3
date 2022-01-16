@@ -995,14 +995,15 @@ class PhysiocapInter( QtWidgets.QDialog):
         else:
             ordre_de_tri = le_champ_contour
         # ITERATION PAR CONTOUR : Tri OK
+        progress_step = int( nombre_contours / 25)
+        progress_bar = 25
+        barre = 1
         for un_contour in vecteur_poly.getFeatures(QgsFeatureRequest().addOrderBy( ordre_de_tri)):
             id = id + 1
-            bar = 75 - int( (nombre_contours - id) / (75-35))
             #AGRO 
             if dialogue.checkBoxInfoVignoble.isChecked() and dialogue.radioButtonContour.isChecked():
                 indice_dict_Entete = quel_indice_entete( origine_poly)
                 # LIMITATION AUX SEULES PARCELLE AGRO 
-                physiocap_log( "AVANT CAS REJET {}".format("INTER"), TRACE_JH)
                 parcelle_attendue = assert_parcelle_attendue(dialogue, un_contour, les_parcelles_agro, modele_agro_retenu, \
                         indice_dict_Entete, dictEnteteVignoble, champsVignobleOrdonnes,  "INTER")
                 if parcelle_attendue == None:
@@ -1282,9 +1283,12 @@ class PhysiocapInter( QtWidgets.QDialog):
             if i_point > 10:
                 date_fin = un_point["DATE"]
 
-            # Progress BAR 35 à 75%
-            if bar % 10:
-                dialogue.progressBarInter.setValue( bar)
+            # Progress BAR 25 à 75%
+            if ( i_point > barre * progress_step):
+                progress_bar = progress_bar + 1
+                barre = barre + 1
+            if progress_bar % 5 == 0:
+                dialogue.progressBarInter.setValue( progress_bar)
 
             # MEMORISATION DES DONNEES DU CONTOUR COURANT (SANS MESURE, SEGMENT, POINT)
             # On fait les calculs des moyenne, médiane et ecart type
