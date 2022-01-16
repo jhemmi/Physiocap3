@@ -1061,7 +1061,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     if ( id_bar > barre * progress_step):
                         progress_bar = progress_bar + 1
                         barre = barre + 1
-                        if progress_bar % 5 == 0:
+                        if progress_bar % 5 == 0 or nombre_calcul_max < 10:
                             dialogue.progressBarIntra.setValue( progress_bar)  
 
                     id_contour = id_contour + 1
