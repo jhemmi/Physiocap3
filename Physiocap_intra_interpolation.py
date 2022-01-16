@@ -1053,7 +1053,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 # On tourne sur les contours qui ont été crée par Inter
                 id_contour = 0
                 barre = 1
-                progress_step = int( nombre_calcul_max / (80-20))
+                progress_step = int( nombre_calcul_max / (90-20))
                 progress_bar = 20
                 for un_contour in vecteur_poly.getFeatures(): 
                     id_bar = id_bar + 1
@@ -1206,8 +1206,6 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         pass
                     # Fin de capture des err        
                     
-                    # Progress BAR 
-                    dialogue.progressBarIntra.setValue( 88)
                        
                     # Affichage dans panneau des couches QGIS                           
                     if ( id_contour >  0 ):                                            
@@ -1239,7 +1237,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                                     vignette_group_intra, mon_projet)
                         physiocap_log ( self.tr( "=~= Fin Interpolation de {0} <<<<").\
                             format( un_nom), leModeDeTrace)
-
+                        
                         # Impression PDF
                         if  dialogue.checkBoxIntraPDF.isChecked():
                             moyenne = 'Inconnue'
@@ -1252,6 +1250,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                                     un_nom, le_champ_choisi, moyenne)
 
 
+            dialogue.progressBarIntra.setValue( 95)
             if ( contour_avec_point >  0 ):                                            
                 physiocap_log( self.tr( "=~= Fin des {0}/{1} interpolation(s) intra parcellaire").\
                     format( str(contour_avec_point), str( contours_possibles)), leModeDeTrace)
