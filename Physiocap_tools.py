@@ -188,6 +188,9 @@ def quel_sont_vecteurs_choisis( self, source = "Intra"):
         derniere_session = self.lineEditDerniereSession.text()
         # Pour polygone de contour   
         nom_complet_poly = self.comboBoxPolygone.currentText().split( SEPARATEUR_NOEUD)
+        physiocap_log("Vecteur {}".format( nom_complet_poly), TRACE_AGRO)
+        physiocap_log("Vecteur {}".format( nom_complet_poly), TRACE_TOOLS)
+        #JHJHICI
         if ( len( nom_complet_poly) == 3) and nom_complet_poly[1] == "CSV NON OUVERT DANS QGIS":
             uri = "file:///{0}?delimiter={1}&crs=epsg:{2}&wktField={3}".\
                 format( nom_complet_poly[ 2], CSV_DELIMITER_POINT_VIRGULE, EPSG_NUMBER, CSV_GEOM)
@@ -198,7 +201,16 @@ def quel_sont_vecteurs_choisis( self, source = "Intra"):
             origine_poly = "AGRO_SHP"
         elif ( len( nom_complet_poly) == 3) and nom_complet_poly[1] == "OUVERT DANS QGIS":
             vecteur_poly = physiocap_get_layer_by_ID( nom_complet_poly[ 2], nom_complet_poly[0])
-            origine_poly = "SHP"
+            URI_complet = vecteur_poly.dataProvider().dataSourceUri()
+            physiocap_log("URI du vecteur OUVERT {}".format( URI_complet), TRACE_AGRO)
+            nom_poly,  un_layer = URI_complet.split( "|")
+            extension = nom_poly[-3:]
+            physiocap_log("extension vecteur OUVERT {}".format( extension), TRACE_AGRO)
+            origine_poly = "INCONNUE"
+            if extension == "shp":
+                origine_poly = "SHP"
+            if extension == "csv":
+                origine_poly = "CSV"
         else:
             aText = self.tr( "Le polygone de contour n'est pas choisi.")
             physiocap_error( self, aText)
@@ -381,7 +393,7 @@ def structure_informations_vignoble( self, format_entre_sortie ='AGRO_CSV'):
         champs_agro_fichier.append( dictEnteteVignoble[champ][ position_dic])
         champs_agro_autre_fichier.append( dictEnteteVignoble[champ][ position_autre])
         types_agro.append( dictEnteteVignoble[champ][ 1])
-    physiocap_log("Les types {}".format( types_agro), TRACE_AGRO)
+    #physiocap_log("Les types {}".format( types_agro), TRACE_AGRO)
     champs_vignoble_requis_fichier = []
     for champ in champs_vignoble_requis:
         champs_vignoble_requis_fichier.append( dictEnteteVignoble[champ][ position_dic])
@@ -449,7 +461,7 @@ def quelles_informations_vignoble_source_onglet( self, format_sortie ='AGRO_CSV'
     for unChamp in champsVignobleOrdonnes:
         listeEntete.append( dictEnteteVignoble[ unChamp][position_dic])
         listeInfo.append( dictInfoVignoble[ unChamp])
-    #physiocap_log( "La Liste Agro : {}".format(listeInfo), TRACE_TOOLS)
+    physiocap_log( "La Liste Agro : {}".format(listeInfo), TRACE_TOOLS)
     return champsVignobleOrdonnes, champs_vignoble_requis_fichier,  dictInfoVignoble, listeInfo,  dictEnteteVignoble, listeEntete
 
 def quel_qml_existe( qml_court, repertoire_template, repertoire_secours):
@@ -735,8 +747,8 @@ def assert_parcelle_attendue(self, un_contour, les_parcelles_agro, modele_agro_r
         return None
 
     nom_phy,  campagne_attendue, parcelle_attendue = un_unique.split( SEPARATEUR_NOEUD)
-    physiocap_log( "Parcelle {} attendue pour la campagne {}".\
-        format( parcelle_attendue, campagne_attendue), TRACE_JH)
+#    physiocap_log( "Parcelle {} attendue pour la campagne {}".\
+#        format( parcelle_attendue, campagne_attendue), TRACE_JH)
     if nom_campagne != None and campagne_attendue != None:
         if int(nom_campagne) != int(campagne_attendue):                            
             physiocap_log( "XXX REJET C {} Parcelle {} rejettée ; sa campagne {} ne ne correspond pas à celle attendue {}".\
@@ -752,7 +764,7 @@ def assert_parcelle_attendue(self, un_contour, les_parcelles_agro, modele_agro_r
                 format( libelle,  nom_parcelle, nom_campagne, campagne_attendue), TRACE_JH)
         return None
         
-    physiocap_log( "Parcelle {} retenue pour {} limiter par agro {}".format( libelle, nom_parcelle, un_unique), TRACE_JH)
+    physiocap_log( "Parcelle {} retenue pour {} limiter par agro {}".format( nom_parcelle,libelle,  un_unique), TRACE_JH)
     return nom_parcelle
 
 def assert_campagne( self, campagne, derniere_info_mid):
@@ -792,7 +804,7 @@ def quelle_liste_attributs( self, vecteur):
     provider = vecteur.dataProvider()
     field_names = [field.name() for field in provider.fields()]
     #physiocap_log( "Liste de champ a pour type {}".format( type( field_names)))
-    physiocap_log( "Attributs de {} sont {}".format( vecteur.name(), field_names ), TRACE_AGRO)
+    #physiocap_log( "Attributs de {} sont {}".format( vecteur.name(), field_names ), TRACE_AGRO)
     return field_names
     
 def inclure_vignoble_sur_contour(self, chemin_fichier_convex, ss_groupe=None):
@@ -892,7 +904,7 @@ def assert_champs_agro_obligatoires( dialogue, vecteur_poly, origine_poly):
     for parcelle in les_parcelles_agro:
         try:
             un_unique = modele_agro_retenu[ parcelle]
-            physiocap_log( "Parcelle {} retenue pour agro {}".format( parcelle, un_unique), TRACE_AGRO)
+            physiocap_log( "Parcelle {} retenue pour agro {}".format( parcelle, un_unique), TRACE_JH)
         except:
             physiocap_error( "Parcelle {} orpheline de données agro ".format( parcelle), TRACE_AGRO)
             pass
@@ -935,15 +947,15 @@ def quelles_listes_info_agro(self):
         les_geometries_agronomique = []
         infos_agronomique_en_cours = {} # Conteneur provisoire
         # CSV
-        nom_champ_geom = "inconnu"
-
-        if origine_poly == "AGRO_CSV":
+        if origine_poly in [ "AGRO_CSV",  "CSV"]:
             indice_dict_Entete = 0
-            nom_champ_geom = CSV_GEOM
-        if origine_poly == "AGRO_SHP":
+        elif origine_poly in [ "AGRO_SHP",  "SHP"]:
             indice_dict_Entete = 2
-            nom_champ_geom = "geom"
-        physiocap_log( "Vecteur AGRO de format {} et géométrie attendue {}".format( origine_poly, nom_champ_geom),  TRACE_JH)
+        else:
+            aText = "Vecteur AGRO de format {} n'est pas pris en compte par l'extension".format( origine_poly)
+            physiocap_log( aText)
+            physiocap_error( self, aText, "CRITICAL")
+
         for un_contour in vecteur_poly.getFeatures(QgsFeatureRequest().addOrderBy( champs_vignoble_requis_fichier[1])):
             # CSV
             nom_parcelle = dictEnteteVignoble[champsVignobleOrdonnes[1]][indice_dict_Entete]
@@ -972,17 +984,16 @@ def quelles_listes_info_agro(self):
                     elif type_attendu == "Integer":
                         infos_agronomique_en_cours[ le_champ] = int( un_contour[ champ_fichier])
                     else:
-                        physiocap_error("Type {} n'est pas prévu par extension".format(type_attendu) )
+                        physiocap_error("Type {} n'est pas prévu par extension".format(type_attendu),  TRACE_JH)
                 except:
                     raise physiocap_exception_agro_type_champ( "{} n'a pas le type attendu {}".\
                         format( champ_fichier, type_attendu))
+            physiocap_log( "Info vignoble : {}".format( infos_agronomique_en_cours),  "TOUS")
             les_infos_vignoble.append( infos_agronomique_en_cours)
             
             infos_agronomique_en_cours = {}
             # Autres champs agro
             for pos_champ, le_champ in enumerate( champs_agro_fichier):
-#                if le_champ in champs_vignoble_requis:
-#                    continue
                 champ_fichier = champs_agro_fichier[ pos_champ]
                 infos_agronomique_en_cours[ champ_fichier] = un_contour[ champ_fichier]
             les_infos_agronomique.append( infos_agronomique_en_cours)
@@ -992,11 +1003,10 @@ def quelles_listes_info_agro(self):
                 try:
                     les_geometries_agronomique.append(  un_contour.geometry())
                 except:
-                    physiocap_error("Contour CSV n'a pas de géométrie")
+                    physiocap_error( self, "Contour CSV n'a pas de géométrie")
                     raise
             else:
                 les_geometries_agronomique.append(  un_contour.geometry())
-        #physiocap_log( "Synthèse Info Agro : {}".format( les_infos_agronomique),  TRACE_JH)
         #physiocap_log( "Synthèse geom : {}".format( les_geometries_agronomique))
 
         return les_parcelles_agro, les_geometries_agronomique, les_infos_agronomique, les_infos_vignoble 
@@ -1052,8 +1062,8 @@ def ajouter_csvt_source_contour( self, vecteur_poly, les_parcelles,  les_geoms_p
             writerCSVT.writerow( [  CSV_GEOM] + listeEntete + listeEnteteMoyenne)
         # Boucler sur les parcelles
         for parcelleId,  parcelleNom in enumerate( les_parcelles):
-            physiocap_log ( "AJOUT Physiocap moyenne de {} la {} ieme parcelle a pour diam : {}".
-            format( parcelleNom,  parcelleId, les_moyennes_par_contour[parcelleId].get( 'diam')), TRACE_JH)
+#            physiocap_log ( "AJOUT Physiocap moyenne de {} la {} ieme parcelle a pour diam : {}".
+#            format( parcelleNom,  parcelleId, les_moyennes_par_contour[parcelleId].get( 'diam')), TRACE_AGRO)
             geomContour = QgsGeometry.fromMultiPolygonXY( les_geoms_poly[ parcelleId])
             # Calculer geomWKT à partir de geom du contour
             geomWKT = str( geomContour.asWkt())
@@ -1061,22 +1071,29 @@ def ajouter_csvt_source_contour( self, vecteur_poly, les_parcelles,  les_geoms_p
             lesMoyennesOrdonnees = []
             for unChamp in champsMoyenneOrdonnes:
                 lesMoyennesOrdonnees.append( round( les_moyennes_par_contour[parcelleId].get( unChamp), 2)) 
-            physiocap_log ( "AJOUT Physiocap moyennes du contour {}: {}".\
-                format( les_parcelles[parcelleId], lesMoyennesOrdonnees), TRACE_JH)
+#            physiocap_log ( "AJOUT Physiocap moyennes du contour {}: {}".\
+#                format( les_parcelles[parcelleId], lesMoyennesOrdonnees), TRACE_AGRO)
+            # Retrouver index de la parcelle dans parcelle agro
             listeInfo = []
-            for un_champ in listeEntete:
-                if un_champ == 'Nom_Parcel':
-                    listeInfo.append( parcelleNom)
-                    continue
-                if un_champ == 'Campagne':
-                    listeInfo.append( campagne_en_cours)
-                    continue
-                #physiocap_log ( "Champ agro du contour {}".format( un_champ))
-                listeInfo.append( les_infos_agronomique[parcelleId].get( un_champ)) 
-            physiocap_log ( "AJOUT Physiocap agro du contour {}: {}".\
-                format( les_parcelles[parcelleId], listeInfo), TRACE_JH)
+            if parcelleNom in les_parcelles_agro:
+                index_parcelle = les_parcelles_agro.index( parcelleNom)
+#                physiocap_log ( "Parcelle {}: id {} et valeur {}".\
+#                    format( parcelleNom, index_parcelle,  parcelleId), TRACE_AGRO)
+                for un_champ in listeEntete:
+                    if un_champ == 'Nom_Parcel':
+                        listeInfo.append( parcelleNom)
+                        continue
+                    if un_champ == 'Campagne':
+                        listeInfo.append( campagne_en_cours)
+                        continue
+                    listeInfo.append( les_infos_agronomique[ index_parcelle].get( un_champ)) 
+                physiocap_log ( "AJOUT Physiocap agro du contour {}: {}".\
+                    format( les_parcelles_agro[ index_parcelle], listeInfo), "IMPORT_CSV")
                 
-            writerCSVT.writerow( [ geomWKT] + listeInfo  +  lesMoyennesOrdonnees)
+                writerCSVT.writerow( [ geomWKT] + listeInfo  +  lesMoyennesOrdonnees)
+            else:
+                # envisager un message
+                pass
         fichier_CSVT.close()
     
     return 0
@@ -1168,6 +1185,7 @@ def physiocap_is_int_number(s):
  
 def physiocap_create_projection_file( prj_name,  laProjection):
     """Creer le fichier de projection du layer avec la description de EPSG"""
+    # TODO : passer à processing qgis:definecurrentprojection pour creer prj et qpj conforme à QGIS
     if (prj_name == None) or (prj_name == ""):
         return
         

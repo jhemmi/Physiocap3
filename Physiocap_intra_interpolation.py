@@ -1077,15 +1077,18 @@ class PhysiocapIntra( QtWidgets.QDialog):
                             indice_dict_Entete, dictEnteteVignoble, champsVignobleOrdonnes)
                         if parcelle_attendue == None:
                             continue
-                        # Eventuelment à la parcelle choisie    
+                        # Eventuellement à la parcelle choisie    
                         if not dialogue.checkBoxToutes.isChecked():
+                            physiocap_log( "CAS UNE PARCELLE {}".format( parcelle_attendue), TRACE_INTRA)
                             if parcelle_attendue != dialogue.fieldComboParcelleIntra.currentText():
-                                physiocap_log( "On ignore parcelle {} non demandée".format( parcelle_attendue), TRACE_INTRA)
+                                physiocap_log( "CAS on évite la parcelle {} non demandée".format( parcelle_attendue), TRACE_INTRA)
                                 continue
+                            physiocap_log( "CAS la parcelle choisie {}".format( parcelle_attendue), TRACE_INTRA)
+
                         if parcelle_attendue in les_parcelles_agro_suivi:
                             les_parcelles_agro_suivi.remove( parcelle_attendue)
                         else:
-                            physiocap_log( "Parcelle {} n'est pas attendue".format( parcelle_attendue), TRACE_JH)
+                            physiocap_log( "Parcelle {} n'est pas attendue".format( parcelle_attendue), TRACE_INTRA)
                             
                         un_nom = parcelle_attendue
                     else:

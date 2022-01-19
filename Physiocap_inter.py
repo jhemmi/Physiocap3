@@ -1773,7 +1773,7 @@ class PhysiocapInter( QtWidgets.QDialog):
             if dialogue.radioButtonContour.isChecked():
                 dialogue.progressBarInter.setValue( 92)
                 # Alonger le CSVT de synthese moyenne et vignoble
-                #physiocap_log("ICI {}".format( les_parcelles),  TRACE_JH)
+                physiocap_log("ICI {}".format( les_parcelles),  TRACE_JH)
                 retour_csv = ajouter_csvt_source_contour( dialogue, vecteur_poly, \
                         les_parcelles, les_geoms_poly, les_moyennes_par_contour)
                 if retour_csv != 0:

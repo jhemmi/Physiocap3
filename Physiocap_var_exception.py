@@ -45,8 +45,8 @@ if MACHINE == "Linux":
 else:
     LE_MODE_PROD = "YES"
 LISTE_PROFIL= [ 'Standard', 'Champagne', 'Fronton'] #, 'IFV Bordeaux']
-# LIVRAISON : supprimer le comentaire suivant en Prod
-LE_MODE_PROD = "YES"
+# LIVRAISON : supprimer le commentaire suivant en Prod
+#LE_MODE_PROD = "YES"
 
 # En prod CENTROIDES vaut NO
 CENTROIDES = "NO"  # CENTROIDES YES est pour voir les centroides dans la synthese
