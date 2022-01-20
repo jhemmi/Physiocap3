@@ -47,7 +47,6 @@ from .Physiocap_tools import ( physiocap_message_box,\
         physiocap_nom_entite_sans_pb_caractere,  physiocap_nom_entite_avec_pb_caractere, \
         physiocap_rename_existing_file, quelle_projection_et_lib_demandee, \
         quel_chemin_templates, quel_qml_existe, quel_sont_vecteurs_choisis, \
-        appel_processing, assert_processing, quelle_librairie_interpolation,  \
         assert_parcelle_attendue, assert_champs_agro_obligatoires, assert_quel_format_entete)
 
 from .Physiocap_var_exception import *
@@ -56,7 +55,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtXml import QDomDocument
 from qgis.core import ( Qgis, QgsProject, QgsVectorLayer, \
     QgsLayerTreeGroup, QgsRasterLayer, QgsMessageLog,  \
-    QgsFeatureRequest, QgsExpression,  \
+    QgsFeatureRequest, QgsExpression, QgsProcessingFeedback, \
     QgsRectangle, QgsLayout, QgsReadWriteContext, QgsLayoutExporter, QgsLayerTree)
 
 import shutil
@@ -574,6 +573,113 @@ class PhysiocapIntra( QtWidgets.QDialog):
            
         return "NOUVEAUX", nom_raster_final, nom_court_raster, nom_iso_final, nom_court_isoligne            
 
+    def assert_processing( self):
+        # Vérifier disponibilité de processing (on attend d'etre dans Intra)
+        try :
+            import processing
+            try:
+                from processing.core.Processing import Processing
+                Processing.initialize()
+            except:
+                physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
+                    format( PHYSIOCAP_UNI, self.tr("Traitement")), TRACE_TOOLS)
+                raise physiocap_exception_no_processing( "Pas d'extension Traitement - initialize")               
+            versionGDAL = processing.tools.raster.gdal.__version__
+            versionSAGA = processing.algs.saga.SagaUtils.getInstalledVersion() # avant "2.3.2"
+        except ImportError:
+            physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
+                format( PHYSIOCAP_UNI, self.tr("Traitement")), TRACE_TOOLS)
+            raise physiocap_exception_no_processing( "Pas d'extension Traitement")
+        except AttributeError:
+            physiocap_log( self.tr( "{0} nécessite SAGA version 2.3.1 ou 2.3.2 (attribute error)").\
+                format( PHYSIOCAP_UNI), self.tr("Traitement"))
+            raise physiocap_exception_no_saga( "Erreur attribut")
+
+    #        physiocap_log ( self.tr( "= Version SAGA = %s" % ( versionSAGA)), TRACE_INTRA)
+        physiocap_log ( self.tr( "= Version GDAL = %s" % ( versionGDAL)), TRACE_INTRA)
+        physiocap_log ( self.tr( "= Version SAGA = %s" % ( versionSAGA)), TRACE_INTRA)
+        return versionGDAL, versionSAGA
+
+    def quelle_librairie_interpolation( self, dialogue, versionSAGA):
+        """
+        Traite le choix et la version SAGA QGIS ou GDAL avant appel des Processing (Traitement) correspondants
+        Attention ce choix peut être revu pour certains cas (SAGA n'accepte pas les caractere non ascii
+        """        
+        # Test version de SAGA, sinon annonce de l'utilisation de GDAL
+        PROCESSING_INTERPOLATION = "INCONNU"
+        if dialogue.radioButtonSAGA.isChecked():
+            if versionSAGA == None:
+                versionNum = -1
+            else:
+                unite, dixieme, centieme = versionSAGA.split( ".")
+                versionNum = round( (float(unite) + float(dixieme)/10 + float(centieme)/100 ), 2)
+                physiocap_log ( self.tr( "= Version SAGA = {0}".format( versionNum)), TRACE_TOOLS)
+
+            # TODO : test SAGA Windows 7.82
+            if (( versionNum >= 2.31) and ( versionNum <= 2.32)): # or versionNum == 7.82:
+                physiocap_log ( self.tr( "= Version SAGA OK : {0}".format( versionSAGA)), TRACE_INTRA)
+                PROCESSING_INTERPOLATION = "SAGA"
+            else:
+                physiocap_log ( self.tr( "= Version SAGA %s est inférieure à 2.3.1 " % ( str( versionSAGA))), \
+                    TRACE_INTRA)
+                physiocap_log ( self.tr( "= ou supérieure à 2.3.2"), TRACE_INTRA)
+                physiocap_log ( self.tr( "= On force l'utilisation de Gdal : "), TRACE_INTRA)
+                PROCESSING_INTERPOLATION = "GDAL"
+                dialogue.radioButtonSAGA.setEnabled( False)
+                dialogue.radioButtonGDAL.setChecked(  Qt.Checked)
+                dialogue.radioButtonSAGA.setChecked(  Qt.Unchecked)
+                dialogue.spinBoxPower.setEnabled( False)
+                self.physiocap_message_box( self.tr( "= Saga a une version incompatible : on force l'utilisation de Gdal" ),
+                    "information")
+        
+        else: # cas GDAL
+            PROCESSING_INTERPOLATION = "GDAL"
+        
+        return PROCESSING_INTERPOLATION
+
+    def appel_processing( self, nom_point, algo_court, algo, params_algo,  
+        nom_produit_algo,  deuxieme_nom = None):
+        """
+        Traite les appels à processing avec gestion du nom_produit_algo attendu
+        Emet exception si pas de retour 
+        """
+        import processing
+        mon_feedback = QgsProcessingFeedback()
+        
+        lettre_algo = algo[0]
+
+        physiocap_log( self.tr( "={0}= Parametres pour algo {1} de nom long {2}\n{3}".\
+                        format( lettre_algo, algo_court, algo , params_algo )), TRACE_INTRA)       
+        textes_sortie_algo = {}
+        try:
+            textes_sortie_algo = processing.run( algo, params_algo, feedback=mon_feedback)        
+    ##        if lettre_algo == "s":
+    ##            # TODO: ?V3.x ? Tester si utile : Pour SAGA
+    ##            textes_sortie_algo = processing.run( algo, params_algo, feedback=mon_feedback)        
+    ##        else:
+    ##            textes_sortie_algo = processing.run( algo, params_algo, feedback=mon_feedback)        
+        except: # QgsProcessingException
+            erreur_processing = self.tr("{0} Erreur durant création du produit par Processing de {1} nom long {2} : exception".\
+                    format( PHYSIOCAP_STOP, algo_court,  algo ))
+            physiocap_error( self, erreur_processing)
+            physiocap_log( erreur_processing, TRACE_INTRA)
+            raise
+
+        # Recherche nom_retour dans sortie_algo
+        produit_algo = None
+        try:
+            produit_algo = textes_sortie_algo[ nom_produit_algo]
+        except:
+            erreur_processing = self.tr("{0} Erreur durant analyse du rendu de produit de {1} : texte produit {2}".\
+                    format( PHYSIOCAP_STOP, algo_court,  textes_sortie_algo ))
+            physiocap_error( self, erreur_processing)
+            physiocap_log( erreur_processing, TRACE_INTRA)
+            raise physiocap_exception_interpolation( nom_point)
+
+        physiocap_log( "={0}= Produit en sortie de {1}\n{2}".\
+                        format( lettre_algo, algo_court, produit_algo), TRACE_INTRA)
+        return produit_algo
+    
     def physiocap_interpolation_IntraParcelles( self, dialogue):
         """Interpolation des données de points intra parcellaires"""
         derniere_session = dialogue.lineEditDerniereSession.text()
@@ -936,7 +1042,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
             # Eviter de tourner en Intra sur chaque parcelle
             if (( dialogue.checkBoxIntraIsos.isChecked()) or 
                         ( dialogue.checkBoxIntraImages.isChecked())):        
-                # On tourne sur les contours qui ont été crée par Inter
+                # PAR CONTOUR : tournée sur les contours qui ont été crée par Inter
                 id_contour = 0
                 for un_contour in vecteur_poly.getFeatures(): 
                     id_bar = id_bar + 1
@@ -963,16 +1069,16 @@ class PhysiocapIntra( QtWidgets.QDialog):
                             continue
                         # Eventuellement à la parcelle choisie    
                         if not dialogue.checkBoxToutes.isChecked():
-                            physiocap_log( "CAS UNE PARCELLE {}".format( parcelle_attendue), TRACE_INTRA)
+                            #physiocap_log( "CAS UNE PARCELLE {}".format( parcelle_attendue), TRACE_INTRA)
                             if parcelle_attendue != dialogue.fieldComboParcelleIntra.currentText():
-                                physiocap_log( "CAS on évite la parcelle {} non demandée".format( parcelle_attendue), TRACE_INTRA)
+                                physiocap_log( "Par d'Interpolation pour la parcelle {} - non demandée".format( parcelle_attendue), "Attention")
                                 continue
                             physiocap_log( "CAS la parcelle choisie {}".format( parcelle_attendue), TRACE_INTRA)
 
                         if parcelle_attendue in les_parcelles_agro_suivi:
                             les_parcelles_agro_suivi.remove( parcelle_attendue)
                         else:
-                            physiocap_log( "Parcelle {} n'est pas attendue".format( parcelle_attendue), TRACE_INTRA)
+                            physiocap_log( "Parcelle {} n'est pas attendue comme une parcelle AGRO".format( parcelle_attendue), "Attention")
                             
                         un_nom = parcelle_attendue
                     else:
@@ -992,7 +1098,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         break
                     if une_densite < le_seuil:
                         physiocap_log( "On ignore parcelle {} : densité de points {} est inférieure au seuil {}".\
-                            format( un_nom, une_densite, le_seuil), TRACE_INTRA)
+                            format( un_nom, une_densite, le_seuil), "Attention")
                         continue
 
                     # ###################

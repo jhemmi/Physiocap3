@@ -649,6 +649,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         # Fin 
         physiocap_log( self.tr( "{0} {1} a affiché les couches demandées dans le groupe {2}").\
             format( PHYSIOCAP_INFO , PHYSIOCAP_UNI, chemin_base_session), leModeDeTrace)
-        quel_poly_point_INTER( dialogue)
+        if not dialogue.checkBoxContourSolo.isChecked():
+            quel_poly_point_INTER( dialogue)
 
         return 0 

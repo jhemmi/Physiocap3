@@ -688,7 +688,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Informations agronomiques (inspiré de ___Nadia___)
         self.dans_Quel_Settings()
         Nom_Profil =  self.fieldComboProfilPHY.currentText()
-        leModeDeTrace = self.fieldComboModeTrace.currentText()
+        #leModeDeTrace = self.fieldComboModeTrace.currentText()
 
         self.lineEditNomParcelle.setText( self.settings.value("Agro/nom_parcelle", "_"))
         self.spinBoxAnneePlant.setValue( int( self.settings.value("Agro/annee_plantation", 2000 )))

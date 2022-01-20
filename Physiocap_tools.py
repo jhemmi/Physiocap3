@@ -200,8 +200,12 @@ def quel_sont_vecteurs_choisis( self, source = "Intra"):
         elif ( len( infos_poly) == 3) and infos_poly[1] == "OUVERT DANS QGIS":
             vecteur_poly = physiocap_get_layer_by_ID( infos_poly[ 2], infos_poly[0])
             URI_complet = vecteur_poly.dataProvider().dataSourceUri()
-            #physiocap_log("URI du vecteur OUVERT {}".format( URI_complet), TRACE_AGRO)
-            chemin_vecteur,  un_layer = URI_complet.split( "|")
+            physiocap_log("URI du vecteur OUVERT {}".format( URI_complet), TRACE_AGRO)
+            if URI_complet.index("|") > 0:
+                URI_decoupe = URI_complet.split( "|")
+                chemin_vecteur = URI_decoupe[0]
+            else:
+                chemin_vecteur = URI_complet
             extension = chemin_vecteur[-3:]
             #physiocap_log("extension vecteur OUVERT {}".format( extension), TRACE_AGRO)
             origine_poly = "INCONNUE"
@@ -266,18 +270,23 @@ def quel_poly_point_INTER( self, isRoot = None, node = None ):
 
     # On descend de l'arbre par la racine
     for child in noeud.children():
-        #physiocap_log( "-- in noeud : comment connaitre le type ?", TRACE_TOOLS))        
         if isinstance( child, QgsLayerTreeGroup):
             noeud_en_cours = child.name()
             #physiocap_log( "--Group: " + noeud_en_cours, TRACE_JH)
             if noeud_en_cours != derniere_session:
                 continue
-            #physiocap_log( "--Group: " + noeud_en_cours, TRACE_JH)
+            physiocap_log( "--Group: " + noeud_en_cours, TRACE_TOOLS)
             groupe_inter = noeud_en_cours + SEPARATEUR_ + VIGNETTES_INTER
-            #physiocap_log( "--Group inter : " + groupe_inter, TRACE_TOOLS))
+            physiocap_log( "--Group inter : " + groupe_inter, TRACE_TOOLS)
             if ( noeud_en_cours != groupe_inter):
                 # On exclut les vignettes INTER : sinon on descend dans le groupe
-                un_nombre_poly, un_nombre_point = quel_poly_point_INTER( self, noeud, child)
+                try:
+                    un_nombre_poly, un_nombre_point = quel_poly_point_INTER( self, noeud, child)
+                except TypeError:
+                    physiocap_log( "--type error ", TRACE_TOOLS)
+                    un_nombre_poly = 0
+                    un_nombre_point = 0
+                    pass
                 nombre_point = nombre_point + un_nombre_point
                 nombre_poly = nombre_poly + un_nombre_poly
         elif isinstance( child, QgsLayerTreeLayer):
@@ -325,15 +334,16 @@ def quel_poly_point_INTER( self, isRoot = None, node = None ):
     if nombre_poly > 0:
         _, _, origine_poly, vecteur_poly, chemin_vecteur = quel_sont_vecteurs_choisis( self, "Filtrer")
         physiocap_log("Dans quel_poly_point_INTER origine est {} pour vecteur {}".\
-                format( origine_poly, chemin_vecteur), TRACE_TOOLS)
-        if Nom_Profil == 'Champagne':
+                format( origine_poly, chemin_vecteur), TRACE_JH)
+        if Nom_Profil == 'Champagne' and self.radioButtonContour.isChecked():
             # Assert vecteur poly champ obligatoire
             try:
                 _, champs_agro_fichier, _, _, champs_vignoble_requis, champs_vignoble_requis_fichier, _, _, les_parcelles_agro, _ = \
                     assert_champs_agro_obligatoires( self, vecteur_poly, origine_poly)
             except physiocap_exception_agro_obligatoire as e:
                 aText = "{}".format(e)
-                physiocap_message_box( self, aText, 'information')
+                les_parcelles_agro = None
+                return physiocap_message_box( self, aText, 'information')
 
             if les_parcelles_agro != None and len( les_parcelles_agro) > 0:
                 # Remplir la liste des parcelles diponibles
@@ -622,7 +632,6 @@ def quel_chemin_templates( self):
             self.settings.setValue("Style/themeIntraPDF", "PDF")
     return chemin_qml, chemin_secours
 
-
 def quel_noms_CSVT_synthese( self):
     """Rend les nom du CSV & CSVT & PRJ à créer"""
     #leModeDeTrace = self.fieldComboModeTrace.currentText()
@@ -653,34 +662,69 @@ def quel_noms_CSVT_synthese( self):
         nom_PRJ = os.path.join( chemin_vecteur, CVST_VIGNOBLE + EXTENSION_PRJ)
 
     return derniere_session, nom_CSV, nom_CSVT, nom_PRJ  
+
+def appel_simplifier_processing( self, nom_point, algo_court, algo, params_algo,  
+    nom_produit_algo,  deuxieme_nom = None):
+    """
+    Traite les appels à processing avec gestion du nom_produit_algo attendu
+    Emet exception si pas de retour 
+    """
+    try :
+        import processing
+        try:
+            from processing.core.Processing import Processing
+            Processing.initialize()
+        except:
+            physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
+                format( PHYSIOCAP_UNI, self.tr("Traitement")), TRACE_TOOLS)
+            raise physiocap_exception_no_processing( "Pas d'extension Traitement - initialize")               
+    except ImportError:
+        physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
+            format( PHYSIOCAP_UNI, self.tr("Traitement")), TRACE_TOOLS)
+        raise physiocap_exception_no_processing( "Pas d'extension Traitement")
+
+    mon_feedback = QgsProcessingFeedback()
     
+    lettre_algo = algo[0]
+
+    physiocap_log( self.tr( "={0}= Parametres pour algo {1} de nom long {2}\n{3}".\
+                    format( lettre_algo, algo_court, algo , params_algo )), TRACE_TOOLS)       
+    textes_sortie_algo = {}
+    try:
+        textes_sortie_algo = processing.run( algo, params_algo, feedback=mon_feedback)        
+    except: # QgsProcessingException
+        erreur_processing = self.tr("{0} Erreur durant création du produit par Processing de {1} nom long {2} : exception".\
+                format( PHYSIOCAP_STOP, algo_court,  algo ))
+        physiocap_error( self, erreur_processing)
+        physiocap_log( erreur_processing, TRACE_INTRA)
+        raise
+
+    # Recherche nom_retour dans sortie_algo
+    produit_algo = None
+    try:
+        produit_algo = textes_sortie_algo[ nom_produit_algo]
+    except:
+        erreur_processing = self.tr("{0} Erreur durant analyse du rendu de produit de {1} : texte produit {2}".\
+                format( PHYSIOCAP_STOP, algo_court,  textes_sortie_algo ))
+        physiocap_error( self, erreur_processing)
+        physiocap_log( erreur_processing, TRACE_TOOLS)
+        raise physiocap_exception_interpolation( nom_point)
+
+    physiocap_log( "={0}= Produit en sortie de {1}\n{2}".\
+                    format( lettre_algo, algo_court, produit_algo), TRACE_TOOLS)
+    return produit_algo
+
 def generer_contour_depuis_points( self, nom_fichier_shape_sans_0,  mids_trie):
     """ Générer un Contour à partir des points bruts"""
 
     version_3 = "YES" if self.checkBoxV3.isChecked() else "NO"
-    # Vérifier disponibilité de processing
-    _, _ = self.assert_processing()
-####    try :
-####        import processing
-####        try:
-####            from processing.core.Processing import Processing
-####            Processing.initialize()
-####        except:
-####            physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
-####                format( PHYSIOCAP_UNI, self.tr("Traitement")), leModeDeTrace)
-####            raise physiocap_exception_no_processing( "Pas d'extension Traitement - initialize")               
-####    except ImportError:
-####        physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
-####                format( PHYSIOCAP_UNI, self.tr("Traitement")), leModeDeTrace)
-####        raise physiocap_exception_no_processing( "Pas d'extension Traitement")
-    
     # Assert points existent bien
     if ( os.path.exists( nom_fichier_shape_sans_0)):
         champsVignobleOrdonnes, _, dictInfoVignobleAgro, _, dictEnteteVignoble, _ = \
             quelles_informations_vignoble_source_onglet(self)
 #        physiocap_log( 'Information vignoble et agro == Nom de parcelle contiendra Entete "{}" et Info "{}"'.\
-#            format( champsVignobleOrdonnes[0], dictInfoVignobleAgro[ champsVignobleOrdonnes[0]]))
-        nom_parcelle = dictInfoVignobleAgro[ champsVignobleOrdonnes[0]]
+#            format( champsVignobleOrdonnes[1], dictInfoVignobleAgro[ champsVignobleOrdonnes[1]]))
+        nom_parcelle = dictInfoVignobleAgro[ champsVignobleOrdonnes[1]]        
         if nom_parcelle == "à préciser":
             nom_parcelle = self.lineEditSession.text()
 
@@ -690,37 +734,25 @@ def generer_contour_depuis_points( self, nom_fichier_shape_sans_0,  mids_trie):
         else:
             chemin_acces = os.path.join( os.path.dirname( chemin_vecteur), REPERTOIRE_SOURCES)
         chemin_fichier_convex = os.path.join( chemin_acces,  FICHIER_CONTOUR_GENERE + "_" + nom_parcelle + EXTENSION_SHP)
-####        mon_feedback = QgsProcessingFeedback()
-####        params_algo = { 'FIELD' : None, 
-####         'INPUT' : nom_fichier_shape_sans_0, 
-####         'OUTPUT' : chemin_fichier_convex, 
-####         'TYPE' : 3 } # Enveloppe convexe
-####        textes_sortie_algo={}
-####        algo = "qgis:minimumboundinggeometry"
-####        textes_sortie_algo = processing.run( algo, params_algo, feedback=mon_feedback)        
-####        physiocap_log( "Sortie algo {} contient {}".format( algo, textes_sortie_algo))
-        nom_retour = ""
         QGIS_CONVEX = { 'FIELD' : None, 
          'INPUT' : nom_fichier_shape_sans_0, 
          'OUTPUT' : chemin_fichier_convex, 
          'TYPE' : 3 } # Enveloppe convexe
         algo = "qgis:minimumboundinggeometry"
-        nom_retour = appel_processing( self, nom_fichier_shape_sans_0, \
+        appel_simplifier_processing( self, nom_fichier_shape_sans_0, \
                 "QGIS_CONVEX", algo, \
-                QGIS_CONVEX, "TARGET_OUT_GRID")      
-        physiocap_log( "Sortie algo {} contient {}".format( algo, nom_retour), TRACE_JH)
+                QGIS_CONVEX, "OUTPUT")      
+        #physiocap_log( "Sortie algo {} contient {}".format( algo, nom_retour), TRACE_JH)
         QgsMessageLog.logMessage( "PHYSIOCAP : après création du contour", "Processing", Qgis.Warning)
 
-        # Changer attributs GID=0 et dictInfoVignobleAgro[ champsVignobleTri[0]]
+        # Changer attributs FID=0 nom parcelle
         convexhull_layer = QgsVectorLayer( chemin_fichier_convex, FICHIER_CONTOUR_GENERE , 'ogr')
         convexhull_layer.dataProvider().addAttributes([QgsField("FID", QVariant.Int, "integer", 10), \
                                                        QgsField("Nom_Parcel", QVariant.String, "string", 25)])
         convexhull_layer.updateFields()
         prov = convexhull_layer.dataProvider()
         field_names = [field.name() for field in prov.fields()]
-#        for count, f in enumerate(field_names):
-#            physiocap_log( "Champ {} position {}".format( f, count))
-            
+           
         convexhull_layer.startEditing()
         for feat in convexhull_layer.getFeatures():
             convexhull_layer.changeAttributeValue(feat.id(), field_names.index('FID'), 0)
@@ -829,59 +861,6 @@ def quelle_liste_attributs( self, vecteur):
     #physiocap_log( "Attributs de {} sont {}".format( vecteur.name(), field_names ), TRACE_AGRO)
     return field_names
     
-def inclure_vignoble_sur_contour( self, chemin_fichier_convex, ss_groupe=None):
-    # TODO Supprimer ... ?
-    if ( os.path.exists( chemin_fichier_convex)):
-
-    ###    geom_wkt = ""
-
-        # delete fields and leave just the geometry
-    ###    fields = convexhull_layer.dataProvider().fields()
-        count = 0
-        fieldsList = list()
-        for field in convexhull_layer.pendingFields():
-            fieldsList.append(count)
-            count += 1
-        convexhull_layer.dataProvider().deleteAttributes(fieldsList)
-        convexhull_layer.updateFields()
-        # add the layer to the legend
-        convexhull_layer.setLayerTransparency(60)
-        QgsMapLayerRegistry.instance().addMapLayer(convexhull_layer, False)
-        ss_groupe.addLayer(convexhull_layer)
-        # iface.addVectorLayer(chemin_fichier_convex, 'contour_genere', 'ogr')
-        # get the geometry from the layer and paste it in the csv file
-        for feature in convexhull_layer.getFeatures():
-            buff = feature.geometry().buffer(0.5, 1)
-            convexhull_layer.dataProvider().changeGeometryValues({feature.id(): buff})
-
-###            # add attributes filled by the user
-###            convexhull_layer.startEditing()
-###
-###            convexhull_layer.dataProvider().addAttributes([QgsField("Nom_Parcel", QVariant.String)])
-###            convexhull_layer.dataProvider().addAttributes([QgsField("Commune", QVariant.String)])
-###
-###            convexhull_layer.updateFields()
-###
-###            for feat in convexhull_layer.getFeatures():
-###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Nom_Parcel'),
-###                                                      nom_parcelle.encode("Utf-8"))
-###                convexhull_layer.changeAttributeValue(feat.id(), convexhull_layer.fieldNameIndex('Commune'),
-###                                                      comuune.encode("Utf-8"))
-###            convexhull_layer.commitChanges()
-        # get the feature geometry and copy the WKT
-        # ecriture de l'entête
-##        # fichier_synthese_CSV.write("Nom_Parcelle; Commune ; Region ; Cepage; Clone; Porte_greffe; \
-##        Annee_plantation; Hauteur_rognage; Densite_plantation; Type_taille; Sol_argile; Sol_MO; Sol_CaCo3;\
-##        Rendement; Poids_moyen_grappes; Nombre_grappes; Rendemenr_annee-1; Poids_moyen_grappes-1; Nombre_grappes-1;\
-##        Fert_type_apports; Fert_produit; Fert_dose; Strategie_entretien_sol; \
-##        Etat_sanitaire; Nb_sarments_moy; Section_moy; Biomasse_moy "+"\n")
-    else:
-        msg = "Erreur durant génération automatique de contour : fichier de point {} n'existe pas\n".\
-            format( nom_fichier_shape_sans_0)
-        physiocap_error( self, msg )
-        err.write( str( msg) ) # on écrit la ligne dans le fichier ERREUR
-    return chemin_fichier_convex
-
 # Fonction pour générer le CSVT : csv avec info agro, moyenne et geometrie en WKT
 def assert_champs_agro_obligatoires( dialogue, vecteur_poly, origine_poly):
     """ Controler les champs obligatoires dans CSV ou SHP du fichier agro d'origine 
@@ -1027,7 +1006,7 @@ def quelles_listes_info_agro( self):
                 except:
                     raise physiocap_exception_agro_type_champ( "{} n'a pas le type attendu {}".\
                         format( champ_fichier, type_attendu))
-            physiocap_log( "Info vignoble : {}".format( infos_agronomique_en_cours),  "TOUS")
+            #physiocap_log( "Info vignoble : {}".format( infos_agronomique_en_cours),  "TOUS")
             les_infos_vignoble.append( infos_agronomique_en_cours)
             
             infos_agronomique_en_cours = {}
@@ -1074,10 +1053,12 @@ def ajouter_csvt_source_contour( self, vecteur_poly, les_parcelles,  les_geoms_p
         exemple_CSVT = os.path.join( os.path.join( self.plugin_dir, CHEMIN_DATA), 'exemple_contour_vignoble.csvt')        
         if os.path.isfile( exemple_CSVT):
             shutil.copyfile( exemple_CSVT, nom_CSVT)
-        # TODO : gerer EPSG pour autres profils
-        exemple_PRJ = os.path.join( os.path.join( self.plugin_dir, CHEMIN_DATA), 'exemple_contour_vignoble.prj')        
-        if os.path.isfile( exemple_PRJ):
-            shutil.copyfile( exemple_PRJ, nom_PRJ)
+        # Gérer tous les EPSG connus pour créer prj et qpj
+        creer_projection_extensions( self, nom_CSV)  
+##        # TODO : gerer EPSG pour autres profils
+#        exemple_PRJ = os.path.join( os.path.join( self.plugin_dir, CHEMIN_DATA), 'exemple_contour_vignoble.prj')        
+#        if os.path.isfile( exemple_PRJ):
+#            shutil.copyfile( exemple_PRJ, nom_PRJ)
 
     # Récuperer les infos agro
     les_parcelles_agro, les_vecteurs_agronomique, les_infos_agronomique, _ = quelles_listes_info_agro(self)
@@ -1192,10 +1173,11 @@ def creer_csvt_source_onglet( self, les_parcelles, les_geoms_poly, les_moyennes_
         exemple_CSVT = os.path.join( os.path.join( self.plugin_dir, CHEMIN_DATA), 'exemple_contour_vignoble.csvt')        
         if os.path.isfile( exemple_CSVT):
             shutil.copyfile( exemple_CSVT, nom_CSVT)
-        # TODO : gerer EPSG pour autres profils
-        exemple_PRJ = os.path.join( os.path.join( self.plugin_dir, CHEMIN_DATA), 'exemple_contour_vignoble.prj')        
-        if os.path.isfile( exemple_PRJ):
-            shutil.copyfile( exemple_PRJ, nom_PRJ)
+        # Gérer tous les EPSG connus pour créer prj et qpj
+        creer_projection_extensions( self, nom_CSV)  
+####        exemple_PRJ = os.path.join( os.path.join( self.plugin_dir, CHEMIN_DATA), 'exemple_contour_vignoble.prj')        
+####        if os.path.isfile( exemple_PRJ):
+####            shutil.copyfile( exemple_PRJ, nom_PRJ)
     return 0
 
 # TOOLS
@@ -1227,6 +1209,36 @@ def physiocap_is_int_number(s):
     except ValueError:
         return False
  
+def creer_projection_extensions( self, nom_vecteur):
+    """processing qgis:definecurrentprojection pour creer prj et qpj conforme à QGIS"""
+    if (nom_vecteur == None) or (nom_vecteur == ""):
+        return
+    intra = PhysiocapIntra( self)
+    intra.assert_processing( self)
+#    _, _ = assert_processing( self)
+    distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
+        laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( self)        
+
+    epsg = 'inconnu'
+    if ( laProjectionTXT == PROJECTION_L93) or ( EPSG_NUMBER == EPSG_NUMBER_L93):
+        epsg = EPSG_DESCRIPTION_L93
+    if ( laProjectionTXT == PROJECTION_GPS) or ( EPSG_NUMBER == EPSG_NUMBER_GPS):
+        epsg = EPSG_DESCRIPTION_GPS
+    if epsg == 'inconnu':
+        physiocap_log( "Pas de projection connu, pour créer prj et qgp de {}".format( nom_vecteur), TRACE_TOOLS)
+        return
+    
+    nom_retour = ""
+    QGIS_PROJECTION = { 'INPUT' : nom_vecteur, 
+     'CRS' :  QgsCoordinateReferenceSystem( epsg)}
+    algo = "qgis:definecurrentprojection"
+    nom_retour = intra.appel_processing( self, nom_fichier_shape_sans_0, \
+            "QGIS_PROJECTION", algo, \
+            QGIS_PROJECTION, "OUTPUT")      
+    physiocap_log( "Sortie algo {} contient {}".format( algo, nom_retour), TRACE_JH)
+    QgsMessageLog.logMessage( "PHYSIOCAP : après création du contour", "Processing", Qgis.Warning)
+
+    
 def physiocap_create_projection_file( prj_name,  laProjection):
     """Creer le fichier de projection du layer avec la description de EPSG"""
     # TODO : passer à processing qgis:definecurrentprojection pour creer prj et qpj conforme à QGIS
@@ -2123,117 +2135,7 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
     
     # on rend le nom du shapefile ou du geopackage
     return nom_layer_cree
-  
 
-def assert_processing( self):
-    # Vérifier disponibilité de processing (on attend d'etre dans Intra)
-    leModeDeTrace = self.fieldComboModeTrace.currentText() 
-    try :
-        import processing
-        try:
-            from processing.core.Processing import Processing
-            Processing.initialize()
-        except:
-            physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
-                format( PHYSIOCAP_UNI, self.tr("Traitement")), leModeDeTrace)
-            raise physiocap_exception_no_processing( "Pas d'extension Traitement - initialize")               
-        versionGDAL = processing.tools.raster.gdal.__version__
-        versionSAGA = processing.algs.saga.SagaUtils.getInstalledVersion() # avant "2.3.2"
-    except ImportError:
-        physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
-            format( PHYSIOCAP_UNI, self.tr("Traitement")), leModeDeTrace)
-        raise physiocap_exception_no_processing( "Pas d'extension Traitement")
-    except AttributeError:
-        physiocap_log( self.tr( "{0} nécessite SAGA version 2.3.1 ou 2.3.2 (attribute error)").\
-            format( PHYSIOCAP_UNI), leModeDeTrace)
-        raise physiocap_exception_no_saga( "Erreur attribut")
-
-#        physiocap_log ( self.tr( "= Version SAGA = %s" % ( versionSAGA)), TRACE_INTRA)
-    physiocap_log ( self.tr( "= Version GDAL = %s" % ( versionGDAL)), TRACE_INTRA)
-    physiocap_log ( self.tr( "= Version SAGA = %s" % ( versionSAGA)), TRACE_INTRA)
-    return versionGDAL, versionSAGA
-
-def quelle_librairie_interpolation( self, versionSAGA):
-    """
-    Traite le choix et la version SAGA QGIS ou GDAL avant appel des Processing (Traitement) correspondants
-    Attention ce choix peut être revu pour certains cas (SAGA n'accepte pas les caractere non ascii
-    """        
-    # Test version de SAGA, sinon annonce de l'utilisation de GDAL
-    PROCESSING_INTERPOLATION = "INCONNU"
-    leModeDeTrace = self.fieldComboModeTrace.currentText() 
-    if self.radioButtonSAGA.isChecked():
-        if versionSAGA == None:
-            versionNum = -1
-        else:
-            unite, dixieme, centieme = versionSAGA.split( ".")
-            versionNum = round( (float(unite) + float(dixieme)/10 + float(centieme)/100 ), 2)
-            physiocap_log ( self.tr( "= Version SAGA = {0}".format( versionNum)), TRACE_TOOLS)
-
-        # TODO : test SAGA Windows 7.82
-        if (( versionNum >= 2.31) and ( versionNum <= 2.32)): # or versionNum == 7.82:
-            physiocap_log ( self.tr( "= Version SAGA OK : {0}".format( versionSAGA)), TRACE_INTRA)
-            PROCESSING_INTERPOLATION = "SAGA"
-        else:
-            physiocap_log ( self.tr( "= Version SAGA %s est inférieure à 2.3.1 " % ( str( versionSAGA))), \
-                leModeDeTrace)
-            physiocap_log ( self.tr( "= ou supérieure à 2.3.2"), leModeDeTrace)
-            physiocap_log ( self.tr( "= On force l'utilisation de Gdal : "), leModeDeTrace)
-            PROCESSING_INTERPOLATION = "GDAL"
-            self.radioButtonSAGA.setEnabled( False)
-            self.radioButtonGDAL.setChecked(  Qt.Checked)
-            self.radioButtonSAGA.setChecked(  Qt.Unchecked)
-            self.spinBoxPower.setEnabled( False)
-            self.physiocap_message_box( self.tr( "= Saga a une version incompatible : on force l'utilisation de Gdal" ),
-                "information")
-    
-    else: # cas GDAL
-        PROCESSING_INTERPOLATION = "GDAL"
-    
-    return PROCESSING_INTERPOLATION
-
-def appel_processing( self, nom_point, algo_court, algo, params_algo,  
-    nom_produit_algo,  deuxieme_nom = None):
-    """
-    Traite les appels à processing avec gestion du nom_produit_algo attendu
-    Emet exception si pas de retour 
-    """
-    leModeDeTrace = self.fieldComboModeTrace.currentText() 
-    import processing
-    mon_feedback = QgsProcessingFeedback()
-    
-    lettre_algo = algo[0]
-
-    physiocap_log( self.tr( "={0}= Parametres pour algo {1} de nom long {2}\n{3}".\
-                    format( lettre_algo, algo_court, algo , params_algo )), TRACE_INTRA)       
-    textes_sortie_algo = {}
-    try:
-        textes_sortie_algo = processing.run( algo, params_algo, feedback=mon_feedback)        
-##        if lettre_algo == "s":
-##            # TODO: ?V3.x ? Tester si utile : Pour SAGA
-##            textes_sortie_algo = processing.run( algo, params_algo, feedback=mon_feedback)        
-##        else:
-##            textes_sortie_algo = processing.run( algo, params_algo, feedback=mon_feedback)        
-    except: # QgsProcessingException
-        erreur_processing = self.tr("{0} Erreur durant création du produit par Processing de {1} nom long {2} : exception".\
-                format( PHYSIOCAP_STOP, algo_court,  algo ))
-        physiocap_error( self, erreur_processing)
-        physiocap_log( erreur_processing, leModeDeTrace)
-        raise
-
-    # Recherche nom_retour dans sortie_algo
-    produit_algo = None
-    try:
-        produit_algo = textes_sortie_algo[ nom_produit_algo]
-    except:
-        erreur_processing = self.tr("{0} Erreur durant analyse du rendu de produit de {1} : texte produit {2}".\
-                format( PHYSIOCAP_STOP, algo_court,  textes_sortie_algo ))
-        physiocap_error( self, erreur_processing)
-        physiocap_log( erreur_processing, leModeDeTrace)
-        raise physiocap_exception_interpolation( nom_point)
-
-    physiocap_log( "={0}= Produit en sortie de {1}\n{2}".\
-                    format( lettre_algo, algo_court, produit_algo), TRACE_INTRA)
-    return produit_algo
     
 class PhysiocapTools( QtWidgets.QDialog):
     """QGIS Pour voir les messages traduits."""
