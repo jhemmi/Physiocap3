@@ -1213,9 +1213,6 @@ def creer_projection_extensions( self, nom_vecteur):
     """processing qgis:definecurrentprojection pour creer prj et qpj conforme à QGIS"""
     if (nom_vecteur == None) or (nom_vecteur == ""):
         return
-    intra = PhysiocapIntra( self)
-    intra.assert_processing( self)
-#    _, _ = assert_processing( self)
     distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
         laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( self)        
 
@@ -1232,7 +1229,7 @@ def creer_projection_extensions( self, nom_vecteur):
     QGIS_PROJECTION = { 'INPUT' : nom_vecteur, 
      'CRS' :  QgsCoordinateReferenceSystem( epsg)}
     algo = "qgis:definecurrentprojection"
-    nom_retour = intra.appel_processing( self, nom_fichier_shape_sans_0, \
+    nom_retour = appel_simplifier_processing( self, nom_fichier_shape_sans_0, \
             "QGIS_PROJECTION", algo, \
             QGIS_PROJECTION, "OUTPUT")      
     physiocap_log( "Sortie algo {} contient {}".format( algo, nom_retour), TRACE_JH)
