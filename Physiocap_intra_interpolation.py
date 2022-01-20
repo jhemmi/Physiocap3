@@ -8,7 +8,7 @@
  Physiocap3 plugin permet l'analyse les données brutes de Physiocap dans QGIS 3 et
  crée une synthese d'une campagne de mesures Physiocap
  
- Le module Intra gère l(interpolation des données le chaque parcelle
+ Le module Intra gère l'interpolation des données le chaque parcelle
  à partir d'un shapefile de contour de parcelles et d'un shape de points de
  chaque parcelle
  Il tourne après qu'inter ait tourné
@@ -46,17 +46,17 @@ from .Physiocap_tools import ( physiocap_message_box,\
         physiocap_log, physiocap_error, physiocap_is_only_ascii, \
         physiocap_nom_entite_sans_pb_caractere,  physiocap_nom_entite_avec_pb_caractere, \
         physiocap_rename_existing_file, quelle_projection_et_lib_demandee, \
-        quel_chemin_templates, quel_qml_existe, quel_sont_vecteurs_choisis, quel_indice_entete, \
-        assert_parcelle_attendue, assert_champs_agro_obligatoires)
+        quel_chemin_templates, quel_qml_existe, quel_sont_vecteurs_choisis, \
+        appel_processing, assert_processing, quelle_librairie_interpolation,  \
+        assert_parcelle_attendue, assert_champs_agro_obligatoires, assert_quel_format_entete)
 
 from .Physiocap_var_exception import *
 
 from PyQt5 import QtWidgets
 from PyQt5.QtXml import QDomDocument
-from PyQt5.QtCore import Qt
 from qgis.core import ( Qgis, QgsProject, QgsVectorLayer, \
     QgsLayerTreeGroup, QgsRasterLayer, QgsMessageLog,  \
-    QgsFeatureRequest, QgsExpression, QgsProcessingFeedback,  \
+    QgsFeatureRequest, QgsExpression,  \
     QgsRectangle, QgsLayout, QgsReadWriteContext, QgsLayoutExporter, QgsLayerTree)
 
 import shutil
@@ -209,106 +209,13 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     mon_projet.addMapLayer( intra_raster)
       
             if (( affiche_raster == "YES") and ( le_template_raster != None)):
-#                physiocap_log ( "= avant set NoData bande {0} RASTER".format( intra_raster.bandCount()), TRACE_INTRA)
-#                physiocap_log ( "= avant set NoData bande {0} RASTER".format( intra_raster.bandName( 1)), TRACE_INTRA)
-                # Pour transparence
-#                provider = intra_raster.dataProvider()
-#                provider.setNoDataValue(1, -99999)
-#                if hasattr( intra_raster, "setCacheImage"):
-#                    intra_raster.setCacheImage( None)
-#                intra_raster.setRefreshOnNotifyEnabled( True)
+                # Pour transparence dans le template valeur -99999
                 intra_raster.loadNamedStyle( le_template_raster)
-#                intra_raster.repaintRequested()
-#                intra_raster.triggerRepaint()
                 #physiocap_log ( "= pendant LOAD STYLE {0} RASTER".format( le_template_raster), TRACE_INTRA)
             if (( affiche_iso == "YES") and ( nom_iso_final != "") and 
                 ( le_template_isolignes != None)):
-#                if MACHINE == "Linux":   # JHJH Bypass Bug 19045 QGIS et 13 extension
                 intra_isoligne.loadNamedStyle( le_template_isolignes)
-        
-    def quelle_librairie_interpolation(self, dialogue, versionSAGA):
-        """
-        Traite le choix et la version SAGA QGIS ou GDAL avant appel des Processing (Traitement) correspondants
-        Attention ce choix peut être revu pour certains cas (SAGA n'accepte pas les caractere non ascii
-        """        
-        # Test version de SAGA, sinon annonce de l'utilisation de GDAL
-        PROCESSING_INTERPOLATION = "INCONNU"
-        leModeDeTrace = dialogue.fieldComboModeTrace.currentText() 
-        if dialogue.radioButtonSAGA.isChecked():
-            if versionSAGA == None:
-                versionNum = -1
-            else:
-                unite, dixieme, centieme = versionSAGA.split( ".")
-                versionNum = round( (float(unite) + float(dixieme)/10 + float(centieme)/100 ), 2)
-                physiocap_log ( self.tr( "= Version SAGA = {0}".format( versionNum)), TRACE_TOOLS)
 
-            # TODO : test SAGA Windows 7.82
-            if (( versionNum >= 2.31) and ( versionNum <= 2.32)): # or versionNum == 7.82:
-                physiocap_log ( self.tr( "= Version SAGA OK : {0}".format( versionSAGA)), TRACE_INTRA)
-                PROCESSING_INTERPOLATION = "SAGA"
-            else:
-                physiocap_log ( self.tr( "= Version SAGA %s est inférieure à 2.3.1 " % ( str( versionSAGA))), \
-                    leModeDeTrace)
-                physiocap_log ( self.tr( "= ou supérieure à 2.3.2"), leModeDeTrace)
-                physiocap_log ( self.tr( "= On force l'utilisation de Gdal : "), leModeDeTrace)
-                PROCESSING_INTERPOLATION = "GDAL"
-                dialogue.radioButtonSAGA.setEnabled( False)
-                dialogue.radioButtonGDAL.setChecked(  Qt.Checked)
-                dialogue.radioButtonSAGA.setChecked(  Qt.Unchecked)
-                dialogue.spinBoxPower.setEnabled( False)
-                physiocap_message_box( dialogue,
-                    self.tr( "= Saga a une version incompatible : on force l'utilisation de Gdal" ),
-                    "information")
-        
-        else: # cas GDAL
-            PROCESSING_INTERPOLATION = "GDAL"
-        
-        return PROCESSING_INTERPOLATION
-
-    def physiocap_appel_processing(self, dialogue, 
-        nom_point, algo_court, algo, params_algo,  
-        nom_produit_algo,  deuxieme_nom = None):
-        """
-        Traite les appels à processing avec gestion du nom_produit_algo attendu
-        Emet exception si pas de retour 
-        """
-        leModeDeTrace = dialogue.fieldComboModeTrace.currentText() 
-        import processing
-        mon_feedback = QgsProcessingFeedback()
-        
-        lettre_algo = algo[0]
-
-        physiocap_log( self.tr( "={0}= Parametres pour algo {1} de nom long {2}\n{3}".\
-                        format( lettre_algo, algo_court, algo , params_algo )), TRACE_INTRA)       
-        textes_sortie_algo = {}
-        try:
-            if lettre_algo == "s":
-                # TODO: ?V3.x ? Tester si utile : Pour SAGA
-                textes_sortie_algo = processing.run( algo, params_algo, feedback=mon_feedback)        
-            else:
-                textes_sortie_algo = processing.run( algo, params_algo, feedback=mon_feedback)        
-        except: # QgsProcessingException
-            erreur_processing = self.tr("{0} Erreur durant création du produit par Processing de {1} nom long {2} : exception".\
-                    format( PHYSIOCAP_STOP, algo_court,  algo ))
-            physiocap_error( self, erreur_processing)
-            physiocap_log( erreur_processing, leModeDeTrace)
-            raise
-  
-        # Recherche nom_retour dans sortie_algo
-        produit_algo = None
-        try:
-            produit_algo = textes_sortie_algo[ nom_produit_algo]
-        except:
-            erreur_processing = self.tr("{0} Erreur durant analyse du rendu de produit de {1} : texte produit {2}".\
-                    format( PHYSIOCAP_STOP, algo_court,  textes_sortie_algo ))
-            physiocap_error( self, erreur_processing)
-            physiocap_log( erreur_processing, leModeDeTrace)
-            raise physiocap_exception_interpolation( nom_point)
-  
-        physiocap_log( "={0}= Produit en sortie de {1}\n{2}".\
-                        format( lettre_algo, algo_court, produit_algo), TRACE_INTRA)
-        return produit_algo
-        
     def creer_raster_iso( self, dialogue, choix_interpolation, choix_force_interpolation, 
                 nom_noeud_arbre, chemin_raster, chemin_iso,
                 nom_court_vignette, nom_vignette, nom_court_point, nom_point,
@@ -527,7 +434,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 'TARGET_OUT_GRID' : nom_raster_temp
                 }
 
-            nom_raster_produit = self.physiocap_appel_processing(dialogue, nom_point, \
+            nom_raster_produit = appel_processing( self, nom_point, \
                 "IDW_SAGA", "saga:inversedistanceweightedinterpolation", \
                 IDW_SAGA, "TARGET_OUT_GRID")      
             QgsMessageLog.logMessage( "PHYSIOCAP : Avant clip SAGA", "Processing", Qgis.Warning)
@@ -547,7 +454,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     'POLYGONS' : nom_vignette,
                     'OUTPUT' : nom_clippe }
                 
-                nom_raster_clippe = self.physiocap_appel_processing(dialogue, nom_point, \
+                nom_raster_clippe = appel_processing( self, nom_point, \
                 "CLIP_SAGA", "saga:cliprasterwithpolygon", \
                 CLIP_SAGA, "OUTPUT")                    
 #####                raster_dans_poly = processing.runalg("saga:clipgridwithpolygon",
@@ -569,7 +476,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         'OPTIONS':'',
                         'DATA_TYPE':6,
                         'OUTPUT' : nom_raster}
-                    nom_raster_final = self.physiocap_appel_processing(dialogue, nom_point, \
+                    nom_raster_final = appel_processing( self, nom_point, \
                         "TRANSLATE_TIFF", "gdal:translate", \
                         TRANSLATE_TIFF, "OUTPUT")
                     le_raster_translate = None
@@ -590,7 +497,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         'ZSTEP' : isoInterlignes, 
                         'CONTOUR' : nom_isoligne }
                         
-                    nom_iso_final = self.physiocap_appel_processing(dialogue, nom_point, \
+                    nom_iso_final = appel_processing( self, nom_point, \
                         "ISO_SAGA", "saga:contourlines", \
                         ISO_SAGA, "CONTOUR")
                     
@@ -624,7 +531,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 'MAX_POINTS':20,'MIN_POINTS':1,'NODATA':0,
                 'OPTIONS':'','DATA_TYPE':6, 'OUTPUT': nom_raster_temp}
 
-            nom_raster_produit = self.physiocap_appel_processing( dialogue, nom_point, \
+            nom_raster_produit = appel_processing( self, nom_point, \
                 "IDW_GDAL", "gdal:gridinversedistance", \
                 IDW_GDAL, "OUTPUT")  
           
@@ -642,7 +549,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     'DATA_TYPE':6,
                     'OUTPUT':nom_raster}
                     
-                nom_raster_final = self.physiocap_appel_processing( dialogue, nom_point, \
+                nom_raster_final = appel_processing( self, nom_point, \
                 "CLIP_GDAL", "gdal:cliprasterbymasklayer", \
                 CLIP_GDAL, "OUTPUT")
                          
@@ -657,7 +564,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         'CREATE_3D' : True, 'IGNORE_NODATA' : False, 'NODATA' : 0, 'OFFSET' : 0,
                         'OUTPUT' : nom_isoligne }
 
-                    nom_iso_final = self.physiocap_appel_processing( dialogue, nom_point, \
+                    nom_iso_final = appel_processing( self, nom_point, \
                     "ISO_GDAL", "gdal:contour", \
                     ISO_GDAL, "OUTPUT")
                 
@@ -688,7 +595,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
             return physiocap_message_box( dialogue, aText, "information")
             
         # Trouver deux vecteurs
-        nom_noeud_arbre, vecteur_point, origine_poly, vecteur_poly = quel_sont_vecteurs_choisis( dialogue, "Intra")
+        nom_noeud_arbre, vecteur_point, origine_poly, vecteur_poly, _ = quel_sont_vecteurs_choisis( dialogue, "Intra")
 
         # Cas des INFO AGRO vignoble par fichier 
         if dialogue.groupBoxDetailVignoble.isChecked() and dialogue.checkBoxInfoVignoble.isChecked() and \
@@ -702,30 +609,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
         le_champ_contour = dialogue.fieldComboContours.currentText()
         champ_pb_gdal = dialogue.fieldPbGdal.currentText()
             
-        # Vérifier disponibilité de processing (on attend d'etre dans Intra)
-        try :
-            import processing
-            try:
-                from processing.core.Processing import Processing
-                Processing.initialize()
-            except:
-                physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
-                    format( PHYSIOCAP_UNI, self.tr("Traitement")), leModeDeTrace)
-                raise physiocap_exception_no_processing( "Pas d'extension Traitement - initialize")               
-            versionGDAL = processing.tools.raster.gdal.__version__
-            versionSAGA = processing.algs.saga.SagaUtils.getInstalledVersion() # avant "2.3.2"
-        except ImportError:
-            physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
-                format( PHYSIOCAP_UNI, self.tr("Traitement")), leModeDeTrace)
-            raise physiocap_exception_no_processing( "Pas d'extension Traitement")
-        except AttributeError:
-            physiocap_log( self.tr( "{0} nécessite SAGA version 2.3.1 ou 2.3.2 (attribute error)").\
-                format( PHYSIOCAP_UNI), leModeDeTrace)
-            raise physiocap_exception_no_saga( "Erreur attribut")
-
-#        physiocap_log ( self.tr( "= Version SAGA = %s" % ( versionSAGA)), TRACE_INTRA)
-        physiocap_log ( self.tr( "= Version GDAL = %s" % ( versionGDAL)), TRACE_INTRA)
-
+        versionGDAL, versionSAGA = assert_processing( self)
         physiocap_log( self.tr( "=~= {0} début de l'interpolation des points de {1}").\
             format( PHYSIOCAP_UNI, nom_noeud_arbre), leModeDeTrace)
 
@@ -733,7 +617,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
         dialogue.progressBarIntra.setValue( 2)
         
         # Appel une seule fois des vérification Processing dispo et choix de Librairie 
-        choix_interpolation = self.quelle_librairie_interpolation( dialogue, versionSAGA)
+        choix_interpolation = quelle_librairie_interpolation( self, versionSAGA)
         physiocap_log ( self.tr( "=~= Choix de la librairie d'interpolation : {0}".\
             format( choix_interpolation)), leModeDeTrace)
 
@@ -1072,7 +956,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     # LIMITATION AUX SEULES PARCELLE AGRO 
                     if dialogue.groupBoxDetailVignoble.isChecked() and dialogue.checkBoxInfoVignoble.isChecked() and \
                        dialogue.radioButtonContour.isChecked():
-                        indice_dict_Entete = quel_indice_entete( origine_poly)
+                        indice_dict_Entete = assert_quel_format_entete( self, origine_poly)
                         parcelle_attendue = assert_parcelle_attendue(self, un_contour, les_parcelles_agro, modele_agro_retenu, \
                             indice_dict_Entete, dictEnteteVignoble, champsVignobleOrdonnes)
                         if parcelle_attendue == None:
@@ -1263,14 +1147,20 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 physiocap_log( aText, leModeDeTrace)
                 return physiocap_message_box( dialogue, aText, "information")
             else:
-                aText = self.tr( "=~= Aucun point interpolé dans vos {0} contours présents dans {1}\n".\
-                    format(  contours_possibles, nom_vecteur_contour))      
-                aText = aText + self.tr( "\nNom point {0} \n".\
-                    format( nom_point_exact))       
-                aText = aText + self.tr( "Pas d'interpolation intra parcellaire. ")       
-                aText = aText + self.tr( "Un changement a eu lieu depuis votre calcul inter parcellaire.")       
-                aText = aText + self.tr( "\nVérifiez votre choix de jeu de mesures.")       
-                aText = aText + self.tr( "\nVérifiez le champ identifiant votre contour.")       
+                if not dialogue.checkBoxToutes.isChecked():
+                    aText = self.tr( "=~= Aucun point interpolé dans votre contour demandé dans {1}\n".\
+                        format(  dialogue.fieldComboParcelleIntra.currentText()))      
+                    aText = aText + self.tr( "Pas d'interpolation intra parcellaire. ")       
+                    aText = aText + self.tr( "\nVérifiez votre choix d'identifiant.")       
+                else:
+                    aText = self.tr( "=~= Aucun point interpolé dans vos {0} contours présents dans {1}\n".\
+                        format(  contours_possibles, nom_vecteur_contour))      
+                    aText = aText + self.tr( "\nNom point {0} \n".\
+                        format( nom_point_exact))       
+                    aText = aText + self.tr( "Pas d'interpolation intra parcellaire. ")       
+                    aText = aText + self.tr( "\nUn changement a pu avoir lieu sur vos répertoires depuis votre calcul inter parcellaire ?")       
+                    aText = aText + self.tr( "\nVérifiez votre choix de jeu de mesures.")       
+                    aText = aText + self.tr( "\nVérifiez le champ identifiant votre contour.")       
                 dialogue.ButtonInter.setEnabled( True)
                 physiocap_log( aText, leModeDeTrace)
                 return physiocap_message_box( dialogue, aText, "information")
@@ -1279,7 +1169,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
         dialogue.ButtonIntra.setEnabled( True)
         if  dialogue.checkBoxTroisActions.isChecked():                                            
             return physiocap_message_box( dialogue, 
-                        self.tr( "Fin de l'enchainement des 3 traitements pour la session {}".format( derniere_session)),
+                        self.tr( "Fin de l'enchainement pour la session {}".format( derniere_session)),
                         "information")
         else:
             return physiocap_message_box( dialogue, 

@@ -45,7 +45,7 @@ from .Physiocap_tools import (physiocap_message_box,physiocap_log, physiocap_err
         physiocap_nom_entite_sans_pb_caractere, physiocap_rename_existing_file,  \
         quel_chemin_templates, quel_qml_existe, quelle_projection_et_lib_demandee, \
         physiocap_create_projection_file, physiocap_get_layer_by_URI, \
-        assert_champs_agro_obligatoires, assert_parcelle_attendue, quel_indice_entete,  \
+        assert_champs_agro_obligatoires, assert_parcelle_attendue, assert_quel_format_entete,  \
         creer_csvt_source_onglet, ajouter_csvt_source_contour, quel_sont_vecteurs_choisis)       #physiocap_vecteur_vers_gpkg, \
 
 from .Physiocap_var_exception import *
@@ -810,7 +810,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                 repertoire_template,  repertoire_secours)    
         
         # Trouver deux vecteurs
-        nom_noeud_arbre, vecteur_point, origine_poly, vecteur_poly = quel_sont_vecteurs_choisis( dialogue, "Inter")
+        nom_noeud_arbre, vecteur_point, origine_poly, vecteur_poly, _ = quel_sont_vecteurs_choisis( dialogue, "Inter")
         le_champ_contour = dialogue.fieldComboContours.currentText()
         champ_pb_gdal = dialogue.fieldPbGdal.currentText()
 
@@ -1002,8 +1002,8 @@ class PhysiocapInter( QtWidgets.QDialog):
             id = id + 1
             #AGRO 
             if dialogue.checkBoxInfoVignoble.isChecked() and dialogue.radioButtonContour.isChecked():
-                indice_dict_Entete = quel_indice_entete( origine_poly)
-                # LIMITATION AUX SEULES PARCELLE AGRO 
+                indice_dict_Entete = assert_quel_format_entete( self, origine_poly)
+                # LIMITATION AUX SEULES PARCELLES AGRO 
                 parcelle_attendue = assert_parcelle_attendue(dialogue, un_contour, les_parcelles_agro, modele_agro_retenu, \
                         indice_dict_Entete, dictEnteteVignoble, champsVignobleOrdonnes,  "INTER")
                 if parcelle_attendue == None:
@@ -1046,12 +1046,15 @@ class PhysiocapInter( QtWidgets.QDialog):
             geomWkbMultiType = QgsWkbTypes.multiType( geomWkbType) # multiple sous processing
             geomType = QgsWkbTypes.geometryType( geomWkbType) 
            
-            if geomType == QgsWkbTypes.Polygon:
-                physiocap_log ( self.tr( "Couche (Polygone) simple : {0} ".\
-                    format( un_nom)), TRACE_JH)
-            elif geomWkbMultiType == QgsWkbTypes.MultiPolygon:
-                physiocap_log ( self.tr("Couche (Polygone) multiple : {0} ".\
-                    format( un_nom)), TRACE_JH)
+###            if geomType == QgsWkbTypes.Polygon:
+###                physiocap_log ( self.tr( "Couche (Polygone) simple : {0} ".\
+###                    format( un_nom)), TRACE_JH)
+###            elif geomWkbMultiType == QgsWkbTypes.MultiPolygon:
+###                physiocap_log ( self.tr("Couche (Polygone) multiple : {0} ".\
+###                    format( un_nom)), TRACE_JH)
+###            else:
+            if geomType == QgsWkbTypes.Polygon or geomWkbMultiType == QgsWkbTypes.MultiPolygon:
+                pass
             else:
                 aText = self.tr( "Cette forme n'est pas un polygone : {0}".\
                     format( un_nom))

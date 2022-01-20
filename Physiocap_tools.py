@@ -127,8 +127,6 @@ def physiocap_log( aText, modeTrace = TRACE_PAS,  level = "INFO"):
         return
     elif modeTrace == TRACE_MINI:
         # On monte warning et message debut et fin
-#        if level == "WARNING" or level == Qgis.Warning :
-#            QgsMessageLog.logMessage( aText, journal_nom, Qgis.Warning)
         if level == "WARNING" or level == Qgis.Warning :
             QgsMessageLog.logMessage( aText, journal_nom, Qgis.Warning)
         elif (len( aText) >2):
@@ -187,25 +185,25 @@ def quel_sont_vecteurs_choisis( self, source = "Intra"):
         laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( self)
         derniere_session = self.lineEditDerniereSession.text()
         # Pour polygone de contour   
-        nom_complet_poly = self.comboBoxPolygone.currentText().split( SEPARATEUR_NOEUD)
-        physiocap_log("Vecteur {}".format( nom_complet_poly), TRACE_AGRO)
-        physiocap_log("Vecteur {}".format( nom_complet_poly), TRACE_TOOLS)
-        #JHJHICI
-        if ( len( nom_complet_poly) == 3) and nom_complet_poly[1] == "CSV NON OUVERT DANS QGIS":
+        infos_poly = self.comboBoxPolygone.currentText().split( SEPARATEUR_NOEUD)
+        #physiocap_log("Vecteur {}".format( infos_poly), TRACE_TOOLS)
+        if ( len( infos_poly) == 3) and infos_poly[1] == "CSV NON OUVERT DANS QGIS":
+            chemin_vecteur = infos_poly[ 2]
             uri = "file:///{0}?delimiter={1}&crs=epsg:{2}&wktField={3}".\
-                format( nom_complet_poly[ 2], CSV_DELIMITER_POINT_VIRGULE, EPSG_NUMBER, CSV_GEOM)
-            vecteur_poly = QgsVectorLayer( uri , nom_complet_poly[ 0], CSV_DRIVER)
+                format( chemin_vecteur, CSV_DELIMITER_POINT_VIRGULE, EPSG_NUMBER, CSV_GEOM)
+            vecteur_poly = QgsVectorLayer( uri , infos_poly[ 0], CSV_DRIVER)
             origine_poly = "AGRO_CSV"
-        elif ( len( nom_complet_poly) == 3) and nom_complet_poly[1] == "SHAPE NON OUVERT DANS QGIS":
-            vecteur_poly = QgsVectorLayer( nom_complet_poly[ 2] , nom_complet_poly[ 0], 'ogr')            
+        elif ( len( infos_poly) == 3) and infos_poly[1] == "SHAPE NON OUVERT DANS QGIS":
+            chemin_vecteur = infos_poly[ 2]
+            vecteur_poly = QgsVectorLayer( chemin_vecteur , infos_poly[ 0], 'ogr')            
             origine_poly = "AGRO_SHP"
-        elif ( len( nom_complet_poly) == 3) and nom_complet_poly[1] == "OUVERT DANS QGIS":
-            vecteur_poly = physiocap_get_layer_by_ID( nom_complet_poly[ 2], nom_complet_poly[0])
+        elif ( len( infos_poly) == 3) and infos_poly[1] == "OUVERT DANS QGIS":
+            vecteur_poly = physiocap_get_layer_by_ID( infos_poly[ 2], infos_poly[0])
             URI_complet = vecteur_poly.dataProvider().dataSourceUri()
-            physiocap_log("URI du vecteur OUVERT {}".format( URI_complet), TRACE_AGRO)
-            nom_poly,  un_layer = URI_complet.split( "|")
-            extension = nom_poly[-3:]
-            physiocap_log("extension vecteur OUVERT {}".format( extension), TRACE_AGRO)
+            #physiocap_log("URI du vecteur OUVERT {}".format( URI_complet), TRACE_AGRO)
+            chemin_vecteur,  un_layer = URI_complet.split( "|")
+            extension = chemin_vecteur[-3:]
+            #physiocap_log("extension vecteur OUVERT {}".format( extension), TRACE_AGRO)
             origine_poly = "INCONNUE"
             if extension == "shp":
                 origine_poly = "SHP"
@@ -217,9 +215,9 @@ def quel_sont_vecteurs_choisis( self, source = "Intra"):
 #            aText = aText + "\n" + self.tr( "Avez-vous créer votre vecteur de contours ?")
 #            aText = aText + "\n" + self.tr( "Créer une nouvelle session Physiocap - bouton Filtrer les données brutes - ")
 #            physiocap_message_box( self, aText)
-            return derniere_session, None, None, None 
+            return derniere_session, None, None, None, None 
         if source == "Filtrer":
-            return derniere_session, None, origine_poly, vecteur_poly
+            return derniere_session, None, origine_poly, vecteur_poly, chemin_vecteur
 
         # Pour les points
         nom_complet_point = self.comboBoxPoints.currentText().split( SEPARATEUR_NOEUD)
@@ -236,13 +234,14 @@ def quel_sont_vecteurs_choisis( self, source = "Intra"):
                 aText = aText + self.tr( "avant de faire votre calcul de Moyenne Intra Parcellaire")
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
-        return nom_noeud_arbre, vecteur_point, origine_poly, vecteur_poly
+        return nom_noeud_arbre, vecteur_point, origine_poly, vecteur_poly, chemin_vecteur
     
 def quel_poly_point_INTER( self, isRoot = None, node = None ):
     """ Recherche dans l'arbre Physiocap (recursif)
     les Polygones,
     les Points de nom DIAMETRE qui correspondent aux données filtreés
     Remplit deux listes pour le comboxBox des vecteurs "inter Parcellaire"
+    et la liste des parcelles pour INTRA
     Rend aussi le nombre de poly et point retrouvé
     """
     #leModeDeTrace = self.fieldComboModeTrace.currentText() 
@@ -322,24 +321,30 @@ def quel_poly_point_INTER( self, isRoot = None, node = None ):
             self.comboBoxPolygone.clear()
             self.comboBoxPolygone.addItem( node_layer)
             nombre_poly = 1
+
+    if nombre_poly > 0:
+        _, _, origine_poly, vecteur_poly, chemin_vecteur = quel_sont_vecteurs_choisis( self, "Filtrer")
+        physiocap_log("Dans quel_poly_point_INTER origine est {} pour vecteur {}".\
+                format( origine_poly, chemin_vecteur), TRACE_TOOLS)
+        if Nom_Profil == 'Champagne':
             # Assert vecteur poly champ obligatoire
-            _, _, origine_poly, vecteur_poly = quel_sont_vecteurs_choisis( self, "Filtrer")
-            physiocap_log("Dans quel_poly_point_INTER origine est {} pour vecteur {}".\
-                format( origine_poly, vecteur_poly.name()), TRACE_JH)
             try:
                 _, champs_agro_fichier, _, _, champs_vignoble_requis, champs_vignoble_requis_fichier, _, _, les_parcelles_agro, _ = \
                     assert_champs_agro_obligatoires( self, vecteur_poly, origine_poly)
             except physiocap_exception_agro_obligatoire as e:
                 aText = "{}".format(e)
                 physiocap_message_box( self, aText, 'information')
+
             if les_parcelles_agro != None and len( les_parcelles_agro) > 0:
-                # Remplir la liste des parcelles diponibles : fieldComboParcelleIntra
-                self.fieldComboParcelleIntra.clear()
-                for parcelle in les_parcelles_agro:
-                    self.fieldComboParcelleIntra.addItem( parcelle)
+                # Remplir la liste des parcelles diponibles
+                lister_parcelles_INTRA( self, None,  les_parcelles_agro)
+
         else:
-            pass
+            # Remplir la liste des parcelles diponibles dans poly
+            lister_parcelles_INTRA( self, vecteur_poly)
+            
     return nombre_poly, nombre_point
+    
 # Vignobles Moyennes et CSVT
 def quelles_informations_moyennes():
     """ Mettre les info moyennes dans l'ordre et dans un dict entete """ 
@@ -461,7 +466,7 @@ def quelles_informations_vignoble_source_onglet( self, format_sortie ='AGRO_CSV'
     for unChamp in champsVignobleOrdonnes:
         listeEntete.append( dictEnteteVignoble[ unChamp][position_dic])
         listeInfo.append( dictInfoVignoble[ unChamp])
-    physiocap_log( "La Liste Agro : {}".format(listeInfo), TRACE_TOOLS)
+    #physiocap_log( "Derniere liste Agro : {}".format(listeInfo), TRACE_TOOLS)
     return champsVignobleOrdonnes, champs_vignoble_requis_fichier,  dictInfoVignoble, listeInfo,  dictEnteteVignoble, listeEntete
 
 def quel_qml_existe( qml_court, repertoire_template, repertoire_secours):
@@ -475,7 +480,7 @@ def quel_qml_existe( qml_court, repertoire_template, repertoire_secours):
             return le_template
     return None
 
-def quel_chemin_templates(self):
+def quel_chemin_templates( self):
     self.dans_Quel_Settings()
     Nom_Profil =  self.fieldComboProfilPHY.currentText()
     # Remplissage de la liste de CHEMIN_TEMPLATES
@@ -654,19 +659,20 @@ def generer_contour_depuis_points( self, nom_fichier_shape_sans_0,  mids_trie):
 
     version_3 = "YES" if self.checkBoxV3.isChecked() else "NO"
     # Vérifier disponibilité de processing
-    try :
-        import processing
-        try:
-            from processing.core.Processing import Processing
-            Processing.initialize()
-        except:
-            physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
-                format( PHYSIOCAP_UNI, self.tr("Traitement")), leModeDeTrace)
-            raise physiocap_exception_no_processing( "Pas d'extension Traitement - initialize")               
-    except ImportError:
-        physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
-                format( PHYSIOCAP_UNI, self.tr("Traitement")), leModeDeTrace)
-        raise physiocap_exception_no_processing( "Pas d'extension Traitement")
+    _, _ = self.assert_processing()
+####    try :
+####        import processing
+####        try:
+####            from processing.core.Processing import Processing
+####            Processing.initialize()
+####        except:
+####            physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
+####                format( PHYSIOCAP_UNI, self.tr("Traitement")), leModeDeTrace)
+####            raise physiocap_exception_no_processing( "Pas d'extension Traitement - initialize")               
+####    except ImportError:
+####        physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
+####                format( PHYSIOCAP_UNI, self.tr("Traitement")), leModeDeTrace)
+####        raise physiocap_exception_no_processing( "Pas d'extension Traitement")
     
     # Assert points existent bien
     if ( os.path.exists( nom_fichier_shape_sans_0)):
@@ -684,15 +690,27 @@ def generer_contour_depuis_points( self, nom_fichier_shape_sans_0,  mids_trie):
         else:
             chemin_acces = os.path.join( os.path.dirname( chemin_vecteur), REPERTOIRE_SOURCES)
         chemin_fichier_convex = os.path.join( chemin_acces,  FICHIER_CONTOUR_GENERE + "_" + nom_parcelle + EXTENSION_SHP)
-        mon_feedback = QgsProcessingFeedback()
-        params_algo = { 'FIELD' : None, 
+####        mon_feedback = QgsProcessingFeedback()
+####        params_algo = { 'FIELD' : None, 
+####         'INPUT' : nom_fichier_shape_sans_0, 
+####         'OUTPUT' : chemin_fichier_convex, 
+####         'TYPE' : 3 } # Enveloppe convexe
+####        textes_sortie_algo={}
+####        algo = "qgis:minimumboundinggeometry"
+####        textes_sortie_algo = processing.run( algo, params_algo, feedback=mon_feedback)        
+####        physiocap_log( "Sortie algo {} contient {}".format( algo, textes_sortie_algo))
+        nom_retour = ""
+        QGIS_CONVEX = { 'FIELD' : None, 
          'INPUT' : nom_fichier_shape_sans_0, 
          'OUTPUT' : chemin_fichier_convex, 
          'TYPE' : 3 } # Enveloppe convexe
-        textes_sortie_algo={}
         algo = "qgis:minimumboundinggeometry"
-        textes_sortie_algo = processing.run( algo, params_algo, feedback=mon_feedback)        
-        physiocap_log( "Sortie algo {} contient {}".format( algo, textes_sortie_algo))
+        nom_retour = appel_processing( self, nom_fichier_shape_sans_0, \
+                "QGIS_CONVEX", algo, \
+                QGIS_CONVEX, "TARGET_OUT_GRID")      
+        physiocap_log( "Sortie algo {} contient {}".format( algo, nom_retour), TRACE_JH)
+        QgsMessageLog.logMessage( "PHYSIOCAP : après création du contour", "Processing", Qgis.Warning)
+
         # Changer attributs GID=0 et dictInfoVignobleAgro[ champsVignobleTri[0]]
         convexhull_layer = QgsVectorLayer( chemin_fichier_convex, FICHIER_CONTOUR_GENERE , 'ogr')
         convexhull_layer.dataProvider().addAttributes([QgsField("FID", QVariant.Int, "integer", 10), \
@@ -716,14 +734,18 @@ def generer_contour_depuis_points( self, nom_fichier_shape_sans_0,  mids_trie):
         physiocap_error( self, msg )
     return chemin_fichier_convex
 
-def quel_indice_entete( origine_poly):
-    if origine_poly == "AGRO_CSV":
+def assert_quel_format_entete( self, origine_poly):
+    if origine_poly in [ "AGRO_CSV",  "CSV"]:
         indice_dict_Entete = 0
-    if origine_poly == "AGRO_SHP":
+    elif origine_poly in [ "AGRO_SHP",  "SHP"]:
         indice_dict_Entete = 2
+    else:
+        aText = "Vecteur AGRO de format {} n'est pas pris en compte par l'extension".format( origine_poly)
+        physiocap_log( aText)
+        physiocap_error( self, aText, "CRITICAL")
     return indice_dict_Entete
     
-def assert_parcelle_attendue(self, un_contour, les_parcelles_agro, modele_agro_retenu, \
+def assert_parcelle_attendue( self, un_contour, les_parcelles_agro, modele_agro_retenu, \
     indice_dict_Entete, dictEnteteVignoble, champsVignobleOrdonnes,  libelle="INTRA"):
     """ Vérifier si la parcelle-campagne est bien celle qui va être utiliser pour 
     les informations agronomiques et INTER INTRA"""
@@ -764,7 +786,7 @@ def assert_parcelle_attendue(self, un_contour, les_parcelles_agro, modele_agro_r
                 format( libelle,  nom_parcelle, nom_campagne, campagne_attendue), TRACE_JH)
         return None
         
-    physiocap_log( "Parcelle {} retenue pour {} limiter par agro {}".format( nom_parcelle,libelle,  un_unique), TRACE_JH)
+    #physiocap_log( "Parcelle {} retenue pour {} limiter par agro {}".format( nom_parcelle,libelle,  un_unique), TRACE_JH)
     return nom_parcelle
 
 def assert_campagne( self, campagne, derniere_info_mid):
@@ -807,7 +829,7 @@ def quelle_liste_attributs( self, vecteur):
     #physiocap_log( "Attributs de {} sont {}".format( vecteur.name(), field_names ), TRACE_AGRO)
     return field_names
     
-def inclure_vignoble_sur_contour(self, chemin_fichier_convex, ss_groupe=None):
+def inclure_vignoble_sur_contour( self, chemin_fichier_convex, ss_groupe=None):
     # TODO Supprimer ... ?
     if ( os.path.exists( chemin_fichier_convex)):
 
@@ -881,7 +903,7 @@ def assert_champs_agro_obligatoires( dialogue, vecteur_poly, origine_poly):
     modele_agro_retenu = {}
     # TODO CAMPAGNE Trier nom et campagne( ? Coallenscence ie champs_vignoble_requis_fichier[0]) et vérifier cas NULL
     for un_contour in vecteur_poly.getFeatures( QgsFeatureRequest().\
-        addOrderBy( champs_vignoble_requis_fichier[1])): #, champs_vignoble_requis_fichier[0])):
+                    addOrderBy( champs_vignoble_requis_fichier[1])): #, champs_vignoble_requis_fichier[0])):
         un_nom = un_contour[ champs_vignoble_requis_fichier[1]]
         une_campagne = un_contour[ champs_vignoble_requis_fichier[0]]
         #physiocap_log( "Parcelle {} campagne {}".format( un_nom,une_campagne), TRACE_JH)
@@ -911,7 +933,30 @@ def assert_champs_agro_obligatoires( dialogue, vecteur_poly, origine_poly):
     return champsVignobleOrdonnes, champs_agro_fichier, type_agro, champs_agro_autre_fichier, champs_vignoble_requis, \
         champs_vignoble_requis_fichier, dictEnteteVignoble, champExistants, les_parcelles_agro, modele_agro_retenu        
 
-def quelles_listes_info_agro(self): 
+def lister_parcelles_INTRA( self, vecteur = None,  liste = None):
+    """ Met à jour la liste des parcelles à partir 
+        du vecteur 
+        ou une liste calculée """
+    la_liste = []
+    if vecteur != None:
+        champ_choisi = self.fieldComboContours.currentText()
+        self.fieldComboParcelleIntra.clear()
+        for un_contour in vecteur.getFeatures( QgsFeatureRequest().addOrderBy( champ_choisi)):
+            self.fieldComboParcelleIntra.addItem(  un_contour[ champ_choisi])
+            la_liste.append( un_contour[ champ_choisi]) 
+    elif liste != None:
+        self.fieldComboParcelleIntra.clear()
+        for un_contour in liste:
+            self.fieldComboParcelleIntra.addItem(  un_contour)
+        la_liste = liste
+    
+    laParcelle = self.settings.value("Intra/attributUneParcelle", "xx") 
+    for idx, une in enumerate( la_liste):
+        if ( une == laParcelle):
+            self.fieldComboParcelleIntra.setCurrentIndex( idx)
+
+
+def quelles_listes_info_agro( self): 
     """ Trouver les informations agro de toutes les parcelles
     les_infos_vignoble sont indexé par le nom du champ générique
     les_infos_agronomique sont indexé par le nom du champ dans le vecteur
@@ -929,10 +974,11 @@ def quelles_listes_info_agro(self):
                 SEPARATEUR_NOEUD + nom_vecteur
             self.comboBoxPolygone.addItem( node_layer)
 
-        _, _, origine_poly, vecteur_poly = quel_sont_vecteurs_choisis( self, "Filtrer")
+        _, _, origine_poly, vecteur_poly, chemin_vecteur = quel_sont_vecteurs_choisis( self, "Filtrer")
 
         if ( vecteur_poly == None) or ( not vecteur_poly.isValid()):
-            aText = self.tr( "Le contour précisant vos données agronomiques n'est pas valide pour QGIS. Vérifiez-le dans QGIS=> Vecteur => Vérifier la validité ")
+            aText = self.tr( "Le contour précisant vos données agronomiques n'a pas toutes ces géométries valides pour QGIS.")
+            aText = aText + self.tr( " Vérifiez-le dans QGIS=> Vecteur => Vérifier la validité ")
             aText = aText + self.tr( "Créer une nouvelle session Physiocap - bouton Filtrer les données brutes - ")
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" ) 
@@ -946,15 +992,8 @@ def quelles_listes_info_agro(self):
         les_infos_vignoble = []
         les_geometries_agronomique = []
         infos_agronomique_en_cours = {} # Conteneur provisoire
-        # CSV
-        if origine_poly in [ "AGRO_CSV",  "CSV"]:
-            indice_dict_Entete = 0
-        elif origine_poly in [ "AGRO_SHP",  "SHP"]:
-            indice_dict_Entete = 2
-        else:
-            aText = "Vecteur AGRO de format {} n'est pas pris en compte par l'extension".format( origine_poly)
-            physiocap_log( aText)
-            physiocap_error( self, aText, "CRITICAL")
+        # CSV ou SHP
+        indice_dict_Entete = assert_quel_format_entete( self, origine_poly)
 
         for un_contour in vecteur_poly.getFeatures(QgsFeatureRequest().addOrderBy( champs_vignoble_requis_fichier[1])):
             # CSV
@@ -1013,20 +1052,21 @@ def quelles_listes_info_agro(self):
  
 def ajouter_csvt_source_contour( self, vecteur_poly, les_parcelles,  les_geoms_poly, les_moyennes_par_contour):
     """Ajouter au CSVT AGRO les informations de moyennes calculées et du vignoble """
-    # Retrouver CSVT ou SHP pour copie (sauf les infos du shp)
-    Repertoire_Donnees_Brutes = self.lineEditDirectoryPhysiocap.text()
+    # Retrouver le nom du CSVT ou SHP pour copie (sauf les infos du shp)
     campagne_en_cours = self.lineEditCampagne.text()
-    nom_vecteur, nom_court_vecteur,  libelle = \
-        quel_vecteur_dans_donnees_brutes( Repertoire_Donnees_Brutes)
+####    Repertoire_Donnees_Brutes = self.lineEditDirectoryPhysiocap.text()
+####    nom_vecteur, nom_court_vecteur,  libelle = \
+####        quel_vecteur_dans_donnees_brutes( Repertoire_Donnees_Brutes)
+    _, _, origine_poly, vecteur_poly, chemin_vecteur = quel_sont_vecteurs_choisis( self, "Filtrer")
     _, nom_CSV, nom_CSVT, nom_PRJ = quel_noms_CSVT_synthese( self)        
-    if ((nom_vecteur != None) and len( nom_vecteur) > 0):
-        if libelle == "CSV NON OUVERT DANS QGIS":                
+    if ((vecteur_poly != None) and len( chemin_vecteur) > 0):
+        if origine_poly in [ "AGRO_CSV",  "CSV"]:
             # Copier le CSV de contour
             shutil.copyfile( nom_vecteur, nom_CSV)
         else:
             aText = "Dans le cas d'un shapefile AGRO, le CSVT de synthese ne contient pas les "
             aText = aText + "informations agro des autres campagnes"
-            physiocap_log( aText, "WARNING")
+            physiocap_log( aText, "Attention")
             exemple_CSV = os.path.join( os.path.join( self.plugin_dir, CHEMIN_DATA), 'exemple_vide_contour_vignoble.csv')        
             if os.path.isfile( exemple_CSV):
                 shutil.copyfile( exemple_CSV, nom_CSV)
@@ -1057,9 +1097,15 @@ def ajouter_csvt_source_contour( self, vecteur_poly, les_parcelles,  les_geoms_p
         # Ecriture CSVT avec agro et moyenne
         fichier_CSVT = open( nom_CSV, "a")
         writerCSVT = csv.writer( fichier_CSVT, delimiter=CSV_DELIMITER_POINT_VIRGULE)        
-        # Ecriture de l'entête et des infos vignobles
-        if libelle == "CSV NON OUVERT DANS QGIS" and self.checkBoxDoubleEnteteCSV.isChecked():
-            writerCSVT.writerow( [  CSV_GEOM] + listeEntete + listeEnteteMoyenne)
+        # Retrouver l'entete mais pas les infos saisie dans onglet
+        if origine_poly in [ "AGRO_CSV",  "CSV"]:
+            _, _, _, _,  _, listeEntete = quelles_informations_vignoble_source_onglet( self)    
+            if self.checkBoxDoubleEnteteCSV.isChecked():
+                # Ecriture de l'entête et des infos vignobles
+                writerCSVT.writerow( [  CSV_GEOM] + listeEntete + listeEnteteMoyenne)
+        if origine_poly in [ "AGRO_SHP",  "SHP"]:
+            _, _, _, _,  _, listeEntete = quelles_informations_vignoble_source_onglet( self, "AGRO_SHP")    
+        
         # Boucler sur les parcelles
         for parcelleId,  parcelleNom in enumerate( les_parcelles):
 #            physiocap_log ( "AJOUT Physiocap moyenne de {} la {} ieme parcelle a pour diam : {}".
@@ -1089,7 +1135,6 @@ def ajouter_csvt_source_contour( self, vecteur_poly, les_parcelles,  les_geoms_p
                     listeInfo.append( les_infos_agronomique[ index_parcelle].get( un_champ)) 
                 physiocap_log ( "AJOUT Physiocap agro du contour {}: {}".\
                     format( les_parcelles_agro[ index_parcelle], listeInfo), "IMPORT_CSV")
-                
                 writerCSVT.writerow( [ geomWKT] + listeInfo  +  lesMoyennesOrdonnees)
             else:
                 # envisager un message
@@ -1124,10 +1169,9 @@ def creer_csvt_source_onglet( self, les_parcelles, les_geoms_poly, les_moyennes_
     
     # ASSERT listes ont la même taille
     if (len( listeEntete) != len( listeInfo)):
-        # TODO warning à logguer
         uMsg = "CREER Liste entete CSVT ({}) et info vignoble ({}) n'ont pas la même taille".\
             format( len( listeEntete), len( listeInfo))
-        physiocap_log( uMsg)
+        physiocap_log( uMsg, "Attention")
         return physiocap_error( self, uMsg)
         
     # ASSERT Le fichier de synthese existe
@@ -1203,14 +1247,6 @@ def physiocap_nom_entite_sans_pb_caractere( un_nom,  mon_unique = 0):
     """Change la chaine un_nom selon qu'elle contient ou non le caractère ' ou blanc"""
     ## Cela peut ne rien faire
     return un_nom.replace(" ",SEPARATEUR_).replace("\'", SEPARATEUR_)
-    #return un_nom
-#    if un_nom.find('\'') < 0:
-#        return un_nom
-#    elif mon_unique == 0:
-#        return un_nom.replace("\'", "")
-#    else:
-#        # on veut un nom unique
-#        return PHYSIOCAP_UNI + SEPARATEUR_+ un_nom.replace("\'", "") + SEPARATEUR_ + str( unique)
      
 def physiocap_nom_entite_avec_pb_caractere( un_nom, un_texte = "GDAL"):
     """rend True si la chaine un_nom contient un caractère ' problématique pour la librairie : un_texte"""
@@ -1241,7 +1277,7 @@ def physiocap_get_layer_by_URI( layerURI ):
         # Retrouver le layer
         layer = root.findLayer( layerID).layer()
         URI_complet = layer.dataProvider().dataSourceUri()
-        # Attention il faut enlever la mention |layerid à la fin de l'URI
+        # Enlever la mention |layerid à la fin de l'URI
         pos_fin_layer = URI_complet.rfind( "|layerid=")
         URI_vecteur = URI_complet[:pos_fin_layer]
         physiocap_log( "Layer URI {0}".format( URI_vecteur), TRACE_TOOLS)
@@ -1255,7 +1291,7 @@ def physiocap_get_layer_by_URI( layerURI ):
         if layer.isValid():
             return layer
         else:
-            physiocap_log( "Layer trouvé  {0} mais invalide".format( layer.name()), TRACE_TOOLS)
+            physiocap_log( "Layer trouvé  {0} mais invalide".format( layer.name()), "Attention")
             return None
     else:
         return None
@@ -2088,6 +2124,117 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
     # on rend le nom du shapefile ou du geopackage
     return nom_layer_cree
   
+
+def assert_processing( self):
+    # Vérifier disponibilité de processing (on attend d'etre dans Intra)
+    leModeDeTrace = self.fieldComboModeTrace.currentText() 
+    try :
+        import processing
+        try:
+            from processing.core.Processing import Processing
+            Processing.initialize()
+        except:
+            physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
+                format( PHYSIOCAP_UNI, self.tr("Traitement")), leModeDeTrace)
+            raise physiocap_exception_no_processing( "Pas d'extension Traitement - initialize")               
+        versionGDAL = processing.tools.raster.gdal.__version__
+        versionSAGA = processing.algs.saga.SagaUtils.getInstalledVersion() # avant "2.3.2"
+    except ImportError:
+        physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
+            format( PHYSIOCAP_UNI, self.tr("Traitement")), leModeDeTrace)
+        raise physiocap_exception_no_processing( "Pas d'extension Traitement")
+    except AttributeError:
+        physiocap_log( self.tr( "{0} nécessite SAGA version 2.3.1 ou 2.3.2 (attribute error)").\
+            format( PHYSIOCAP_UNI), leModeDeTrace)
+        raise physiocap_exception_no_saga( "Erreur attribut")
+
+#        physiocap_log ( self.tr( "= Version SAGA = %s" % ( versionSAGA)), TRACE_INTRA)
+    physiocap_log ( self.tr( "= Version GDAL = %s" % ( versionGDAL)), TRACE_INTRA)
+    physiocap_log ( self.tr( "= Version SAGA = %s" % ( versionSAGA)), TRACE_INTRA)
+    return versionGDAL, versionSAGA
+
+def quelle_librairie_interpolation( self, versionSAGA):
+    """
+    Traite le choix et la version SAGA QGIS ou GDAL avant appel des Processing (Traitement) correspondants
+    Attention ce choix peut être revu pour certains cas (SAGA n'accepte pas les caractere non ascii
+    """        
+    # Test version de SAGA, sinon annonce de l'utilisation de GDAL
+    PROCESSING_INTERPOLATION = "INCONNU"
+    leModeDeTrace = self.fieldComboModeTrace.currentText() 
+    if self.radioButtonSAGA.isChecked():
+        if versionSAGA == None:
+            versionNum = -1
+        else:
+            unite, dixieme, centieme = versionSAGA.split( ".")
+            versionNum = round( (float(unite) + float(dixieme)/10 + float(centieme)/100 ), 2)
+            physiocap_log ( self.tr( "= Version SAGA = {0}".format( versionNum)), TRACE_TOOLS)
+
+        # TODO : test SAGA Windows 7.82
+        if (( versionNum >= 2.31) and ( versionNum <= 2.32)): # or versionNum == 7.82:
+            physiocap_log ( self.tr( "= Version SAGA OK : {0}".format( versionSAGA)), TRACE_INTRA)
+            PROCESSING_INTERPOLATION = "SAGA"
+        else:
+            physiocap_log ( self.tr( "= Version SAGA %s est inférieure à 2.3.1 " % ( str( versionSAGA))), \
+                leModeDeTrace)
+            physiocap_log ( self.tr( "= ou supérieure à 2.3.2"), leModeDeTrace)
+            physiocap_log ( self.tr( "= On force l'utilisation de Gdal : "), leModeDeTrace)
+            PROCESSING_INTERPOLATION = "GDAL"
+            self.radioButtonSAGA.setEnabled( False)
+            self.radioButtonGDAL.setChecked(  Qt.Checked)
+            self.radioButtonSAGA.setChecked(  Qt.Unchecked)
+            self.spinBoxPower.setEnabled( False)
+            self.physiocap_message_box( self.tr( "= Saga a une version incompatible : on force l'utilisation de Gdal" ),
+                "information")
+    
+    else: # cas GDAL
+        PROCESSING_INTERPOLATION = "GDAL"
+    
+    return PROCESSING_INTERPOLATION
+
+def appel_processing( self, nom_point, algo_court, algo, params_algo,  
+    nom_produit_algo,  deuxieme_nom = None):
+    """
+    Traite les appels à processing avec gestion du nom_produit_algo attendu
+    Emet exception si pas de retour 
+    """
+    leModeDeTrace = self.fieldComboModeTrace.currentText() 
+    import processing
+    mon_feedback = QgsProcessingFeedback()
+    
+    lettre_algo = algo[0]
+
+    physiocap_log( self.tr( "={0}= Parametres pour algo {1} de nom long {2}\n{3}".\
+                    format( lettre_algo, algo_court, algo , params_algo )), TRACE_INTRA)       
+    textes_sortie_algo = {}
+    try:
+        textes_sortie_algo = processing.run( algo, params_algo, feedback=mon_feedback)        
+##        if lettre_algo == "s":
+##            # TODO: ?V3.x ? Tester si utile : Pour SAGA
+##            textes_sortie_algo = processing.run( algo, params_algo, feedback=mon_feedback)        
+##        else:
+##            textes_sortie_algo = processing.run( algo, params_algo, feedback=mon_feedback)        
+    except: # QgsProcessingException
+        erreur_processing = self.tr("{0} Erreur durant création du produit par Processing de {1} nom long {2} : exception".\
+                format( PHYSIOCAP_STOP, algo_court,  algo ))
+        physiocap_error( self, erreur_processing)
+        physiocap_log( erreur_processing, leModeDeTrace)
+        raise
+
+    # Recherche nom_retour dans sortie_algo
+    produit_algo = None
+    try:
+        produit_algo = textes_sortie_algo[ nom_produit_algo]
+    except:
+        erreur_processing = self.tr("{0} Erreur durant analyse du rendu de produit de {1} : texte produit {2}".\
+                format( PHYSIOCAP_STOP, algo_court,  textes_sortie_algo ))
+        physiocap_error( self, erreur_processing)
+        physiocap_log( erreur_processing, leModeDeTrace)
+        raise physiocap_exception_interpolation( nom_point)
+
+    physiocap_log( "={0}= Produit en sortie de {1}\n{2}".\
+                    format( lettre_algo, algo_court, produit_algo), TRACE_INTRA)
+    return produit_algo
+    
 class PhysiocapTools( QtWidgets.QDialog):
     """QGIS Pour voir les messages traduits."""
     def __init__(self, parent=None):
@@ -2098,14 +2245,14 @@ class PhysiocapTools( QtWidgets.QDialog):
         """ Renvoi un message dans la log pour pointer l'utilisateur vers la liste des erreurs"""
         message_log_court = self.tr( "{0} n'a pas correctement fini son analyse").\
             format( PHYSIOCAP_UNI)
-        message_log = message_log_court + self.tr( ". Consultez le journal {0} Erreurs").\
+        message_log = message_log_court + self.tr( ". Consultez le journal {0} Attention").\
             format( PHYSIOCAP_UNI)
-        physiocap_log( message_log, TRACE_TOUT,"WARNING")
+        physiocap_log( message_log, TRACE_TOUT, Qgis.Warning)
         self.physiocap_tools_log_error( message_log_court, "Critical" )
 
     def physiocap_tools_log_error( self, aText, level="WARNING"):
         """Send a text to the Physiocap error"""
-        journal_nom = self.tr( "{0} Erreurs").format( PHYSIOCAP_UNI)
+        journal_nom = self.tr( "{0} Attention").format( PHYSIOCAP_UNI)
         if level == "WARNING":
             QgsMessageLog.logMessage( aText, journal_nom, Qgis.Warning)
         else:

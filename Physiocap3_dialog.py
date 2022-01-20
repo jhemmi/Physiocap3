@@ -45,6 +45,7 @@
 from .Physiocap_tools import (physiocap_message_box, \
         physiocap_log_for_error, physiocap_log, physiocap_error, \
         quel_chemin_templates, quel_poly_point_INTER, quelle_projection_et_lib_demandee, \
+        quel_sont_vecteurs_choisis, assert_champs_agro_obligatoires, lister_parcelles_INTRA, \
         physiocap_nom_entite_avec_pb_caractere, physiocap_get_layer_by_name, physiocap_get_layer_by_ID)
 
 from .Physiocap_creer_arbre import (PhysiocapFiltrer)
@@ -209,7 +210,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             for idx, un in enumerate( LISTE_PROFIL):
                 if ( un == leProfil):
                     self.fieldComboProfilPHY.setCurrentIndex( idx)
-                    physiocap_log( self.tr( "Profil retrouvé"), TRACE_PROFIL) 
+                    #physiocap_log( self.tr( "Profil retrouvé"), TRACE_PROFIL) 
 
         # Affichages
         self.lire_affichages()
@@ -739,7 +740,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 for idx, une in enumerate( LISTE_COMMUNES):
                     if ( une == laCommune):
                         self.comboBoxCommune.setCurrentIndex( idx + 1)  # car _
-                        physiocap_log( self.tr( "Commune retrouvée"), leModeDeTrace) 
+                        #physiocap_log( self.tr( "Commune retrouvée"), leModeDeTrace) 
         
         self.lineEditClone.setText( self.settings.value("Agro/clone", "inconnu"))
         self.lineEditPorteGreffe.setText( self.settings.value("Agro/porte_greffe", "inconnu"))
@@ -1022,6 +1023,9 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.settings.setValue("Intra/attributIntra", self.fieldComboIntra.currentText())
         toutes_parcelles = "YES" if self.checkBoxToutes.isChecked() else "NO"
         self.settings.setValue("Intra/toutesParcelles", toutes_parcelles)
+        if toutes_parcelles == "NO":
+            self.settings.setValue("Intra/attributUneParcelle", self.fieldComboParcelleIntra.currentText())
+        
         self.settings.setValue("Intra/continueIntra", self.fieldComboIntraContinue.currentIndex())
         self.settings.setValue("Intra/densiteMinimale", float( self.spinBoxDensiteMinimale.value()))
         self.settings.setValue("Intra/powerIntra", float( self.spinBoxPower.value()))
@@ -1941,13 +1945,32 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
 ####            # TODO: RENDU again self.iface.mapCanvas().setRenderFlag( True )
 
     def slot_bascule_intra_toutes(self):
-        """ Changement de choix Intra toutes parcelle libere la liste de choix 
+        """ Changement de choix Intra toutes parcelle libère la liste de choix et la remplit
         """ 
+        Nom_Profil = self.fieldComboProfilPHY.currentText()
         set_quoi = False
         if self.checkBoxToutes.isChecked():
             set_quoi = False
         else:
-            set_quoi = True            
+            set_quoi = True
+            _, _, origine_poly, vecteur_poly, chemin_vecteur = quel_sont_vecteurs_choisis( self, "Filtrer")
+            # Assert vecteur dejà choisi
+            if vecteur_poly != None:
+                if Nom_Profil == 'Champagne':
+                    # Assert vecteur poly champ obligatoire
+                    try:
+                        _, champs_agro_fichier, _, _, champs_vignoble_requis, champs_vignoble_requis_fichier, _, _, les_parcelles_agro, _ = \
+                            assert_champs_agro_obligatoires( self, vecteur_poly, origine_poly)
+                    except physiocap_exception_agro_obligatoire as e:
+                        aText = "{}".format(e)
+                        physiocap_message_box( self, aText, 'information')
+
+                    if les_parcelles_agro != None and len( les_parcelles_agro) > 0:
+                        # Remplir la liste des parcelles diponibles
+                        lister_parcelles_INTRA( self, None,  les_parcelles_agro)
+                else:
+                    # Remplir la liste des parcelles diponibles dans poly
+                    lister_parcelles_INTRA( self, vecteur_poly)            
         self.fieldComboParcelleIntra.setEnabled( set_quoi)
 
     def slot_bascule_pas_mesure(self):
@@ -2258,7 +2281,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         except physiocap_exception_stop_user:
             return physiocap_log( \
                 self.tr( "Arrêt de {0} à la demande de l'utilisateur").format( PHYSIOCAP_UNI), 
-                leModeDeTrace, "WARNING")
+                leModeDeTrace, "Attention")
          # On remonte les autres exceptions
         except:
             raise
