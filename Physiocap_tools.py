@@ -368,12 +368,15 @@ def quelles_informations_moyennes():
 def structure_informations_vignoble( self, format_entre_sortie ='AGRO_CSV'):
     """ Structure des info vignobles dans une liste ordonnée, 
         dans une liste des requis et dans un dict pour les entete et type """ 
-    if format_entre_sortie == 'AGRO_CSV':
+    position_dic = 0
+    position_autre = 2
+    if format_entre_sortie in [ 'AGRO_CSV',  "CSV"]:
         position_dic = 0
         position_autre = 2
-    else:
+    elif format_entre_sortie in [ "AGRO_SHP",  "SHP"]:
         position_dic = 2
         position_autre = 0
+    # TODO Erreur autres
     dictEnteteVignoble = {}  # dict de liste [ "nom champ csv", "type_QGIS", "champ shp"] 
     # pour entete manque pH non demandé et CaCO3 non necessaire
     champsVignobleOrdonnes = [ "campagne", "nom_parcelle", "commune", "region", "cepage", "clone", "porte_greffe", \
@@ -421,9 +424,10 @@ def quelles_informations_vignoble_source_onglet( self, format_sortie ='AGRO_CSV'
     """ Mettre les valeurs d'info vignobles dans l'ordre et dans un dict 
         puis création de deux listes entetes et valeurs pretes à écrite dans 
         CSVT si format_sortie = CSV ou Shape sinon""" 
-    if format_sortie == 'AGRO_CSV':
+    position_dic = 0
+    if format_sortie in [ "AGRO_CSV",  "CSV"]:
         position_dic = 0
-    else:
+    elif format_sortie in [ "AGRO_SHP",  "SHP"]:
         position_dic = 2
     champsVignobleOrdonnes, champs_agro_fichier, _, _, champs_vignoble_requis, champs_vignoble_requis_fichier, dictEnteteVignoble \
         = structure_informations_vignoble( self, format_sortie)
@@ -770,6 +774,7 @@ def generer_contour_depuis_points( self, nom_fichier_shape_sans_0,  mids_trie):
     return chemin_fichier_convex
 
 def assert_quel_format_entete( self, origine_poly):
+    indice_dict_Entete = 2
     if origine_poly in [ "AGRO_CSV",  "CSV"]:
         indice_dict_Entete = 0
     elif origine_poly in [ "AGRO_SHP",  "SHP"]:
@@ -1021,7 +1026,7 @@ def quelles_listes_info_agro( self):
             les_infos_agronomique.append( infos_agronomique_en_cours)
             infos_agronomique_en_cours = {}
             # Geometrie
-            if origine_poly == "AGRO_CSV":
+            if origine_poly in [ "AGRO_CSV", "CSV"]:
                 try:
                     les_geometries_agronomique.append(  un_contour.geometry())
                 except:
@@ -1083,12 +1088,12 @@ def ajouter_csvt_source_contour( self, vecteur_poly, les_parcelles,  les_geoms_p
         writerCSVT = csv.writer( fichier_CSVT, delimiter=CSV_DELIMITER_POINT_VIRGULE)        
         # Retrouver l'entete mais pas les infos saisie dans onglet
         if origine_poly in [ "AGRO_CSV",  "CSV"]:
-            _, _, _, _,  _, listeEntete = quelles_informations_vignoble_source_onglet( self)    
+            _, _, _, _,  _, listeEntete = quelles_informations_vignoble_source_onglet( self, origine_poly)    
             if self.checkBoxDoubleEnteteCSV.isChecked():
                 # Ecriture de l'entête et des infos vignobles
                 writerCSVT.writerow( [  CSV_GEOM] + listeEntete + listeEnteteMoyenne)
         if origine_poly in [ "AGRO_SHP",  "SHP"]:
-            _, _, _, _,  _, listeEntete = quelles_informations_vignoble_source_onglet( self, "AGRO_SHP")    
+            _, _, _, _,  _, listeEntete = quelles_informations_vignoble_source_onglet( self, origine_poly)    
         
         # Boucler sur les parcelles
         for parcelleId,  parcelleNom in enumerate( les_parcelles):
