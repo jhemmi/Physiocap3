@@ -201,7 +201,7 @@ def quel_sont_vecteurs_choisis( self, source = "Intra"):
             vecteur_poly = physiocap_get_layer_by_ID( infos_poly[ 2], infos_poly[0])
             URI_complet = vecteur_poly.dataProvider().dataSourceUri()
             physiocap_log("URI du vecteur OUVERT {}".format( URI_complet), TRACE_AGRO)
-            if URI_complet.index("|") > 0:
+            if URI_complet.find("|") > 0:
                 URI_decoupe = URI_complet.split( "|")
                 chemin_vecteur = URI_decoupe[0]
             else:
