@@ -39,16 +39,16 @@
             <prop v="#0e0000" k="preset_color_name_5"/>
             <prop v="preset" k="rampType"/>
           </colorramp>
-          <item color="#e9e9d8" label="BIOMGCEP &lt; 200" alpha="255" value="200"/>
-          <item color="#eff797" label="200 &lt; BIOMGCEP &lt; 300" alpha="255" value="300"/>
-          <item color="#9dd798" label="300 &lt; BIOMGCEP &lt; 350" alpha="255" value="350"/>
-          <item color="#54b466" label="350 &lt; BIOMGCEP &lt; 400" alpha="255" value="400"/>
-          <item color="#1d9340" label="400 &lt; BIOMGCEP &lt; 450" alpha="255" value="450"/>
-          <item color="#00741f" label="450 &lt; BIOMGCEP &lt; 500" alpha="255" value="500"/>
-          <item color="#244d7a" label="500 &lt; BIOMGCEP &lt; 600" alpha="255" value="600"/>
-          <item color="#67387a" label="600 &lt; BIOMGCEP &lt; 700" alpha="255" value="700"/>
-          <item color="#78205d" label="700 &lt; BIOMGCEP &lt; 800" alpha="255" value="800"/>
-          <item color="#5e0440" label="800 &lt; BIOMGCEP " alpha="255" value="9999"/>
+          <item color="#e9e9d8" label="BIOM &lt; 200" alpha="255" value="200"/>
+          <item color="#eff797" label="200 &lt; BIOM &lt; 300" alpha="255" value="300"/>
+          <item color="#9dd798" label="300 &lt; BIOM &lt; 350" alpha="255" value="350"/>
+          <item color="#54b466" label="350 &lt; BIOM &lt; 400" alpha="255" value="400"/>
+          <item color="#1d9340" label="400 &lt; BIOM &lt; 450" alpha="255" value="450"/>
+          <item color="#00741f" label="450 &lt; BIOM &lt; 500" alpha="255" value="500"/>
+          <item color="#244d7a" label="500 &lt; BIOM &lt; 600" alpha="255" value="600"/>
+          <item color="#67387a" label="600 &lt; BIOM &lt; 700" alpha="255" value="700"/>
+          <item color="#78205d" label="700 &lt; BIOM &lt; 800" alpha="255" value="800"/>
+          <item color="#5e0440" label="800 &lt; BIOM " alpha="255" value="9999"/>
         </colorrampshader>
       </rastershader>
     </rasterrenderer>
