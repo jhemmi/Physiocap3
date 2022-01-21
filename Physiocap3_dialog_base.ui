@@ -6108,7 +6108,7 @@ DIAM, SARM, BIOM,...) </string>
        </font>
       </property>
       <property name="text">
-       <string>Version 3.10.14a &quot;Agro &amp; PDF par parcelle&quot;</string>
+       <string>Version 3.10.14b &quot;Agro &amp; PDF par parcelle&quot;</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_500">

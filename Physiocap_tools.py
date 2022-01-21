@@ -333,21 +333,23 @@ def quel_poly_point_INTER( self, isRoot = None, node = None ):
 
     if nombre_poly > 0:
         _, _, origine_poly, vecteur_poly, chemin_vecteur = quel_sont_vecteurs_choisis( self, "Filtrer")
-        physiocap_log("Dans quel_poly_point_INTER origine est {} pour vecteur {}".\
-                format( origine_poly, chemin_vecteur), TRACE_JH)
-        if Nom_Profil == 'Champagne' and self.radioButtonContour.isChecked():
-            # Assert vecteur poly champ obligatoire
-            try:
-                _, champs_agro_fichier, _, _, champs_vignoble_requis, champs_vignoble_requis_fichier, _, _, les_parcelles_agro, _ = \
-                    assert_champs_agro_obligatoires( self, vecteur_poly, origine_poly)
-            except physiocap_exception_agro_obligatoire as e:
-                aText = "{}".format(e)
-                les_parcelles_agro = None
-                return physiocap_message_box( self, aText, 'information')
-
-            if les_parcelles_agro != None and len( les_parcelles_agro) > 0:
-                # Remplir la liste des parcelles diponibles
-                lister_parcelles_INTRA( self, None,  les_parcelles_agro)
+        physiocap_log( "Dans quel_poly_point_INTER origine est {} pour vecteur {}".\
+                format( origine_poly, chemin_vecteur), TRACE_TOOLS)
+        if Nom_Profil == 'Champagne':
+            if self.radioButtonContour.isChecked():
+                # Assert vecteur poly champ obligatoire
+                try:
+                    _, champs_agro_fichier, _, _, champs_vignoble_requis, champs_vignoble_requis_fichier, _, _, les_parcelles_agro, _ = \
+                        assert_champs_agro_obligatoires( self, vecteur_poly, origine_poly)
+                except physiocap_exception_agro_obligatoire as e:
+                    aText = "{}".format(e)
+                    les_parcelles_agro = []
+                    physiocap_message_box( self, aText, 'information')
+                    return 0, 0
+                    
+                if les_parcelles_agro != None and len( les_parcelles_agro) > 0:
+                    # Remplir la liste des parcelles diponibles
+                    lister_parcelles_INTRA( self, None,  les_parcelles_agro)
 
         else:
             # Remplir la liste des parcelles diponibles dans poly
@@ -656,6 +658,7 @@ def quel_noms_CSVT_synthese( self):
         nom_CSV = os.path.join( chemin_session, CVST_VIGNOBLE + EXTENSION_CSV)
         nom_CSVT = os.path.join( chemin_session, CVST_VIGNOBLE + EXTENSION_CSVT)
         nom_PRJ = os.path.join( chemin_session, CVST_VIGNOBLE + EXTENSION_PRJ)
+        # TODO : nom_QPJ
     else:
         nom_CSV = os.path.join( chemin_vecteur, CVST_VIGNOBLE + EXTENSION_CSV)
         nom_CSVT = os.path.join( chemin_vecteur, CVST_VIGNOBLE + EXTENSION_CSVT)
@@ -859,6 +862,7 @@ def quelle_liste_attributs( self, vecteur):
     field_names = [field.name() for field in provider.fields()]
     #physiocap_log( "Liste de champ a pour type {}".format( type( field_names)))
     #physiocap_log( "Attributs de {} sont {}".format( vecteur.name(), field_names ), TRACE_AGRO)
+    provider = None
     return field_names
     
 # Fonction pour générer le CSVT : csv avec info agro, moyenne et geometrie en WKT
@@ -1053,12 +1057,11 @@ def ajouter_csvt_source_contour( self, vecteur_poly, les_parcelles,  les_geoms_p
         exemple_CSVT = os.path.join( os.path.join( self.plugin_dir, CHEMIN_DATA), 'exemple_contour_vignoble.csvt')        
         if os.path.isfile( exemple_CSVT):
             shutil.copyfile( exemple_CSVT, nom_CSVT)
-        # Gérer tous les EPSG connus pour créer prj et qpj
-        creer_projection_extensions( self, nom_CSV)  
-##        # TODO : gerer EPSG pour autres profils
-#        exemple_PRJ = os.path.join( os.path.join( self.plugin_dir, CHEMIN_DATA), 'exemple_contour_vignoble.prj')        
-#        if os.path.isfile( exemple_PRJ):
-#            shutil.copyfile( exemple_PRJ, nom_PRJ)
+        # TODO : Gérer tous les EPSG connus pour créer prj et qpj
+        # creer_projection_extensions( self, nom_CSV)  
+        exemple_PRJ = os.path.join( os.path.join( self.plugin_dir, CHEMIN_DATA), 'exemple_contour_vignoble.prj')        
+        if os.path.isfile( exemple_PRJ):
+            shutil.copyfile( exemple_PRJ, nom_PRJ)
 
     # Récuperer les infos agro
     les_parcelles_agro, les_vecteurs_agronomique, les_infos_agronomique, _ = quelles_listes_info_agro(self)
@@ -1173,11 +1176,11 @@ def creer_csvt_source_onglet( self, les_parcelles, les_geoms_poly, les_moyennes_
         exemple_CSVT = os.path.join( os.path.join( self.plugin_dir, CHEMIN_DATA), 'exemple_contour_vignoble.csvt')        
         if os.path.isfile( exemple_CSVT):
             shutil.copyfile( exemple_CSVT, nom_CSVT)
-        # Gérer tous les EPSG connus pour créer prj et qpj
-        creer_projection_extensions( self, nom_CSV)  
-####        exemple_PRJ = os.path.join( os.path.join( self.plugin_dir, CHEMIN_DATA), 'exemple_contour_vignoble.prj')        
-####        if os.path.isfile( exemple_PRJ):
-####            shutil.copyfile( exemple_PRJ, nom_PRJ)
+#####        # Gérer tous les EPSG connus pour créer prj et qpj
+#####        creer_projection_extensions( self, nom_CSV)  
+        exemple_PRJ = os.path.join( os.path.join( self.plugin_dir, CHEMIN_DATA), 'exemple_contour_vignoble.prj')        
+        if os.path.isfile( exemple_PRJ):
+            shutil.copyfile( exemple_PRJ, nom_PRJ)
     return 0
 
 # TOOLS
@@ -1209,31 +1212,32 @@ def physiocap_is_int_number(s):
     except ValueError:
         return False
  
-def creer_projection_extensions( self, nom_vecteur):
-    """processing qgis:definecurrentprojection pour creer prj et qpj conforme à QGIS"""
-    if (nom_vecteur == None) or (nom_vecteur == ""):
-        return
-    distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
-        laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( self)        
-
-    epsg = 'inconnu'
-    if ( laProjectionTXT == PROJECTION_L93) or ( EPSG_NUMBER == EPSG_NUMBER_L93):
-        epsg = EPSG_DESCRIPTION_L93
-    if ( laProjectionTXT == PROJECTION_GPS) or ( EPSG_NUMBER == EPSG_NUMBER_GPS):
-        epsg = EPSG_DESCRIPTION_GPS
-    if epsg == 'inconnu':
-        physiocap_log( "Pas de projection connu, pour créer prj et qgp de {}".format( nom_vecteur), TRACE_TOOLS)
-        return
-    
-    nom_retour = ""
-    QGIS_PROJECTION = { 'INPUT' : nom_vecteur, 
-     'CRS' :  QgsCoordinateReferenceSystem( epsg)}
-    algo = "qgis:definecurrentprojection"
-    nom_retour = appel_simplifier_processing( self, nom_fichier_shape_sans_0, \
-            "QGIS_PROJECTION", algo, \
-            QGIS_PROJECTION, "OUTPUT")      
-    physiocap_log( "Sortie algo {} contient {}".format( algo, nom_retour), TRACE_JH)
-    QgsMessageLog.logMessage( "PHYSIOCAP : après création du contour", "Processing", Qgis.Warning)
+###def creer_projection_extensions( self, nom_vecteur):
+###    """processing qgis:definecurrentprojection pour creer prj et qpj conforme à QGIS
+###       Nécessiterait que la couche soit rendu ?"""
+###    if (nom_vecteur == None) or (nom_vecteur == ""):
+###        return
+###    distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
+###        laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( self)        
+###
+###    epsg = 'inconnu'
+###    if ( laProjectionTXT == PROJECTION_L93) or ( EPSG_NUMBER == EPSG_NUMBER_L93):
+###        epsg = EPSG_DESCRIPTION_L93
+###    if ( laProjectionTXT == PROJECTION_GPS) or ( EPSG_NUMBER == EPSG_NUMBER_GPS):
+###        epsg = EPSG_DESCRIPTION_GPS
+###    if epsg == 'inconnu':
+###        physiocap_log( "Pas de projection connu, pour créer prj et qgp de {}".format( nom_vecteur), TRACE_TOOLS)
+###        return
+###    
+###    nom_retour = ""
+###    QGIS_PROJECTION = { 'INPUT' : nom_vecteur, 
+###     'CRS' :  QgsCoordinateReferenceSystem( epsg)}
+###    algo = "qgis:definecurrentprojection"
+###    nom_retour = appel_simplifier_processing( self, nom_vecteur, \
+###            "QGIS_PROJECTION", algo, \
+###            QGIS_PROJECTION, "OUTPUT")      
+###    physiocap_log( "Sortie algo {} contient {}".format( algo, nom_retour), TRACE_JH)
+###    QgsMessageLog.logMessage( "PHYSIOCAP : après création du contour", "Processing", Qgis.Warning)
 
     
 def physiocap_create_projection_file( prj_name,  laProjection):
@@ -1567,13 +1571,13 @@ def quel_vecteur_dans_donnees_brutes( Repertoire_Donnees_Brutes):
         physiocap_log( "Vecteur de type SHAPEFILE {}".format( listeSHPTriee[0]))
         
         return listeSHPTriee[0], os.path.basename( listeSHPTriee[0]), "SHAPE NON OUVERT DANS QGIS"        
-    #CSVT
-    nom_fichiers_recherches = os.path.join( Repertoire_Donnees_Brutes, RECHERCHE_EXTENSION_CSV)
-    listeCSVTriee = sorted(glob.glob( nom_fichiers_recherches))
-    if len( listeCSVTriee) == 0:
-        physiocap_log( "Aucun vecteur de type CSV dans répertoire des données brutes", TRACE_JH)
-    else:
-        return listeCSVTriee[0], os.path.basename( listeCSVTriee[0]), "CSV NON OUVERT DANS QGIS"
+####    #CSVT
+####    nom_fichiers_recherches = os.path.join( Repertoire_Donnees_Brutes, RECHERCHE_EXTENSION_CSV)
+####    listeCSVTriee = sorted(glob.glob( nom_fichiers_recherches))
+####    if len( listeCSVTriee) == 0:
+####        physiocap_log( "Aucun vecteur de type CSV dans répertoire des données brutes", TRACE_JH)
+####    else:
+####        return listeCSVTriee[0], os.path.basename( listeCSVTriee[0]), "CSV NON OUVERT DANS QGIS"
     return None, None, None
 
 def lister_MIDs_pour_synthese( repertoire, MIDs, synthese="xx"):

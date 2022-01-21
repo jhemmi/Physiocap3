@@ -1785,7 +1785,8 @@ class PhysiocapInter( QtWidgets.QDialog):
     
         # Progress BAR 100 %
         dialogue.progressBarInter.setValue( 100)
-
+        vecteur_poly = None
+        vecteur_point = None
         if nombre_contours > 0:
             dialogue.ButtonIntra.setEnabled( True)
         # FIN CREATION PUIS AFFICHAGE DES VECTEURS DE TOUS CONTOURS

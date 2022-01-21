@@ -144,7 +144,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
 
         self.ButtonIntra.pressed.connect(self.slot_INTRA_interpolation_parcelles)
         self.groupBoxIntra.setEnabled( False)
-        self.groupBoxMethode.setEnabled( False)
+        self.groupBoxMethode.setEnabled( True)
         self.ButtonIntra.setEnabled( False)
         
         # Affichage
@@ -537,7 +537,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.checkBoxIntraIsos.setChecked( Qt.Unchecked)
             self.groupBoxIsolignes.setChecked( Qt.Unchecked)
             self.groupBoxIsolignes.setEnabled( False)
-            self.groupBoxMethode.setEnabled( False)
+            self.groupBoxMethode.setEnabled( True)
             self.groupBoxExpertOuvert.setEnabled( False)
             self.groupBoxSegment.setEnabled( False)
         elif Nom_Profil == 'Fronton':
@@ -1972,7 +1972,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                     # Remplir la liste des parcelles diponibles dans poly
                     lister_parcelles_INTRA( self, vecteur_poly)            
         self.fieldComboParcelleIntra.setEnabled( set_quoi)
-
+        vecteur_poly = None
+        
     def slot_bascule_pas_mesure(self):
         """ Changement de choix Inter PasMesure : 
         """ 
