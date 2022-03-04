@@ -123,7 +123,7 @@ def physiocap_log( aText, modeTrace = TRACE_PAS,  level = "INFO"):
     journal_nom = "{0} Informations".format( PHYSIOCAP_UNI)
     if modeTrace == TRACE_PAS:
         if LE_MODE_PROD == "NO":
-            QgsMessageLog.logMessage( "Pas de trace : " + aText,  journal_nom, Qgis.Info)
+            QgsMessageLog.logMessage( "#NO# " + aText,  journal_nom, Qgis.Info)
         return
     elif modeTrace == TRACE_MINI:
         # On monte warning et message debut et fin
@@ -138,7 +138,7 @@ def physiocap_log( aText, modeTrace = TRACE_PAS,  level = "INFO"):
             QgsMessageLog.logMessage( aText, journal_nom, Qgis.Warning)
         elif modeTrace != TRACE_TOUT:
             # Journal spécifique (TOOLS ou SEGMENT ou INTRA) et de niveau INFO
-            if LE_MODE_PROD == "YES":
+            if LE_MODE_PROD == "YES" and modeTrace not in TRACES_DEMASQUEES:
                 pass
             else:
                 if modeTrace in TRACES_MASQUEES:
@@ -376,7 +376,7 @@ def structure_informations_vignoble( self, format_entre_sortie ='AGRO_CSV'):
     elif format_entre_sortie in [ "AGRO_SHP",  "SHP"]:
         position_dic = 2
         position_autre = 0
-    # TODO Erreur autres
+    # TODO ? Erreur autres
     dictEnteteVignoble = {}  # dict de liste [ "nom champ csv", "type_QGIS", "champ shp"] 
     # pour entete manque pH non demandé et CaCO3 non necessaire
     champsVignobleOrdonnes = [ "campagne", "nom_parcelle", "commune", "region", "cepage", "clone", "porte_greffe", \
@@ -990,13 +990,12 @@ def quelles_listes_info_agro( self):
             if un_nom not in les_parcelles_agro:
                 continue
             # Champs requis on tester la présence et le type
-            # TODO ? Attraper exception champ non existant dans contour
             for pos_champ, le_champ in enumerate( champs_vignoble_requis):
                 champ_fichier = champs_vignoble_requis_fichier[ pos_champ]
                 try:
                     les_infos_agronomiques_presence.append( un_contour[ champ_fichier])
                 except:
-                    raise physiocap_exception_agro_obligatoire( "{} obligatoire (les champs obligatoires sont {}".\
+                    raise physiocap_exception_agro_obligatoire( "{} obligatoire (les champs obligatoires sont {})".\
                         format( champ_fichier, champs_vignoble_requis_fichier))
                     
             # ASSERT type

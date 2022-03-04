@@ -58,7 +58,7 @@ from qgis.core import ( Qgis, QgsProject, QgsVectorLayer, \
     QgsFeatureRequest, QgsExpression, QgsProcessingFeedback, \
     QgsRectangle, QgsLayout, QgsReadWriteContext, QgsLayoutExporter, QgsLayerTree)
 
-import shutil
+### copy qpt import shutil
 
 class PhysiocapIntra( QtWidgets.QDialog):
     """QGIS Pour voir les messages traduits."""
@@ -114,17 +114,26 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 format( nom_attribut, nom_parcelle, nom_pdf))
 
         # Charger un modele qpt dans les composer_template
-        chemin_composer = os.path.join( dialogue.gis_dir, 'composer_templates')
-        tmpfile = os.path.join( chemin_composer, profil_physiocap + EXTENSION_QPT)
-        if not os.path.exists( tmpfile):
-            chemin_modele = os.path.join( dialogue.plugin_dir,'modeleQGIS')
-            chemin = os.path.join( chemin_modele,'Mise_en_page')
-            modele_file = os.path.join( chemin, profil_physiocap + EXTENSION_QPT)
-            if not os.path.exists( modele_file):
-                raise physiocap_exception_agro_no_pdf_modele( modele_file)
-            # Copier le template
-            shutil.copy( modele_file, chemin_composer)
-        with open(tmpfile) as f:
+######        chemin_composer = os.path.join( dialogue.gis_dir, 'composer_templates')
+######   OK linux et windows JH     tmpfile = os.path.join( chemin_composer, profil_physiocap + EXTENSION_QPT)
+######        if not os.path.exists( tmpfile):
+######            chemin_modele = os.path.join( dialogue.plugin_dir,'modeleQGIS')
+######            chemin = os.path.join( chemin_modele,'Mise_en_page')
+######            modele_file = os.path.join( chemin, profil_physiocap + EXTENSION_QPT)
+######            if not os.path.exists( modele_file):
+######                raise physiocap_exception_agro_no_pdf_modele( modele_file)
+######            # Copier le template pour chaque utilisateur
+######            shutil.copy( modele_file, chemin_composer)
+        chemin_modele = os.path.join( dialogue.plugin_dir,'modeleQGIS')
+        chemin = os.path.join( chemin_modele,'Mise_en_page')
+        modele_file = os.path.join( chemin, profil_physiocap + EXTENSION_QPT)
+        if not os.path.exists( modele_file):
+            raise physiocap_exception_agro_no_pdf_modele( modele_file)
+        physiocap_log( "Chemin template {} ".\
+                format( modele_file),  leModeDeTrace)
+        
+#### OK        with open(tmpfile) as f:
+        with open(modele_file) as f:
             template_content = f.read()
         doc = QDomDocument()
         doc.setContent(template_content)

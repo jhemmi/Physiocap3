@@ -291,12 +291,12 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.spinBoxMinDiametre.setValue( int( self.settings.value("Physiocap/mindiam", 2 )))
         self.spinBoxMaxDiametre.setValue( int( self.settings.value("Physiocap/maxdiam", 28 )))
         self.spinBoxMaxSarmentsParMetre.setValue( int( self.settings.value("Physiocap/max_sarments_metre", 25 )))
-        self.spinBoxInterrangs.setValue( int( self.settings.value("Physiocap/interrangs", 110 )))
-        self.spinBoxInterceps.setValue( int( self.settings.value("Physiocap/interceps", 100 )))
+        self.spinBoxInterrangs.setValue( int( self.settings.value("Agro/interrangs", 110 )))
+        self.spinBoxInterceps.setValue( int( self.settings.value("Agro/interceps", 100 )))
         # Densité pied /ha
         self.slot_calcul_densite()
-        self.spinBoxHauteur.setValue( int( self.settings.value("Physiocap/hauteur", 90 )))
-        self.doubleSpinBoxDensite.setValue( float( self.settings.value("Physiocap/densite", 0.9 )))
+        self.spinBoxHauteur.setValue( int( self.settings.value("Agro/hauteur", 90 )))
+        self.doubleSpinBoxDensite.setValue( float( self.settings.value("Agro/densite", 0.9 )))
       
         # Remplissage de la liste de SHAPE Filtre
         # DIAMETRE : Cas unique
@@ -714,9 +714,9 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 if ( une == laRegion):
                     self.comboBoxRegion.setCurrentIndex( idx)
 
-        self.spinBoxInterrangs.setValue( int( self.settings.value("Agro/interrangs", 100 )))
+        self.spinBoxInterrangs.setValue( int( self.settings.value("Agro/interrangs", 110 )))
         self.spinBoxInterceps.setValue( int( self.settings.value("Agro/interceps", 100 )))
-        self.spinBoxHauteur.setValue( int( self.settings.value("Agro/hauteur", 100 )))
+        self.spinBoxHauteur.setValue( int( self.settings.value("Agro/hauteur", 90 )))
         self.doubleSpinBoxDensite.setValue( float( self.settings.value("Agro/densite", 0.9 )))
 
         # Remplissage des communes
@@ -2269,12 +2269,14 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             aText = self.tr( "INFORMATIONS AGRO KO : la couche vecteur de votre session ne contient pas un attribut {0}. ").\
                 format( e)
             aText = aText +  "\n" + self.tr( "Vérifier le vecteur choisi pour décrire vos contours et vos données AGRO ")
+            aText = aText +  "\n" + self.tr( "Une information AGRO n'a pas le nommage attendu ")
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "CRITICAL" )
         except physiocap_exception_agro_type_champ as e:
             physiocap_log_for_error( self)
             aText = self.tr( "INFORMATIONS AGRO inconsistentes : l'attribut {0}. ").format( e)
-            aText = aText + "\n" + self.tr( "Vérifier le vecteur choisi pour décrire vos contours et vos données AGRO ")
+            aText = aText + "\n" + self.tr( "Vérifier si des lignes de données ne sont pas manquantes : vides ou nulles dans votre vecteur AGRO ")
+            aText = aText + "\n" + self.tr( "Identifier le vecteur choisi pour décrire vos contours et vos données AGRO ")
             aText = aText + "\n" + self.tr( "Le nom du vecteur AGRO est dans Onglet Calcul" )
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "CRITICAL" )

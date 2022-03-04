@@ -1,5 +1,5 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis version="3.4.12-Madeira" hasScaleBasedVisibilityFlag="0" styleCategories="AllStyleCategories" minScale="1e+8" maxScale="0">
+<qgis hasScaleBasedVisibilityFlag="0" styleCategories="AllStyleCategories" version="3.4.12-Madeira" minScale="1e+8" maxScale="0">
   <flags>
     <Identifiable>1</Identifiable>
     <Removable>1</Removable>
@@ -12,7 +12,7 @@
     <property key="identify/format" value="Value"/>
   </customproperties>
   <pipe>
-    <rasterrenderer alphaBand="-1" type="singlebandpseudocolor" band="1" classificationMin="7.4" classificationMax="25" opacity="1">
+    <rasterrenderer type="singlebandpseudocolor" opacity="1" band="1" classificationMin="110" classificationMax="inf" alphaBand="-1">
       <rasterTransparency/>
       <minMaxOrigin>
         <limits>None</limits>
@@ -23,37 +23,25 @@
         <stdDevFactor>2</stdDevFactor>
       </minMaxOrigin>
       <rastershader>
-        <colorrampshader clip="0" classificationMode="1" colorRampType="DISCRETE">
-          <colorramp type="preset" name="[source]">
-            <prop v="217,217,217,255" k="preset_color_0"/>
-            <prop v="255,0,0,255" k="preset_color_1"/>
-            <prop v="255,255,0,255" k="preset_color_2"/>
-            <prop v="0,255,255,255" k="preset_color_3"/>
-            <prop v="106,168,79,255" k="preset_color_4"/>
-            <prop v="14,0,0,255" k="preset_color_5"/>
-            <prop v="#d9d9d9" k="preset_color_name_0"/>
-            <prop v="#ff0000" k="preset_color_name_1"/>
-            <prop v="#ffff00" k="preset_color_name_2"/>
-            <prop v="#00ffff" k="preset_color_name_3"/>
-            <prop v="#6aa84f" k="preset_color_name_4"/>
-            <prop v="#0e0000" k="preset_color_name_5"/>
-            <prop v="preset" k="rampType"/>
+        <colorrampshader colorRampType="DISCRETE" clip="0" classificationMode="2">
+          <colorramp type="gradient" name="[source]">
+            <prop v="253,231,37,255" k="color1"/>
+            <prop v="68,1,84,255" k="color2"/>
+            <prop v="0" k="discrete"/>
+            <prop v="gradient" k="rampType"/>
+            <prop v="0.019608;241,229,29,255:0.039216;229,228,25,255:0.058824;216,226,25,255:0.078431;202,225,31,255:0.098039;189,223,38,255:0.117647;176,221,47,255:0.137255;162,218,55,255:0.156863;149,216,64,255:0.176471;137,213,72,255:0.196078;124,210,80,255:0.215686;112,207,87,255:0.235294;101,203,94,255:0.254902;90,200,100,255:0.27451;80,196,106,255:0.294118;70,192,111,255:0.313725;61,188,116,255:0.333333;53,183,121,255:0.352941;46,179,124,255:0.372549;40,174,128,255:0.392157;36,170,131,255:0.411765;33,165,133,255:0.431373;31,161,136,255:0.45098;30,156,137,255:0.470588;31,151,139,255:0.490196;32,146,140,255:0.509804;33,142,141,255:0.529412;35,137,142,255:0.54902;37,132,142,255:0.568627;39,128,142,255:0.588235;41,123,142,255:0.607843;42,118,142,255:0.627451;44,113,142,255:0.647059;46,109,142,255:0.666667;49,104,142,255:0.686275;51,99,141,255:0.705882;53,94,141,255:0.72549;56,89,140,255:0.745098;58,83,139,255:0.764706;61,78,138,255:0.784314;63,72,137,255:0.803922;65,66,135,255:0.823529;67,61,132,255:0.843137;69,55,129,255:0.862745;70,48,126,255:0.882353;71,42,122,255:0.901961;72,36,117,255:0.921569;72,29,111,255:0.941176;72,23,105,255:0.960784;71,16,99,255:0.980392;70,8,92,255" k="stops"/>
           </colorramp>
-          <item color="#e9e9d8" label="BIOM &lt; 200" alpha="255" value="200"/>
-          <item color="#eff797" label="200 &lt; BIOM &lt; 300" alpha="255" value="300"/>
-          <item color="#9dd798" label="300 &lt; BIOM &lt; 350" alpha="255" value="350"/>
-          <item color="#54b466" label="350 &lt; BIOM &lt; 400" alpha="255" value="400"/>
-          <item color="#1d9340" label="400 &lt; BIOM &lt; 450" alpha="255" value="450"/>
-          <item color="#00741f" label="450 &lt; BIOM &lt; 500" alpha="255" value="500"/>
-          <item color="#244d7a" label="500 &lt; BIOM &lt; 600" alpha="255" value="600"/>
-          <item color="#67387a" label="600 &lt; BIOM &lt; 700" alpha="255" value="700"/>
-          <item color="#78205d" label="700 &lt; BIOM &lt; 800" alpha="255" value="800"/>
-          <item color="#5e0440" label="800 &lt; BIOM " alpha="255" value="9999"/>
+          <item alpha="255" value="110" color="#eff797" label="Très faible : &lt;= 110"/>
+          <item alpha="255" value="322" color="#ddf2d7" label="Faible : entre 110 et 322"/>
+          <item alpha="255" value="407" color="#b2e0ab" label="Moyenne - : entre 322 et 407"/>
+          <item alpha="255" value="488" color="#3da75a" label="Moyenne + : entre 407 et 488"/>
+          <item alpha="255" value="733" color="#38578c" label="Elevée : entre 488 et 733"/>
+          <item alpha="255" value="inf" color="#440154" label="Très élevée : > 733"/>
         </colorrampshader>
       </rastershader>
     </rasterrenderer>
-    <brightnesscontrast brightness="0" contrast="0"/>
-    <huesaturation colorizeRed="255" saturation="0" colorizeStrength="100" colorizeBlue="128" colorizeGreen="128" grayscaleMode="0" colorizeOn="0"/>
+    <brightnesscontrast contrast="0" brightness="0"/>
+    <huesaturation colorizeOn="0" saturation="0" grayscaleMode="0" colorizeRed="255" colorizeStrength="100" colorizeGreen="128" colorizeBlue="128"/>
     <rasterresampler maxOversampling="2"/>
   </pipe>
   <blendMode>0</blendMode>
