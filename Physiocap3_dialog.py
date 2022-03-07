@@ -1949,6 +1949,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         """ 
         Nom_Profil = self.fieldComboProfilPHY.currentText()
         set_quoi = False
+        les_parcelles_agro = None
         if self.checkBoxToutes.isChecked():
             set_quoi = False
         else:
