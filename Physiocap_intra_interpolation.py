@@ -53,6 +53,8 @@ from .Physiocap_var_exception import *
 
 from PyQt5 import QtWidgets
 from PyQt5.QtXml import QDomDocument
+from PyQt5.QtCore import ( Qt)
+
 from qgis.core import ( Qgis, QgsProject, QgsVectorLayer, \
     QgsLayerTreeGroup, QgsRasterLayer, QgsMessageLog,  \
     QgsFeatureRequest, QgsExpression, QgsProcessingFeedback, \
@@ -401,7 +403,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
         #physiocap_log( "=~= Extent layer >>> " + info_extent + " <<<", leModeDeTrace)        
         info_extent_epsg = info_extent + " [EPSG:" + str( EPSG_NUMBER) + "]"
         
-        if choix_force_interpolation == "SAGA":
+        if choix_force_interpolation in [ "SAGA", "SAGA7"]:
             # Appel SAGA : power à 2 fixe
             physiocap_log( self.tr( "=~= Interpolation SAGA dans {0}").\
                 format(  nom_court_raster), leModeDeTrace)
@@ -421,31 +423,47 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     ### 'DW_BANDWIDTH' : 0, 
                     ### 'SEARCH_POINTS_MAX' : 20, 
                     # ????  ### 'TARGET_USER_SIZE' : 1.8, 
-                    
-            IDW_SAGA = { 'SHAPES' : nom_point, 
-                'FIELD' : le_champ_choisi, 
-                'OUTPUT_EXTENT' : info_extent_epsg,
-                'DW_WEIGHTING' : 1,
-                'DW_IDW_POWER' : 2, 
-                'DW_IDW_OFFSET' : False, 
-                'DW_BANDWIDTH' : 1, 
-                'SEARCH_RANGE' : 0, 
-                'SEARCH_RADIUS' : rayonDoubleIntra, 
-                'SEARCH_POINTS_ALL' : 0, 
-                'SEARCH_POINTS_MIN' : 1, 
-                'SEARCH_POINTS_MAX' : 20, 
-                'SEARCH_DIRECTION' : 0, 
-                'TARGET_USER_SIZE' : pixelIntra, 
-                'TARGET_DEFINITION' : 0, 
-                'TARGET_USER_FITS' : 0,
-                'TARGET_TEMPLATE' : None,
-                'TARGET_OUT_GRID' : nom_raster_temp
-                }
+            if choix_force_interpolation == "SAGA":
+                IDW_SAGA = { 'SHAPES' : nom_point, 
+                    'FIELD' : le_champ_choisi, 
+                    'OUTPUT_EXTENT' : info_extent_epsg,
+                    'DW_WEIGHTING' : 1,
+                    'DW_IDW_POWER' : 2, 
+                    'DW_IDW_OFFSET' : False, 
+                    'DW_BANDWIDTH' : 1, 
+                    'SEARCH_RANGE' : 0, 
+                    'SEARCH_RADIUS' : rayonDoubleIntra, 
+                    'SEARCH_POINTS_ALL' : 0, 
+                    'SEARCH_POINTS_MIN' : 1, 
+                    'SEARCH_POINTS_MAX' : 20, 
+                    'SEARCH_DIRECTION' : 0, 
+                    'TARGET_USER_SIZE' : pixelIntra, 
+                    'TARGET_DEFINITION' : 0, 
+                    'TARGET_USER_FITS' : 0,
+                    'TARGET_TEMPLATE' : None,
+                    'TARGET_OUT_GRID' : nom_raster_temp
+                    }
+                nom_raster_produit = self.appel_processing( nom_point, \
+                    "IDW_SAGA", "saga:inversedistanceweightedinterpolation", \
+                    IDW_SAGA, "TARGET_OUT_GRID")     
+            else:
+                IDW_SAGA_7 = { 'POINTS' : nom_point, 
+                    'FIELD' : le_champ_choisi, 
+                    'CV_METHOD':0,'CV_SUMMARY':'TEMPORARY_OUTPUT',
+                    'CV_RESIDUALS':'TEMPORARY_OUTPUT', 'CV_SAMPLES':10,
+                    'TARGET_USER_XMIN TARGET_USER_XMAX TARGET_USER_YMIN TARGET_USER_YMAX' : info_extent_epsg, 
+                    'TARGET_USER_SIZE' : pixelIntra, 
+                    'TARGET_OUT_GRID' : nom_raster_temp, 
+                    'SEARCH_RANGE' : 0, 
+                    'SEARCH_RADIUS' : rayonDoubleIntra,
+                    'SEARCH_POINTS_ALL' : 0, 'SEARCH_POINTS_MIN' : 1, 'SEARCH_POINTS_MAX' : 10, 
+                    'DW_WEIGHTING' : 1, 'DW_IDW_POWER' : 2, 'DW_BANDWIDTH' : 1
+                    }
 
-            nom_raster_produit = self.appel_processing( nom_point, \
-                "IDW_SAGA", "saga:inversedistanceweightedinterpolation", \
-                IDW_SAGA, "TARGET_OUT_GRID")      
-            QgsMessageLog.logMessage( "PHYSIOCAP : Avant clip SAGA", "Processing", Qgis.Warning)
+                nom_raster_produit = self.appel_processing( nom_point, \
+                    "IDW_SAGA7", "saga:inversedistanceweighted", \
+                    IDW_SAGA_7, "TARGET_OUT_GRID")      
+            QgsMessageLog.logMessage( "PHYSIOCAP : Avant clip SAGA", "Processing", Qgis.Info)
 
             # Cas TIFF on garde le nom final du tiff pour le step suivant
             if dialogue.checkBoxSagaTIFF.isChecked():
@@ -624,14 +642,16 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 versionNum = round( (float(unite) + float(dixieme)/10 + float(centieme)/100 ), 2)
                 physiocap_log ( self.tr( "= Version SAGA = {0}".format( versionNum)), TRACE_INTRA)
 
-            # TODO : test SAGA Windows 7.82
-            if (( versionNum >= 2.31) and ( versionNum <= 2.32)): # or versionNum == 7.82:
+            # ouverture SAGA Windows 7.82
+            if ((( versionNum >= 2.31) and ( versionNum <= 2.32)) or versionNum == 7.82):
                 physiocap_log ( self.tr( "= Version SAGA OK : {0}".format( versionSAGA)), TRACE_INTRA)
-                PROCESSING_INTERPOLATION = "SAGA"
+                if (( versionNum >= 2.31) and ( versionNum <= 2.32)):
+                    PROCESSING_INTERPOLATION = "SAGA"
+                elif versionNum == 7.82:
+                    PROCESSING_INTERPOLATION = "SAGA7"
             else:
-                physiocap_log ( self.tr( "= Version SAGA %s est inférieure à 2.3.1 " % ( str( versionSAGA))), \
+                physiocap_log ( self.tr( "= Version SAGA %s n'est pas parmi 2.3.1 ou 2.3.2 ou 7.8.2 " % ( str( versionSAGA))), \
                     TRACE_INTRA)
-                physiocap_log ( self.tr( "= ou supérieure à 2.3.2"), TRACE_INTRA)
                 physiocap_log ( self.tr( "= On force l'utilisation de Gdal : "), TRACE_INTRA)
                 PROCESSING_INTERPOLATION = "GDAL"
                 dialogue.radioButtonSAGA.setEnabled( False)
@@ -1109,7 +1129,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     # Contournement du bug SAGA et caractères spéciaux ==> Interpolation GDAL
                     # ###################                    
                     # Ne tester que si SAGA
-                    if choix_interpolation == "SAGA" and not physiocap_is_only_ascii( un_nom):
+                    if choix_interpolation[0:4] == "SAGA" and not physiocap_is_only_ascii( un_nom):
                         aText =  self.tr("=~= {0} {1} ne peut pas dialoguer avec SAGA et des caractères non ascii.\n").\
                                 format( PHYSIOCAP_WARNING, PHYSIOCAP_UNI)
                         aText = aText + self.tr( "L'interpolation de {0} doit être réalisée par GDAL").format( un_nom)

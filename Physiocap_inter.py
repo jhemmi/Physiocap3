@@ -1308,7 +1308,7 @@ class PhysiocapInter( QtWidgets.QDialog):
             ecarts_point = {}
             medianes_point = {}
             sommes_point_segment = {}
-            physiocap_log( "Nombre Diam {} et nombre Sarment {}".format( nb_dia, nb_sarments_m), leModeDeTrace)
+            #physiocap_log( "Nombre Diam {} et nombre Sarment {}".format( nb_dia, nb_sarments_m), leModeDeTrace)
             if ( (nb_dia > 0) and ( nb_dia == nb_sarments_m )):
                 # Appel np pour mean et std
                 # Ranger toutes les moyennes dans un dict Moyenne et un dict Ecart
@@ -1399,8 +1399,8 @@ class PhysiocapInter( QtWidgets.QDialog):
                     ecarts_point['nbsarcep'] = float(   np.std( les_nbsarcep))
                     medianes_point['nbsarcep'] = float( np.median( les_nbsarcep))
                 
-                physiocap_log ( self.tr( "Date : {0}").\
-                    format( date_debut), leModeDeTrace) 
+#                physiocap_log ( self.tr( "Date : {0}").\
+#                    format( date_debut), leModeDeTrace) 
                 if version_3 == "YES":                
                     physiocap_log ( self.tr( "Moyenne des orientations Aller par segments : {0:6.1f} - Ecarts : {1:6.1f} en °").\
                         format( moyennes_point.get('azimuth_segments_pos'), ecarts_point.get('azimuth_segments_pos') ), leModeDeTrace)
@@ -1412,8 +1412,8 @@ class PhysiocapInter( QtWidgets.QDialog):
                     if longueur_segment != 0:
                         physiocap_log ( self.tr( 'Nombre de sarments au metre "Méthode Segment NBSART/LONGUEUR_SEGMENT": {0:6.1f}').\
                             format( sommes_point_segment['la_somme_des_nbsart'] / longueur_segment ), leModeDeTrace)
-                physiocap_log ( self.tr( 'Moyenne du nombre de sarments au metre "Méthode V2 NBSARM": {0:6.1f} - Ecarts : {1:6.1f}').\
-                    format( moyennes_point.get('sarm'), ecarts_point.get('sarm')  ), leModeDeTrace) 
+#                physiocap_log ( self.tr( 'Moyenne du nombre de sarments au metre "Méthode V2 NBSARM": {0:6.1f} - Ecarts : {1:6.1f}').\
+#                    format( moyennes_point.get('sarm'), ecarts_point.get('sarm')  ), leModeDeTrace) 
                 physiocap_log ( self.tr( "Moyenne des diamètres : {0:5.1f} - Ecarts : {1:5.1f} en mm").\
                     format( moyennes_point.get('diam'),  ecarts_point.get('diam')), leModeDeTrace)
                 physiocap_log ( self.tr( "{0} {1} Fin Inter pour {2} <<<< ").\

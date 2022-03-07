@@ -1601,7 +1601,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             return physiocap_message_box( self, aText, "information" ) 
         except physiocap_exception_probleme_caractere_librairie as e:
             physiocap_log_for_error( self)
-            aText = self.tr( "Le nom du contour {0} contient un caratère (parmi ',...) non supporté durant l'interpolation. "). \
+            aText = self.tr( "Le nom du contour {0} contient un caratère (parmi ',blanc...) non supporté durant l'interpolation. "). \
             format( e)
             aText = aText + self.tr( "Modifiez ce nom en supprimant ce(s) caractère(s) dans vos contours et relancez les traitements inter et/ou intra.")
             physiocap_error( self, aText, "CRITICAL")
