@@ -344,7 +344,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
         # Création d'un raster temporaire
         try:
             from processing.tools.system import ( getTempDirInTempFolder, getTempFilename)
-            if choix_force_interpolation == "SAGA":
+            if choix_force_interpolation in [ "SAGA", "SAGA7"]:
                 # on crée un repertoire temporaire 
                 nom_dir_temp = getTempDirInTempFolder()
                 nom_raster_temp = os.path.join( nom_dir_temp, "TMP_RASTER_SAGA" + EXTENSION_RASTER_SAGA)
@@ -407,23 +407,23 @@ class PhysiocapIntra( QtWidgets.QDialog):
             # Appel SAGA : power à 2 fixe
             physiocap_log( self.tr( "=~= Interpolation SAGA dans {0}").\
                 format(  nom_court_raster), leModeDeTrace)
-            # Les parametres proviennent du modele d'interpolation Physiocap du CIVC
-            # apres le champ, 1 veut dire Linearly discreasing with search radius
-            # 2 est power
-            # 1 est bande pour expo ou gauss (non utilisé)
-            # 0 recherche locale dans le rayon
-            # rayon de recherche (defaut saga est 100) : local maximum search distance given in map units
-            # 0 all directions et non quadrans
-            # 1 tous les points ce qui annule ? le 10 qui suit
-            # 10 nombre de point max
-            # extent calculé precedemment
-            # cellsize ou taille du pixel (unité de la carte)
+            if choix_force_interpolation == "SAGA":
+                # Les parametres proviennent du modele d'interpolation Physiocap du CIVC
+                # apres le champ, 1 veut dire Linearly discreasing with search radius
+                # 2 est power
+                # 1 est bande pour expo ou gauss (non utilisé)
+                # 0 recherche locale dans le rayon
+                # rayon de recherche (defaut saga est 100) : local maximum search distance given in map units
+                # 0 all directions et non quadrans
+                # 1 tous les points ce qui annule ? le 10 qui suit
+                # 10 nombre de point max
+                # extent calculé precedemment
+                # cellsize ou taille du pixel (unité de la carte)
                     # OK avec V3  : 
                     ### 'FIELD' : 'DIAM', 
                     ### 'DW_BANDWIDTH' : 0, 
                     ### 'SEARCH_POINTS_MAX' : 20, 
                     # ????  ### 'TARGET_USER_SIZE' : 1.8, 
-            if choix_force_interpolation == "SAGA":
                 IDW_SAGA = { 'SHAPES' : nom_point, 
                     'FIELD' : le_champ_choisi, 
                     'OUTPUT_EXTENT' : info_extent_epsg,
@@ -459,11 +459,10 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     'SEARCH_POINTS_ALL' : 0, 'SEARCH_POINTS_MIN' : 1, 'SEARCH_POINTS_MAX' : 10, 
                     'DW_WEIGHTING' : 1, 'DW_IDW_POWER' : 2, 'DW_BANDWIDTH' : 1
                     }
-
                 nom_raster_produit = self.appel_processing( nom_point, \
                     "IDW_SAGA7", "saga:inversedistanceweighted", \
                     IDW_SAGA_7, "TARGET_OUT_GRID")      
-            QgsMessageLog.logMessage( "PHYSIOCAP : Avant clip SAGA", "Processing", Qgis.Info)
+            #QgsMessageLog.logMessage( "PHYSIOCAP : Avant clip SAGA", "Processing", Qgis.Info)
 
             # Cas TIFF on garde le nom final du tiff pour le step suivant
             if dialogue.checkBoxSagaTIFF.isChecked():
