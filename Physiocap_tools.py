@@ -1034,7 +1034,7 @@ def quelles_listes_info_agro( self):
 
         return les_parcelles_agro, les_geometries_agronomique, les_infos_agronomique, les_infos_vignoble 
  
-def ajouter_csvt_source_contour( self, vecteur_poly, les_parcelles,  les_geoms_poly, les_moyennes_par_contour):
+def ajouter_csvt_source_contour( self, la_projection_TXT, vecteur_poly, les_parcelles,  les_geoms_poly, les_moyennes_par_contour):
     """Ajouter au CSVT AGRO les informations de moyennes calculées et du vignoble """
     # Retrouver le nom du CSVT ou SHP pour copie (sauf les infos du shp)
     campagne_en_cours = self.lineEditCampagne.text()
@@ -1058,12 +1058,9 @@ def ajouter_csvt_source_contour( self, vecteur_poly, les_parcelles,  les_geoms_p
         exemple_CSVT = os.path.join( os.path.join( self.plugin_dir, CHEMIN_DATA), 'exemple_contour_vignoble.csvt')        
         if os.path.isfile( exemple_CSVT):
             shutil.copyfile( exemple_CSVT, nom_CSVT)
-        # TODO : Gérer tous les EPSG connus pour créer prj et qpj
-        # creer_projection_extensions( self, nom_CSV)  
-        exemple_PRJ = os.path.join( os.path.join( self.plugin_dir, CHEMIN_DATA), 'exemple_contour_vignoble.prj')        
-        if os.path.isfile( exemple_PRJ):
-            shutil.copyfile( exemple_PRJ, nom_PRJ)
-
+        # Creer .prj et .qpj
+        creer_extensions_pour_projection( nom_CSV, la_projection_TXT)
+    return 0
     # Récuperer les infos agro
     les_parcelles_agro, les_vecteurs_agronomique, les_infos_agronomique, _ = quelles_listes_info_agro(self)
     champsMoyenneOrdonnes, listeEnteteMoyenne, listeEnteteMoyenne_SHP = quelles_informations_moyennes()    
@@ -1179,7 +1176,6 @@ def creer_csvt_source_onglet( self, la_projection_TXT, les_parcelles, les_geoms_
             shutil.copyfile( exemple_CSVT, nom_CSVT)
         # Creer .prj et .qpj
         creer_extensions_pour_projection( nom_CSV, la_projection_TXT)
-
     return 0
 
 # TOOLS
@@ -1245,8 +1241,10 @@ def creer_extensions_pour_projection( nom_couche, laProjection):
         return
     # Supprimer extension
     pos_extension = nom_couche.rfind(".")
+    physiocap_log( "Nom sans extension {} ".format( nom_couche[:pos_extension]),  TRACE_JH )
     for une_extension in [ EXTENSION_PRJ, EXTENSION_QPJ]:
         nouveau_nom = nom_couche[:pos_extension] + une_extension
+        physiocap_log( "Nouvelle extension {} ".format( nouveau_nom), TRACE_JH )
         if (not os.path.exists(nouveau_nom)) :
             # Retrouver le modele pour la projection
             if ( laProjection == PROJECTION_L93) or ( laProjection == EPSG_NUMBER_L93):
@@ -1257,6 +1255,7 @@ def creer_extensions_pour_projection( nom_couche, laProjection):
                 chemin_modele = os.path.join( CHEMIN_PROJECTION, PROJECTION_CC45 + une_extension)
             else:
                 chemin_modele = "inconnu"
+            physiocap_log( "Chemin modele {} ".format( chemin_modele), TRACE_JH)
             if chemin_modele == "inconnu" or not os.path.exists( chemin_modele):
                 # TODO ? message erreur 
                 physiocap_log( "Aucun modèle n'existant pour la projection {} (dans {}) : l'extension {} n'estpas créée".\

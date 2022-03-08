@@ -323,7 +323,7 @@ DICT_ATTRTIBUT_UNITE={
 
 CHEMIN_TEMPLATES = [ "modeleQGIS", "project_templates"]
 CHEMIN_DATA = 'data'
-CHEMIN_PROJECTION = os.path.join( CHEMIN_TEMPLATES[0],  'projection')
+CHEMIN_PROJECTION = os.path.join( os.path.join( os.path.dirname(__file__), CHEMIN_TEMPLATES[0]),  'Projection')
 
 # Exceptions Physiocap à partir de 30 erreurs sur un fchier mid
 TAUX_LIGNES_ERREUR= 30

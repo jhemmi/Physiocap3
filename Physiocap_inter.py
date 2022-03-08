@@ -52,8 +52,7 @@ from .Physiocap_var_exception import *
 
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import QVariant
-from qgis.core import (Qgis, QgsProject, QgsVectorLayer, \
-    QgsLayerTreeGroup,\
+from qgis.core import (Qgis, QgsProject, QgsVectorLayer, QgsLayerTreeGroup,\
     QgsFeatureRequest, QgsFields, QgsField, QgsVectorFileWriter, QgsFeature,\
     QgsPoint, QgsPointXY, QgsGeometry, QgsWkbTypes, QgsMessageLog)
 try :
@@ -1736,7 +1735,7 @@ class PhysiocapInter( QtWidgets.QDialog):
         # INSERTION_CIVC_V2 pour CSVT
         if dialogue.groupBoxDetailVignoble.isChecked() and dialogue.checkBoxInfoVignoble.isChecked():
             if dialogue.radioButtonOnglet.isChecked():
-                dialogue.progressBarInter.setValue( 94)
+                dialogue.progressBarInter.setValue( 92)
                 # Créer un CSVT de synthese moyenne et vignoble
                 retour_csv = creer_csvt_source_onglet( dialogue, laProjectionTXT, \
                         les_parcelles, les_geoms_poly, les_moyennes_par_contour)
@@ -1744,9 +1743,9 @@ class PhysiocapInter( QtWidgets.QDialog):
                     return physiocap_error(self, self.tr( \
                         "Erreur bloquante : problème lors de la création du CSVT "))
             if dialogue.radioButtonContour.isChecked():
-                dialogue.progressBarInter.setValue( 92)
+                dialogue.progressBarInter.setValue( 95)
                 # Alonger le CSVT de synthese moyenne et vignoble
-                retour_csv = ajouter_csvt_source_contour( dialogue, vecteur_poly, \
+                retour_csv = ajouter_csvt_source_contour( dialogue, laProjectionTXT, vecteur_poly, \
                         les_parcelles, les_geoms_poly, les_moyennes_par_contour)
                 if retour_csv != 0:
                     return physiocap_error(self, self.tr( \

@@ -1968,6 +1968,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
 
                     if les_parcelles_agro != None and len( les_parcelles_agro) > 0:
                         # Remplir la liste des parcelles diponibles
+                        # TODO limiter les parcelles agro calculé durant inter
                         lister_parcelles_INTRA( self, None,  les_parcelles_agro)
                 else:
                     # Remplir la liste des parcelles diponibles dans poly
@@ -2043,7 +2044,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         if self.checkBoxContourSolo.isChecked():
             if  self.radioButtonContour.isChecked():
                 #Assert
-                aText = "Il est impossible de demander de créer un coutour en déclarant que les informations"
+                aText = "Il est impossible de demander de créer un contour en déclarant que les informations"
                 aText = aText + " agronomiques proviennent de contours... Les informations vignobles proviennent"
                 aText = aText + " donc de l'Onglet Agronomie"
                 physiocap_message_box( self, aText, "information" )

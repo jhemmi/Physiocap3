@@ -1092,11 +1092,11 @@ class PhysiocapIntra( QtWidgets.QDialog):
                             continue
                         # Eventuellement à la parcelle choisie    
                         if not dialogue.checkBoxToutes.isChecked():
-                            #physiocap_log( "CAS UNE PARCELLE {}".format( parcelle_attendue), TRACE_INTRA)
+                            physiocap_log( "CAS UNE PARCELLE {}".format( parcelle_attendue), TRACE_JH)
                             if parcelle_attendue != dialogue.fieldComboParcelleIntra.currentText():
-                                physiocap_log( "Par d'Interpolation pour la parcelle {} - non demandée".format( parcelle_attendue), "Attention")
+                                physiocap_log( "Par d'Interpolation pour la parcelle {} - non demandée".format( parcelle_attendue), TRACE_JH)
                                 continue
-                            physiocap_log( "CAS la parcelle choisie {}".format( parcelle_attendue), TRACE_INTRA)
+                            physiocap_log( "CAS la parcelle choisie {}".format( parcelle_attendue), TRACE_JH)
 
                         if parcelle_attendue in les_parcelles_agro_suivi:
                             les_parcelles_agro_suivi.remove( parcelle_attendue)

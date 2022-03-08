@@ -90,6 +90,7 @@ CONF_SAVE = $(CONF_TARGET).sauve
 
 TEMPLATE = modeleQGIS
 LAYOUT = Mise_en_page
+PROJECTION = Projection
 VERSION_STANDARD= Standard
 VERSION_CHAMPAGNE= Champagne
 GPKG = modeleGPKG
@@ -154,6 +155,7 @@ deploy: compile doc transcompile
 	mkdir -p $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(HELP)
 	mkdir -p $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(TEMPLATE)
 	mkdir -p $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(TEMPLATE)/$(LAYOUT)
+	mkdir -p $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(TEMPLATE)/$(PROJECTION)
 	mkdir -p $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(TEMPLATE)/$(VERSION_STANDARD)
 	mkdir -p $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(TEMPLATE)/$(VERSION_CHAMPAGNE)
 	mkdir -p $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(GPKG)
@@ -165,6 +167,8 @@ deploy: compile doc transcompile
 	@cp -vf $(HELP_FILES)  $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(HELP)
 	@cp -vf $(DATA_FILES) $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(DATA)
 	@cp -vf $(TEMPLATE)/$(LAYOUT)/*.qpt $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(TEMPLATE)/$(LAYOUT)
+	@cp -vf $(TEMPLATE)/$(PROJECTION)/*.prj $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(TEMPLATE)/$(PROJECTION)
+	@cp -vf $(TEMPLATE)/$(PROJECTION)/*.qpj $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(TEMPLATE)/$(PROJECTION)
 	@cp -vf $(TEMPLATE)/$(VERSION_STANDARD)/*.qml $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(TEMPLATE)/$(VERSION_STANDARD)
 	@cp -vf $(TEMPLATE)/$(VERSION_CHAMPAGNE)/*.qml $(HOME)/$(QGISDIR)/python/plugins/$(PLUGINNAME)/$(TEMPLATE)/$(VERSION_CHAMPAGNE)
 	@cp -vf $(TEMPLATE)/$(VERSION_STANDARD)/*.qml $(HOME)/$(QGISDIR)/project_templates/$(PLUGINNAME)/$(VERSION_STANDARD)

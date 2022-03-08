@@ -6108,7 +6108,7 @@ DIAM, SARM, BIOM,...) </string>
        </font>
       </property>
       <property name="text">
-       <string>Version 3.16.15 &quot;Agro &amp; Saga7&quot;</string>
+       <string>Version 3.16.15 &quot;Agro - Saga7&quot;</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_500">
