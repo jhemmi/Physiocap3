@@ -324,7 +324,7 @@ def physiocap_filtrer(self, nom_court_csv_concat, src, csv_sans_0, csv_avec_0, c
     nombre_segments_sans_coupure = 0
 
     # Récuperer le CRS choisi, les extensions et le calculateur de distance
-    distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
+    distancearea, EXT_CRS_SHP, EXT_CRS_RASTER, \
     laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( self)
     #tracer_une_fois = 0
 

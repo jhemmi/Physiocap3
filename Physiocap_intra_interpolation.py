@@ -263,7 +263,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
             raise physiocap_exception_project_point_incoherence( nom_court_point)       
      
         # Recuperer le CRS choisi, les extensions et le calculateur de distance
-        distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
+        distancearea, EXT_CRS_SHP, EXT_CRS_RASTER, \
         laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( dialogue)
             
         # Récupération des deux parametres d'Intra pour GDAL demandé et non forcé
@@ -779,7 +779,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
         nom_vecteur_contour = vecteur_poly.name()
                    
         # Recuperer le CRS choisi, les extensions et le calculateur de distance
-        distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
+        distancearea, EXT_CRS_SHP, EXT_CRS_RASTER, \
         laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( dialogue)
 
         quel_vecteur_demande = dialogue.fieldComboFormats.currentText()

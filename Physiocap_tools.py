@@ -181,8 +181,8 @@ def quel_type_vecteur( self, vector):
         return "Inconnu", "WkbInconnu",  None,  None
 
 def quel_sont_vecteurs_choisis( self, source = "Intra"):
-        distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
-        laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( self)
+        distancearea, EXT_CRS_SHP, EXT_CRS_RASTER, \
+            laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( self)
         derniere_session = self.lineEditDerniereSession.text()
         # Pour polygone de contour   
         infos_poly = self.comboBoxPolygone.currentText().split( SEPARATEUR_NOEUD)
@@ -661,14 +661,11 @@ def quel_noms_CSVT_synthese( self):
     if self.fieldComboProfilPHY.currentText() == 'Champagne':
         nom_CSV = os.path.join( chemin_session, CVST_VIGNOBLE + EXTENSION_CSV)
         nom_CSVT = os.path.join( chemin_session, CVST_VIGNOBLE + EXTENSION_CSVT)
-        nom_PRJ = os.path.join( chemin_session, CVST_VIGNOBLE + EXTENSION_PRJ)
-        # TODO : nom_QPJ
     else:
         nom_CSV = os.path.join( chemin_vecteur, CVST_VIGNOBLE + EXTENSION_CSV)
         nom_CSVT = os.path.join( chemin_vecteur, CVST_VIGNOBLE + EXTENSION_CSVT)
-        nom_PRJ = os.path.join( chemin_vecteur, CVST_VIGNOBLE + EXTENSION_PRJ)
 
-    return derniere_session, nom_CSV, nom_CSVT, nom_PRJ  
+    return derniere_session, nom_CSV, nom_CSVT  
 
 def appel_simplifier_processing( self, nom_point, algo_court, algo, params_algo,  
     nom_produit_algo,  deuxieme_nom = None):
@@ -1045,7 +1042,7 @@ def ajouter_csvt_source_contour( self, vecteur_poly, les_parcelles,  les_geoms_p
 ####    nom_vecteur, nom_court_vecteur,  libelle = \
 ####        quel_vecteur_dans_donnees_brutes( Repertoire_Donnees_Brutes)
     _, _, origine_poly, vecteur_poly, chemin_vecteur = quel_sont_vecteurs_choisis( self, "Filtrer")
-    _, nom_CSV, nom_CSVT, nom_PRJ = quel_noms_CSVT_synthese( self)        
+    _, nom_CSV, nom_CSVT = quel_noms_CSVT_synthese( self)        
     if ((vecteur_poly != None) and len( chemin_vecteur) > 0):
         if origine_poly in [ "AGRO_CSV",  "CSV"]:
             # Copier le CSV de contour
@@ -1131,7 +1128,7 @@ def ajouter_csvt_source_contour( self, vecteur_poly, les_parcelles,  les_geoms_p
     
     return 0
    
-def creer_csvt_source_onglet( self, les_parcelles, les_geoms_poly, les_moyennes_par_contour):
+def creer_csvt_source_onglet( self, la_projection_TXT, les_parcelles, les_geoms_poly, les_moyennes_par_contour):
     """Créer CSVT avec les informations de moyenne & l'onglet Agronomie"""
     #leModeDeTrace = self.fieldComboModeTrace.currentText()
     # Récupération des moyennes du contour
@@ -1151,7 +1148,7 @@ def creer_csvt_source_onglet( self, les_parcelles, les_geoms_poly, les_moyennes_
     # Calculer geomWKT à partir de geom du contour
     geomWKT = str( geomContour.asWkt())
 
-    _, nom_CSV, nom_CSVT, nom_PRJ = quel_noms_CSVT_synthese( self)
+    _, nom_CSV, nom_CSVT = quel_noms_CSVT_synthese( self)
     champsVignobleOrdonnes, _, dictInfoVignoble, listeInfo,  dictEnteteVignoble, listeEntete = \
         quelles_informations_vignoble_source_onglet( self)
     
@@ -1180,11 +1177,9 @@ def creer_csvt_source_onglet( self, les_parcelles, les_geoms_poly, les_moyennes_
         exemple_CSVT = os.path.join( os.path.join( self.plugin_dir, CHEMIN_DATA), 'exemple_contour_vignoble.csvt')        
         if os.path.isfile( exemple_CSVT):
             shutil.copyfile( exemple_CSVT, nom_CSVT)
-#####        # Gérer tous les EPSG connus pour créer prj et qpj
-#####        creer_projection_extensions( self, nom_CSV)  
-        exemple_PRJ = os.path.join( os.path.join( self.plugin_dir, CHEMIN_DATA), 'exemple_contour_vignoble.prj')        
-        if os.path.isfile( exemple_PRJ):
-            shutil.copyfile( exemple_PRJ, nom_PRJ)
+        # Creer .prj et .qpj
+        creer_extensions_pour_projection( nom_CSV, la_projection_TXT)
+
     return 0
 
 # TOOLS
@@ -1221,7 +1216,7 @@ def physiocap_is_int_number(s):
 ###       Nécessiterait que la couche soit rendu ?"""
 ###    if (nom_vecteur == None) or (nom_vecteur == ""):
 ###        return
-###    distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
+###    distancearea, EXT_CRS_SHP, EXT_CRS_RASTER, \
 ###        laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( self)        
 ###
 ###    epsg = 'inconnu'
@@ -1244,22 +1239,33 @@ def physiocap_is_int_number(s):
 ###    QgsMessageLog.logMessage( "PHYSIOCAP : après création du contour", "Processing", Qgis.Warning)
 
     
-def physiocap_create_projection_file( prj_name,  laProjection):
-    """Creer le fichier de projection du layer avec la description de EPSG"""
-    # TODO : passer à processing qgis:definecurrentprojection pour creer prj et qpj conforme à QGIS
-    if (prj_name == None) or (prj_name == ""):
+def creer_extensions_pour_projection( nom_couche, laProjection):
+    """Creer les fichiers de projection de la couche pour .prj et .qpj"""
+    if (nom_couche == None) or (nom_couche == ""):
         return
-        
-    prj = open(prj_name, "w")
-    epsg = 'inconnu'
-    if ( laProjection == PROJECTION_L93) or ( laProjection == EPSG_NUMBER_L93):
-        epsg = EPSG_DESCRIPTION_L93
-    if ( laProjection == PROJECTION_GPS) or ( laProjection == EPSG_NUMBER_GPS):
-        epsg = EPSG_DESCRIPTION_GPS
-    prj.write(epsg)
-    prj.close()
+    # Supprimer extension
+    pos_extension = nom_couche.rfind(".")
+    for une_extension in [ EXTENSION_PRJ, EXTENSION_QPJ]:
+        nouveau_nom = nom_couche[:pos_extension] + une_extension
+        if (not os.path.exists(nouveau_nom)) :
+            # Retrouver le modele pour la projection
+            if ( laProjection == PROJECTION_L93) or ( laProjection == EPSG_NUMBER_L93):
+                chemin_modele = os.path.join( CHEMIN_PROJECTION, PROJECTION_L93 + une_extension)
+            elif ( laProjection == PROJECTION_GPS) or ( laProjection == EPSG_NUMBER_GPS):
+                chemin_modele = os.path.join( CHEMIN_PROJECTION, PROJECTION_GPS + une_extension)
+            elif ( laProjection == PROJECTION_CC45) or ( laProjection == EPSG_NUMBER_CC45):
+                chemin_modele = os.path.join( CHEMIN_PROJECTION, PROJECTION_CC45 + une_extension)
+            else:
+                chemin_modele = "inconnu"
+            if chemin_modele == "inconnu" or not os.path.exists( chemin_modele):
+                # TODO ? message erreur 
+                physiocap_log( "Aucun modèle n'existant pour la projection {} (dans {}) : l'extension {} n'estpas créée".\
+                    format( laProjection, CHEMIN_PROJECTION, une_extension), TRACE_TOOLS )
+                continue
+            # Copie
+            shutil.copyfile( chemin_modele, nouveau_nom)
     return
-    
+
 def physiocap_nom_entite_sans_pb_caractere( un_nom,  mon_unique = 0):
     """Change la chaine un_nom selon qu'elle contient ou non le caractère ' ou blanc"""
     ## Cela peut ne rien faire
@@ -1370,7 +1376,7 @@ def physiocap_get_layer_by_ID( layerID,  layerName = None):
 def quelle_projection_et_lib_demandee( self):
     """ Selon la valeur cochée dans le radio de projection 
     positionne laProjection (en QgsCoordinateReferenceSystem, texte et nombre (epsg)
-    les extensions EXTENSION_SHP, EXTENSION_PRJ et RASTER selon la demande SAGA
+    les extensions EXTENSION_SHP et RASTER selon la demande SAGA
     Rend aussi un QgsDistanceArea pour cet EPSG
     """
     # defaut L93
@@ -1384,14 +1390,12 @@ def quelle_projection_et_lib_demandee( self):
         la_projection_TXT = PROJECTION_L93
 
     la_projection_CRS = QgsCoordinateReferenceSystem.fromEpsgId( mon_EPSG_number)
-    # A_TESTER: Récuperer le CRS du projet QGIS et le compare au choix
+    # TODO : A_TESTER Récuperer le CRS du projet QGIS et le compare au choix
 #    laProjection_str = str( la_projection_CRS.postgisSrid())
 #    if la_projection_CRS.isValid():
 #        physiocap_log("Projection {0} des shapefiles est demandée : {1} est un EPSG valide".\
 #            format( la_projection_TXT, laProjection_str), TRACE_TOOLS)
-        
     EXTENSION_SHP_COMPLET = SEPARATEUR_ + la_projection_TXT + EXTENSION_SHP
-    EXTENSION_PRJ_COMPLET = SEPARATEUR_ + la_projection_TXT + EXTENSION_PRJ
    
     # Cas du nom du raster 
     if self.radioButtonSAGA.isChecked():
@@ -1405,8 +1409,7 @@ def quelle_projection_et_lib_demandee( self):
     # Preparer les calculs de distance et de surface : distanceArea objet
     distanceArea = physiocap_preparer_calcul_distance( self, mon_EPSG_number, la_projection_CRS)
 
-    return  distanceArea, \
-    EXTENSION_SHP_COMPLET, EXTENSION_PRJ_COMPLET, EXTENSION_RASTER_COMPLET, \
+    return  distanceArea, EXTENSION_SHP_COMPLET, EXTENSION_RASTER_COMPLET, \
     la_projection_CRS, la_projection_TXT, mon_EPSG_number
 
 
@@ -1729,12 +1732,10 @@ def physiocap_segment_vers_vecteur( self, chemin_session,  nom_repertoire, nom_s
         version_3 = "NO",  segment_simplifie="YES"):
     """ Creation de shape file à partir des données de segment """
 
-    distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
+    distancearea, EXT_CRS_SHP, EXT_CRS_RASTER, \
         laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( self)        
     nom_court_vecteur_segment = None
-    nom_court_prj_segment = None
     nom_vecteur_segment = None
-    nom_prj = None
     #nom_gpkg = None
     quel_vecteur_demande = self.fieldComboFormats.currentText()
     if segment_simplifie == "YES":
@@ -1743,9 +1744,7 @@ def physiocap_segment_vers_vecteur( self, chemin_session,  nom_repertoire, nom_s
         nom_court_vecteur = nom_session + NOM_SEGMENTS + NOM_SEGMENTS_SUITE_DETAILS    
     if quel_vecteur_demande == SHAPEFILE_NOM: 
         nom_court_vecteur_segment = nom_court_vecteur + EXT_CRS_SHP
-        nom_court_prj_segment = nom_court_vecteur + EXT_CRS_PRJ
         nom_vecteur_segment = os.path.join( nom_repertoire, nom_court_vecteur_segment)
-        nom_prj = os.path.join( nom_repertoire, nom_court_prj_segment)
         # Si le shape existe dejà il faut le détruire
         if os.path.isfile( nom_vecteur_segment):
             # A_TESTER: je doute que ca marche
@@ -1826,8 +1825,8 @@ def physiocap_segment_vers_vecteur( self, chemin_session,  nom_repertoire, nom_s
         writer.addFeature( feat)
     writer = None
 
-    # PRJ file
-    physiocap_create_projection_file( nom_prj,  laProjectionTXT)
+    # Creer .PRJ et .QPJ
+    creer_extensions_pour_projection( nom_vecteur_segment,  laProjectionTXT)
 
     nom_layer_cree = nom_vecteur_segment
     # Cas geopackage
@@ -1847,19 +1846,16 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
     """
     leModeDeTrace = self.fieldComboModeTrace.currentText()
     # Recuperer le CRS choisi, les extensions et le calculateur de distance
-    distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
+    distancearea, EXT_CRS_SHP, EXT_CRS_RASTER, \
         laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( self)        
     
     # Initialisation
     nom_vecteur = None
-    prj_name = None
     #nom_gpkg = None
     quel_vecteur_demande = self.fieldComboFormats.currentText()
     if quel_vecteur_demande == SHAPEFILE_NOM:
         nom_court_shapefile = nom_court_vecteur + EXT_CRS_SHP
-        nom_court_projection = nom_court_vecteur + EXT_CRS_PRJ
         nom_vecteur = os.path.join(chemin_shapes, nom_court_shapefile)
-        prj_name = os.path.join(chemin_shapes, nom_court_projection)
         # Si le shape existe dejà il faut le détruire
         if os.path.isfile( nom_vecteur):
             # A_TESTER: je doute que ca marche : detruire plutot par une option de creation
@@ -2073,8 +2069,8 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
     # Fermer le vecteur
     writer = None
 
-    # Create the PRJ file
-    physiocap_create_projection_file( prj_name,  laProjectionTXT)
+    # Creer .PRJ et .QPJ
+    creer_extensions_pour_projection( nom_vecteur,  laProjectionTXT)
  
     # Progress BAR + 5 %
     progress_barre = progress_barre + 5

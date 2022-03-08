@@ -2171,7 +2171,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Remettre vide le textEditSynthese
         self.textEditSynthese.clear()
 
-        distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
+        distancearea, EXT_CRS_SHP, EXT_CRS_RASTER, \
         laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( self)
         self.settings.setValue("Expert/laProjection", laProjectionTXT)
         
@@ -2193,8 +2193,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             filtreur = PhysiocapFiltrer( self)
             # Création des répertoires et des résultats de synthèse
             retour = filtreur.physiocap_creer_donnees_resultats( self, 
-                laProjectionCRS,  laProjectionTXT, 
-                EXT_CRS_SHP, EXT_CRS_PRJ,
+                laProjectionCRS,  laProjectionTXT, EXT_CRS_SHP, 
                 details, TRACE_HISTO, recursif, version_3)
 
         except physiocap_exception_rep as e:

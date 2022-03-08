@@ -1,0 +1,3 @@
+# Il s'agit de modeles de description de projections qui existent au format .prj et .qpj car 
+# QGIS ne les crée pas toujours de facon consistante d'une version à l'autre
+# et Physiocap3 crée des vecteurs et raster avant de les ouvrir dans QGIS...  

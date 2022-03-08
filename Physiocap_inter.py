@@ -44,7 +44,7 @@
 from .Physiocap_tools import (physiocap_message_box,physiocap_log, physiocap_error,  \
         physiocap_nom_entite_sans_pb_caractere, physiocap_rename_existing_file,  \
         quel_chemin_templates, quel_qml_existe, quelle_projection_et_lib_demandee, \
-        physiocap_create_projection_file, physiocap_get_layer_by_URI, \
+        creer_extensions_pour_projection, physiocap_get_layer_by_URI, \
         assert_champs_agro_obligatoires, assert_parcelle_attendue, assert_quel_format_entete,  \
         creer_csvt_source_onglet, ajouter_csvt_source_contour, quel_sont_vecteurs_choisis)       #physiocap_vecteur_vers_gpkg, \
 
@@ -63,7 +63,7 @@ except ImportError:
     QgsMessageLog.logMessage( aText, "\u03D5 Erreurs", Qgis.Warning)
     QgsMessageLog.logMessage( aText, PHYSIOCAP_LOG_ERREUR, Qgis.Warning)
 
-def physiocap_moyenne_un_contour( laProjectionCRS, EPSG_NUMBER, nom_vignette, nom_prj,
+def creer_moyenne_un_contour( laProjectionCRS, EPSG_NUMBER, nom_vignette,
         geom_poly, la_surface, un_nom, un_autre_ID, date_debut, date_fin,
         nombre_points, le_taux_de_sans_mesure, 
         moyennes_point, ecarts_point, medianes_point, sommes_point_segment,  
@@ -254,14 +254,11 @@ def physiocap_moyenne_un_contour( laProjectionCRS, EPSG_NUMBER, nom_vignette, no
    # Ecrit le feature
     writer.addFeature( feat)
     
-    # PRJ file
-    physiocap_create_projection_file( nom_prj, EPSG_NUMBER)  
+    # Creer .prj et .qpj
+    creer_extensions_pour_projection( nom_vignette, EPSG_NUMBER)
     return 0
     
-    
-
-def physiocap_segment_tous_contours( laProjectionCRS, EPSG_NUMBER, 
-                nom_segment, nom_prj,
+def creer_segment_tous_contours( laProjectionCRS, EPSG_NUMBER, nom_segment, 
                 toutes_les_geoms_segment, les_infos_segment, 
                 segment_simplifie="YES"):
 
@@ -304,12 +301,11 @@ def physiocap_segment_tous_contours( laProjectionCRS, EPSG_NUMBER,
             # Ecrit le feature
             writer.addFeature( feat)
 
-    # PRJ file
-    physiocap_create_projection_file( nom_prj, EPSG_NUMBER)  
-    
+    # Creer .prj et .qpj
+    creer_extensions_pour_projection( nom_segment, EPSG_NUMBER)
     return 0
 
-def physiocap_segments_un_contour( laProjectionCRS, EPSG_NUMBER, nom_segment, nom_segment_prj, 
+def creer_segments_un_contour( laProjectionCRS, EPSG_NUMBER, nom_segment,
                         les_geoms_segment, les_dates_debut_segment, les_dates_fin_segment, 
                         les_azimuths_segment,  les_longueurs_segment, les_distances_entre_segment,  
                         les_GID, les_nombres_points_segment, les_nombres_points_restant, 
@@ -373,13 +369,12 @@ def physiocap_segments_un_contour( laProjectionCRS, EPSG_NUMBER, nom_segment, no
         # Ecrit le feature
         writer.addFeature( feat)
 
-    # PRJ file
-    physiocap_create_projection_file( nom_segment_prj, EPSG_NUMBER)  
-    
+    # Creer .prj et .qpj
+    creer_extensions_pour_projection( nom_segment, EPSG_NUMBER)
     return 0
 
  
-def physiocap_sans_mesure_tous_contours( laProjectionCRS, EPSG_NUMBER, nom_sans_mesure, nom_prj,
+def creer_sans_mesure_tous_contours( laProjectionCRS, EPSG_NUMBER, nom_sans_mesure,
                 toutes_les_geoms_sans_mesure, les_infos_sans_mesure):
     """ Creation d'un shape de points sans mesure se trouvant dans tous les contours
     """
@@ -408,12 +403,11 @@ def physiocap_sans_mesure_tous_contours( laProjectionCRS, EPSG_NUMBER, nom_sans_
             # Ecrit le feature
             writer.addFeature( feat)
 
-    # PRJ file
-    physiocap_create_projection_file( nom_prj, EPSG_NUMBER)  
-    
+    # Creer .prj et .qpj
+    creer_extensions_pour_projection( nom_sans_mesure, EPSG_NUMBER)
     return 0
- 
-def physiocap_sans_mesure_un_contour( laProjectionCRS, EPSG_NUMBER, nom_sans_mesure, nom_prj,
+     
+def creer_sans_mesure_un_contour( laProjectionCRS, EPSG_NUMBER, nom_sans_mesure,
                     les_geoms_des_points, les_GID, les_dates, 
                     les_vitesses, les_altitudes,  les_pdop,  les_azimuths):
     """ Creation d'un shape de points sans mesure se trouvant dans le contour
@@ -441,12 +435,11 @@ def physiocap_sans_mesure_un_contour( laProjectionCRS, EPSG_NUMBER, nom_sans_mes
        # Ecrit le feature
         writer.addFeature( feat)
 
-    # PRJ file
-    physiocap_create_projection_file( nom_prj, EPSG_NUMBER)  
-    
+    # Creer .prj et .qpj
+    creer_extensions_pour_projection( nom_sans_mesure, EPSG_NUMBER)
     return 0
 
-def physiocap_point_un_contour( laProjectionCRS, EPSG_NUMBER, nom_point, nom_prj,
+def creer_point_un_contour( laProjectionCRS, EPSG_NUMBER, nom_point, 
                     les_geoms_des_points, les_GID, les_dates, 
                     les_vitesses, les_sarments, les_diametres, les_biom, 
                     les_altitudes, les_pdop, les_distances, les_derives, 
@@ -527,13 +520,11 @@ def physiocap_point_un_contour( laProjectionCRS, EPSG_NUMBER, nom_point, nom_prj
        # Ecrit le feature
         writer.addFeature( feat)
 
-    # PRJ file
-    physiocap_create_projection_file( nom_prj, EPSG_NUMBER)  
-    
+    # Creer .prj et .qpj
+    creer_extensions_pour_projection( nom_point, EPSG_NUMBER)
     return 0
 
-def physiocap_moyennes_tous_contours( laProjectionCRS, EPSG_NUMBER, 
-    nom_contour_moyenne, nom_contour_moyenne_prj,
+def creer_moyennes_tous_contours( laProjectionCRS, EPSG_NUMBER, nom_contour_moyenne, 
     les_geoms_poly, les_surfaces, les_parcelles, les_parcelles_ID, 
     dates_debut_parcelle, dates_fin_parcelle,
     les_nombres, les_taux_sans_mesure, 
@@ -747,10 +738,9 @@ def physiocap_moyennes_tous_contours( laProjectionCRS, EPSG_NUMBER,
         # Ecrit le feature
         writer.addFeature( feat)
     
-    # PRJ file
-    physiocap_create_projection_file( nom_contour_moyenne_prj, EPSG_NUMBER)
-
-    return 0     
+    # Creer .prj et .qpj
+    creer_extensions_pour_projection( nom_contour_moyenne, EPSG_NUMBER)
+    return 0
 
 class PhysiocapInter( QtWidgets.QDialog):
     """QGIS Pour voir les messages traduits."""
@@ -858,7 +848,7 @@ class PhysiocapInter( QtWidgets.QDialog):
             return physiocap_message_box( dialogue, mes,"information")
                   
         # Récupérer le CRS choisi, les extensions et le calculateur de distance
-        distancearea, EXT_CRS_SHP, EXT_CRS_PRJ, EXT_CRS_RASTER, \
+        distancearea, EXT_CRS_SHP, EXT_CRS_RASTER, \
         laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( dialogue)
        
         quel_vecteur_demande = dialogue.fieldComboFormats.currentText()
@@ -1470,11 +1460,9 @@ class PhysiocapInter( QtWidgets.QDialog):
                 # CRÉATION moyenne
                 # ################### 
                 nom_court_vignette = nom_noeud_arbre + NOM_MOYENNE + un_nom_libere +  EXT_CRS_SHP     
-                nom_court_prj = nom_noeud_arbre + NOM_MOYENNE + un_nom_libere  + EXT_CRS_PRJ     
                 #physiocap_log( "Vignette court : " + nom_court_vignette , leModeDeTrace)       
                 nom_vignette = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_vignette))        
-                nom_prj = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_prj))        
-                physiocap_moyenne_un_contour( laProjectionCRS, EPSG_NUMBER, nom_vignette, nom_prj, 
+                creer_moyenne_un_contour( laProjectionCRS, EPSG_NUMBER, nom_vignette, 
                     geom_poly, la_surface,  un_nom, un_autre_ID, date_debut, date_fin,
                     nb_dia, le_taux_de_sans_mesure, 
                     moyennes_point, ecarts_point, medianes_point, sommes_point_segment, 
@@ -1499,11 +1487,9 @@ class PhysiocapInter( QtWidgets.QDialog):
                 # CRÉATION point
                 # ###################
                 nom_court_point = nom_noeud_arbre + NOM_POINTS + SEPARATEUR_ + un_nom_libere + EXT_CRS_SHP     
-                nom_court_point_prj = nom_noeud_arbre + NOM_POINTS + SEPARATEUR_ + un_nom_libere + EXT_CRS_PRJ     
                 nom_point = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_point))        
-                nom_point_prj = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_point_prj))        
                 
-                physiocap_point_un_contour( laProjectionCRS, EPSG_NUMBER, nom_point, nom_point_prj, 
+                creer_point_un_contour( laProjectionCRS, EPSG_NUMBER, nom_point,
                     les_geoms_des_points, les_GID, les_dates, 
                     les_vitesses, les_sarments, les_diametres, les_biom,
                     les_altitudes,  les_pdop, les_distances, les_derives,
@@ -1516,12 +1502,9 @@ class PhysiocapInter( QtWidgets.QDialog):
                     # CRÉATION point sans mesure
                     # ###################
                     nom_court_sans_mesure = nom_noeud_arbre + NOM_POINTS + EXTENSION_ZERO_SEUL + SEPARATEUR_ + un_nom_libere + EXT_CRS_SHP     
-                    nom_court_sans_mesure_prj = nom_noeud_arbre + NOM_POINTS + EXTENSION_ZERO_SEUL + SEPARATEUR_ + un_nom_libere + EXT_CRS_PRJ     
                     nom_sans_mesure = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_sans_mesure))        
-                    nom_sans_mesure_prj = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_sans_mesure_prj))        
                     
-                    physiocap_sans_mesure_un_contour( laProjectionCRS, EPSG_NUMBER, 
-                        nom_sans_mesure, nom_sans_mesure_prj, 
+                    creer_sans_mesure_un_contour( laProjectionCRS, EPSG_NUMBER, nom_sans_mesure, 
                         les_geoms_sans_mesure, les_GID_sans_mesure, les_dates_sans_mesure, 
                         les_vitesses_sans_mesure, les_altitudes_sans_mesure, les_pdop_sans_mesure, 
                         les_azimuths_sans_mesure)
@@ -1531,11 +1514,9 @@ class PhysiocapInter( QtWidgets.QDialog):
                     # CRÉATION segment droit dans contour
                     # ###################
                     nom_court_segment = nom_noeud_arbre + NOM_SEGMENTS + SEPARATEUR_ + un_nom_libere + EXT_CRS_SHP     
-                    nnom_court_segment_prj = nom_noeud_arbre + NOM_SEGMENTS + SEPARATEUR_ + un_nom_libere + EXT_CRS_PRJ     
                     nom_segment = physiocap_rename_existing_file( os.path.join( chemin_segments, nom_court_segment))        
-                    nom_segment_prj = physiocap_rename_existing_file( os.path.join( chemin_segments, nnom_court_segment_prj))        
-                    
-                    physiocap_segments_un_contour( laProjectionCRS, EPSG_NUMBER, nom_segment, nom_segment_prj, 
+                   
+                    creer_segments_un_contour( laProjectionCRS, EPSG_NUMBER, nom_segment, 
                         les_geoms_segment, les_dates_debut_segment, les_dates_fin_segment, 
                         les_azimuths_segment,  les_longueurs_segment, les_distances_entre_segment,  
                         les_GID_segment, les_nombres_points_segment, les_nombres_points_restant)
@@ -1545,11 +1526,9 @@ class PhysiocapInter( QtWidgets.QDialog):
                     # CRÉATION segment  brisé dans contour
                     # ###################
                     nom_court_segment_brise = nom_noeud_arbre + NOM_SEGMENTS + NOM_SEGMENTS_SUITE_DETAILS + SEPARATEUR_ + un_nom_libere + EXT_CRS_SHP     
-                    nnom_court_segment_brise_prj = nom_noeud_arbre + NOM_SEGMENTS + NOM_SEGMENTS_SUITE_DETAILS + SEPARATEUR_ + un_nom_libere + EXT_CRS_PRJ     
                     nom_segment_brise = physiocap_rename_existing_file( os.path.join( chemin_segments, nom_court_segment_brise))        
-                    nom_segment_brise_prj = physiocap_rename_existing_file( os.path.join( chemin_segments, nnom_court_segment_brise_prj))        
                     
-                    physiocap_segments_un_contour( laProjectionCRS, EPSG_NUMBER, nom_segment_brise, nom_segment_brise_prj, 
+                    creer_segments_un_contour( laProjectionCRS, EPSG_NUMBER, nom_segment_brise,
                         les_geoms_segment, les_dates_debut_segment, les_dates_fin_segment, 
                         les_azimuths_segment,  les_longueurs_segment, les_distances_entre_segment,  
                         les_GID_segment, les_nombres_points_segment, les_nombres_points_restant, 
@@ -1661,13 +1640,13 @@ class PhysiocapInter( QtWidgets.QDialog):
             nom_court_du_contour = os.path.basename( vecteur_poly.name() + EXTENSION_SHP)
             # Inserer "MOYENNES"
             nom_court_du_contour_moyenne = nom_noeud_arbre + NOM_MOYENNE + nom_court_du_contour
-            nom_court_du_contour_moyenne_prj = nom_court_du_contour_moyenne [:-4] + EXT_CRS_PRJ[ -4:]     
+###            nom_court_du_contour_moyenne_prj = nom_court_du_contour_moyenne [:-4] + EXT_CRS_PRJ[ -4:]     
             nom_contour_moyenne = physiocap_rename_existing_file( 
             os.path.join( chemin_vignettes, nom_court_du_contour_moyenne))        
-            nom_contour_moyenne_prj = physiocap_rename_existing_file( 
-            os.path.join( chemin_vignettes, nom_court_du_contour_moyenne_prj)) 
+###            nom_contour_moyenne_prj = physiocap_rename_existing_file( 
+###            os.path.join( chemin_vignettes, nom_court_du_contour_moyenne_prj)) 
             
-            physiocap_moyennes_tous_contours( laProjectionCRS, EPSG_NUMBER, nom_contour_moyenne, nom_contour_moyenne_prj,
+            creer_moyennes_tous_contours( laProjectionCRS, EPSG_NUMBER, nom_contour_moyenne, 
                 les_geoms_poly, les_surfaces, les_parcelles, les_parcelles_ID, 
                 dates_debut_parcelle,  dates_fin_parcelle,
                 les_nombres, les_taux_sans_mesure, 
@@ -1678,29 +1657,20 @@ class PhysiocapInter( QtWidgets.QDialog):
             # CREATION VECTEUR DE 0_SEUL ou sans mesure
             if  version_3 == "YES" and dialogue.checkBoxInterPasMesure.isChecked():
                 nom_court_sans_mesure_moyenne = nom_noeud_arbre + NOM_POINTS + EXTENSION_ZERO_SEUL + SEPARATEUR_ + nom_court_du_contour
-                nom_court_sans_mesure_moyenne_prj = nom_court_sans_mesure_moyenne [:-4] + EXT_CRS_PRJ[ -4:]
                 nom_sans_mesure_moyenne = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_sans_mesure_moyenne))        
-                nom_sans_mesure_moyenne_prj = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_sans_mesure_moyenne_prj))        
-                physiocap_sans_mesure_tous_contours( laProjectionCRS, EPSG_NUMBER, 
-                    nom_sans_mesure_moyenne, nom_sans_mesure_moyenne_prj, 
+                creer_sans_mesure_tous_contours( laProjectionCRS, EPSG_NUMBER, nom_sans_mesure_moyenne,
                     toutes_les_geoms_sans_mesure, les_infos_sans_mesure)
                     
             # CREATION VECTEUR SEGMENT
             if  version_3 == "YES" and dialogue.checkBoxInterSegment.isChecked() :
                 nom_court_segment_moyenne = nom_noeud_arbre + NOM_SEGMENTS + SEPARATEUR_ + nom_court_du_contour
-                nom_court_segment_moyenne_prj = nom_court_segment_moyenne [:-4] + EXT_CRS_PRJ[ -4:]
                 nom_segment_moyenne = physiocap_rename_existing_file( os.path.join( chemin_segments, nom_court_segment_moyenne))        
-                nom_segment_moyenne_prj = physiocap_rename_existing_file( os.path.join( chemin_segments, nom_court_segment_moyenne_prj))        
-                physiocap_segment_tous_contours( laProjectionCRS, EPSG_NUMBER, 
-                    nom_segment_moyenne, nom_segment_moyenne_prj,
+                creer_segment_tous_contours( laProjectionCRS, EPSG_NUMBER, nom_segment_moyenne, 
                     toutes_les_geoms_segment, les_infos_segment)   
             if  version_3 == "YES" and dialogue.checkBoxInterSegmentBrise.isChecked():
                 nom_court_segment_brise_moyenne = nom_noeud_arbre + NOM_SEGMENTS + SEPARATEUR_ + nom_court_du_contour
-                nom_court_segment_brise_moyenne_prj = nom_court_segment_brise_moyenne [:-4] + EXT_CRS_PRJ[ -4:]
                 nom_segment_brise_moyenne = physiocap_rename_existing_file( os.path.join( chemin_segments, nom_court_segment_brise_moyenne))        
-                nom_segment_brise_moyenne_prj = physiocap_rename_existing_file( os.path.join( chemin_segments, nom_court_segment_brise_moyenne_prj))        
-                physiocap_segment_tous_contours( laProjectionCRS, EPSG_NUMBER, 
-                    nom_segment_brise_moyenne, nom_segment_brise_moyenne_prj,
+                creer_segment_tous_contours( laProjectionCRS, EPSG_NUMBER, nom_segment_brise_moyenne, 
                     toutes_les_geoms_segment, les_infos_segment, 
                     "BRISE")
                     
@@ -1768,7 +1738,7 @@ class PhysiocapInter( QtWidgets.QDialog):
             if dialogue.radioButtonOnglet.isChecked():
                 dialogue.progressBarInter.setValue( 94)
                 # Créer un CSVT de synthese moyenne et vignoble
-                retour_csv = creer_csvt_source_onglet( dialogue, \
+                retour_csv = creer_csvt_source_onglet( dialogue, laProjectionTXT, \
                         les_parcelles, les_geoms_poly, les_moyennes_par_contour)
                 if retour_csv != 0:
                     return physiocap_error(self, self.tr( \
@@ -1776,7 +1746,6 @@ class PhysiocapInter( QtWidgets.QDialog):
             if dialogue.radioButtonContour.isChecked():
                 dialogue.progressBarInter.setValue( 92)
                 # Alonger le CSVT de synthese moyenne et vignoble
-                physiocap_log("ICI {}".format( les_parcelles),  TRACE_JH)
                 retour_csv = ajouter_csvt_source_contour( dialogue, vecteur_poly, \
                         les_parcelles, les_geoms_poly, les_moyennes_par_contour)
                 if retour_csv != 0:
