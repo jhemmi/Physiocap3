@@ -1060,7 +1060,6 @@ def ajouter_csvt_source_contour( self, la_projection_TXT, vecteur_poly, les_parc
             shutil.copyfile( exemple_CSVT, nom_CSVT)
         # Creer .prj et .qpj
         creer_extensions_pour_projection( nom_CSV, la_projection_TXT)
-    return 0
     # Récuperer les infos agro
     les_parcelles_agro, les_vecteurs_agronomique, les_infos_agronomique, _ = quelles_listes_info_agro(self)
     champsMoyenneOrdonnes, listeEnteteMoyenne, listeEnteteMoyenne_SHP = quelles_informations_moyennes()    
@@ -1131,18 +1130,21 @@ def creer_csvt_source_onglet( self, la_projection_TXT, les_parcelles, les_geoms_
     # Récupération des moyennes du contour
     lesMoyennesOrdonnees = []
     champsMoyenneOrdonnes, listeEnteteMoyenne, _ = quelles_informations_moyennes()    
-    physiocap_log ( "CREER Physiocap parcelles : {}".format( les_parcelles), TRACE_JH)
-    physiocap_log ( "CREER Physiocap moyennes par contour : {}".format( les_moyennes_par_contour), TRACE_JH)
+#    physiocap_log ( "CREER Physiocap parcelles : {}".format( les_parcelles), TRACE_JH)
+#    physiocap_log ( "CREER Physiocap moyennes par contour : {}".format( les_moyennes_par_contour), TRACE_JH)
     for parcelleId,  parcelleNom in enumerate( les_parcelles):
-        physiocap_log ( "CREER Physiocap moyenne de {} la {} ieme parcelle a pour diam : {}".
-        format( parcelleNom,  parcelleId, les_moyennes_par_contour[parcelleId].get( 'diam')), TRACE_JH)
+#        physiocap_log ( "CREER Physiocap moyenne de {} la {} ieme parcelle a pour diam : {}".
+#         format( parcelleNom,  parcelleId, les_moyennes_par_contour[parcelleId].get( 'diam')), TRACE_JH)
         geomContour = QgsGeometry.fromMultiPolygonXY( les_geoms_poly[ parcelleId])
+#        physiocap_log ( "CREER Physiocap geom de {} pour geom : {}".
+#         format( parcelleNom,  geomContour), TRACE_JH)
 
         for unChamp in champsMoyenneOrdonnes:
             lesMoyennesOrdonnees.append( round( les_moyennes_par_contour[parcelleId].get( unChamp), 1)) 
     physiocap_log ( "CREER Physiocap moyennes du contour {}: {}".\
         format( les_parcelles[parcelleId], lesMoyennesOrdonnees), TRACE_JH)
-    # Calculer geomWKT à partir de geom du contour
+    # Identifier ? si plusieurs parcelles ?
+    #Calculer geomWKT à partir de geom du contour
     geomWKT = str( geomContour.asWkt())
 
     _, nom_CSV, nom_CSVT = quel_noms_CSVT_synthese( self)

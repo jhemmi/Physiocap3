@@ -1636,7 +1636,8 @@ class PhysiocapInter( QtWidgets.QDialog):
                     "information")
         else:
             # CREATION DU VECTEUR DE MOYENNES
-            nom_court_du_contour = os.path.basename( vecteur_poly.name() + EXTENSION_SHP)
+            ### nom_court_du_contour = os.path.basename( vecteur_poly.name() + EXTENSION_SHP)
+            nom_court_du_contour = os.path.basename( vecteur_poly.name())
             # Inserer "MOYENNES"
             nom_court_du_contour_moyenne = nom_noeud_arbre + NOM_MOYENNE + nom_court_du_contour
 ###            nom_court_du_contour_moyenne_prj = nom_court_du_contour_moyenne [:-4] + EXT_CRS_PRJ[ -4:]     
@@ -1734,6 +1735,8 @@ class PhysiocapInter( QtWidgets.QDialog):
         dialogue.progressBarInter.setValue( 89)
         # INSERTION_CIVC_V2 pour CSVT
         if dialogue.groupBoxDetailVignoble.isChecked() and dialogue.checkBoxInfoVignoble.isChecked():
+            physiocap_log( "Avant CSV onglet {} ou contour {}".\
+                    format( dialogue.radioButtonOnglet.isChecked(), dialogue.radioButtonContour.isChecked()),  TRACE_JH) 
             if dialogue.radioButtonOnglet.isChecked():
                 dialogue.progressBarInter.setValue( 92)
                 # Créer un CSVT de synthese moyenne et vignoble

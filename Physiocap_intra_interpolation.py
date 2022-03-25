@@ -959,7 +959,9 @@ class PhysiocapIntra( QtWidgets.QDialog):
             # #####################
             # Nom du Shape moyenne de toutes les vignettes
             # nom visible ici nom_vecteur_contour = vecteur_poly.name()
-            nom_court_du_contour = os.path.basename( nom_vecteur_contour + EXTENSION_SHP)
+            # TODO : valider si jamais besoin de .shp (cf inter 1640) 
+            #nom_court_du_contour = os.path.basename( nom_vecteur_contour + EXTENSION_SHP)
+            nom_court_du_contour = os.path.basename( nom_vecteur_contour)
             nom_court_vignette_toutes = nom_noeud_arbre + NOM_MOYENNE + nom_court_du_contour
             nom_vignette_toutes = os.path.join( chemin_vignettes, nom_court_vignette_toutes)        
             vignette_toutes_vecteur = None
