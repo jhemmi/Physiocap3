@@ -6108,7 +6108,7 @@ DIAM, SARM, BIOM,...) </string>
        </font>
       </property>
       <property name="text">
-       <string>Version 3.16.15</string>
+       <string>Version 3.22.5 B</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_500">
@@ -6243,7 +6243,7 @@ DIAM, SARM, BIOM,...) </string>
      <widget class="QLabel" name="label_VCP">
       <property name="geometry">
        <rect>
-        <x>310</x>
+        <x>330</x>
         <y>310</y>
         <width>101</width>
         <height>76</height>
@@ -6509,6 +6509,19 @@ p, li { white-space: pre-wrap; }
        <bool>false</bool>
       </property>
      </widget>
+     <widget class="QToolButton" name="toolButton">
+      <property name="geometry">
+       <rect>
+        <x>270</x>
+        <y>300</y>
+        <width>26</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+     </widget>
      <zorder>label_Contributions</zorder>
      <zorder>buttonContribuer</zorder>
      <zorder>label_506</zorder>
@@ -6533,6 +6546,7 @@ p, li { white-space: pre-wrap; }
      <zorder>fieldPbGdal</zorder>
      <zorder>checkBoxDoubleEnteteCSV</zorder>
      <zorder>textBrowserAide</zorder>
+     <zorder>toolButton</zorder>
     </widget>
    </widget>
   </widget>

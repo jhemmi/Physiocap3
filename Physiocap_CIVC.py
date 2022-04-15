@@ -51,8 +51,8 @@ from qgis.core import ( Qgis, QgsCoordinateReferenceSystem, QgsCoordinateTransfo
 try :
     import matplotlib
     import matplotlib.pyplot as plt
-    matplotlib.use('Qt4Agg')
-
+    matplotlib.use('Qt5Agg')   #Qt4Agg disapeared with 3.1x
+ 
 except ImportError:
     aText ="Erreur bloquante : module matplotlib.pyplot n'est pas accessible\n" 
     aText = aText + 'Sous Ubuntu : installez python3-matplotlib par "sudo apt-get install python3-matplotlib"'
