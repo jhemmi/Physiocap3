@@ -23,17 +23,17 @@ Cette version permet les interpolations SAGA et GDAL (voir détail dans l'issue 
 
 *"Physiocap" est déposé par le CIVC.*
 
-L'extension Pysiocap3 intègre le code de calcul du CIVC (PHYSIOCAP_V8). Pysiocap3 est donc sous licence Common Creative CC-BY-NC-SA V4. S'appuyant sur QGIS 3 API elle est aussi sous licence GNU/GPL (voir les détails sous https://github.com/jhemmi/Physiocap3/blob/master/LICENSE). Physiocap3 Plugin est un logiciel libre mais aussi un bien commun qui cherche :
+L'extension Physiocap3 intègre le code de calcul du CIVC (PHYSIOCAP_V8 datant de 2015). Pysiocap3 est donc sous licence Common Creative CC-BY-NC-SA V4. S'appuyant sur QGIS 3 API elle est aussi sous licence GNU/GPL (voir les détails sous https://github.com/jhemmi/Physiocap3/blob/master/LICENSE). Physiocap3 Plugin est un logiciel libre mais aussi un bien commun qui cherche :
 * à diffuser le traitement de ses données au plus près de l'utilisateur,
 * à favoriser l'utilisation de QGIS 3 dans le monde viticole,
 * plus généralement à "Valoriser vos données"
 
 La documentation de la version 3 se trouve dans le Wiki https://github.com/jhemmi/Physiocap3/wiki. La documentation utilisateur est disponible sous https://drive.google.com/file/d/1l0cjwrqVe4PaROBVw7XpPlOK2Qdos_5X/view.
 
-La version 3.10.4 LTR est déposée sous QGIS 3 (accessible directement dans QGIS 3 depuis le Menu "Extension").
+La version 3.16.15 LTR est déposée sous QGIS 3 (accessible directement dans QGIS 3 depuis le Menu "Extension").
 
-La numérotation de l'extension suit le numéro des versions LTR de QGIS3 (3.4, 3.10).
+La numérotation de l'extension suit le numéro des versions LTR de QGIS3 (3.4, 3.10, 3.16 ...).
 
-**Attention, ce dépot GitHub contient la aussi dernière version en cours d'évolution (la 3.16.0 - Fev 2021 https://github.com/jhemmi/Physiocap3/releases) **
+**Attention, ce dépot GitHub contient la aussi dernière version en cours de test (la 3.22.x - Avril 2022 https://github.com/jhemmi/Physiocap3/releases) **
 
-**Warning, this GitHub repo contains last evolution version (Version 3.16.0 - february 2021 https://github.com/jhemmi/Physiocap3/releases) **
+**Warning, this GitHub repo contains last evolution version (Version 3.22.x - april 2022 https://github.com/jhemmi/Physiocap3/releases) **
