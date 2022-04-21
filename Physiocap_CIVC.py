@@ -51,12 +51,15 @@ from qgis.core import ( Qgis, QgsCoordinateReferenceSystem, QgsCoordinateTransfo
 try :
     import matplotlib
     import matplotlib.pyplot as plt
-    matplotlib.use('Qt5Agg')   #Qt4Agg disapeared with 3.1x
- 
+    for mon_usage in ['QtAgg', 'Qt5Agg']: # Qt4Agg disapeared with 3.1x but not the same list available for linux and windows
+        try:
+            matplotlib.use(mon_usage)   
+        except ValueError:
+            pass
+    
 except ImportError:
     aText ="Erreur bloquante : module matplotlib.pyplot n'est pas accessible\n" 
     aText = aText + 'Sous Ubuntu : installez python3-matplotlib par "sudo apt-get install python3-matplotlib"'
-    aText = aText + "Sous Fedora : installez python-matplotlib-qt4" 
     # ignorer sous Windows
     aText = aText + "Sous Windows : ignorez ce message" 
     QgsMessageLog.logMessage( aText, "\u03D5 Erreurs", Qgis.Warning)

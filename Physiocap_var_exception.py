@@ -32,6 +32,7 @@
 """
 import os 
 import platform
+from qgis.core import (Qgis)
 
 # ###########################
 # VARIABLES GLOBALES DE PHYSIOCAP
@@ -145,7 +146,9 @@ if MACHINE == "Linux":
     FORMAT_VECTEUR_V3 = [ SHAPEFILE_NOM,   GEOPACKAGE_NOM] # CSV_NOM, GEOJSON_NOM,,  "memory"] # POSTGRES_NOM] 
 else:
     FORMAT_VECTEUR_V3 = [ SHAPEFILE_NOM, GEOPACKAGE_NOM] #,  "memory"] # POSTGRES_NOM] 
-    
+# version QGIS
+V_majeure, V_mineure, V_detail = Qgis.QGIS_VERSION.split(".")    
+
 # Répertoires des sources et de concaténation en fichiers texte
 FICHIER_RESULTAT = "resultat.txt"
 REPERTOIRE_SOURCES = "fichiers_sources"

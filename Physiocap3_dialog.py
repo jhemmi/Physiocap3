@@ -264,6 +264,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
 #            if uri != None:
             if (self.settings.value("Expert/version3") == "YES"):
                 self.fieldComboFormats.addItems( liste_formats)
+                self.fieldComboFormats.setEnabled( False)
             else:
                 self.fieldComboFormats.addItem( liste_formats[ 0])
                 self.fieldComboFormats.setEnabled( False)

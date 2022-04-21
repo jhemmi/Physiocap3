@@ -151,9 +151,19 @@ def creer_moyenne_un_contour( laProjectionCRS, EPSG_NUMBER, nom_vignette,
     les_champs.append( QgsField( "SURF_HA", QVariant.Double, "double", 10,4))
     les_champs.append( QgsField( "NOMBRE", QVariant.Int, "int", 10))           
 
-    # Creation du Shape
-    writer = QgsVectorFileWriter( nom_vignette, "utf-8", les_champs, 
-        QgsWkbTypes.MultiPolygon, laProjectionCRS , "ESRI Shapefile")
+    # Nouvelle creation du Shape
+    if V_majeure == 3 and V_mineure >= 10:
+        save_options = QgsVectorFileWriter.SaveVectorOptions()
+        # TODO : récupérer le nom du driver et fabriquer le nom du vecteur avec la bonne extension
+        save_options.driverName = "ESRI Shapefile"
+        save_options.fileEncoding = "UTF-8"
+        # JH vérifier si on peut passer une transformation vide, ie == laProjectionCRS
+        transform_context = QgsProject.instance().transformContext()
+        writer = QgsVectorFileWriter.create( nom_vignette, les_champs, QgsWkbTypes.MultiPolygon, laProjectionCRS,   
+            transform_context, save_options)
+    else:
+        writer = QgsVectorFileWriter( nom_vignette, "utf-8", les_champs, 
+            QgsWkbTypes.MultiPolygon, laProjectionCRS , "ESRI Shapefile")
 
     feat = QgsFeature()
     feat.setGeometry( QgsGeometry.fromMultiPolygonXY(geom_poly.asMultiPolygon())) #écrit la géométrie tel que lu dans shape contour
@@ -274,9 +284,17 @@ def creer_segment_tous_contours( laProjectionCRS, EPSG_NUMBER, nom_segment,
     les_champs.append( QgsField("DATE_DEB", QVariant.String, "string", 25))
     les_champs.append( QgsField("DATE_FIN", QVariant.String, "string", 25))
 
-    # Creation du Shape
-    writer = QgsVectorFileWriter( nom_segment, "utf-8", les_champs, 
-        QgsWkbTypes.MultiLineString, laProjectionCRS , "ESRI Shapefile")
+    # Nouvelle creation du Shape
+    if V_majeure == 3 and V_mineure >= 10:
+        save_options = QgsVectorFileWriter.SaveVectorOptions()
+        save_options.driverName = "ESRI Shapefile"
+        save_options.fileEncoding = "UTF-8"
+        transform_context = QgsProject.instance().transformContext()
+        writer = QgsVectorFileWriter.create( nom_segment, les_champs, QgsWkbTypes.MultiLineString, laProjectionCRS,   
+            transform_context, save_options)
+    else:
+        writer = QgsVectorFileWriter( nom_segment, "utf-8", les_champs, 
+            QgsWkbTypes.MultiLineString, laProjectionCRS , "ESRI Shapefile")
 
     for i in range( 0, len( toutes_les_geoms_segment)):
         for j in range( 0, len( toutes_les_geoms_segment[i])): 
@@ -327,9 +345,17 @@ def creer_segments_un_contour( laProjectionCRS, EPSG_NUMBER, nom_segment,
     les_champs.append( QgsField("DATE_DEB", QVariant.String, "string", 25))
     les_champs.append( QgsField("DATE_FIN", QVariant.String, "string", 25))
 
-    # Creation du Shape
-    writer = QgsVectorFileWriter( nom_segment, "utf-8", les_champs, 
-        QgsWkbTypes.MultiLineString, laProjectionCRS , "ESRI Shapefile")
+    # Nouvelle creation du Shape
+    if V_majeure == 3 and V_mineure >= 10:
+        save_options = QgsVectorFileWriter.SaveVectorOptions()
+        save_options.driverName = "ESRI Shapefile"
+        save_options.fileEncoding = "UTF-8"
+        transform_context = QgsProject.instance().transformContext()
+        writer = QgsVectorFileWriter.create( nom_segment, les_champs, QgsWkbTypes.MultiLineString, laProjectionCRS,   
+            transform_context, save_options)
+    else:
+        writer = QgsVectorFileWriter( nom_segment, "utf-8", les_champs, 
+            QgsWkbTypes.MultiLineString, laProjectionCRS , "ESRI Shapefile")
 
     # Ecriture du shp
     numero_ligne = 0
@@ -385,9 +411,17 @@ def creer_sans_mesure_tous_contours( laProjectionCRS, EPSG_NUMBER, nom_sans_mesu
     les_champs.append(QgsField("ALTITUDE", QVariant.Double,"double", 10,2)) 
     les_champs.append(QgsField("PDOP", QVariant.Double,"double", 10,2)) 
 
-    # Creation du Shape
-    writer = QgsVectorFileWriter( nom_sans_mesure, "utf-8", les_champs, 
-        QgsWkbTypes.Point, laProjectionCRS , "ESRI Shapefile")
+    # Nouvelle creation du Shape
+    if V_majeure == 3 and V_mineure >= 10:
+        save_options = QgsVectorFileWriter.SaveVectorOptions()
+        save_options.driverName = "ESRI Shapefile"
+        save_options.fileEncoding = "UTF-8"
+        transform_context = QgsProject.instance().transformContext()
+        writer = QgsVectorFileWriter.create( nom_sans_mesure, les_champs, QgsWkbTypes.Point, laProjectionCRS,   
+            transform_context, save_options)
+    else:
+        writer = QgsVectorFileWriter( nom_sans_mesure, "utf-8", les_champs, 
+            QgsWkbTypes.Point, laProjectionCRS , "ESRI Shapefile")
 
 
     for i in range( 0, len( toutes_les_geoms_sans_mesure)):
@@ -420,9 +454,18 @@ def creer_sans_mesure_un_contour( laProjectionCRS, EPSG_NUMBER, nom_sans_mesure,
     les_champs.append(QgsField("PDOP", QVariant.Double,"double", 10,2)) 
     les_champs.append(QgsField("AZIMUTH", QVariant.Double,"double", 10,2)) 
 
-    # Creation du Shape
-    writer = QgsVectorFileWriter( nom_sans_mesure, "utf-8", les_champs, 
-        QgsWkbTypes.Point, laProjectionCRS , "ESRI Shapefile")
+    # Nouvelle creation du Shape
+    if V_majeure == 3 and V_mineure >= 10:
+        save_options = QgsVectorFileWriter.SaveVectorOptions()
+        save_options.driverName = "ESRI Shapefile"
+        save_options.fileEncoding = "UTF-8"
+        transform_context = QgsProject.instance().transformContext()
+        writer = QgsVectorFileWriter.create( nom_sans_mesure, les_champs, QgsWkbTypes.Point, laProjectionCRS,   
+            transform_context, save_options)
+    else:
+        # Creation du Shape
+        writer = QgsVectorFileWriter( nom_sans_mesure, "utf-8", les_champs, 
+            QgsWkbTypes.Point, laProjectionCRS , "ESRI Shapefile")
 
     i = -1
     for gid in les_GID:   
@@ -472,11 +515,21 @@ def creer_point_un_contour( laProjectionCRS, EPSG_NUMBER, nom_point,
     # Creation du Shape
     if version_3 == "YES":
         # On ecrit le 3eme Dimension
-        writer = QgsVectorFileWriter( nom_point, "utf-8", les_champs, 
-            QgsWkbTypes.PointZ, laProjectionCRS , "ESRI Shapefile")
+        type_point = QgsWkbTypes.PointZ
+    else:
+        type_point = QgsWkbTypes.Point
+
+    # Nouvelle creation du Shape
+    if V_majeure == 3 and V_mineure >= 10:
+        save_options = QgsVectorFileWriter.SaveVectorOptions()
+        save_options.driverName = "ESRI Shapefile"
+        save_options.fileEncoding = "UTF-8"
+        transform_context = QgsProject.instance().transformContext()
+        writer = QgsVectorFileWriter.create( nom_point, les_champs, type_point, laProjectionCRS,   
+            transform_context, save_options)
     else:
         writer = QgsVectorFileWriter( nom_point, "utf-8", les_champs, 
-            QgsWkbTypes.Point, laProjectionCRS , "ESRI Shapefile")        
+            type_point, laProjectionCRS , "ESRI Shapefile")        
     i = -1
     for gid in les_GID:   
         i = i+1
@@ -612,9 +665,17 @@ def creer_moyennes_tous_contours( laProjectionCRS, EPSG_NUMBER, nom_contour_moye
     les_champs.append( QgsField( "SURF_HA", QVariant.Double, "double", 10,4))
     les_champs.append( QgsField( "NOMBRE", QVariant.Int, "int", 10))
 
-    # Creation du Shape
-    writer = QgsVectorFileWriter( nom_contour_moyenne, "utf-8", les_champs, 
-        QgsWkbTypes.MultiPolygon, laProjectionCRS , "ESRI Shapefile")
+    # Nouvelle creation du Shape
+    if V_majeure == 3 and V_mineure >= 10:
+        save_options = QgsVectorFileWriter.SaveVectorOptions()
+        save_options.driverName = "ESRI Shapefile"
+        save_options.fileEncoding = "UTF-8"
+        transform_context = QgsProject.instance().transformContext()
+        writer = QgsVectorFileWriter.create( nom_contour_moyenne, les_champs, QgsWkbTypes.MultiPolygon, 
+            laProjectionCRS, transform_context, save_options)
+    else:
+        writer = QgsVectorFileWriter( nom_contour_moyenne, "utf-8", les_champs, 
+            QgsWkbTypes.MultiPolygon, laProjectionCRS , "ESRI Shapefile")
     
     for i in range( 0, len( les_parcelles)) :
         

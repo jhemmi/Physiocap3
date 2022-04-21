@@ -601,6 +601,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
 
     def assert_processing( self):
         # Vérifier disponibilité de processing (on attend d'etre dans Intra)
+        versionSAGA = None
         try :
             import processing
             try:
@@ -611,17 +612,27 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     format( PHYSIOCAP_UNI, self.tr("Traitement")), TRACE_INTRA)
                 raise physiocap_exception_no_processing( "Pas d'extension Traitement - initialize")               
             versionGDAL = processing.tools.raster.gdal.__version__
-            versionSAGA = processing.algs.saga.SagaUtils.getInstalledVersion() # avant "2.3.2"
+            try:
+                import sagaprovider
+                versionSAGA = sagaprovider.SagaUtils.getInstalledVersion() # versioin > 3.22
+            except ImportError:
+                pass
+            except AttributeError:
+                pass
+            if versionSAGA == None:
+                versionSAGA = processing.algs.saga.SagaUtils.getInstalledVersion() # versioin <= 3.16.15
+
         except ImportError:
             physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
-                format( PHYSIOCAP_UNI, self.tr("Traitement")), TRACE_INTRA)
+                format( PHYSIOCAP_UNI, self.tr("Traitement (Processing)")), TRACE_INTRA)
             raise physiocap_exception_no_processing( "Pas d'extension Traitement")
         except AttributeError:
-            physiocap_log( self.tr( "{0} nécessite SAGA version 2.3.1 ou 2.3.2 (attribute error)").\
-                format( PHYSIOCAP_UNI), self.tr("Traitement"))
-            raise physiocap_exception_no_saga( "Erreur attribut")
+            pass
+        if versionSAGA == None:
+            physiocap_log( self.tr( "{0} nécessite SAGA (attribute error)").\
+                format( PHYSIOCAP_UNI), self.tr("Traitement (Processing)"))
+            raise physiocap_exception_no_saga( "Pas de version SAGA")
 
-    #        physiocap_log ( self.tr( "= Version SAGA = %s" % ( versionSAGA)), TRACE_INTRA)
         physiocap_log ( self.tr( "= Version GDAL = %s" % ( versionGDAL)), TRACE_INTRA)
         physiocap_log ( self.tr( "= Version SAGA = %s" % ( versionSAGA)), TRACE_INTRA)
         return versionGDAL, versionSAGA
