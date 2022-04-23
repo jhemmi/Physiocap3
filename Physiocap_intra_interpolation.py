@@ -615,12 +615,16 @@ class PhysiocapIntra( QtWidgets.QDialog):
             try:
                 import sagaprovider
                 versionSAGA = sagaprovider.SagaUtils.getInstalledVersion() # versioin > 3.22
+                physiocap_log( "OK sagaProvider {0}".format( versionSAGA), TRACE_JH)
             except ImportError:
+                physiocap_log( "KO import sagaProvider", TRACE_JH)
                 pass
             except AttributeError:
+                physiocap_log( "KO version SAGA by sagaProvider", TRACE_JH)
                 pass
             if versionSAGA == None:
                 versionSAGA = processing.algs.saga.SagaUtils.getInstalledVersion() # versioin <= 3.16.15
+                physiocap_log( "OK saga avant 3.22 {0}".format( versionSAGA), TRACE_JH)
 
         except ImportError:
             physiocap_log( self.tr( "{0} nécessite l'extension {1}").\
@@ -628,13 +632,15 @@ class PhysiocapIntra( QtWidgets.QDialog):
             raise physiocap_exception_no_processing( "Pas d'extension Traitement")
         except AttributeError:
             pass
+                
+        physiocap_log( "Versioin SAGA {0}".format( versionSAGA), TRACE_JH)
         if versionSAGA == None:
             physiocap_log( self.tr( "{0} nécessite SAGA (attribute error)").\
                 format( PHYSIOCAP_UNI), self.tr("Traitement (Processing)"))
             raise physiocap_exception_no_saga( "Pas de version SAGA")
 
-        physiocap_log ( self.tr( "= Version GDAL = %s" % ( versionGDAL)), TRACE_INTRA)
-        physiocap_log ( self.tr( "= Version SAGA = %s" % ( versionSAGA)), TRACE_INTRA)
+        physiocap_log ( "= Version GDAL = {0}".format( versionGDAL), TRACE_INTRA)
+        physiocap_log ( "= Version SAGA = {0}".format( versionSAGA), TRACE_INTRA)
         return versionGDAL, versionSAGA
 
     def quelle_librairie_interpolation( self, dialogue, versionSAGA):

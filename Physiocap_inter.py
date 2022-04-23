@@ -153,6 +153,8 @@ def creer_moyenne_un_contour( laProjectionCRS, EPSG_NUMBER, nom_vignette,
 
     # Nouvelle creation du Shape
     if V_majeure == 3 and V_mineure >= 10:
+        physiocap_log( "{0} {1} FileWriter V3 & create".\
+            format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI), TRACE_JH)        
         save_options = QgsVectorFileWriter.SaveVectorOptions()
         # TODO : récupérer le nom du driver et fabriquer le nom du vecteur avec la bonne extension
         save_options.driverName = "ESRI Shapefile"
@@ -162,6 +164,7 @@ def creer_moyenne_un_contour( laProjectionCRS, EPSG_NUMBER, nom_vignette,
         writer = QgsVectorFileWriter.create( nom_vignette, les_champs, QgsWkbTypes.MultiPolygon, laProjectionCRS,   
             transform_context, save_options)
     else:
+        physiocap_log( "{0} {1} OLD FileWriter sans create".format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI), TRACE_JH)        
         writer = QgsVectorFileWriter( nom_vignette, "utf-8", les_champs, 
             QgsWkbTypes.MultiPolygon, laProjectionCRS , "ESRI Shapefile")
 
@@ -521,6 +524,8 @@ def creer_point_un_contour( laProjectionCRS, EPSG_NUMBER, nom_point,
 
     # Nouvelle creation du Shape
     if V_majeure == 3 and V_mineure >= 10:
+        physiocap_log( "{0} {1} FileWriter V3 & create".\
+            format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI), TRACE_JH)        
         save_options = QgsVectorFileWriter.SaveVectorOptions()
         save_options.driverName = "ESRI Shapefile"
         save_options.fileEncoding = "UTF-8"
@@ -528,6 +533,7 @@ def creer_point_un_contour( laProjectionCRS, EPSG_NUMBER, nom_point,
         writer = QgsVectorFileWriter.create( nom_point, les_champs, type_point, laProjectionCRS,   
             transform_context, save_options)
     else:
+        physiocap_log( "{0} {1} OLD FileWriter sans create".format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI), TRACE_JH)        
         writer = QgsVectorFileWriter( nom_point, "utf-8", les_champs, 
             type_point, laProjectionCRS , "ESRI Shapefile")        
     i = -1
