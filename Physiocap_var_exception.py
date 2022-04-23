@@ -44,9 +44,9 @@ MACHINE = platform.system()
 if MACHINE == "Linux":
     LE_MODE_PROD = "NO"
 else:
-    LE_MODE_PROD = "YES"
+    LE_MODE_PROD = "NO"    # JH JH Attention
 LISTE_PROFIL= [ 'Standard', 'Champagne', 'Fronton'] #, 'IFV Bordeaux']
-# LIVRAISON : supprimer le commentaire suivant en Prod
+# LIVRAISON : supprimer le commentaire suivant en Prod et si win à YES
 #LE_MODE_PROD = "YES"
 
 # En prod CENTROIDES vaut NO

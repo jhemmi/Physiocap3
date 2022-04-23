@@ -95,7 +95,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 if ( modeTrace == leModeDeTrace):
                     self.fieldComboModeTrace.setCurrentIndex( idx)
 
-        #physiocap_log( "Répertoire de QGIS : " +  self.gis_dir, leModeDeTrace)
+        physiocap_log( "Répertoire de QGIS : {} version {}.{}".format( self.gis_dir, V_majeure, V_mineure), leModeDeTrace)
         physiocap_log( "Répertoire des extensions (plugins) : " +  self.plugins_dir, leModeDeTrace)
        
         # Slot for boutons : ces deux sont déjà sont dans UI
