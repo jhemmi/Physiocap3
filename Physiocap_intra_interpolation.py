@@ -614,7 +614,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
             versionGDAL = processing.tools.raster.gdal.__version__
             try:
                 import sagaprovider
-                versionSAGA = sagaprovider.SagaUtils.getInstalledVersion() # versioin > 3.22
+                versionSAGA = sagaprovider.SagaUtils.getInstalledVersion() # version > 3.22
                 physiocap_log( "OK sagaProvider {0}".format( versionSAGA), TRACE_JH)
             except ImportError:
                 physiocap_log( "KO import sagaProvider", TRACE_JH)
@@ -623,7 +623,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 physiocap_log( "KO version SAGA by sagaProvider", TRACE_JH)
                 pass
             if versionSAGA == None:
-                versionSAGA = processing.algs.saga.SagaUtils.getInstalledVersion() # versioin <= 3.16.15
+                versionSAGA = processing.algs.saga.SagaUtils.getInstalledVersion() # version <= 3.16.15
                 physiocap_log( "OK saga avant 3.22 {0}".format( versionSAGA), TRACE_JH)
 
         except ImportError:
@@ -633,11 +633,11 @@ class PhysiocapIntra( QtWidgets.QDialog):
         except AttributeError:
             pass
                 
-        physiocap_log( "Versioin SAGA {0}".format( versionSAGA), TRACE_JH)
-        if versionSAGA == None:
-            physiocap_log( self.tr( "{0} nécessite SAGA (attribute error)").\
-                format( PHYSIOCAP_UNI), self.tr("Traitement (Processing)"))
-            raise physiocap_exception_no_saga( "Pas de version SAGA")
+        physiocap_log( "Version SAGA {0}".format( versionSAGA), TRACE_JH)
+#        if versionSAGA == None:
+#            physiocap_log( self.tr( "{0} nécessite SAGA (attribute error)").\
+#                format( PHYSIOCAP_UNI), self.tr("Traitement (Processing)"))
+#            raise physiocap_exception_no_saga( "Pas de version SAGA")
 
         physiocap_log ( "= Version GDAL = {0}".format( versionGDAL), TRACE_INTRA)
         physiocap_log ( "= Version SAGA = {0}".format( versionSAGA), TRACE_INTRA)
