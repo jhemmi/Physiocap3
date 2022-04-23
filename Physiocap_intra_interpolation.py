@@ -674,7 +674,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 dialogue.radioButtonGDAL.setChecked(  Qt.Checked)
                 dialogue.radioButtonSAGA.setChecked(  Qt.Unchecked)
                 dialogue.spinBoxPower.setEnabled( False)
-                self.physiocap_message_box( self.tr( "= Saga a une version incompatible : on force l'utilisation de Gdal" ),
+                physiocap_message_box(dialogue,  self.tr( "= Saga a une version incompatible : on force l'utilisation de Gdal" ),
                     "information")
         
         else: # cas GDAL
