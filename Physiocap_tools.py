@@ -1243,10 +1243,10 @@ def creer_extensions_pour_projection( nom_couche, laProjection):
         return
     # Supprimer extension
     pos_extension = nom_couche.rfind(".")
-    physiocap_log( "Nom sans extension {} ".format( nom_couche[:pos_extension]),  TRACE_JH )
+    #physiocap_log( "Nom sans extension {} ".format( nom_couche[:pos_extension]),  TRACE_JH )
     for une_extension in [ EXTENSION_PRJ, EXTENSION_QPJ]:
         nouveau_nom = nom_couche[:pos_extension] + une_extension
-        physiocap_log( "Nouvelle extension {} ".format( nouveau_nom), TRACE_JH )
+        #physiocap_log( "Nouvelle extension {} ".format( nouveau_nom), TRACE_JH )
         if (not os.path.exists(nouveau_nom)) :
             # Retrouver le modele pour la projection
             if ( laProjection == PROJECTION_L93) or ( laProjection == EPSG_NUMBER_L93):
@@ -1257,11 +1257,11 @@ def creer_extensions_pour_projection( nom_couche, laProjection):
                 chemin_modele = os.path.join( CHEMIN_PROJECTION, PROJECTION_CC45 + une_extension)
             else:
                 chemin_modele = "inconnu"
-            physiocap_log( "Chemin modele {} ".format( chemin_modele), TRACE_JH)
+            #physiocap_log( "Chemin modele {} ".format( chemin_modele), TRACE_JH)
             if chemin_modele == "inconnu" or not os.path.exists( chemin_modele):
                 # TODO ? message erreur 
                 physiocap_log( "Aucun modèle n'existant pour la projection {} (dans {}) : l'extension {} n'estpas créée".\
-                    format( laProjection, CHEMIN_PROJECTION, une_extension), TRACE_TOOLS )
+                    format( laProjection, CHEMIN_PROJECTION, une_extension), TRACE_TOUT )
                 continue
             # Copie
             shutil.copyfile( chemin_modele, nouveau_nom)

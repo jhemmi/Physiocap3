@@ -540,8 +540,8 @@ def creer_point_un_contour( laProjectionCRS, EPSG_NUMBER, nom_point,
     for gid in les_GID:   
         i = i+1
         feat = QgsFeature()
-        physiocap_log( "INTER point un contour : {0}". \
-                format( les_geoms_des_points[ i].asWkt()),  TRACE_SEGMENT) 
+#        physiocap_log( "INTER point un contour : {0}". \
+#                format( les_geoms_des_points[ i].asWkt()),  TRACE_SEGMENT) 
         if version_3 == "YES":
             # On pose directement les 3D
             # BUG #17 en QGIS3.10 : feat.setGeometry( QgsGeometry( QgsPoint( les_geoms_des_points[ i])))

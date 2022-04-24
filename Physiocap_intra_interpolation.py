@@ -131,8 +131,8 @@ class PhysiocapIntra( QtWidgets.QDialog):
         modele_file = os.path.join( chemin, profil_physiocap + EXTENSION_QPT)
         if not os.path.exists( modele_file):
             raise physiocap_exception_agro_no_pdf_modele( modele_file)
-        physiocap_log( "Chemin template {} ".\
-                format( modele_file),  leModeDeTrace)
+#        physiocap_log( "Chemin template {} ".\
+#                format( modele_file),  leModeDeTrace)
         
 #### OK        with open(tmpfile) as f:
         with open(modele_file) as f:
