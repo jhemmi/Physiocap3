@@ -41,7 +41,7 @@
 """
 
 from .Physiocap_tools import ( physiocap_log, physiocap_error,  \
-    quelle_projection_et_lib_demandee, physiocap_segment_vers_vecteur, \
+    quelle_projection_et_format_vecteur, physiocap_segment_vers_vecteur, \
     quel_type_vecteur, quelles_listes_info_agro) 
 from .Physiocap_var_exception import *
 
@@ -327,9 +327,8 @@ def physiocap_filtrer(self, nom_court_csv_concat, src, csv_sans_0, csv_avec_0, c
     nombre_segments_sans_coupure = 0
 
     # Récuperer le CRS choisi, les extensions et le calculateur de distance
-    distancearea, EXT_CRS_SHP, EXT_CRS_RASTER, \
-    laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( self)
-    #tracer_une_fois = 0
+    distancearea, quel_vecteur_demande, EXTENSION_CRS_VECTEUR, DRIVER_VECTEUR, EXTENSION_RASTER_COMPLET, \
+        transform_context, laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_format_vecteur( self)
 
     for numero_point, ligne_brute in enumerate( lignes_brutes):
         if not ligne_brute: break 

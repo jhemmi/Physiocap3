@@ -44,7 +44,7 @@
 
 from .Physiocap_tools import (physiocap_message_box, \
         physiocap_log_for_error, physiocap_log, physiocap_error, \
-        quel_chemin_templates, quel_poly_point_INTER, quelle_projection_et_lib_demandee, \
+        quel_chemin_templates, quel_poly_point_INTER, quelle_projection_et_format_vecteur, \
         quel_sont_vecteurs_choisis, assert_champs_agro_obligatoires, lister_parcelles_INTRA, \
         physiocap_nom_entite_avec_pb_caractere, physiocap_get_layer_by_name, physiocap_get_layer_by_ID)
 
@@ -263,12 +263,9 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             physiocap_error( self, self.tr( "Pas de liste des formats de vecteurs pré définie"))
         else:
             self.fieldComboFormats.clear( )
-#            #uri = physiocap_get_uri_by_layer( self)
-#            uri = None
-#            if uri != None:
             if (self.settings.value("Expert/version3") == "YES"):
                 self.fieldComboFormats.addItems( liste_formats)
-                self.fieldComboFormats.setEnabled( False)
+                self.fieldComboFormats.setEnabled( True)
             else:
                 self.fieldComboFormats.addItem( liste_formats[ 0])
                 self.fieldComboFormats.setEnabled( False)
@@ -2177,8 +2174,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Remettre vide le textEditSynthese
         self.textEditSynthese.clear()
 
-        distancearea, EXT_CRS_SHP, EXT_CRS_RASTER, \
-        laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( self)
+        distancearea, quel_vecteur_demande, EXTENSION_CRS_VECTEUR, DRIVER_VECTEUR, EXTENSION_RASTER_COMPLET, \
+            transform_context, laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_format_vecteur( self)
         self.settings.setValue("Expert/laProjection", laProjectionTXT)
         
         # On sauve les affichages et rend les bascules pour traitement
@@ -2199,7 +2196,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             filtreur = PhysiocapFiltrer( self)
             # Création des répertoires et des résultats de synthèse
             retour = filtreur.physiocap_creer_donnees_resultats( self, 
-                laProjectionCRS,  laProjectionTXT, EXT_CRS_SHP, 
+                laProjectionCRS,  laProjectionTXT, EXTENSION_CRS_VECTEUR, 
                 details, TRACE_HISTO, recursif, version_3)
 
         except physiocap_exception_rep as e:

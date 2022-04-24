@@ -143,7 +143,7 @@ NOM_PAR_DEFAUT = "PHY" + SEPARATEUR_ # pour session et nom PHY  Attention UPPER
 FORMAT_VECTEUR = [ SHAPEFILE_NOM] #,  POSTGRES_NOM] # "memory"]
 #liste des formats vecteur en prod à trancher
 if MACHINE == "Linux":
-    FORMAT_VECTEUR_V3 = [ SHAPEFILE_NOM,   GEOPACKAGE_NOM] # CSV_NOM, GEOJSON_NOM,,  "memory"] # POSTGRES_NOM] 
+    FORMAT_VECTEUR_V3 = [ SHAPEFILE_NOM,    GEOPACKAGE_NOM,    GEOJSON_NOM] # CSV_NOM, GEOJSON_NOM,,  "memory"] # POSTGRES_NOM] 
 else:
     FORMAT_VECTEUR_V3 = [ SHAPEFILE_NOM, GEOPACKAGE_NOM] #,  "memory"] # POSTGRES_NOM] 
 # Detail de version QGIS

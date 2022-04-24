@@ -181,8 +181,8 @@ def quel_type_vecteur( self, vector):
         return "Inconnu", "WkbInconnu",  None,  None
 
 def quel_sont_vecteurs_choisis( self, source = "Intra"):
-        distancearea, EXT_CRS_SHP, EXT_CRS_RASTER, \
-            laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( self)
+        distancearea, quel_vecteur_demande, EXTENSION_CRS_VECTEUR, DRIVER_VECTEUR, EXTENSION_RASTER_COMPLET, \
+            transform_context, laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_format_vecteur( self)
         derniere_session = self.lineEditDerniereSession.text()
         # Pour polygone de contour   
         infos_poly = self.comboBoxPolygone.currentText().split( SEPARATEUR_NOEUD)
@@ -1208,34 +1208,6 @@ def physiocap_is_int_number(s):
         return True
     except ValueError:
         return False
- 
-###def creer_projection_extensions( self, nom_vecteur):
-###    """processing qgis:definecurrentprojection pour creer prj et qpj conforme à QGIS
-###       Nécessiterait que la couche soit rendu ?"""
-###    if (nom_vecteur == None) or (nom_vecteur == ""):
-###        return
-###    distancearea, EXT_CRS_SHP, EXT_CRS_RASTER, \
-###        laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( self)        
-###
-###    epsg = 'inconnu'
-###    if ( laProjectionTXT == PROJECTION_L93) or ( EPSG_NUMBER == EPSG_NUMBER_L93):
-###        epsg = EPSG_DESCRIPTION_L93
-###    if ( laProjectionTXT == PROJECTION_GPS) or ( EPSG_NUMBER == EPSG_NUMBER_GPS):
-###        epsg = EPSG_DESCRIPTION_GPS
-###    if epsg == 'inconnu':
-###        physiocap_log( "Pas de projection connu, pour créer prj et qgp de {}".format( nom_vecteur), TRACE_TOOLS)
-###        return
-###    
-###    nom_retour = ""
-###    QGIS_PROJECTION = { 'INPUT' : nom_vecteur, 
-###     'CRS' :  QgsCoordinateReferenceSystem( epsg)}
-###    algo = "qgis:definecurrentprojection"
-###    nom_retour = appel_simplifier_processing( self, nom_vecteur, \
-###            "QGIS_PROJECTION", algo, \
-###            QGIS_PROJECTION, "OUTPUT")      
-###    physiocap_log( "Sortie algo {} contient {}".format( algo, nom_retour), TRACE_JH)
-###    QgsMessageLog.logMessage( "PHYSIOCAP : après création du contour", "Processing", Qgis.Warning)
-
     
 def creer_extensions_pour_projection( nom_couche, laProjection):
     """Creer les fichiers de projection de la couche pour .prj et .qpj"""
@@ -1374,10 +1346,11 @@ def physiocap_get_layer_by_ID( layerID,  layerName = None):
             return le_layer
         return None
   
-def quelle_projection_et_lib_demandee( self):
+def quelle_projection_et_format_vecteur( self):
     """ Selon la valeur cochée dans le radio de projection 
     positionne laProjection (en QgsCoordinateReferenceSystem, texte et nombre (epsg)
-    les extensions EXTENSION_SHP et RASTER selon la demande SAGA
+    les nom d'extensions EXTENSION_VECTEUR sont rendu avec la projection de l'EPSG
+    pour les EXTENSION_RASTER en tiff ou selon la demande SAGA
     Rend aussi un QgsDistanceArea pour cet EPSG
     """
     # defaut L93
@@ -1396,8 +1369,18 @@ def quelle_projection_et_lib_demandee( self):
 #    if la_projection_CRS.isValid():
 #        physiocap_log("Projection {0} des shapefiles est demandée : {1} est un EPSG valide".\
 #            format( la_projection_TXT, laProjection_str), TRACE_TOOLS)
-    EXTENSION_SHP_COMPLET = SEPARATEUR_ + la_projection_TXT + EXTENSION_SHP
-   
+
+    quel_vecteur_demande = self.fieldComboFormats.currentText()
+    if quel_vecteur_demande == SHAPEFILE_NOM:
+        EXTENSION_CRS_VECTEUR = SEPARATEUR_ + la_projection_TXT + EXTENSION_SHP
+        DRIVER_VECTEUR = SHAPEFILE_DRIVER
+    elif quel_vecteur_demande == GEOJSON_NOM:
+        EXTENSION_CRS_VECTEUR = SEPARATEUR_ + la_projection_TXT + EXTENSION_GEOJSON
+        DRIVER_VECTEUR = GEOJSON_DRIVER  
+    else:  # GEOPACKAGE est traité dans le code filtrer
+        EXTENSION_CRS_VECTEUR = SEPARATEUR_ + la_projection_TXT + EXTENSION_SHP
+        DRIVER_VECTEUR = SHAPEFILE_DRIVER
+        
     # Cas du nom du raster 
     if self.radioButtonSAGA.isChecked():
         if self.checkBoxSagaTIFF.isChecked():
@@ -1408,13 +1391,13 @@ def quelle_projection_et_lib_demandee( self):
         EXTENSION_RASTER_COMPLET = SEPARATEUR_ + la_projection_TXT + EXTENSION_RASTER
 
     # Preparer les calculs de distance et de surface : distanceArea objet
-    distanceArea = physiocap_preparer_calcul_distance( self, mon_EPSG_number, la_projection_CRS)
+    transform_context = QgsProject.instance().transformContext()
+    distanceArea = physiocap_preparer_calcul_distance( self, mon_EPSG_number, la_projection_CRS, transform_context)
 
-    return  distanceArea, EXTENSION_SHP_COMPLET, EXTENSION_RASTER_COMPLET, \
-    la_projection_CRS, la_projection_TXT, mon_EPSG_number
+    return  distanceArea, self.fieldComboFormats.currentText(), EXTENSION_CRS_VECTEUR, DRIVER_VECTEUR, EXTENSION_RASTER_COMPLET, \
+        transform_context, la_projection_CRS, la_projection_TXT, mon_EPSG_number
 
-
-def physiocap_preparer_calcul_distance( self, EPSG_NUMBER, laProjectionCRS):
+def physiocap_preparer_calcul_distance( self, EPSG_NUMBER, laProjectionCRS, transform_context):
     """ Selon l'EPSG prépare l'objet distance area
     """
     # pour le calcul des distances
@@ -1425,15 +1408,16 @@ def physiocap_preparer_calcul_distance( self, EPSG_NUMBER, laProjectionCRS):
         spheroid = SPHEROID_GPS    
     distancearea = QgsDistanceArea()
     if laProjectionCRS.isValid():
-        physiocap_log( "Calcul de distance Description SCR {0}".\
+        physiocap_log( "Calcul de distance Description SCR {0} est valide".\
         format( laProjectionCRS.description()), TRACE_TOOLS)
-        physiocap_log( "PROJ.4 SCR {0}".\
-        format( laProjectionCRS.toProj4()), TRACE_TOOLS)
+#        physiocap_log( "PROJ.4 SCR {0}".\
+#        format( laProjectionCRS.toProj4()), TRACE_TOOLS)
     else:
         physiocap_log( "INVALIDE SCR", TRACE_TOOLS)
         return None
         
-    distancearea.setSourceCrs( laProjectionCRS, QgsProject.instance().transformContext())            
+# OLD    distancearea.setSourceCrs( laProjectionCRS, QgsProject.instance().transformContext())            
+    distancearea.setSourceCrs( laProjectionCRS, transform_context)            
     distancearea.setEllipsoid( spheroid)
     physiocap_log( "Calcul de distance sous ellipsoide {0}".\
         format( distancearea.ellipsoid()), TRACE_TOOLS)
@@ -1733,22 +1717,21 @@ def physiocap_segment_vers_vecteur( self, chemin_session,  nom_repertoire, nom_s
         version_3 = "NO",  segment_simplifie="YES"):
     """ Creation de shape file à partir des données de segment """
 
-    distancearea, EXT_CRS_SHP, EXT_CRS_RASTER, \
-        laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( self)        
+    distancearea, quel_vecteur_demande, EXTENSION_CRS_VECTEUR, DRIVER_VECTEUR, EXT_CRS_RASTER, \
+        transform_context, laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_format_vecteur( self)        
     nom_court_vecteur_segment = None
     nom_vecteur_segment = None
     #nom_gpkg = None
-    quel_vecteur_demande = self.fieldComboFormats.currentText()
     if segment_simplifie == "YES":
         nom_court_vecteur = nom_session + NOM_SEGMENTS
     else:
         nom_court_vecteur = nom_session + NOM_SEGMENTS + NOM_SEGMENTS_SUITE_DETAILS    
     if quel_vecteur_demande == SHAPEFILE_NOM: 
-        nom_court_vecteur_segment = nom_court_vecteur + EXT_CRS_SHP
+        nom_court_vecteur_segment = nom_court_vecteur + EXTENSION_CRS_VECTEUR
         nom_vecteur_segment = os.path.join( nom_repertoire, nom_court_vecteur_segment)
         # Si le shape existe dejà il faut le détruire
         if os.path.isfile( nom_vecteur_segment):
-            # A_TESTER: je doute que ca marche
+            # A_TESTER: je doute que ca marche sous windows mais voir nouvelle api V3.22 vector delete
             physiocap_log( self.tr( "Le shape file existant déjà, il est détruit."), TRACE_TOOLS)
             os.remove( nom_vecteur_segment) 
     elif quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
@@ -1847,15 +1830,13 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
     """
     leModeDeTrace = self.fieldComboModeTrace.currentText()
     # Recuperer le CRS choisi, les extensions et le calculateur de distance
-    distancearea, EXT_CRS_SHP, EXT_CRS_RASTER, \
-        laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( self)        
+    distancearea, quel_vecteur_demande, EXTENSION_CRS_VECTEUR, DRIVER_VECTEUR, EXT_CRS_RASTER, \
+        transform_context, laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_format_vecteur( self)        
     
     # Initialisation
     nom_vecteur = None
-    #nom_gpkg = None
-    quel_vecteur_demande = self.fieldComboFormats.currentText()
     if quel_vecteur_demande == SHAPEFILE_NOM:
-        nom_court_shapefile = nom_court_vecteur + EXT_CRS_SHP
+        nom_court_shapefile = nom_court_vecteur + EXTENSION_CRS_VECTEUR
         nom_vecteur = os.path.join(chemin_shapes, nom_court_shapefile)
         # Si le shape existe dejà il faut le détruire
         if os.path.isfile( nom_vecteur):
@@ -1863,12 +1844,10 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
             os.remove( nom_vecteur)            
     elif quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
         # Creer seulement le geopackage
-        #nom_gpkg = <<< Inutile
         physiocap_vecteur_vers_gpkg( self, chemin_session, Nom_Session)
         nom_court_gpkg = NOM_POINTS[1:] + extension_point
         nom_court_gpkg_extension = nom_court_gpkg + EXTENSION_GPKG
         nom_gpkg_intermediaire = os.path.join( chemin_session, nom_court_gpkg_extension)
-        #nom_gpkg_final = nom_gpkg + SEPARATEUR_GPKG + nom_court_gpkg
     else:
         # Assert type vecteur supporté
         raise physiocap_exception_vecteur_type_inconnu( quel_vecteur_demande)
@@ -1989,7 +1968,6 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
         les_champs.append(QgsField("BIOMGM2", QVariant.Double,"double", 10,2))
         les_champs.append(QgsField("BIOMGCEP", QVariant.Double,"double", 10,2))
 
-
     # Creation du vecteur
     if quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
         # CAS Géopackage
@@ -2071,7 +2049,7 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
     writer = None
 
     # Creer .PRJ et .QPJ
-    creer_extensions_pour_projection( nom_vecteur,  laProjectionTXT)
+    creer_extensions_pour_projection( nom_vecteur, laProjectionTXT)
  
     # Progress BAR + 5 %
     progress_barre = progress_barre + 5

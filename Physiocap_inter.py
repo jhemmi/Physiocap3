@@ -43,7 +43,7 @@
 """
 from .Physiocap_tools import (physiocap_message_box,physiocap_log, physiocap_error,  \
         physiocap_nom_entite_sans_pb_caractere, physiocap_rename_existing_file,  \
-        quel_chemin_templates, quel_qml_existe, quelle_projection_et_lib_demandee, \
+        quel_chemin_templates, quel_qml_existe, quelle_projection_et_format_vecteur, \
         creer_extensions_pour_projection, physiocap_get_layer_by_URI, \
         assert_champs_agro_obligatoires, assert_parcelle_attendue, assert_quel_format_entete,  \
         creer_csvt_source_onglet, ajouter_csvt_source_contour, quel_sont_vecteurs_choisis)       #physiocap_vecteur_vers_gpkg, \
@@ -62,7 +62,7 @@ except ImportError:
     QgsMessageLog.logMessage( aText, "\u03D5 Erreurs", Qgis.Warning)
     QgsMessageLog.logMessage( aText, PHYSIOCAP_LOG_ERREUR, Qgis.Warning)
 
-def creer_moyenne_un_contour( laProjectionCRS, EPSG_NUMBER, nom_vignette,
+def creer_moyenne_un_contour( nom_vignette, quel_vecteur_demande, DRIVER_VECTEUR, transform_context, laProjectionCRS, EPSG_NUMBER, 
         geom_poly, la_surface, un_nom, un_autre_ID, date_debut, date_fin,
         nombre_points, le_taux_de_sans_mesure, 
         moyennes_point, ecarts_point, medianes_point, sommes_point_segment,  
@@ -157,16 +157,14 @@ def creer_moyenne_un_contour( laProjectionCRS, EPSG_NUMBER, nom_vignette,
             format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI), TRACE_JH)        
         save_options = QgsVectorFileWriter.SaveVectorOptions()
         # TODO : récupérer le nom du driver et fabriquer le nom du vecteur avec la bonne extension
-        save_options.driverName = "ESRI Shapefile"
+        save_options.driverName = DRIVER_VECTEUR
         save_options.fileEncoding = "UTF-8"
-        # JH vérifier si on peut passer une transformation vide, ie == laProjectionCRS
-        transform_context = QgsProject.instance().transformContext()
         writer = QgsVectorFileWriter.create( nom_vignette, les_champs, QgsWkbTypes.MultiPolygon, laProjectionCRS,   
             transform_context, save_options)
     else:
         physiocap_log( "{0} {1} OLD FileWriter sans create".format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI), TRACE_JH)        
         writer = QgsVectorFileWriter( nom_vignette, "utf-8", les_champs, 
-            QgsWkbTypes.MultiPolygon, laProjectionCRS , "ESRI Shapefile")
+            QgsWkbTypes.MultiPolygon, laProjectionCRS , DRIVER_VECTEUR)
 
     feat = QgsFeature()
     feat.setGeometry( QgsGeometry.fromMultiPolygonXY(geom_poly.asMultiPolygon())) #écrit la géométrie tel que lu dans shape contour
@@ -270,7 +268,8 @@ def creer_moyenne_un_contour( laProjectionCRS, EPSG_NUMBER, nom_vignette,
     creer_extensions_pour_projection( nom_vignette, EPSG_NUMBER)
     return 0
     
-def creer_segment_tous_contours( laProjectionCRS, EPSG_NUMBER, nom_segment, 
+
+def creer_segment_tous_contours( nom_segment, quel_vecteur_demande, DRIVER_VECTEUR, transform_context, laProjectionCRS, EPSG_NUMBER, 
                 toutes_les_geoms_segment, les_infos_segment, 
                 segment_simplifie="YES"):
 
@@ -290,14 +289,13 @@ def creer_segment_tous_contours( laProjectionCRS, EPSG_NUMBER, nom_segment,
     # Nouvelle creation du Shape
     if V_majeure == 3 and V_mineure >= 10:
         save_options = QgsVectorFileWriter.SaveVectorOptions()
-        save_options.driverName = "ESRI Shapefile"
+        save_options.driverName = DRIVER_VECTEUR
         save_options.fileEncoding = "UTF-8"
-        transform_context = QgsProject.instance().transformContext()
         writer = QgsVectorFileWriter.create( nom_segment, les_champs, QgsWkbTypes.MultiLineString, laProjectionCRS,   
             transform_context, save_options)
     else:
         writer = QgsVectorFileWriter( nom_segment, "utf-8", les_champs, 
-            QgsWkbTypes.MultiLineString, laProjectionCRS , "ESRI Shapefile")
+            QgsWkbTypes.MultiLineString, laProjectionCRS , DRIVER_VECTEUR)
 
     for i in range( 0, len( toutes_les_geoms_segment)):
         for j in range( 0, len( toutes_les_geoms_segment[i])): 
@@ -325,7 +323,8 @@ def creer_segment_tous_contours( laProjectionCRS, EPSG_NUMBER, nom_segment,
     creer_extensions_pour_projection( nom_segment, EPSG_NUMBER)
     return 0
 
-def creer_segments_un_contour( laProjectionCRS, EPSG_NUMBER, nom_segment,
+
+def creer_segments_un_contour( nom_segment, quel_vecteur_demande, DRIVER_VECTEUR, transform_context, laProjectionCRS, EPSG_NUMBER, 
                         les_geoms_segment, les_dates_debut_segment, les_dates_fin_segment, 
                         les_azimuths_segment,  les_longueurs_segment, les_distances_entre_segment,  
                         les_GID, les_nombres_points_segment, les_nombres_points_restant, 
@@ -351,14 +350,13 @@ def creer_segments_un_contour( laProjectionCRS, EPSG_NUMBER, nom_segment,
     # Nouvelle creation du Shape
     if V_majeure == 3 and V_mineure >= 10:
         save_options = QgsVectorFileWriter.SaveVectorOptions()
-        save_options.driverName = "ESRI Shapefile"
+        save_options.driverName = DRIVER_VECTEUR
         save_options.fileEncoding = "UTF-8"
-        transform_context = QgsProject.instance().transformContext()
         writer = QgsVectorFileWriter.create( nom_segment, les_champs, QgsWkbTypes.MultiLineString, laProjectionCRS,   
             transform_context, save_options)
     else:
         writer = QgsVectorFileWriter( nom_segment, "utf-8", les_champs, 
-            QgsWkbTypes.MultiLineString, laProjectionCRS , "ESRI Shapefile")
+            QgsWkbTypes.MultiLineString, laProjectionCRS , DRIVER_VECTEUR)
 
     # Ecriture du shp
     numero_ligne = 0
@@ -402,7 +400,8 @@ def creer_segments_un_contour( laProjectionCRS, EPSG_NUMBER, nom_segment,
     return 0
 
  
-def creer_sans_mesure_tous_contours( laProjectionCRS, EPSG_NUMBER, nom_sans_mesure,
+
+def creer_sans_mesure_tous_contours( nom_sans_mesure, quel_vecteur_demande, DRIVER_VECTEUR, transform_context, laProjectionCRS, EPSG_NUMBER, 
                 toutes_les_geoms_sans_mesure, les_infos_sans_mesure):
     """ Creation d'un shape de points sans mesure se trouvant dans tous les contours
     """
@@ -417,14 +416,13 @@ def creer_sans_mesure_tous_contours( laProjectionCRS, EPSG_NUMBER, nom_sans_mesu
     # Nouvelle creation du Shape
     if V_majeure == 3 and V_mineure >= 10:
         save_options = QgsVectorFileWriter.SaveVectorOptions()
-        save_options.driverName = "ESRI Shapefile"
+        save_options.driverName = DRIVER_VECTEUR
         save_options.fileEncoding = "UTF-8"
-        transform_context = QgsProject.instance().transformContext()
         writer = QgsVectorFileWriter.create( nom_sans_mesure, les_champs, QgsWkbTypes.Point, laProjectionCRS,   
             transform_context, save_options)
     else:
         writer = QgsVectorFileWriter( nom_sans_mesure, "utf-8", les_champs, 
-            QgsWkbTypes.Point, laProjectionCRS , "ESRI Shapefile")
+            QgsWkbTypes.Point, laProjectionCRS , DRIVER_VECTEUR)
 
 
     for i in range( 0, len( toutes_les_geoms_sans_mesure)):
@@ -443,7 +441,7 @@ def creer_sans_mesure_tous_contours( laProjectionCRS, EPSG_NUMBER, nom_sans_mesu
     creer_extensions_pour_projection( nom_sans_mesure, EPSG_NUMBER)
     return 0
      
-def creer_sans_mesure_un_contour( laProjectionCRS, EPSG_NUMBER, nom_sans_mesure,
+def creer_sans_mesure_un_contour( nom_sans_mesure, quel_vecteur_demande, DRIVER_VECTEUR, transform_context, laProjectionCRS, EPSG_NUMBER, 
                     les_geoms_des_points, les_GID, les_dates, 
                     les_vitesses, les_altitudes,  les_pdop,  les_azimuths):
     """ Creation d'un shape de points sans mesure se trouvant dans le contour
@@ -460,15 +458,14 @@ def creer_sans_mesure_un_contour( laProjectionCRS, EPSG_NUMBER, nom_sans_mesure,
     # Nouvelle creation du Shape
     if V_majeure == 3 and V_mineure >= 10:
         save_options = QgsVectorFileWriter.SaveVectorOptions()
-        save_options.driverName = "ESRI Shapefile"
+        save_options.driverName = DRIVER_VECTEUR
         save_options.fileEncoding = "UTF-8"
-        transform_context = QgsProject.instance().transformContext()
         writer = QgsVectorFileWriter.create( nom_sans_mesure, les_champs, QgsWkbTypes.Point, laProjectionCRS,   
             transform_context, save_options)
     else:
         # Creation du Shape
         writer = QgsVectorFileWriter( nom_sans_mesure, "utf-8", les_champs, 
-            QgsWkbTypes.Point, laProjectionCRS , "ESRI Shapefile")
+            QgsWkbTypes.Point, laProjectionCRS , DRIVER_VECTEUR)
 
     i = -1
     for gid in les_GID:   
@@ -484,7 +481,8 @@ def creer_sans_mesure_un_contour( laProjectionCRS, EPSG_NUMBER, nom_sans_mesure,
     creer_extensions_pour_projection( nom_sans_mesure, EPSG_NUMBER)
     return 0
 
-def creer_point_un_contour( laProjectionCRS, EPSG_NUMBER, nom_point, 
+
+def creer_point_un_contour( nom_point, quel_vecteur_demande, DRIVER_VECTEUR, transform_context, laProjectionCRS, EPSG_NUMBER, 
                     les_geoms_des_points, les_GID, les_dates, 
                     les_vitesses, les_sarments, les_diametres, les_biom, 
                     les_altitudes, les_pdop, les_distances, les_derives, 
@@ -527,15 +525,14 @@ def creer_point_un_contour( laProjectionCRS, EPSG_NUMBER, nom_point,
         physiocap_log( "{0} {1} FileWriter V3 & create".\
             format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI), TRACE_JH)        
         save_options = QgsVectorFileWriter.SaveVectorOptions()
-        save_options.driverName = "ESRI Shapefile"
+        save_options.driverName = DRIVER_VECTEUR
         save_options.fileEncoding = "UTF-8"
-        transform_context = QgsProject.instance().transformContext()
         writer = QgsVectorFileWriter.create( nom_point, les_champs, type_point, laProjectionCRS,   
             transform_context, save_options)
     else:
         physiocap_log( "{0} {1} OLD FileWriter sans create".format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI), TRACE_JH)        
         writer = QgsVectorFileWriter( nom_point, "utf-8", les_champs, 
-            type_point, laProjectionCRS , "ESRI Shapefile")        
+            type_point, laProjectionCRS , DRIVER_VECTEUR)        
     i = -1
     for gid in les_GID:   
         i = i+1
@@ -582,7 +579,8 @@ def creer_point_un_contour( laProjectionCRS, EPSG_NUMBER, nom_point,
     creer_extensions_pour_projection( nom_point, EPSG_NUMBER)
     return 0
 
-def creer_moyennes_tous_contours( laProjectionCRS, EPSG_NUMBER, nom_contour_moyenne, 
+
+def creer_moyennes_tous_contours( nom_contour_moyenne, quel_vecteur_demande, DRIVER_VECTEUR, transform_context, laProjectionCRS, EPSG_NUMBER, 
     les_geoms_poly, les_surfaces, les_parcelles, les_parcelles_ID, 
     dates_debut_parcelle, dates_fin_parcelle,
     les_nombres, les_taux_sans_mesure, 
@@ -674,14 +672,13 @@ def creer_moyennes_tous_contours( laProjectionCRS, EPSG_NUMBER, nom_contour_moye
     # Nouvelle creation du Shape
     if V_majeure == 3 and V_mineure >= 10:
         save_options = QgsVectorFileWriter.SaveVectorOptions()
-        save_options.driverName = "ESRI Shapefile"
+        save_options.driverName = DRIVER_VECTEUR
         save_options.fileEncoding = "UTF-8"
-        transform_context = QgsProject.instance().transformContext()
         writer = QgsVectorFileWriter.create( nom_contour_moyenne, les_champs, QgsWkbTypes.MultiPolygon, 
             laProjectionCRS, transform_context, save_options)
     else:
         writer = QgsVectorFileWriter( nom_contour_moyenne, "utf-8", les_champs, 
-            QgsWkbTypes.MultiPolygon, laProjectionCRS , "ESRI Shapefile")
+            QgsWkbTypes.MultiPolygon, laProjectionCRS , DRIVER_VECTEUR)
     
     for i in range( 0, len( les_parcelles)) :
         
@@ -914,10 +911,9 @@ class PhysiocapInter( QtWidgets.QDialog):
             return physiocap_message_box( dialogue, mes,"information")
                   
         # Récupérer le CRS choisi, les extensions et le calculateur de distance
-        distancearea, EXT_CRS_SHP, EXT_CRS_RASTER, \
-        laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( dialogue)
+        distancearea, quel_vecteur_demande, EXTENSION_CRS_VECTEUR, DRIVER_VECTEUR, EXTENSION_RASTER_COMPLET, \
+            transform_context, laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_format_vecteur( dialogue)
        
-        quel_vecteur_demande = dialogue.fieldComboFormats.currentText()
         nom_vecteur_point = vecteur_point.dataProvider().dataSourceUri()
 #       physiocap_log( "Nom du vecteur point {0} type vecteur point {1}". \
 #                format( nom_vecteur_point, type(nom_vecteur_point)), leModeDeTrace)
@@ -966,7 +962,7 @@ class PhysiocapInter( QtWidgets.QDialog):
         # CAS DE CONSOLIDATION ne traite pas les points sans mesure et les segments 
         if  version_3 == "YES" and consolidation != "YES":
             # On remplace la chaine finale du vecteur point par segment
-            pos_diametre = nom_vecteur_point.rfind( NOM_POINTS + EXTENSION_SANS_ZERO + EXT_CRS_SHP)
+            pos_diametre = nom_vecteur_point.rfind( NOM_POINTS + EXTENSION_SANS_ZERO + EXTENSION_CRS_VECTEUR)
 #            physiocap_log( "{0} retrouve le 'sans zero' à position {1}". \
 #                format(PHYSIOCAP_UNI, pos_diametre), leModeDeTrace)
             nom_base_point = nom_vecteur_point[:pos_diametre]
@@ -976,7 +972,7 @@ class PhysiocapInter( QtWidgets.QDialog):
             physiocap_log( "Nom du chemin base segment {0} ". \
                         format(nom_base_segment), leModeDeTrace)
             if ( dialogue.checkBoxInterPasMesure.isChecked()):
-                nom_vecteur_pas_mesure = nom_base_point + NOM_POINTS + EXTENSION_ZERO_SEUL + EXT_CRS_SHP
+                nom_vecteur_pas_mesure = nom_base_point + NOM_POINTS + EXTENSION_ZERO_SEUL + EXTENSION_CRS_VECTEUR
                 vecteur_pas_mesure = physiocap_get_layer_by_URI( nom_vecteur_pas_mesure)
                 if ( vecteur_pas_mesure == None) or ( not vecteur_pas_mesure.isValid()):
                     aText = self.tr( "La couche des points sans mesure n'est pas disponible ou valide. ")
@@ -988,7 +984,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                    
             if ( dialogue.checkBoxInterSegment.isChecked() or \
                 dialogue.checkBoxInterSegmentBrise.isChecked() ):
-                nom_vecteur_segment = nom_base_segment + NOM_SEGMENTS + NOM_SEGMENTS_SUITE_DETAILS + EXT_CRS_SHP
+                nom_vecteur_segment = nom_base_segment + NOM_SEGMENTS + NOM_SEGMENTS_SUITE_DETAILS + EXTENSION_CRS_VECTEUR
                 vecteur_segment = physiocap_get_layer_by_URI( nom_vecteur_segment)
                 if ( vecteur_segment == None) or ( not vecteur_segment.isValid()):
                     physiocap_log( "Nom du vecteur segment {0} type vecteur {1}". \
@@ -1525,10 +1521,10 @@ class PhysiocapInter( QtWidgets.QDialog):
                 # ###################
                 # CRÉATION moyenne
                 # ################### 
-                nom_court_vignette = nom_noeud_arbre + NOM_MOYENNE + un_nom_libere +  EXT_CRS_SHP     
+                nom_court_vignette = nom_noeud_arbre + NOM_MOYENNE + un_nom_libere +  EXTENSION_CRS_VECTEUR     
                 #physiocap_log( "Vignette court : " + nom_court_vignette , leModeDeTrace)       
                 nom_vignette = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_vignette))        
-                creer_moyenne_un_contour( laProjectionCRS, EPSG_NUMBER, nom_vignette, 
+                creer_moyenne_un_contour( nom_vignette, quel_vecteur_demande, DRIVER_VECTEUR, transform_context, laProjectionCRS, EPSG_NUMBER, 
                     geom_poly, la_surface,  un_nom, un_autre_ID, date_debut, date_fin,
                     nb_dia, le_taux_de_sans_mesure, 
                     moyennes_point, ecarts_point, medianes_point, sommes_point_segment, 
@@ -1552,7 +1548,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                 # ###################
                 # CRÉATION point
                 # ###################
-                nom_court_point = nom_noeud_arbre + NOM_POINTS + SEPARATEUR_ + un_nom_libere + EXT_CRS_SHP     
+                nom_court_point = nom_noeud_arbre + NOM_POINTS + SEPARATEUR_ + un_nom_libere + EXTENSION_CRS_VECTEUR     
                 nom_point = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_point))        
                 
                 creer_point_un_contour( laProjectionCRS, EPSG_NUMBER, nom_point,
@@ -1567,10 +1563,10 @@ class PhysiocapInter( QtWidgets.QDialog):
                     # ###################
                     # CRÉATION point sans mesure
                     # ###################
-                    nom_court_sans_mesure = nom_noeud_arbre + NOM_POINTS + EXTENSION_ZERO_SEUL + SEPARATEUR_ + un_nom_libere + EXT_CRS_SHP     
+                    nom_court_sans_mesure = nom_noeud_arbre + NOM_POINTS + EXTENSION_ZERO_SEUL + SEPARATEUR_ + un_nom_libere + EXTENSION_CRS_VECTEUR     
                     nom_sans_mesure = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_sans_mesure))        
                     
-                    creer_sans_mesure_un_contour( laProjectionCRS, EPSG_NUMBER, nom_sans_mesure, 
+                    creer_sans_mesure_un_contour( nom_sans_mesure, quel_vecteur_demande, DRIVER_VECTEUR, transform_context, laProjectionCRS, EPSG_NUMBER, 
                         les_geoms_sans_mesure, les_GID_sans_mesure, les_dates_sans_mesure, 
                         les_vitesses_sans_mesure, les_altitudes_sans_mesure, les_pdop_sans_mesure, 
                         les_azimuths_sans_mesure)
@@ -1579,10 +1575,9 @@ class PhysiocapInter( QtWidgets.QDialog):
                     # ###################
                     # CRÉATION segment droit dans contour
                     # ###################
-                    nom_court_segment = nom_noeud_arbre + NOM_SEGMENTS + SEPARATEUR_ + un_nom_libere + EXT_CRS_SHP     
+                    nom_court_segment = nom_noeud_arbre + NOM_SEGMENTS + SEPARATEUR_ + un_nom_libere + EXTENSION_CRS_VECTEUR     
                     nom_segment = physiocap_rename_existing_file( os.path.join( chemin_segments, nom_court_segment))        
-                   
-                    creer_segments_un_contour( laProjectionCRS, EPSG_NUMBER, nom_segment, 
+                    creer_segments_un_contour( nom_segment, quel_vecteur_demande, DRIVER_VECTEUR, transform_context, laProjectionCRS, EPSG_NUMBER, 
                         les_geoms_segment, les_dates_debut_segment, les_dates_fin_segment, 
                         les_azimuths_segment,  les_longueurs_segment, les_distances_entre_segment,  
                         les_GID_segment, les_nombres_points_segment, les_nombres_points_restant)
@@ -1591,10 +1586,9 @@ class PhysiocapInter( QtWidgets.QDialog):
                     # ###################
                     # CRÉATION segment  brisé dans contour
                     # ###################
-                    nom_court_segment_brise = nom_noeud_arbre + NOM_SEGMENTS + NOM_SEGMENTS_SUITE_DETAILS + SEPARATEUR_ + un_nom_libere + EXT_CRS_SHP     
+                    nom_court_segment_brise = nom_noeud_arbre + NOM_SEGMENTS + NOM_SEGMENTS_SUITE_DETAILS + SEPARATEUR_ + un_nom_libere + EXTENSION_CRS_VECTEUR     
                     nom_segment_brise = physiocap_rename_existing_file( os.path.join( chemin_segments, nom_court_segment_brise))        
-                    
-                    creer_segments_un_contour( laProjectionCRS, EPSG_NUMBER, nom_segment_brise,
+                    creer_segments_un_contour( nom_segment_brise, quel_vecteur_demande, DRIVER_VECTEUR, transform_context, laProjectionCRS, EPSG_NUMBER, 
                         les_geoms_segment, les_dates_debut_segment, les_dates_fin_segment, 
                         les_azimuths_segment,  les_longueurs_segment, les_distances_entre_segment,  
                         les_GID_segment, les_nombres_points_segment, les_nombres_points_restant, 
@@ -1725,19 +1719,19 @@ class PhysiocapInter( QtWidgets.QDialog):
             if  version_3 == "YES" and dialogue.checkBoxInterPasMesure.isChecked():
                 nom_court_sans_mesure_moyenne = nom_noeud_arbre + NOM_POINTS + EXTENSION_ZERO_SEUL + SEPARATEUR_ + nom_court_du_contour
                 nom_sans_mesure_moyenne = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_sans_mesure_moyenne))        
-                creer_sans_mesure_tous_contours( laProjectionCRS, EPSG_NUMBER, nom_sans_mesure_moyenne,
+                creer_sans_mesure_tous_contours( nom_sans_mesure_moyenne, quel_vecteur_demande, DRIVER_VECTEUR, transform_context, laProjectionCRS, EPSG_NUMBER, 
                     toutes_les_geoms_sans_mesure, les_infos_sans_mesure)
                     
             # CREATION VECTEUR SEGMENT
             if  version_3 == "YES" and dialogue.checkBoxInterSegment.isChecked() :
                 nom_court_segment_moyenne = nom_noeud_arbre + NOM_SEGMENTS + SEPARATEUR_ + nom_court_du_contour
                 nom_segment_moyenne = physiocap_rename_existing_file( os.path.join( chemin_segments, nom_court_segment_moyenne))        
-                creer_segment_tous_contours( laProjectionCRS, EPSG_NUMBER, nom_segment_moyenne, 
+                creer_segment_tous_contours( nom_segment_moyenne, quel_vecteur_demande, DRIVER_VECTEUR, transform_context, laProjectionCRS, EPSG_NUMBER, 
                     toutes_les_geoms_segment, les_infos_segment)   
             if  version_3 == "YES" and dialogue.checkBoxInterSegmentBrise.isChecked():
                 nom_court_segment_brise_moyenne = nom_noeud_arbre + NOM_SEGMENTS + SEPARATEUR_ + nom_court_du_contour
                 nom_segment_brise_moyenne = physiocap_rename_existing_file( os.path.join( chemin_segments, nom_court_segment_brise_moyenne))        
-                creer_segment_tous_contours( laProjectionCRS, EPSG_NUMBER, nom_segment_brise_moyenne, 
+                creer_segment_tous_contours( nom_segment_brise_moyenne, quel_vecteur_demande, DRIVER_VECTEUR, transform_context, laProjectionCRS, EPSG_NUMBER, 
                     toutes_les_geoms_segment, les_infos_segment, 
                     "BRISE")
                     

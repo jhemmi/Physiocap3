@@ -45,7 +45,7 @@
 from .Physiocap_tools import ( physiocap_message_box,\
         physiocap_log, physiocap_error, physiocap_is_only_ascii, \
         physiocap_nom_entite_sans_pb_caractere,  physiocap_nom_entite_avec_pb_caractere, \
-        physiocap_rename_existing_file, quelle_projection_et_lib_demandee, \
+        physiocap_rename_existing_file, quelle_projection_et_format_vecteur, \
         quel_chemin_templates, quel_qml_existe, quel_sont_vecteurs_choisis, \
         assert_parcelle_attendue, assert_champs_agro_obligatoires, assert_quel_format_entete)
 
@@ -131,8 +131,6 @@ class PhysiocapIntra( QtWidgets.QDialog):
         modele_file = os.path.join( chemin, profil_physiocap + EXTENSION_QPT)
         if not os.path.exists( modele_file):
             raise physiocap_exception_agro_no_pdf_modele( modele_file)
-#        physiocap_log( "Chemin template {} ".\
-#                format( modele_file),  leModeDeTrace)
         
 #### OK        with open(tmpfile) as f:
         with open(modele_file) as f:
@@ -263,8 +261,8 @@ class PhysiocapIntra( QtWidgets.QDialog):
             raise physiocap_exception_project_point_incoherence( nom_court_point)       
      
         # Recuperer le CRS choisi, les extensions et le calculateur de distance
-        distancearea, EXT_CRS_SHP, EXT_CRS_RASTER, \
-        laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( dialogue)
+        distancearea, quel_vecteur_demande, EXTENSION_CRS_VECTEUR, DRIVER_VECTEUR, EXTENSION_RASTER_COMPLET, \
+            transform_context, laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_format_vecteur( dialogue)
             
         # Récupération des deux parametres d'Intra pour GDAL demandé et non forcé
         rayonDoubleIntra = float ( dialogue.spinBoxDoubleRayon.value())
@@ -300,7 +298,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
         nom_court_raster = nom_noeud_arbre + NOM_INTRA + SEPARATEUR_ + le_champ_choisi +  \
             SEPARATEUR_ + le_nom_entite_libere + EXT_CRS_RASTER
         nom_court_isoligne = nom_noeud_arbre + NOM_INTRA  + SEPARATEUR_  + le_champ_choisi  + \
-            SEPARATEUR_ + "ISOLIGNE_" + le_nom_entite_libere + EXT_CRS_SHP
+            SEPARATEUR_ + "ISOLIGNE_" + le_nom_entite_libere + EXTENSION_CRS_VECTEUR
         le_raster_possible = os.path.join( chemin_raster, nom_court_raster) 
         l_iso_possible = os.path.join( chemin_iso, nom_court_isoligne)
         if le_choix_INTRA_continue == 0:
@@ -796,10 +794,9 @@ class PhysiocapIntra( QtWidgets.QDialog):
         nom_vecteur_contour = vecteur_poly.name()
                    
         # Recuperer le CRS choisi, les extensions et le calculateur de distance
-        distancearea, EXT_CRS_SHP, EXT_CRS_RASTER, \
-        laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_lib_demandee( dialogue)
+        distancearea, quel_vecteur_demande, EXTENSION_CRS_VECTEUR, DRIVER_VECTEUR, EXTENSION_RASTER_COMPLET, \
+            transform_context, laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_format_vecteur( dialogue)
 
-        quel_vecteur_demande = dialogue.fieldComboFormats.currentText()
         nom_point_en_cours = vecteur_point.dataProvider().dataSourceUri()
         pos_fin_layer = nom_point_en_cours.rfind( "|layerid=")
         if ( pos_fin_layer != -1):
@@ -1005,7 +1002,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                     nom_base_point = os.path.basename( unicode( vecteur_point.name() ) )
                     nom_court_point = nom_base_point + EXTENSION_SHP
                 else:
-                    nom_court_point = derniere_session + NOM_POINTS + EXTENSION_SANS_ZERO + EXT_CRS_SHP   
+                    nom_court_point = derniere_session + NOM_POINTS + EXTENSION_SANS_ZERO + EXTENSION_CRS_VECTEUR   
                 nom_point = os.path.join( chemin_shapes, nom_court_point)                    
 
                 # Vérifier si le point et la vignette existent
@@ -1178,12 +1175,12 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         format( PHYSIOCAP_UNI, un_nom,  id_contour), leModeDeTrace)
 
                     # Nom du Shape moyenne 
-                    nom_court_vignette = nom_noeud_arbre + NOM_MOYENNE + le_nom_entite_libere +  EXT_CRS_SHP     
+                    nom_court_vignette = nom_noeud_arbre + NOM_MOYENNE + le_nom_entite_libere +  EXTENSION_CRS_VECTEUR     
                     # Attention j'ai enleve physiocap_rename_existing_file(
                     nom_vignette = os.path.join( chemin_vignettes, nom_court_vignette)        
                                 
                     # Nom point 
-                    nom_court_point = nom_noeud_arbre + NOM_POINTS + SEPARATEUR_ + le_nom_entite_libere + EXT_CRS_SHP     
+                    nom_court_point = nom_noeud_arbre + NOM_POINTS + SEPARATEUR_ + le_nom_entite_libere + EXTENSION_CRS_VECTEUR     
                     # Attention j'ai enleve physiocap_rename_existing_file(
                     nom_point = os.path.join( chemin_vignettes, nom_court_point)                    
                     #physiocap_log( "=~= Vignette court : " +  nom_court_vignette , TRACE_INTRA)  
