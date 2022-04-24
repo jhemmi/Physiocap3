@@ -296,7 +296,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
         
         # Nom du raster cible avec le_champ_choisi
         nom_court_raster = nom_noeud_arbre + NOM_INTRA + SEPARATEUR_ + le_champ_choisi +  \
-            SEPARATEUR_ + le_nom_entite_libere + EXT_CRS_RASTER
+            SEPARATEUR_ + le_nom_entite_libere + EXTENSION_RASTER_COMPLET
         nom_court_isoligne = nom_noeud_arbre + NOM_INTRA  + SEPARATEUR_  + le_champ_choisi  + \
             SEPARATEUR_ + "ISOLIGNE_" + le_nom_entite_libere + EXTENSION_CRS_VECTEUR
         le_raster_possible = os.path.join( chemin_raster, nom_court_raster) 

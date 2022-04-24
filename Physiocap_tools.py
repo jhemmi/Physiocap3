@@ -1351,7 +1351,7 @@ def quelle_projection_et_format_vecteur( self):
     positionne laProjection (en QgsCoordinateReferenceSystem, texte et nombre (epsg)
     les nom d'extensions EXTENSION_VECTEUR sont rendu avec la projection de l'EPSG
     pour les EXTENSION_RASTER en tiff ou selon la demande SAGA
-    Rend aussi un QgsDistanceArea pour cet EPSG
+    Rend aussi un transform_context & QgsDistanceArea pour cet EPSG
     """
     # defaut L93
     mon_EPSG_number = EPSG_NUMBER_L93
@@ -1717,7 +1717,7 @@ def physiocap_segment_vers_vecteur( self, chemin_session,  nom_repertoire, nom_s
         version_3 = "NO",  segment_simplifie="YES"):
     """ Creation de shape file à partir des données de segment """
 
-    distancearea, quel_vecteur_demande, EXTENSION_CRS_VECTEUR, DRIVER_VECTEUR, EXT_CRS_RASTER, \
+    distancearea, quel_vecteur_demande, EXTENSION_CRS_VECTEUR, DRIVER_VECTEUR, _, \
         transform_context, laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_format_vecteur( self)        
     nom_court_vecteur_segment = None
     nom_vecteur_segment = None
@@ -1830,7 +1830,7 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
     """
     leModeDeTrace = self.fieldComboModeTrace.currentText()
     # Recuperer le CRS choisi, les extensions et le calculateur de distance
-    distancearea, quel_vecteur_demande, EXTENSION_CRS_VECTEUR, DRIVER_VECTEUR, EXT_CRS_RASTER, \
+    distancearea, quel_vecteur_demande, EXTENSION_CRS_VECTEUR, DRIVER_VECTEUR, _, \
         transform_context, laProjectionCRS, laProjectionTXT, EPSG_NUMBER = quelle_projection_et_format_vecteur( self)        
     
     # Initialisation
