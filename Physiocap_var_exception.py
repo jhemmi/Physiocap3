@@ -146,8 +146,12 @@ if MACHINE == "Linux":
     FORMAT_VECTEUR_V3 = [ SHAPEFILE_NOM,   GEOPACKAGE_NOM] # CSV_NOM, GEOJSON_NOM,,  "memory"] # POSTGRES_NOM] 
 else:
     FORMAT_VECTEUR_V3 = [ SHAPEFILE_NOM, GEOPACKAGE_NOM] #,  "memory"] # POSTGRES_NOM] 
-# version QGIS
-V_majeure, V_mineure, V_detail = Qgis.QGIS_VERSION.split(".")    
+# Detail de version QGIS
+Texte_majeure, Texte_mineure, Texte_detail_complet = Qgis.QGIS_VERSION.split(".")    
+V_majeure = int( Texte_majeure)
+V_mineure = int( Texte_mineure)
+Texte_detail,  V_petitNom = Texte_detail_complet.split("-")    
+V_detail = int( Texte_detail)
 
 # Répertoires des sources et de concaténation en fichiers texte
 FICHIER_RESULTAT = "resultat.txt"

@@ -95,9 +95,9 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 if ( modeTrace == leModeDeTrace):
                     self.fieldComboModeTrace.setCurrentIndex( idx)
 
-        physiocap_log( "Répertoire de QGIS : {} version {}.{}".format( self.gis_dir, V_majeure, V_mineure), leModeDeTrace)
+        physiocap_log( "Répertoire QGIS : {} est version {}.{}.{}-{}".format( self.gis_dir, V_majeure, V_mineure, V_detail, V_petit_nom), leModeDeTrace)
         physiocap_log( "Répertoire des extensions (plugins) : " +  self.plugins_dir, leModeDeTrace)
-       
+                      
         # Slot for boutons : ces deux sont déjà sont dans UI
         ##self.buttonBox.button( QDialogButtonBox.Ok ).pressed.connect(self.accept)
         ##self.buttonBox.button( QDialogButtonBox.Cancel ).pressed.connect(self.reject)
@@ -107,7 +107,6 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         
         # Slot Profil & test PDF
         self.fieldComboProfilPHY.currentIndexChanged[int].connect( self.slot_PROFIL_change )  
-        
         # Slot pour données brutes et pour données cibles
         self.toolButtonDirectoryPhysiocap.pressed.connect( self.slot_lecture_repertoire_donnees_brutes )  
         self.toolButtonDirectoryFiltre.pressed.connect( self.slot_lecture_repertoire_donnees_cibles)  
