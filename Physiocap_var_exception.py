@@ -150,7 +150,7 @@ else:
 Texte_majeure, Texte_mineure, Texte_detail_complet = Qgis.QGIS_VERSION.split(".")    
 V_majeure = int( Texte_majeure)
 V_mineure = int( Texte_mineure)
-Texte_detail,  V_petitNom = Texte_detail_complet.split("-")    
+Texte_detail,  V_petit_nom = Texte_detail_complet.split("-")    
 V_detail = int( Texte_detail)
 
 # Répertoires des sources et de concaténation en fichiers texte

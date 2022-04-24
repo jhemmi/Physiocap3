@@ -97,7 +97,12 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
 
         physiocap_log( "Répertoire QGIS : {} est version {}.{}.{}-{}".format( self.gis_dir, V_majeure, V_mineure, V_detail, V_petit_nom), leModeDeTrace)
         physiocap_log( "Répertoire des extensions (plugins) : " +  self.plugins_dir, leModeDeTrace)
-                      
+
+        if V_majeure == 3:
+            physiocap_log( "V3 QGIS", leModeDeTrace)
+        if V_mineure == 4:
+            physiocap_log( "V3.4 QGIS", leModeDeTrace)
+            
         # Slot for boutons : ces deux sont déjà sont dans UI
         ##self.buttonBox.button( QDialogButtonBox.Ok ).pressed.connect(self.accept)
         ##self.buttonBox.button( QDialogButtonBox.Cancel ).pressed.connect(self.reject)
