@@ -70,7 +70,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
     def __init__(self, parent=None):
         """Class constructor."""
         super( PhysiocapFiltrer, self).__init__()
-    def physiocap_creer_donnees_resultats( self, dialogue, laProjectionCRS, laProjectionTXT, EXT_CRS_SHP,
+    def physiocap_creer_donnees_resultats( self, dialogue, laProjectionCRS, laProjectionTXT, EXTENSION_CRS_VECTEUR,
         details = "NO", histogrammes = "NO", recursif = "NO",  version_3 = "NO"):
         """ Récupération des paramètres saisies et 
         creation de l'arbre "source" "texte" et du fichier "resultats"

@@ -1551,7 +1551,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                 nom_court_point = nom_noeud_arbre + NOM_POINTS + SEPARATEUR_ + un_nom_libere + EXTENSION_CRS_VECTEUR     
                 nom_point = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_point))        
                 
-                creer_point_un_contour( laProjectionCRS, EPSG_NUMBER, nom_point,
+                creer_point_un_contour( nom_point, quel_vecteur_demande, DRIVER_VECTEUR, transform_context, laProjectionCRS, EPSG_NUMBER, 
                     les_geoms_des_points, les_GID, les_dates, 
                     les_vitesses, les_sarments, les_diametres, les_biom,
                     les_altitudes,  les_pdop, les_distances, les_derives,
@@ -1707,7 +1707,7 @@ class PhysiocapInter( QtWidgets.QDialog):
 ###            nom_contour_moyenne_prj = physiocap_rename_existing_file( 
 ###            os.path.join( chemin_vignettes, nom_court_du_contour_moyenne_prj)) 
             
-            creer_moyennes_tous_contours( laProjectionCRS, EPSG_NUMBER, nom_contour_moyenne, 
+            creer_moyennes_tous_contours( nom_contour_moyenne, quel_vecteur_demande, DRIVER_VECTEUR, transform_context, laProjectionCRS, EPSG_NUMBER, 
                 les_geoms_poly, les_surfaces, les_parcelles, les_parcelles_ID, 
                 dates_debut_parcelle,  dates_fin_parcelle,
                 les_nombres, les_taux_sans_mesure, 
