@@ -271,7 +271,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                 self.fieldComboFormats.setEnabled( False)
              # Retrouver le format de  settings
             self.fieldComboFormats.setCurrentIndex( 0)
-            leFormat = self.settings.value("Physiocap/leFormat", "xx") 
+            leFormat = self.settings.value("Expert/leFormat", "xx") 
             for idx, unFormat in enumerate( liste_formats):
                 if ( unFormat == leFormat):
                     self.fieldComboFormats.setCurrentIndex( idx)
@@ -279,15 +279,15 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
 
         # Remplissage des parametres segment à partir des settings
         self.doubleSpinBoxVitesseMiniSegment.setValue( 
-            float( self.settings.value("Physiocap/vitesse_mini_segment", 2.5 )))
+            float( self.settings.value("Expert/vitesse_mini_segment", 2.5 )))
         self.doubleSpinBoxVitesseMaxiSegment.setValue( 
-            float( self.settings.value("Physiocap/vitesse_maxi_segment", 8.0 )))
+            float( self.settings.value("Expert/vitesse_maxi_segment", 8.0 )))
         self.spinBoxNombreMiniPointsConsecutifs.setValue( 
-            int( self.settings.value("Physiocap/nombre_mini_points", 5 )))
-        self.spinBoxDeriveMaxSegment.setValue( int( self.settings.value("Physiocap/derive_max_segment", 35 )))
-        self.spinBoxPasDeDerive.setValue( int( self.settings.value("Physiocap/pas_de_la_derive", 30 )))
+            int( self.settings.value("Expert/nombre_mini_points", 5 )))
+        self.spinBoxDeriveMaxSegment.setValue( int( self.settings.value("Expert/derive_max_segment", 35 )))
+        self.spinBoxPasDeDerive.setValue( int( self.settings.value("Expert/pas_de_la_derive", 30 )))
         self.doubleSpinBoxPdopMaxSegment.setValue( 
-            float( self.settings.value("Physiocap/pdop_max_segment", 2.0 )))        
+            float( self.settings.value("Expert/pdop_max_segment", 2.0 )))        
         
         # Remplissage des parametres vignobles à partir des settings
         self.spinBoxMinDiametre.setValue( int( self.settings.value("Physiocap/mindiam", 2 )))
@@ -565,6 +565,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.groupBoxExpertOuvert.setEnabled( False)
             self.groupBoxSegment.setEnabled( True)
             self.checkBoxIntraImages.setChecked( Qt.Checked)
+            self.checkBoxIntraPDF.setChecked( Qt.Unchecked)
         elif Nom_Profil == 'Standard':
             self.radioButtonNordPrecedent.setChecked( Qt.Checked)
             self.spinBoxMinDiametre.setValue( 4)
@@ -578,24 +579,29 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.groupBoxDetailVignoble.setChecked( Qt.Checked)
             self.checkBoxInfoVignoble.setChecked( Qt.Checked)
             # Autoriser de continuer les cas d'intra
-            self.checkBoxArret.setChecked( Qt.Checked)
+            self.checkBoxArret.setChecked( Qt.Unchecked)
             self.fieldComboIntraContinue.clear()
             self.fieldComboIntraContinue.addItems( ATTR_CONTINUE)        
-            self.fieldComboIntraContinue.setCurrentIndex( 0)
+            self.fieldComboIntraContinue.setCurrentIndex( 1)
             self.groupBoxVignoble.setEnabled( True)
             self.label_PH.setEnabled( True)            
             self.doubleSpinBoxPH.setEnabled( True)            
+            # Saga par defaut et L93
+            self.radioButtonSAGA.setChecked(  Qt.Unchecked)
+            self.checkBoxSagaTIFF.setChecked( Qt.Unchecked)
+            self.radioButtonL93.setChecked(  Qt.Checked)
             self.groupBoxMethode.setEnabled( True)
             self.groupBoxExpertOuvert.setEnabled( True)
             self.groupBoxThemaTrace.setEnabled( True)
             self.groupBoxIsolignes.setChecked( Qt.Checked)
             self.groupBoxIsolignes.setEnabled( True)
             self.checkBoxIntraImages.setChecked( Qt.Checked)
+            self.checkBoxIntraPDF.setChecked( Qt.Unchecked)
         else:
             physiocap_error( "Dans slot_PROFIL {} est inconnu ".format ( Nom_Profil), TRACE_PROFIL)
         physiocap_log( "PROFIL {} est initialisé".format ( Nom_Profil), TRACE_PROFIL)
 
-    def dans_Quel_Settings( self, nomSettings=PHYSIOCAP_NOM_3+".4"):
+    def dans_Quel_Settings( self, nomSettings=PHYSIOCAP_NOM_3+".22"):
         self.settings= QSettings(PHYSIOCAP_NOM, nomSettings)
         
     def memoriser_tous_Settings( self):
@@ -878,6 +884,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.settings.setValue("Affichage/IntraIsos", isos )
         images = "YES" if self.checkBoxIntraImages.isChecked() else "NO"
         self.settings.setValue("Affichage/IntraImages", images ) 
+        pdf = "YES" if self.checkBoxIntraPDF.isChecked() else "NO"
+        self.settings.setValue("Affichage/IntraPDF", pdf ) 
         
         # Trois parametre INTRA
         self.settings.setValue("Physiocap/leChoixShapeSarment", self.fieldComboShapeSarment.currentIndex())
@@ -1012,6 +1020,10 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.checkBoxIntraImages.setChecked( Qt.Checked)
         else:
             self.checkBoxIntraImages.setChecked( Qt.Unchecked)
+        if (self.settings.value("Affichage/IntraPDF", "NO") == "YES"):
+            self.checkBoxIntraPDF.setChecked( Qt.Checked)
+        else:
+            self.checkBoxIntraPDF.setChecked( Qt.Unchecked)
 
     def memoriser_saisies_InterIntraParcelles(self):
         """ Mémorise les saisies inter et intra """
@@ -1803,6 +1815,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             if ( layer.type() == 0):
                 position_combo = 1 # Demarre à 1 car NOM_PHY est dejà ajouté
                 dernierAttribut = self.settings.value("Physiocap/attributPoly", "xx")
+                physiocap_log( "Dernier attribut {} envisagé en position {}".format( dernierAttribut, position_combo), TRACE_JH)
                 mon_provider = layer.dataProvider()
                 nombre_ligne = mon_provider.featureCount()
                 map_champ = mon_provider.fieldNameMap()
@@ -1846,6 +1859,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                             self.fieldPbGdal.addItem( valeur_pb_GDAL )                                
                             self.fieldComboContours.addItem( nom_champ )
                             if ( nom_champ == dernierAttribut):
+                                physiocap_log( "Dernier attribut {} retrouvé en position {}".format( nom_champ, position_combo), TRACE_JH)
                                 self.fieldComboContours.setCurrentIndex( position_combo)
                                 self.fieldPbGdal.setCurrentIndex( position_combo)                              
                             position_combo = position_combo + 1

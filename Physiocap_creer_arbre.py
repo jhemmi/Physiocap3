@@ -133,7 +133,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         # Stocker dans la fenetre principale le nom de la session courante
         chemin_base_session = os.path.basename( chemin_session)
         dialogue.lineEditDerniereSession.setText( chemin_base_session)
-        dialogue.settings= QSettings( PHYSIOCAP_NOM, PHYSIOCAP_NOM_3)
+        dialogue.settings= QSettings( PHYSIOCAP_NOM, PHYSIOCAP_NOM_3+".22")
         dialogue.settings.setValue("Physiocap/derniereSession", chemin_base_session) 
         
         physiocap_log( self.tr( "{0} {1} Début du traitement pour la session Physiocap {2}").\

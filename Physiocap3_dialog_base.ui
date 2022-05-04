@@ -2999,7 +2999,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <string>Carte PDF de chaque parcelle</string>
       </property>
       <property name="checked">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QCheckBox" name="checkBoxContour">

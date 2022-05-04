@@ -63,7 +63,7 @@ DATA = data
 DATA_FILES = $(DATA)/01021103.MID $(DATA)/01021103.ERC  \
 	$(DATA)/Agro.shp $(DATA)/Agro.shx $(DATA)/Agro.cpg \
 	$(DATA)/Agro.dbf $(DATA)/Agro.prj \
-	$(DATA)/Contour_L93.shp $(DATA)/Contour_L93.shx \
+	$(DATA)/contour.geojson $(DATA)/Contour_L93.shp $(DATA)/Contour_L93.shx \
 	$(DATA)/Contour_L93.dbf $(DATA)/Contour_L93.prj $(DATA)/Contour_L93.cpg\
 	$(DATA)/exemple_vide_contour_vignoble.csv $(DATA)/exemple_contour_vignoble.csv \
 	$(DATA)/exemple_contour_vignoble.csvt $(DATA)/exemple_contour_vignoble.prj
@@ -84,8 +84,8 @@ HELP_FILES = $(HELP)/index.html $(HELP)/Histo_non_calcule.png \
     $(HELP)/jhemmi.eu.png $(HELP)/CIVC.jpg $(HELP)/Logo_IFV.png \
     $(HELP)/Logo_MHCS.png $(HELP)/Logo_VCP.png $(HELP)/Logo_TAITTINGER.png
     
-CONF_TARGET = $(HOME)/.config/Physiocap/Physiocap3.conf
-CONF_MODEL = test/Physiocap3.conf
+CONF_TARGET = $(HOME)/.config/Physiocap/Physiocap3.22.conf
+CONF_MODEL = test/Physiocap3.22.conf
 CONF_SAVE = $(CONF_TARGET).sauve
 
 TEMPLATE = modeleQGIS
