@@ -395,7 +395,6 @@ def physiocap_filtrer(self, nom_court_csv_concat, src, csv_sans_0, csv_avec_0, c
             if version_3 == "NO":
                 pass
             elif precedent == [] or on_coupe == "PREMIER":
-                #physiocap_log( "SEGMENT ==>> point {0} PREMIER".format( numero_point), TRACE_SEGMENT + "_DEBUG")
                 # Stocker le premier point pour comparer au prochain tour    
                 # et la Date début
                 precedent = XY_projete    

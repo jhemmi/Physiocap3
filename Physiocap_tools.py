@@ -121,6 +121,7 @@ def physiocap_log( aText, modeTrace = TRACE_PAS,  level = "INFO"):
     de trace et le niveau de message
     Il permet de supprimer les traces détaillées en Prodcution"""
     journal_nom = "{0} Informations".format( PHYSIOCAP_UNI)
+    print( aText)
     if modeTrace == TRACE_PAS:
         if LE_MODE_PROD == "NO":
             QgsMessageLog.logMessage( "#NO# " + aText,  journal_nom, Qgis.Info)
@@ -170,8 +171,8 @@ def quel_type_vecteur( self, vector):
         geomType = QgsWkbTypes.geometryType( geomWkbType) 
         geomTypeText = QgsWkbTypes.geometryDisplayString( geomType)
         geomWkbTypeText = QgsWkbTypes.displayString( geomWkbType)
-#        physiocap_log( "-- Vecteur Text {0} type geom {1} et WkbType {2}".\
-#            format( geomTypeText, geomType,  geomWkbType), TRACE_JH)
+        physiocap_log( "-- Vecteur Text {0} type geom {1} et WkbType {2}".\
+            format( geomTypeText, geomType,  geomWkbType), TRACE_JH)
         return geomTypeText, geomWkbTypeText, geomWkbType,  geomWkbMultiType  
     except:
 #        physiocap_error( self, self.tr("Warning : couche (layer) {0} n'est ni (is nor) point, ni (nor) polygone").\
@@ -235,7 +236,7 @@ def quel_sont_vecteurs_choisis( self, source = "Intra"):
             if souce == "Inter":
                 aText = aText + self.tr( "avant de faire votre calcul de Moyenne Inter Parcellaire")
             else:
-                aText = aText + self.tr( "avant de faire votre calcul de Moyenne Intra Parcellaire")
+                aText = aText + self.tr( "avant de faire votre interpolation Intra Parcellaire")
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )
         return nom_noeud_arbre, vecteur_point, origine_poly, vecteur_poly, chemin_vecteur
@@ -290,12 +291,12 @@ def quel_poly_point_INTER( self, isRoot = None, node = None ):
                 nombre_point = nombre_point + un_nombre_point
                 nombre_poly = nombre_poly + un_nombre_poly
         elif isinstance( child, QgsLayerTreeLayer):
-#            physiocap_log( "--Layer >> {0}  ID>> {1} ". \
+#            physiocap_log( "--Layer {0} ID {1} ". \
 #                format( child.name(),  child.layerId()), TRACE_TOOLS)) 
-#           physiocap_log( "--Layer parent le groupe >> " + child.parent().name() , TRACE_TOOLS)) 
+#           physiocap_log( "--Layer parent le groupe " + child.parent().name() , TRACE_TOOLS)) 
             # Tester si poly ou point
             type_layer,  type_Wkb_layer,  numero_Wkb_layer,  numero_Multi_Wkb = quel_type_vecteur( self, child.layer())
-#            physiocap_log( "--Layer a pour type >> {0} WkbType  >> {1} et numero_Wkb  >> {2} ".\
+#            physiocap_log( "--Layer a pour type {0} WkbType {1} et numero_Wkb {2} ".\
 #            format( type_layer,  type_Wkb_layer,  numero_Wkb_layer), TRACE_TOOLS))
             if ( type_layer == "Point"):
                 if (((not self.checkBoxConsolidation.isChecked()) and \
@@ -652,12 +653,6 @@ def quel_noms_CSVT_synthese( self):
     else:
         #chemin_MID = os.path.join( chemin_session, REPERTOIRE_SOURCES)
         chemin_vecteur = os.path.join( chemin_session, REPERTOIRE_SHAPEFILE)        
-#    if quel_vecteur_demande == SHAPEFILE_NOM:
-#        nomLongContour = os.path.join( chemin_MID, FICHIER_CONTOUR_GENERE + EXTENSION_SHP)
-#    else:
-#        physiocap_log( self.tr( "{0} ne reconnait pas les vecteurs {1} ").\
-#                format( PHYSIOCAP_UNI, quel_vecteur_demande), leModeDeTrace)
-#        raise physiocap_exception_vecteur_type_inconnu( quel_vecteur_demande)
     if self.fieldComboProfilPHY.currentText() == 'Champagne':
         nom_CSV = os.path.join( chemin_session, CVST_VIGNOBLE + EXTENSION_CSV)
         nom_CSVT = os.path.join( chemin_session, CVST_VIGNOBLE + EXTENSION_CSVT)
@@ -718,7 +713,7 @@ def appel_simplifier_processing( self, nom_point, algo_court, algo, params_algo,
                     format( lettre_algo, algo_court, produit_algo), TRACE_TOOLS)
     return produit_algo
 
-def generer_contour_depuis_points( self, nom_fichier_shape_sans_0,  mids_trie):
+def generer_contour_depuis_points( self, nom_fichier_shape_sans_0,  EXTENSION_CRS_VECTEUR):
     """ Générer un Contour à partir des points bruts"""
 
     version_3 = "YES" if self.checkBoxV3.isChecked() else "NO"
@@ -737,7 +732,7 @@ def generer_contour_depuis_points( self, nom_fichier_shape_sans_0,  mids_trie):
             chemin_acces = os.path.join( os.path.dirname( chemin_vecteur), REPERTOIRE_SOURCE_V3)
         else:
             chemin_acces = os.path.join( os.path.dirname( chemin_vecteur), REPERTOIRE_SOURCES)
-        chemin_fichier_convex = os.path.join( chemin_acces,  FICHIER_CONTOUR_GENERE + "_" + nom_parcelle + EXTENSION_SHP)
+        chemin_fichier_convex = os.path.join( chemin_acces,  FICHIER_CONTOUR_GENERE + "_" + nom_parcelle + EXTENSION_CRS_VECTEUR)
         QGIS_CONVEX = { 'FIELD' : None, 
          'INPUT' : nom_fichier_shape_sans_0, 
          'OUTPUT' : chemin_fichier_convex, 
@@ -746,7 +741,6 @@ def generer_contour_depuis_points( self, nom_fichier_shape_sans_0,  mids_trie):
         appel_simplifier_processing( self, nom_fichier_shape_sans_0, \
                 "QGIS_CONVEX", algo, \
                 QGIS_CONVEX, "OUTPUT")      
-        #physiocap_log( "Sortie algo {} contient {}".format( algo, nom_retour), TRACE_JH)
         QgsMessageLog.logMessage( "PHYSIOCAP : après création du contour", "Processing", Qgis.Warning)
 
         # Changer attributs FID=0 nom parcelle
@@ -828,15 +822,15 @@ def assert_parcelle_attendue( self, un_contour, les_parcelles_agro, modele_agro_
 
 def assert_campagne( self, campagne, derniere_info_mid):
     """ Vérifier que campagne debut mid est la même que fin"""
-    hemisphere = "Nord" if self.radioButtonNordPrecedent.isChecked() else "Sud"
+    ##hemisphere = "Nord" if self.radioButtonNordPrecedent.isChecked() else "Sud"
     campagne_fin = quelle_campagne( self, derniere_info_mid)
     if campagne_fin != campagne:
         aText = "Les captures (MIDs) présentées pour cette session concernent deux campagnes {} et {}".\
             format( campagne, campagne_fin)
-        aText = atext + "\nCe cas n'est pas prévu par l'extension. Choisir des MIDs d'une même campagne"
+        aText = atext + "\nCe cas n'est pas prévu par l'extension. Sélectionnez des MIDs d'une même campagne"
         return physiocap_error( self, aText )
     else:
-        physiocap_log( "Choix hémisphère {} donne campagne {}".format( hemisphere, campagne))
+        ##physiocap_log( "Choix hémisphère {} donne campagne {}".format( hemisphere, campagne))
         return campagne
         
 def quelle_campagne( self, premiere_info_mid):
@@ -919,20 +913,25 @@ def assert_champs_agro_obligatoires( dialogue, vecteur_poly, origine_poly):
         champs_vignoble_requis_fichier, dictEnteteVignoble, champExistants, les_parcelles_agro, modele_agro_retenu        
 
 def lister_parcelles_INTRA( self, vecteur = None,  liste = None):
-    """ Met à jour la liste des parcelles à partir 
-        du vecteur 
+    """ Met à jour la liste des parcelles à partir du vecteur (cas prioritaire)
         ou une liste calculée """
     la_liste = []
     if vecteur != None:
         champ_choisi = self.fieldComboContours.currentText()
         self.fieldComboParcelleIntra.clear()
-        for un_contour in vecteur.getFeatures( QgsFeatureRequest().addOrderBy( champ_choisi)):
-            self.fieldComboParcelleIntra.addItem(  un_contour[ champ_choisi])
-            la_liste.append( un_contour[ champ_choisi]) 
+        physiocap_log("lister_parcelles_INTRA : Vecteur trouvé -- champ est {}".format( champ_choisi),  TRACE_JH)
+        try:
+            for un_contour in vecteur.getFeatures( QgsFeatureRequest().addOrderBy( champ_choisi)):
+                self.fieldComboParcelleIntra.addItem(  un_contour[ champ_choisi])
+                la_liste.append( un_contour[ champ_choisi])
+        except:
+            physiocap_log("lister_parcelles_INTRA : Erreur pas de liste de parcelles trouvée avec le champ {}".format( champ_choisi),  TRACE_JH)
+            pass
     elif liste != None:
         self.fieldComboParcelleIntra.clear()
         for un_contour in liste:
             self.fieldComboParcelleIntra.addItem(  un_contour)
+        physiocap_log("lister_parcelles_INTRA : liste proposé et renseigné {}".format( liste),  TRACE_JH)
         la_liste = liste
     
     laParcelle = self.settings.value("Intra/attributUneParcelle", "xx") 
@@ -1210,11 +1209,15 @@ def physiocap_is_int_number(s):
         return False
     
 def creer_extensions_pour_projection( nom_couche, laProjection):
-    """Creer les fichiers de projection de la couche pour .prj et .qpj"""
+    """Creer les fichiers de projection de la couche pour .prj et .qpj pour les cas shp ou """
     if (nom_couche == None) or (nom_couche == ""):
         return
     # Supprimer extension
     pos_extension = nom_couche.rfind(".")
+    if nom_couche[ pos_extension:] not in [ EXTENSION_SHP, EXTENSION_CSV]:
+        #physiocap_log( "Extension vaut {}, on ne crée pas de prj ou qpj".format( nom_couche[ pos_extension:]))
+        return
+    
     #physiocap_log( "Nom sans extension {} ".format( nom_couche[:pos_extension]),  TRACE_JH )
     for une_extension in [ EXTENSION_PRJ, EXTENSION_QPJ]:
         nouveau_nom = nom_couche[:pos_extension] + une_extension
@@ -1232,7 +1235,7 @@ def creer_extensions_pour_projection( nom_couche, laProjection):
             #physiocap_log( "Chemin modele {} ".format( chemin_modele), TRACE_JH)
             if chemin_modele == "inconnu" or not os.path.exists( chemin_modele):
                 # TODO ? message erreur 
-                physiocap_log( "Aucun modèle n'existant pour la projection {} (dans {}) : l'extension {} n'estpas créée".\
+                physiocap_log( "Aucun modèle n'existant pour la projection {} (dans {}) : l'extension {} n'est pas créée".\
                     format( laProjection, CHEMIN_PROJECTION, une_extension), TRACE_TOUT )
                 continue
             # Copie
@@ -1268,7 +1271,7 @@ def physiocap_get_layer_by_URI( layerURI ):
     physiocap_log( "Recherche {0}".format( layerURI), TRACE_TOOLS)
     # BUG 7 melange des / et \ en V3. On repasse tout en "/"
     layerURI_nettoye = layerURI.replace("\\", "/")
-    physiocap_log( "Modifié>> {0}".format( layerURI_nettoye), TRACE_TOOLS)
+    physiocap_log( "URI modifié {0}".format( layerURI_nettoye), TRACE_TOOLS)
     for layerID in ids:
         # Retrouver le layer
         layer = root.findLayer( layerID).layer()
@@ -1378,8 +1381,9 @@ def quelle_projection_et_format_vecteur( self):
         EXTENSION_CRS_VECTEUR = SEPARATEUR_ + la_projection_TXT + EXTENSION_GEOJSON
         DRIVER_VECTEUR = GEOJSON_DRIVER  
     else:  # GEOPACKAGE est traité dans le code filtrer
-        EXTENSION_CRS_VECTEUR = SEPARATEUR_ + la_projection_TXT + EXTENSION_SHP
-        DRIVER_VECTEUR = SHAPEFILE_DRIVER
+        EXTENSION_CRS_VECTEUR = SEPARATEUR_ + la_projection_TXT + EXTENSION_GPKG
+        DRIVER_VECTEUR = GEOPACKAGE_DRIVER
+    #physiocap_log(" == Format {} : extension {} et driver {}".format( quel_vecteur_demande, EXTENSION_CRS_VECTEUR, DRIVER_VECTEUR))
         
     # Cas du nom du raster 
     if self.radioButtonSAGA.isChecked():
@@ -1407,20 +1411,15 @@ def physiocap_preparer_calcul_distance( self, EPSG_NUMBER, laProjectionCRS, tran
     if (EPSG_NUMBER == EPSG_NUMBER_GPS):
         spheroid = SPHEROID_GPS    
     distancearea = QgsDistanceArea()
-    if laProjectionCRS.isValid():
-        physiocap_log( "Calcul de distance Description SCR {0} est valide".\
-        format( laProjectionCRS.description()), TRACE_TOOLS)
-#        physiocap_log( "PROJ.4 SCR {0}".\
-#        format( laProjectionCRS.toProj4()), TRACE_TOOLS)
-    else:
+    if not laProjectionCRS.isValid():
         physiocap_log( "INVALIDE SCR", TRACE_TOOLS)
         return None
         
 # OLD    distancearea.setSourceCrs( laProjectionCRS, QgsProject.instance().transformContext())            
     distancearea.setSourceCrs( laProjectionCRS, transform_context)            
     distancearea.setEllipsoid( spheroid)
-    physiocap_log( "Calcul de distance sous ellipsoide {0}".\
-        format( distancearea.ellipsoid()), TRACE_TOOLS)
+#    physiocap_log( "Calcul de distance sous ellipsoide {0}".\
+#        format( distancearea.ellipsoid()), TRACE_TOOLS)
     return distancearea
 
 ##def physiocap_quel_uriname( self):
@@ -1726,24 +1725,26 @@ def physiocap_segment_vers_vecteur( self, chemin_session,  nom_repertoire, nom_s
         nom_court_vecteur = nom_session + NOM_SEGMENTS
     else:
         nom_court_vecteur = nom_session + NOM_SEGMENTS + NOM_SEGMENTS_SUITE_DETAILS    
-    if quel_vecteur_demande == SHAPEFILE_NOM: 
+    if quel_vecteur_demande in [ SHAPEFILE_NOM,  GEOJSON_NOM]: 
         nom_court_vecteur_segment = nom_court_vecteur + EXTENSION_CRS_VECTEUR
+#        physiocap_log( "Le vecteur segment court est {}".format( nom_court_vecteur_segment), TRACE_TOOLS)
+#        physiocap_log( "Le répertoire est {}".format( nom_repertoire), TRACE_TOOLS)
         nom_vecteur_segment = os.path.join( nom_repertoire, nom_court_vecteur_segment)
+#        physiocap_log( "Le vecteur segment long est {}".format( nom_vecteur_segment), TRACE_TOOLS)
         # Si le shape existe dejà il faut le détruire
         if os.path.isfile( nom_vecteur_segment):
             # A_TESTER: je doute que ca marche sous windows mais voir nouvelle api V3.22 vector delete
-            physiocap_log( self.tr( "Le shape file existant déjà, il est détruit."), TRACE_TOOLS)
+            physiocap_log( self.tr( "Le vecteur existant déjà, il est détruit."), TRACE_TOOLS)
             os.remove( nom_vecteur_segment) 
     elif quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
         # Assert GPKG existe : nom_gpkg = 
         physiocap_vecteur_vers_gpkg( self, chemin_session, nom_session)
         nom_court_gpkg_extension = nom_court_vecteur + EXTENSION_GPKG
-        nom_gpkg_intermediaire = os.path.join( chemin_session, nom_court_gpkg_extension)
+        nom_vecteur_segment = os.path.join( chemin_session, nom_court_gpkg_extension)
+# OLD nom_gpkg_intermediaire = os.path.join( chemin_session, nom_court_gpkg_extension)
     else:
         # Assert type vecteur supporté
         raise physiocap_exception_vecteur_type_inconnu( quel_vecteur_demande)
-
-    # Assert GPKG existe
 
     # Prepare les attributs
     les_champs = QgsFields()
@@ -1759,16 +1760,26 @@ def physiocap_segment_vers_vecteur( self, chemin_session,  nom_repertoire, nom_s
     les_champs.append( QgsField("GID_GARDE", QVariant.String, "varchar", 100))
     les_champs.append( QgsField("GID_TROU", QVariant.String, "varchar", 100))
 
-    # Creation du vecteur
-    if quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
-        # CAS Géopackage
-        writer = QgsVectorFileWriter( nom_gpkg_intermediaire, "utf-8", les_champs, 
-            QgsWkbTypes.MultiLineString, laProjectionCRS, GEOPACKAGE_DRIVER)
-    else:    
+### OLD   if DRIVER_VECTEUR == GEOPACKAGE_DRIVER  and version_3 == "YES":
+###        # CAS Géopackage
+###        writer = QgsVectorFileWriter( nom_gpkg_intermediaire, "utf-8", les_champs, 
+###            QgsWkbTypes.MultiLineString, laProjectionCRS, DRIVER_VECTEUR)
+###    else:    
+    # Nouvelle creation du vecteur
+    if V_majeure == 3 and V_mineure >= 10:
+        physiocap_log( "{0} {1} FileWriter V3 & create".format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI), TRACE_JH)        
+        save_options = QgsVectorFileWriter.SaveVectorOptions()
+        # TODO : récupérer le nom du driver et fabriquer le nom du vecteur avec la bonne extension
+        save_options.driverName = DRIVER_VECTEUR
+        save_options.fileEncoding = "UTF-8"
+        writer = QgsVectorFileWriter.create( nom_vecteur_segment, les_champs, QgsWkbTypes.MultiLineString, laProjectionCRS,   
+            transform_context, save_options)
+    else:
+        physiocap_log( "{0} {1} OLD FileWriter sans create".format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI), TRACE_JH)        
         writer = QgsVectorFileWriter( nom_vecteur_segment, "utf-8", les_champs, 
-            QgsWkbTypes.MultiLineString, laProjectionCRS, SHAPEFILE_DRIVER)
+            QgsWkbTypes.MultiLineString, laProjectionCRS, DRIVER_VECTEUR)
             
-    # Ecriture du shp
+    # Ecriture du vecteur
     numero_ligne = 0
     for un_segment  in segment:
         feat = QgsFeature()
@@ -1816,12 +1827,12 @@ def physiocap_segment_vers_vecteur( self, chemin_session,  nom_repertoire, nom_s
     # Cas geopackage
     if quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
         nom_layer_cree = physiocap_vecteur_vers_gpkg( self, chemin_session, nom_session,  
-            nom_court_vecteur, nom_gpkg_intermediaire)
+            nom_court_vecteur, nom_vecteur_segment)
         
     return nom_layer_cree
 
 def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barre, extension_point,  
-    csv_name,  chemin_shapes, nom_court_vecteur,
+    csv_name,  chemin_vecteurs, nom_court_vecteur,
     nom_fichier_synthese = "NO", details = "NO",  version_3 = "NO"):
     """ Creation de shape file à partir des données des CSV
     Si nom_fichier_synthese n'est pas "NO", on produit les moyennes dans le fichier 
@@ -1835,19 +1846,20 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
     
     # Initialisation
     nom_vecteur = None
-    if quel_vecteur_demande == SHAPEFILE_NOM:
-        nom_court_shapefile = nom_court_vecteur + EXTENSION_CRS_VECTEUR
-        nom_vecteur = os.path.join(chemin_shapes, nom_court_shapefile)
-        # Si le shape existe dejà il faut le détruire
+    if quel_vecteur_demande in [ SHAPEFILE_NOM, GEOJSON_NOM]:
+        nom_court_vecteur = nom_court_vecteur + EXTENSION_CRS_VECTEUR
+        nom_vecteur = os.path.join( chemin_vecteurs, nom_court_vecteur)
+        # Si le vecteur existe dejà il faut le détruire
         if os.path.isfile( nom_vecteur):
             # A_TESTER: je doute que ca marche : detruire plutot par une option de creation
-            os.remove( nom_vecteur)            
-    elif quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
+            os.remove( nom_vecteur)                      
+    elif quel_vecteur_demande == GEOPACKAGE_NOM and version_3 == "YES":
         # Creer seulement le geopackage
         physiocap_vecteur_vers_gpkg( self, chemin_session, Nom_Session)
         nom_court_gpkg = NOM_POINTS[1:] + extension_point
         nom_court_gpkg_extension = nom_court_gpkg + EXTENSION_GPKG
-        nom_gpkg_intermediaire = os.path.join( chemin_session, nom_court_gpkg_extension)
+        nom_vecteur = os.path.join( chemin_session, nom_court_gpkg_extension)
+# old       nom_gpkg_intermediaire = os.path.join( chemin_session, nom_court_gpkg_extension)
     else:
         # Assert type vecteur supporté
         raise physiocap_exception_vecteur_type_inconnu( quel_vecteur_demande)
@@ -1944,7 +1956,7 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
     # Prepare les attributs
     les_champs = QgsFields()
     # V1.0 Ajout du GID puis V3.1.8 pas fid si GPKG
-    if quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
+    if DRIVER_VECTEUR == GEOPACKAGE_DRIVER  and version_3 == "YES":
         les_champs.append( QgsField("fid", QVariant.Int, "integer", 10))
     else:
         les_champs.append( QgsField("GID", QVariant.Int, "integer", 10))
@@ -1968,19 +1980,24 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
         les_champs.append(QgsField("BIOMGM2", QVariant.Double,"double", 10,2))
         les_champs.append(QgsField("BIOMGCEP", QVariant.Double,"double", 10,2))
 
-    # Creation du vecteur
-    if quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
-        # CAS Géopackage
-        writer = QgsVectorFileWriter( nom_gpkg_intermediaire, "utf-8", les_champs, 
-                QgsWkbTypes.PointZM, laProjectionCRS , GEOPACKAGE_DRIVER)
+    # Nouvelle creation du vecteur
+    if V_majeure == 3 and V_mineure >= 10:
+        physiocap_log( "{0} {1} FileWriter V3 & create".format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI), TRACE_JH)        
+        save_options = QgsVectorFileWriter.SaveVectorOptions()
+        # TODO : récupérer le nom du driver et fabriquer le nom du vecteur avec la bonne extension
+        save_options.driverName = DRIVER_VECTEUR
+        save_options.fileEncoding = "UTF-8"
+        writer = QgsVectorFileWriter.create( nom_vecteur, les_champs, QgsWkbTypes.PointZM, laProjectionCRS,   
+            transform_context, save_options)
     else:
+        physiocap_log( "{0} {1} OLD FileWriter sans create".format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI), TRACE_JH)        
         if version_3 == "YES":
             # Cas V3
             writer = QgsVectorFileWriter( nom_vecteur, "utf-8", les_champs, 
-                    QgsWkbTypes.PointZM, laProjectionCRS , SHAPEFILE_DRIVER)
+                        QgsWkbTypes.PointZM, laProjectionCRS , DRIVER_VECTEUR)
         else:
             writer = QgsVectorFileWriter( nom_vecteur, "utf-8", les_champs, 
-                    QgsWkbTypes.Point, laProjectionCRS , SHAPEFILE_DRIVER)
+                        QgsWkbTypes.Point, laProjectionCRS , DRIVER_VECTEUR)
 
 ### CAS Géopackage BAD ne n'a pas creer de vecteur, mais un tuple
 ###    if self.fieldComboFormats.currentText() == GEOPACKAGE_NOM  and version_3 == "YES":
@@ -2059,7 +2076,7 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
     # Cas geopackage il faut faire une copie du gpkg intermediaire
     if quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
         nom_layer_cree = physiocap_vecteur_vers_gpkg( self, chemin_session, Nom_Session,
-            nom_court_gpkg, nom_gpkg_intermediaire )
+            nom_court_gpkg, nom_vecteur)
     else:
         nom_layer_cree = nom_vecteur
         

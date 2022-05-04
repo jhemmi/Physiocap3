@@ -1756,8 +1756,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         nombre_poly = 0
         nombre_point = 0
         nombre_poly, nombre_point = quel_poly_point_INTER( self)
-        physiocap_log( "Dans slot_INTER_liste_parcelles : poly >> {}<< et points >> {}<<". \
-           format ( nombre_poly,nombre_point), TRACE_JH)
+        physiocap_log( "Dans slot_INTER_liste_parcelles : {} polys & {} points". \
+           format ( nombre_poly, nombre_point), TRACE_JH)
 
         if ( nombre_poly > 0):
             # A_TESTER: si utile fin inter self.slot_min_max_champ_intra()
@@ -1766,6 +1766,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             # Liberer le bouton "Inter"
             self.ButtonInter.setEnabled( True)
         else:
+            physiocap_log( "INTER FALSE dans slot_INTER_liste_parcelles : {} polys & {} points". \
+                format ( nombre_poly, nombre_point), TRACE_JH)
             self.ButtonInter.setEnabled( False)
         
         # Mise à jour du commentaire pour le rayon
@@ -1785,7 +1787,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
 
         self.fieldComboContours.clear()
         self.fieldPbGdal.clear()
-        physiocap_log( "Dans recherche de champ : layer >> {0}<<". \
+        physiocap_log( "Dans recherche de champ : layer == {0} ==". \
            format ( inputLayer), TRACE_JH)
 
         layer = physiocap_get_layer_by_name( inputLayer)

@@ -151,7 +151,7 @@ def creer_moyenne_un_contour( nom_vignette, quel_vecteur_demande, DRIVER_VECTEUR
     les_champs.append( QgsField( "SURF_HA", QVariant.Double, "double", 10,4))
     les_champs.append( QgsField( "NOMBRE", QVariant.Int, "int", 10))           
 
-    # Nouvelle creation du Shape
+    # Nouvelle creation du vecteur
     if V_majeure == 3 and V_mineure >= 10:
         physiocap_log( "{0} {1} FileWriter V3 & create".\
             format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI), TRACE_JH)        
@@ -372,7 +372,7 @@ def creer_segments_un_contour( nom_segment, quel_vecteur_demande, DRIVER_VECTEUR
             message = " - ASSERT GID {0} longueur segment {1} différent du nombre points {2} interieurs au contour  - ". \
                 format( le_gid, len( un_segment), nombre_inter )
             raise physiocap_exception_segment_invalid( message)
-        physiocap_log( "INTER un contour : segment {0} Nombre de points dans le segment >> {1}  et nb de points restant >> {2} ". \
+        physiocap_log( "INTER un contour : segment {0} Nombre de points dans le segment {1}  et nb de points restant {2} ". \
                 format( le_gid,  nombre_points_initiaux,   nombre_inter),  TRACE_SEGMENT) 
         if (segment_simplifie == "YES"):   # Premier et dernier 
             feat.setGeometry( QgsGeometry.fromPolylineXY( [ un_segment[0], un_segment[nombre_inter-1]] )) #écrit la géométrie
@@ -935,7 +935,7 @@ class PhysiocapInter( QtWidgets.QDialog):
             # Version 3.4.0 pas de geopackage en intra            
             return physiocap_message_box( dialogue, 
             self.tr( "== Le format Géopackage n'est pas disponible pour les traitements inter-parcellaires"), "information")
-        elif quel_vecteur_demande == SHAPEFILE_NOM:  # cas Shapefile
+        elif quel_vecteur_demande in [ SHAPEFILE_NOM, GEOJSON_NOM]:
             # Retrouver et vérifier le repertoire de la session et des vecteurs (ancien shapefile)
             # Assert repertoire shapefile : c'est le repertoire qui contient le vecteur point
             # Ca fonctionne pour consolidation
@@ -1038,7 +1038,7 @@ class PhysiocapInter( QtWidgets.QDialog):
         dialogue.progressBarInter.setValue( 25)
         
         nombre_contours = vecteur_poly.featureCount()
-        physiocap_log ( self.tr( "{0} {1} Début Inter pour {2} contours >>>> ").\
+        physiocap_log ( self.tr( "{0} {1} Début Inter pour {2} contours").\
                 format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI, nombre_contours), leModeDeTrace)
         # AGRO
         if dialogue.groupBoxDetailVignoble.isChecked() and dialogue.checkBoxInfoVignoble.isChecked() and \
@@ -1081,7 +1081,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                     un_nom = NOM_CHAMP_ID + SEPARATEUR_ + str(id)
                     pass
                 
-            physiocap_log( self.tr( "{0} {1} Début Inter pour {2} >>>> ").\
+            physiocap_log( self.tr( "{0} {1} Début Inter pour {2}").\
                 format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI, un_nom), leModeDeTrace)
 
             # Selon cas vis à vis de gdal (controlé dans la fieldPbGdal lors de recherche des champs uniques
@@ -1468,7 +1468,7 @@ class PhysiocapInter( QtWidgets.QDialog):
 #                    format( moyennes_point.get('sarm'), ecarts_point.get('sarm')  ), leModeDeTrace) 
                 physiocap_log ( self.tr( "Moyenne des diamètres : {0:5.1f} - Ecarts : {1:5.1f} en mm").\
                     format( moyennes_point.get('diam'),  ecarts_point.get('diam')), leModeDeTrace)
-                physiocap_log ( self.tr( "{0} {1} Fin Inter pour {2} <<<< ").\
+                physiocap_log ( self.tr( "{0} {1} Fin Inter pour {2}").\
                     format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI, un_nom), leModeDeTrace)
 
                 # ###################
@@ -1692,16 +1692,19 @@ class PhysiocapInter( QtWidgets.QDialog):
         # CREATION PUIS AFFICHAGE DES VECTEURS DE TOUS CONTOURS
         if ( contour_avec_point == 0): # Pas de contours avec des points
             return physiocap_message_box( dialogue, 
-                    self.tr( "== Aucun point dans {0}. Pas de comparaison inter parcellaire").\
-                    format( self.tr( "vos contours")),
-                    "information")
+                    self.tr( "== Aucun point dans vos contours. Pas de comparaison inter parcellaire"), "information")
         else:
             # CREATION DU VECTEUR DE MOYENNES
-            ### nom_court_du_contour = os.path.basename( vecteur_poly.name() + EXTENSION_SHP)
             nom_court_du_contour = os.path.basename( vecteur_poly.name())
+            # Supprimer _L93 (la projection_TXT si elle se trouve à la finale
+            pos_projection_layer = nom_court_du_contour.rfind( SEPARATEUR_ + laProjectionTXT)
+            if pos_projection_layer > 0:
+                physiocap_log( "Nom du contour {} est simplifié {}".format( nom_court_du_contour, nom_court_du_contour[:pos_projection_layer]), 
+                    TRACE_JH)
+                nom_court_du_contour = nom_court_du_contour[:pos_projection_layer]
+                
             # Inserer "MOYENNES"
-            nom_court_du_contour_moyenne = nom_noeud_arbre + NOM_MOYENNE + nom_court_du_contour
-###            nom_court_du_contour_moyenne_prj = nom_court_du_contour_moyenne [:-4] + EXT_CRS_PRJ[ -4:]     
+            nom_court_du_contour_moyenne = nom_noeud_arbre + NOM_MOYENNE + nom_court_du_contour + EXTENSION_CRS_VECTEUR
             nom_contour_moyenne = physiocap_rename_existing_file( 
             os.path.join( chemin_vignettes, nom_court_du_contour_moyenne))        
 ###            nom_contour_moyenne_prj = physiocap_rename_existing_file( 
@@ -1717,19 +1720,19 @@ class PhysiocapInter( QtWidgets.QDialog):
 
             # CREATION VECTEUR DE 0_SEUL ou sans mesure
             if  version_3 == "YES" and dialogue.checkBoxInterPasMesure.isChecked():
-                nom_court_sans_mesure_moyenne = nom_noeud_arbre + NOM_POINTS + EXTENSION_ZERO_SEUL + SEPARATEUR_ + nom_court_du_contour
+                nom_court_sans_mesure_moyenne = nom_noeud_arbre + NOM_POINTS + EXTENSION_ZERO_SEUL + SEPARATEUR_ + nom_court_du_contour + EXTENSION_CRS_VECTEUR
                 nom_sans_mesure_moyenne = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_sans_mesure_moyenne))        
                 creer_sans_mesure_tous_contours( nom_sans_mesure_moyenne, quel_vecteur_demande, DRIVER_VECTEUR, transform_context, laProjectionCRS, EPSG_NUMBER, 
                     toutes_les_geoms_sans_mesure, les_infos_sans_mesure)
                     
             # CREATION VECTEUR SEGMENT
             if  version_3 == "YES" and dialogue.checkBoxInterSegment.isChecked() :
-                nom_court_segment_moyenne = nom_noeud_arbre + NOM_SEGMENTS + SEPARATEUR_ + nom_court_du_contour
+                nom_court_segment_moyenne = nom_noeud_arbre + NOM_SEGMENTS + SEPARATEUR_ + nom_court_du_contour + EXTENSION_CRS_VECTEUR
                 nom_segment_moyenne = physiocap_rename_existing_file( os.path.join( chemin_segments, nom_court_segment_moyenne))        
                 creer_segment_tous_contours( nom_segment_moyenne, quel_vecteur_demande, DRIVER_VECTEUR, transform_context, laProjectionCRS, EPSG_NUMBER, 
                     toutes_les_geoms_segment, les_infos_segment)   
             if  version_3 == "YES" and dialogue.checkBoxInterSegmentBrise.isChecked():
-                nom_court_segment_brise_moyenne = nom_noeud_arbre + NOM_SEGMENTS + SEPARATEUR_ + nom_court_du_contour
+                nom_court_segment_brise_moyenne = nom_noeud_arbre + NOM_SEGMENTS + SEPARATEUR_ + nom_court_du_contour + EXTENSION_CRS_VECTEUR
                 nom_segment_brise_moyenne = physiocap_rename_existing_file( os.path.join( chemin_segments, nom_court_segment_brise_moyenne))        
                 creer_segment_tous_contours( nom_segment_brise_moyenne, quel_vecteur_demande, DRIVER_VECTEUR, transform_context, laProjectionCRS, EPSG_NUMBER, 
                     toutes_les_geoms_segment, les_infos_segment, 
@@ -1740,8 +1743,7 @@ class PhysiocapInter( QtWidgets.QDialog):
             # AFFICHAGE DES VECTEURS
             if (consolidation == "YES"):
                 # Cas de consolidation on précise le nom du shaoe de point
-                nom_court_affichage = shape_point_sans_extension + \
-                    SEPARATEUR_
+                nom_court_affichage = shape_point_sans_extension + SEPARATEUR_
             else:
                 nom_court_affichage = nom_noeud_arbre + SEPARATEUR_
             SHAPE_A_AFFICHER = []
@@ -1823,7 +1825,7 @@ class PhysiocapInter( QtWidgets.QDialog):
             dialogue.ButtonIntra.setEnabled( True)
         # FIN CREATION PUIS AFFICHAGE DES VECTEURS DE TOUS CONTOURS
         if  dialogue.checkBoxTroisActions.isChecked() and nombre_contours > 0:
-            return physiocap_log ( self.tr( "{0} {1} Fin Inter pour {2} contours >>>> ").\
+            return physiocap_log ( self.tr( "{0} {1} Fin Inter pour {2} contours").\
                 format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI, nombre_contours), leModeDeTrace)
         else:
             return physiocap_message_box( dialogue, 

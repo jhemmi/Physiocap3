@@ -48,8 +48,7 @@ from .Physiocap_tools import ( physiocap_message_box, physiocap_question_box,\
         generer_contour_depuis_points) 
         
 from .Physiocap_CIVC import (physiocap_assert_csv, physiocap_ferme_csv, \
-        physiocap_fichier_histo, physiocap_tracer_histo, physiocap_filtrer
-        )   
+        physiocap_fichier_histo, physiocap_tracer_histo, physiocap_filtrer)   
 
 from .Physiocap_var_exception import *
 
@@ -250,11 +249,6 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
                 # Centroides
                 fichier_synthese.write( "\n" + str(info[6]) + "--" + str(info[7]))
             fichier_synthese.write("\n")
-    ##        nom_mid = ""
-    ##        for fichier_mid in listeTriee:
-    ##            nom_mid = nom_mid + os.path.basename( fichier_mid) + " & "
-    ##        fichier_synthese.write("Liste des fichiers MID : " + nom_mid[:-3] + "\n")
-    ##        physiocap_log( "Liste des MID : " + nom_mid[:-3], leModeDeTrace)
         fichier_synthese.write( "Campagne {}\n".format( campagne))
         
         # Progress BAR 5 %
@@ -341,12 +335,12 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
                 format( PHYSIOCAP_UNI, quel_vecteur_demande), leModeDeTrace)
         chemin_shapes = None
         nom_dir_vecteur_segment = None
-        if quel_vecteur_demande == SHAPEFILE_NOM:
+        if quel_vecteur_demande in [ SHAPEFILE_NOM,  GEOJSON_NOM]:
             # Verification de l'existance ou création du répertoire des SHAPEFILE
             if (version_3 == "NO"):
                 rep_vecteur = REPERTOIRE_SHAPEFILE
             else:
-                rep_vecteur = REPERTOIRE_SHAPEFILE_V3
+                rep_vecteur = REPERTOIRE_VECTEUR_V3
             chemin_shapes = os.path.join(chemin_session, rep_vecteur)
             if not (os.path.exists( chemin_shapes)):
                 try :
@@ -541,9 +535,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         dialogue.progressBar.setValue( 70)
 
         if dialogue.checkBoxContourSolo.isChecked():
-            physiocap_log( "{0} {1} Avant création du contour à partir des points.". \
-                format( PHYSIOCAP_INFO, PHYSIOCAP_UNI), leModeDeTrace)
-            nom_contour = generer_contour_depuis_points( dialogue, nom_layer_sans_0, listeTriee)                
+            nom_contour = generer_contour_depuis_points( dialogue, nom_layer_sans_0, EXTENSION_CRS_VECTEUR)                
             physiocap_log( "{0} {1} Création du contour OK : {2}.". \
                 format( PHYSIOCAP_INFO, PHYSIOCAP_UNI, nom_contour), leModeDeTrace)
                 

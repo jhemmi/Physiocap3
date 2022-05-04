@@ -59,9 +59,9 @@ MODE_TRACE = [ TRACE_TOUT,  TRACE_MINI, TRACE_PAS]
 MODE_PHY_ID = [ "ID_PHY vaut PHY_numérique",  "ID_PHY contient un texte sans blanc, sans cote"]
 TRACE_INTRA  = "Intra"
 TRACE_TOOLS  = "Tools"
-TRACE_MIN_MAX  = "Min-Max-Iso"
-TRACE_SEGMENT  = "Segment"
-TRACE_SEGMENT_DECOUPES  = "Découpe"
+TRACE_MIN_MAX  = TRACE_TOOLS #"Min-Max-Iso"
+TRACE_SEGMENT  = TRACE_TOOLS #"Segment"
+TRACE_SEGMENT_DECOUPES  = TRACE_TOOLS #"Découpe"
 TRACE_PROFIL  = "Profil"
 TRACE_AGRO = "INFO-AGRO"
 TRACE_JH  = "aJH"
@@ -196,7 +196,7 @@ FICHIER_HISTO_DIAMETRE_FILTRE = "histogramme_DIAM_FILTERED" +  SUFFIXE_HISTO
 FICHIER_CONTOUR_GENERE="contour_genere"
 CVST_VIGNOBLE="synthese_vignoble"
 REPERTOIRE_SHAPEFILE = "shapefile"
-REPERTOIRE_SHAPEFILE_V3 = "vecteur"
+REPERTOIRE_VECTEUR_V3 = "vecteur"
 
 #if MACHINE == "Linux":
 #    EXTENSION_RASTER_SANS_POINT = "png"
@@ -231,35 +231,7 @@ SPHEROID_GPS = "WGS84" # "WGS_1984"
 SPHEROID_CC45 = "GRS80" 
 LISTE_EPSG=[      EPSG_NUMBER_L93, EPSG_NUMBER_GPS, EPSG_NUMBER_CC45]
 LISTE_PROJECTION=[PROJECTION_L93,  PROJECTION_GPS,  PROJECTION_CC45]
-
 # FICHIER modele .prj et .qpj déposés pour 3.16.10 dans modeleQGIS/projection
-###EPSG_DESCRIPTION_L93 = 'PROJCS["RGF93 / Lambert-93", \
-###GEOGCS["RGF93",DATUM["D_RGF_1993", \
-###SPHEROID["GRS_1980",6378137,298.257222101]], \
-###PRIMEM["Greenwich",0],UNIT["Degree",0.017453292519943295]], \
-###PROJECTION["Lambert_Conformal_Conic"], \
-###PARAMETER["standard_parallel_1",49], \
-###PARAMETER["standard_parallel_2",44], \
-###PARAMETER["latitude_of_origin",46.5], \
-###PARAMETER["central_meridian",3], \
-###PARAMETER["false_easting",700000], \
-###PARAMETER["false_northing",6600000],UNIT["Meter",1]]'
-###
-###EPSG_DESCRIPTION_GPS =  'GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984", \
-###SPHEROID["WGS_1984",6378137,298.257223563]], \
-###PRIMEM["Greenwich",0],UNIT["Degree",0.017453292519943295]]'
-###
-###EPSG_DESCRIPTION_CC45 = 'PROJCS["RGF93 / CC45", \
-###GEOGCS["RGF93",DATUM["D_RGF_1993", \
-###SPHEROID["GRS_1980",6378137,298.257222101]], \
-###PRIMEM["Greenwich",0],UNIT["Degree",0.017453292519943295]], \
-###PROJECTION["Lambert_Conformal_Conic"], \
-###PARAMETER["standard_parallel_1",44.25], \
-###PARAMETER["standard_parallel_2",45.75], \
-###PARAMETER["latitude_of_origin",45], \
-###PARAMETER["central_meridian",3], \
-###PARAMETER["false_easting",1700000], \
-###PARAMETER["false_northing",4200000],UNIT["Meter",1]]'
 
 # CHAMP pour nommer les entités 
 CHAMP_NOM_PHY = "NOM_PHY"
