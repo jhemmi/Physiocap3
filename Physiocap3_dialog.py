@@ -1317,7 +1317,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         """ Initialise la box arret / continue"""
 
         if self.checkBoxV3.isChecked():
-            if (self.settings.value("Physiocap/groupStop", "YES") == "YES"):
+            if (self.settings.value("Intra/groupStop", "YES") == "YES"):
                 self.checkBoxArret.setChecked( Qt.Checked)
             else:
                 self.checkBoxArret.setChecked( Qt.Unchecked)
@@ -1331,14 +1331,14 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
                     self.fieldComboIntraContinue.setCurrentIndex( k)
                     idx = k
                 k = k+1
-            self.settings.setValue("Physiocap/continueIntra", idx)
+            self.settings.setValue("Intra/continueIntra", idx)
         else:
             self.checkBoxArret.setChecked( Qt.Checked)
-            self.settings.setValue("Physiocap/groupStop", "YES")
+            self.settings.setValue("Intra/groupStop", "YES")
             self.fieldComboIntraContinue.clear()
             self.fieldComboIntraContinue.addItems( ATTR_CONTINUE)        
             self.fieldComboIntraContinue.setCurrentIndex( 0)
-            self.settings.setValue("Physiocap/continueIntra", 0)
+            self.settings.setValue("Intra/continueIntra", 0)
 
         return
 
@@ -1814,7 +1814,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             # On exclut les layers qui ne sont pas de type 0 (exemple 1 raster)
             if ( layer.type() == 0):
                 position_combo = 1 # Demarre à 1 car NOM_PHY est dejà ajouté
-                dernierAttribut = self.settings.value("Physiocap/attributPoly", "xx")
+                dernierAttribut = self.settings.value("Inter/attributPoly", "xx")
                 physiocap_log( "Dernier attribut {} envisagé en position {}".format( dernierAttribut, position_combo), TRACE_JH)
                 mon_provider = layer.dataProvider()
                 nombre_ligne = mon_provider.featureCount()
