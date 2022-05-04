@@ -567,19 +567,13 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 # On passe ETAPE ISO si nom_raster_final existe
                 if ( nom_raster_final != ""):
                     # Isolignes
-                    physiocap_log( "=~= Avant iso GDAL raster {0}".format( nom_raster))
-                    physiocap_log( "=~= Avant iso GDAL raster final {0}".format( nom_raster_final))
                     ISO_GDAL = {'INPUT':nom_raster,
                         'BAND' : 1,
                         'INTERVAL' : isoInterlignes,
                         'FIELD_NAME' : 'Z',
                         'CREATE_3D' : True, 'IGNORE_NODATA' : False, 'NODATA' : None, 'OFFSET' : 0,
                         'OUTPUT' : nom_isoligne }
-# Bug iso gdal si NODATA=0
-# OK{ 'BAND' : 1, 'CREATE_3D' : False, 'FIELD_NAME' : 'Z', 'IGNORE_NODATA' : False, 
-#'INPUT' : '/media/jean/DATA/GIS/DATA/DATA_PHY/SORTIE_PHY/ISO/Interpolation/Raster/gdal[3]_INTRA_DIAM_PHY_ID_1_L93.tiff', 
-#'INTERVAL' : 10, 'NODATA' : None, 'OFFSET' : 0, 'OPTIONS' : '', 
-#'OUTPUT' : '/tmp/processing_2d826b93bb3d49d1b1bf618a83bd782a/3219fb3c59484f1fa42c9186ad22bdb7/OUTPUT.shp' }
+                    # Bug iso gdal si NODATA=0
 
                     nom_iso_final = self.appel_processing( nom_point, \
                     "ISO_GDAL", "gdal:contour", \
@@ -1099,14 +1093,17 @@ class PhysiocapIntra( QtWidgets.QDialog):
                         parcelle_attendue = assert_parcelle_attendue(self, un_contour, les_parcelles_agro, modele_agro_retenu, \
                             indice_dict_Entete, dictEnteteVignoble, champsVignobleOrdonnes)
                         if parcelle_attendue == None:
+                            physiocap_log( "=== PARCELLE {} non attendue dans agro".format( un_contour), TRACE_JH)
                             continue
+                        
+                        # Attention seulement si le contour est agro 
                         # Eventuellement à la parcelle choisie    
                         if not dialogue.checkBoxToutes.isChecked():
-                            physiocap_log( "CAS UNE PARCELLE {}".format( parcelle_attendue), TRACE_JH)
+                            physiocap_log( "=== CAS UNE PARCELLE {}".format( parcelle_attendue), TRACE_JH)
                             if parcelle_attendue != dialogue.fieldComboParcelleIntra.currentText():
                                 physiocap_log( "Par d'Interpolation pour la parcelle {} - non demandée".format( parcelle_attendue), TRACE_JH)
                                 continue
-                            physiocap_log( "CAS la parcelle choisie {}".format( parcelle_attendue), TRACE_JH)
+                            physiocap_log( "=== CAS la parcelle choisie {}".format( parcelle_attendue), TRACE_JH)
 
                         if parcelle_attendue in les_parcelles_agro_suivi:
                             les_parcelles_agro_suivi.remove( parcelle_attendue)

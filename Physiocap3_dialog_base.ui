@@ -1012,7 +1012,7 @@ Si vous hésitez, trouvez du conseil. </string>
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Vous pouvez choisir de calculer l'interpolation pour toutes les parcelles de votre contour ou choisir une seule parcelle.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="text">
-       <string>Cartographiez toutes les parcelles ou précisez un contour</string>
+       <string>Cartographiez toutes les parcelles ou précisez un contour agro</string>
       </property>
       <property name="checked">
        <bool>true</bool>
