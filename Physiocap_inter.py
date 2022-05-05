@@ -887,8 +887,8 @@ class PhysiocapInter( QtWidgets.QDialog):
 
         # Vérification 
         if ( vecteur_poly == None) or ( not vecteur_poly.isValid()):
-            aText = self.tr( "Le contour choisi n'est pas valide. ")
-            aText = aText + "\n" + self.tr( "Créer une nouvelle session Physiocap - bouton Filtrer les données brutes - ")
+            aText = self.tr( "Le contour n'est pas ouvert et/ou choisi et/ou n'est pas valide. ")
+            aText = aText + "\n" + self.tr( "Ouvrir vos contours dans QGIS et/ou dans l'onglet Calcul, choisir un polygone décrivant vos contours - ")
             aText = aText + "\n" + self.tr( "avant de faire votre calcul de Moyenne Inter Parcellaire")
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( dialogue, aText, "information" ) 
