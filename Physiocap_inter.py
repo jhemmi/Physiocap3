@@ -963,14 +963,14 @@ class PhysiocapInter( QtWidgets.QDialog):
         if  version_3 == "YES" and consolidation != "YES":
             # On remplace la chaine finale du vecteur point par segment
             pos_diametre = nom_vecteur_point.rfind( NOM_POINTS + EXTENSION_SANS_ZERO + EXTENSION_CRS_VECTEUR)
-#            physiocap_log( "{0} retrouve le 'sans zero' à position {1}". \
-#                format(PHYSIOCAP_UNI, pos_diametre), leModeDeTrace)
+            physiocap_log( "{0} retrouve le 'sans zero' à position {1}". \
+                format(PHYSIOCAP_UNI, pos_diametre), TRACE_JH)
             nom_base_point = nom_vecteur_point[:pos_diametre]
             #nom_de_base = os.path.dirname( nom_base_point)
             nom_de_base_a_point = os.path.basename( nom_base_point)
             nom_base_segment = os.path.join( chemin_shapes_segment, nom_de_base_a_point)  
             physiocap_log( "Nom du chemin base segment {0} ". \
-                        format(nom_base_segment), leModeDeTrace)
+                        format(nom_base_segment), TRACE_JH)
             if ( dialogue.checkBoxInterPasMesure.isChecked()):
                 nom_vecteur_pas_mesure = nom_base_point + NOM_POINTS + EXTENSION_ZERO_SEUL + EXTENSION_CRS_VECTEUR
                 vecteur_pas_mesure = physiocap_get_layer_by_URI( nom_vecteur_pas_mesure)
@@ -988,7 +988,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                 vecteur_segment = physiocap_get_layer_by_URI( nom_vecteur_segment)
                 if ( vecteur_segment == None) or ( not vecteur_segment.isValid()):
                     physiocap_log( "Nom du vecteur segment {0} type vecteur {1}". \
-                        format(nom_vecteur_segment, vecteur_segment), leModeDeTrace)
+                        format(nom_vecteur_segment, vecteur_segment), TRACE_JH)
                     aText = self.tr( "La couche des segments brisés n'est pas disponible ou valide. ")
                     aText = aText + self.tr( "Créer une nouvelle session Physiocap - bouton Filtrer les données brutes - ")
                     aText = aText + self.tr( "en cochant le Format version 3 ")
