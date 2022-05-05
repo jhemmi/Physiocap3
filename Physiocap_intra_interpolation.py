@@ -9,9 +9,9 @@
  crée une synthese d'une campagne de mesures Physiocap
  
  Le module Intra gère l'interpolation des données le chaque parcelle
- à partir d'un shapefile de contour de parcelles et d'un shape de points de
+ à partir d'un vecteur de contour de parcelles et d'un vecteur de points de
  chaque parcelle
- Il tourne après qu'inter ait tourné
+ Il s'appuie sur les créations du module Inter
 
  Les variables et fonctions sont nommées dans la même langue
   en Anglais pour les utilitaires

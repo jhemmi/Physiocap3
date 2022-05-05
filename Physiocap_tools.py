@@ -1270,13 +1270,13 @@ def physiocap_get_layer_by_URI( layerURI ):
     layer = None
     # BUG 7 melange des / et \ en V3. On repasse tout en "/"
     layerURI_nettoye = layerURI.replace("\\", "/")
-    physiocap_log( "URI modifié {0}".format( layerURI_nettoye), TRACE_TOOLS)
+    #physiocap_log( "URI modifié {0}".format( layerURI_nettoye), TRACE_TOOLS)
     for layerID in ids:
         # Retrouver le layer
         layer = root.findLayer( layerID).layer()
         URI_complet = layer.dataProvider().dataSourceUri()
         # Enlever la mention |layerid à la fin de l'URI
-        physiocap_log( "Complet URI {0}".format( URI_complet), TRACE_TOOLS)
+        #physiocap_log( "Complet URI {0}".format( URI_complet), TRACE_TOOLS)
         pos_fin_layer = URI_complet.rfind( "|layerid=")
         if pos_fin_layer !=  -1:
             URI_complet = URI_complet[:pos_fin_layer]

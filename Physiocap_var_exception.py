@@ -47,7 +47,7 @@ else:
     LE_MODE_PROD = "YES"
 LISTE_PROFIL= [ 'Standard', 'Champagne', 'Fronton'] #, 'IFV Bordeaux']
 # LIVRAISON : supprimer le commentaire suivant en Prod et si win à YES
-LE_MODE_PROD = "NO"
+LE_MODE_PROD = "YES"
 
 # En prod CENTROIDES vaut NO
 CENTROIDES = "NO"  # CENTROIDES YES est pour voir les centroides dans la synthese
@@ -143,9 +143,9 @@ NOM_PAR_DEFAUT = "PHY" + SEPARATEUR_ # pour session et nom PHY  Attention UPPER
 FORMAT_VECTEUR = [ SHAPEFILE_NOM] #,  POSTGRES_NOM] # "memory"]
 #liste des formats vecteur en prod à trancher
 if MACHINE == "Linux":
-    FORMAT_VECTEUR_V3 = [ SHAPEFILE_NOM,    GEOPACKAGE_NOM,    GEOJSON_NOM] # CSV_NOM, GEOJSON_NOM,,  "memory"] # POSTGRES_NOM] 
+    FORMAT_VECTEUR_V3 = [ SHAPEFILE_NOM,    GEOPACKAGE_NOM,    GEOJSON_NOM] # CSV_NOM, "memory"] # POSTGRES_NOM] 
 else:
-    FORMAT_VECTEUR_V3 = [ SHAPEFILE_NOM, GEOPACKAGE_NOM] #,  "memory"] # POSTGRES_NOM] 
+    FORMAT_VECTEUR_V3 = [ SHAPEFILE_NOM, GEOPACKAGE_NOM, GEOJSON_NOM] #,  "memory"] # POSTGRES_NOM] 
 # Detail de version QGIS
 Texte_majeure, Texte_mineure, Texte_detail_complet = Qgis.QGIS_VERSION.split(".")    
 V_majeure = int( Texte_majeure)
