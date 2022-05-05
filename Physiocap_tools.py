@@ -148,7 +148,7 @@ def physiocap_log( aText, modeTrace = TRACE_PAS,  level = "INFO"):
                     journal_nom = "{0} {1}".format( PHYSIOCAP_UNI, modeTrace)
                 QgsMessageLog.logMessage( aText, journal_nom, Qgis.Info)
         else:
-            # Cas général et info
+            # Cas général devient info
             QgsMessageLog.logMessage( aText, journal_nom, Qgis.Info)
     return
     
@@ -1280,6 +1280,14 @@ def physiocap_get_layer_by_URI( layerURI ):
         pos_fin_layer = URI_complet.rfind( "|layerid=")
         URI_vecteur = URI_complet[:pos_fin_layer]
         physiocap_log( "Layer URI {0}".format( URI_vecteur), TRACE_TOOLS)
+        if layer is not None:
+            physiocap_log( "Layer non vide {}".format( layer.name()), TRACE_TOOLS)
+            physiocap_log( "Layer type {}".format( layer.type()), TRACE_TOOLS)
+            if layer.type() == QgsMapLayer.VectorLayer:
+                physiocap_log( "Layer {} de type vecteur".format( layer.name()), TRACE_TOOLS)
+            else:
+                physiocap_log( "Layer non type vecteur {}".format( QgsMapLayer.VectorLayer), TRACE_TOOLS)
+                
         if layer is not None and layer.type() == QgsMapLayer.VectorLayer and \
             (URI_vecteur == layerURI_nettoye or URI_vecteur == layerURI):
             trouve = "YES"
