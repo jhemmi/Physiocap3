@@ -152,7 +152,7 @@ def creer_moyenne_un_contour( nom_vignette, quel_vecteur_demande, DRIVER_VECTEUR
     les_champs.append( QgsField( "NOMBRE", QVariant.Int, "int", 10))           
 
     # Nouvelle creation du vecteur
-    if V_majeure == 3 and V_mineure >= 10:
+    if V_majeure == 3 and V_mineure >= 16:
         physiocap_log( "{0} {1} FileWriter V3 & create".\
             format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI), TRACE_JH)        
         save_options = QgsVectorFileWriter.SaveVectorOptions()
@@ -287,7 +287,7 @@ def creer_segment_tous_contours( nom_segment, quel_vecteur_demande, DRIVER_VECTE
     les_champs.append( QgsField("DATE_FIN", QVariant.String, "string", 25))
 
     # Nouvelle creation du Shape
-    if V_majeure == 3 and V_mineure >= 10:
+    if V_majeure == 3 and V_mineure >= 16:
         save_options = QgsVectorFileWriter.SaveVectorOptions()
         save_options.driverName = DRIVER_VECTEUR
         save_options.fileEncoding = "UTF-8"
@@ -348,7 +348,7 @@ def creer_segments_un_contour( nom_segment, quel_vecteur_demande, DRIVER_VECTEUR
     les_champs.append( QgsField("DATE_FIN", QVariant.String, "string", 25))
 
     # Nouvelle creation du Shape
-    if V_majeure == 3 and V_mineure >= 10:
+    if V_majeure == 3 and V_mineure >= 16:
         save_options = QgsVectorFileWriter.SaveVectorOptions()
         save_options.driverName = DRIVER_VECTEUR
         save_options.fileEncoding = "UTF-8"
@@ -414,7 +414,7 @@ def creer_sans_mesure_tous_contours( nom_sans_mesure, quel_vecteur_demande, DRIV
     les_champs.append(QgsField("PDOP", QVariant.Double,"double", 10,2)) 
 
     # Nouvelle creation du Shape
-    if V_majeure == 3 and V_mineure >= 10:
+    if V_majeure == 3 and V_mineure >= 16:
         save_options = QgsVectorFileWriter.SaveVectorOptions()
         save_options.driverName = DRIVER_VECTEUR
         save_options.fileEncoding = "UTF-8"
@@ -456,7 +456,7 @@ def creer_sans_mesure_un_contour( nom_sans_mesure, quel_vecteur_demande, DRIVER_
     les_champs.append(QgsField("AZIMUTH", QVariant.Double,"double", 10,2)) 
 
     # Nouvelle creation du Shape
-    if V_majeure == 3 and V_mineure >= 10:
+    if V_majeure == 3 and V_mineure >= 16:
         save_options = QgsVectorFileWriter.SaveVectorOptions()
         save_options.driverName = DRIVER_VECTEUR
         save_options.fileEncoding = "UTF-8"
@@ -521,7 +521,7 @@ def creer_point_un_contour( nom_point, quel_vecteur_demande, DRIVER_VECTEUR, tra
         type_point = QgsWkbTypes.Point
 
     # Nouvelle creation du Shape
-    if V_majeure == 3 and V_mineure >= 10:
+    if V_majeure == 3 and V_mineure >= 16:
         physiocap_log( "{0} {1} FileWriter V3 & create".\
             format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI), TRACE_JH)        
         save_options = QgsVectorFileWriter.SaveVectorOptions()
@@ -670,7 +670,7 @@ def creer_moyennes_tous_contours( nom_contour_moyenne, quel_vecteur_demande, DRI
     les_champs.append( QgsField( "NOMBRE", QVariant.Int, "int", 10))
 
     # Nouvelle creation du Shape
-    if V_majeure == 3 and V_mineure >= 10:
+    if V_majeure == 3 and V_mineure >= 16:
         save_options = QgsVectorFileWriter.SaveVectorOptions()
         save_options.driverName = DRIVER_VECTEUR
         save_options.fileEncoding = "UTF-8"

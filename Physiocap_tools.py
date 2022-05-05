@@ -1768,7 +1768,7 @@ def physiocap_segment_vers_vecteur( self, chemin_session,  nom_repertoire, nom_s
 ###            QgsWkbTypes.MultiLineString, laProjectionCRS, DRIVER_VECTEUR)
 ###    else:    
     # Nouvelle creation du vecteur
-    if V_majeure == 3 and V_mineure >= 10:
+    if V_majeure == 3 and V_mineure >= 16:
         physiocap_log( "{0} {1} FileWriter V3 & create".format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI), TRACE_JH)        
         save_options = QgsVectorFileWriter.SaveVectorOptions()
         # TODO : récupérer le nom du driver et fabriquer le nom du vecteur avec la bonne extension
@@ -1983,7 +1983,7 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
         les_champs.append(QgsField("BIOMGCEP", QVariant.Double,"double", 10,2))
 
     # Nouvelle creation du vecteur
-    if V_majeure == 3 and V_mineure >= 10:
+    if V_majeure == 3 and V_mineure >= 16:
         physiocap_log( "{0} {1} FileWriter V3 & create".format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI), TRACE_JH)        
         save_options = QgsVectorFileWriter.SaveVectorOptions()
         # TODO : récupérer le nom du driver et fabriquer le nom du vecteur avec la bonne extension
