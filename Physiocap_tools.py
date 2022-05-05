@@ -1268,7 +1268,6 @@ def physiocap_get_layer_by_URI( layerURI ):
     ids = root.findLayerIds()              
     trouve = "NO"
     layer = None
-    physiocap_log( "Recherche {0}".format( layerURI), TRACE_TOOLS)
     # BUG 7 melange des / et \ en V3. On repasse tout en "/"
     layerURI_nettoye = layerURI.replace("\\", "/")
     physiocap_log( "URI modifié {0}".format( layerURI_nettoye), TRACE_TOOLS)
@@ -1277,19 +1276,14 @@ def physiocap_get_layer_by_URI( layerURI ):
         layer = root.findLayer( layerID).layer()
         URI_complet = layer.dataProvider().dataSourceUri()
         # Enlever la mention |layerid à la fin de l'URI
+        physiocap_log( "Complet URI {0}".format( URI_complet), TRACE_TOOLS)
         pos_fin_layer = URI_complet.rfind( "|layerid=")
-        URI_vecteur = URI_complet[:pos_fin_layer]
-        physiocap_log( "Layer URI {0}".format( URI_vecteur), TRACE_TOOLS)
-        if layer is not None:
-            physiocap_log( "Layer non vide {}".format( layer.name()), TRACE_TOOLS)
-            physiocap_log( "Layer type {}".format( layer.type()), TRACE_TOOLS)
-            if layer.type() == QgsMapLayer.VectorLayer:
-                physiocap_log( "Layer {} de type vecteur".format( layer.name()), TRACE_TOOLS)
-            else:
-                physiocap_log( "Layer non type vecteur {}".format( QgsMapLayer.VectorLayer), TRACE_TOOLS)
+        if pos_fin_layer !=  -1:
+            URI_complet = URI_complet[:pos_fin_layer]
+        physiocap_log( "Raccourci URI {0}".format( URI_complet), TRACE_TOOLS)
                 
         if layer is not None and layer.type() == QgsMapLayer.VectorLayer and \
-            (URI_vecteur == layerURI_nettoye or URI_vecteur == layerURI):
+            (URI_complet == layerURI_nettoye or URI_complet == layerURI):
             trouve = "YES"
             physiocap_log( "Layer retrouvé  {0}".format( layer.name()), TRACE_TOOLS)
             # The layer is found
