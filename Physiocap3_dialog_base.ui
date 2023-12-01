@@ -219,7 +219,7 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>0</x>
+     <x>10</x>
      <y>70</y>
      <width>621</width>
      <height>731</height>
@@ -239,7 +239,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>7</pointsize>
+     <pointsize>8</pointsize>
      <weight>75</weight>
      <italic>false</italic>
      <bold>true</bold>
@@ -274,6 +274,15 @@
     <bool>true</bool>
    </property>
    <widget class="QWidget" name="tabParametres">
+    <property name="font">
+     <font>
+      <pointsize>8</pointsize>
+      <weight>75</weight>
+      <italic>false</italic>
+      <bold>true</bold>
+      <kerning>true</kerning>
+     </font>
+    </property>
     <attribute name="title">
      <string>Calculs</string>
     </attribute>
@@ -288,7 +297,7 @@
      </property>
      <property name="font">
       <font>
-       <pointsize>9</pointsize>
+       <pointsize>10</pointsize>
        <weight>75</weight>
        <italic>false</italic>
        <bold>true</bold>
@@ -405,7 +414,7 @@
       </property>
       <property name="font">
        <font>
-        <pointsize>9</pointsize>
+        <pointsize>10</pointsize>
         <weight>75</weight>
         <bold>true</bold>
        </font>
@@ -481,7 +490,7 @@
      <property name="font">
       <font>
        <family>Ubuntu</family>
-       <pointsize>9</pointsize>
+       <pointsize>10</pointsize>
        <weight>75</weight>
        <italic>false</italic>
        <bold>true</bold>
@@ -717,7 +726,7 @@
      </property>
      <property name="font">
       <font>
-       <pointsize>9</pointsize>
+       <pointsize>10</pointsize>
        <weight>75</weight>
        <italic>false</italic>
        <bold>true</bold>
@@ -926,7 +935,7 @@ vos autres données agronomiques</string>
       </property>
       <property name="font">
        <font>
-        <pointsize>9</pointsize>
+        <pointsize>10</pointsize>
         <weight>75</weight>
         <italic>false</italic>
         <bold>true</bold>
@@ -1537,7 +1546,7 @@ Si vous hésitez, trouvez du conseil. </string>
       </property>
       <property name="font">
        <font>
-        <pointsize>9</pointsize>
+        <pointsize>10</pointsize>
         <weight>75</weight>
         <italic>false</italic>
         <bold>true</bold>
@@ -2776,6 +2785,15 @@ Si vous hésitez, trouvez du conseil. </string>
        <width>231</width>
        <height>26</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+       <weight>75</weight>
+       <italic>false</italic>
+       <bold>true</bold>
+       <kerning>true</kerning>
+      </font>
      </property>
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#00aa00;&quot;&gt;Astuce : Si vous confiant dans votre paramétrage, vous pouvez décocher la création des histogrammes lors de traitement de grande masse de données.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -6894,7 +6912,7 @@ DIAM, SARM, BIOM,...) </string>
       </property>
       <property name="font">
        <font>
-        <pointsize>9</pointsize>
+        <pointsize>10</pointsize>
         <weight>75</weight>
         <italic>false</italic>
         <bold>true</bold>
@@ -6902,7 +6920,7 @@ DIAM, SARM, BIOM,...) </string>
        </font>
       </property>
       <property name="text">
-       <string>Version 3.28.11</string>
+       <string>Version 3.34.1</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_500">
@@ -6916,7 +6934,7 @@ DIAM, SARM, BIOM,...) </string>
       </property>
       <property name="font">
        <font>
-        <pointsize>9</pointsize>
+        <pointsize>10</pointsize>
         <weight>75</weight>
         <italic>false</italic>
         <bold>true</bold>
@@ -7110,7 +7128,7 @@ DIAM, SARM, BIOM,...) </string>
      <widget class="QTextBrowser" name="textBrowserAide">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>0</x>
         <y>450</y>
         <width>621</width>
         <height>131</height>
@@ -7126,7 +7144,7 @@ DIAM, SARM, BIOM,...) </string>
        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:7pt; font-weight:600; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:8pt; font-weight:600; font-style:normal;&quot;&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:9pt; font-weight:400;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Cantarell'; font-size:10pt; font-weight:400;&quot;&gt;Utilisez le bouton &lt;/span&gt;&lt;span style=&quot; font-family:'Cantarell'; font-size:10pt;&quot;&gt;Aide&lt;/span&gt;&lt;span style=&quot; font-family:'Cantarell'; font-size:10pt; font-weight:400;&quot;&gt; pour accéder aux documentations, à la license et au suivi des évolutions sous le Wiki de l'extension. &lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Cantarell'; font-size:10pt; font-weight:400;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
@@ -7139,8 +7157,8 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="geometry">
        <rect>
-        <x>130</x>
-        <y>590</y>
+        <x>240</x>
+        <y>550</y>
         <width>271</width>
         <height>21</height>
        </rect>
@@ -7173,8 +7191,8 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="lab_traces">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>590</y>
+        <x>30</x>
+        <y>540</y>
         <width>111</width>
         <height>21</height>
        </rect>

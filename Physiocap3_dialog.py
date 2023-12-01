@@ -98,15 +98,15 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         #physiocap_log( "Répertoire QGIS : {} est version {}.{}.{}-{}".format( self.gis_dir, V_majeure, V_mineure, V_detail, V_petit_nom), leModeDeTrace)
         physiocap_log( "Répertoire des extensions (plugins) : " +  self.plugins_dir, leModeDeTrace)
 
-        if MACHINE != "Linux":
+        if MACHINE == "Windows":
             from win32api import GetSystemMetrics
             _, height = GetSystemMetrics(0), GetSystemMetrics(1)
-            # if height < 1080:
-            aText="Votre écran {} supporte seulement une hauteur de {} pixels" . \
-                format(MACHINE,  height)
-            physiocap_log( aText, leModeDeTrace)  
-            physiocap_message_box( self, aText, "attention")
-
+            if height < 1080:
+                aText="Attention, votre écran {} supporte seulement une hauteur de {} pixels. " . \
+                    format(MACHINE,  height)
+                aText = aText + "Pour utiliser Physiocap3, ouvrez QGIS dans un écran à meilleure résolution. "
+                physiocap_log( aText, leModeDeTrace)  
+                physiocap_message_box( self, aText, "attention")
 #            
         # Slot for boutons : ces deux sont déjà sont dans UI
         ##self.buttonBox.button( QDialogButtonBox.Ok ).pressed.connect(self.accept)
