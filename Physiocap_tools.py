@@ -645,9 +645,9 @@ def quel_noms_CSVT_synthese( self):
     derniere_session = self.lineEditDerniereSession.text()
     chemin_session = os.path.join( self.lineEditDirectoryFiltre.text(), derniere_session)
     #quel_vecteur_demande = self.fieldComboFormats.currentText()
-    version_3 = "YES" if self.checkBoxV3.isChecked() else "NO"
+    DATA_VERSION_3 = "YES" if self.checkBoxV3.isChecked() else "NO"
     # Nom du contour et du CSVT
-    if version_3 == "YES":
+    if DATA_VERSION_3 == "YES":
         #chemin_MID = os.path.join( chemin_session, REPERTOIRE_SOURCE_V3)
         chemin_vecteur = os.path.join( chemin_session, REPERTOIRE_INTER_V3)        
     else:
@@ -716,7 +716,7 @@ def appel_simplifier_processing( self, nom_point, algo_court, algo, params_algo,
 def generer_contour_depuis_points( self, nom_fichier_shape_sans_0,  EXTENSION_CRS_VECTEUR):
     """ Générer un Contour à partir des points bruts"""
 
-    version_3 = "YES" if self.checkBoxV3.isChecked() else "NO"
+    DATA_VERSION_3 = "YES" if self.checkBoxV3.isChecked() else "NO"
     # Assert points existent bien
     if ( os.path.exists( nom_fichier_shape_sans_0)):
         champsVignobleOrdonnes, _, dictInfoVignobleAgro, _, dictEnteteVignoble, _ = \
@@ -724,11 +724,11 @@ def generer_contour_depuis_points( self, nom_fichier_shape_sans_0,  EXTENSION_CR
 #        physiocap_log( 'Information vignoble et agro == Nom de parcelle contiendra Entete "{}" et Info "{}"'.\
 #            format( champsVignobleOrdonnes[1], dictInfoVignobleAgro[ champsVignobleOrdonnes[1]]))
         nom_parcelle = dictInfoVignobleAgro[ champsVignobleOrdonnes[1]]        
-        if nom_parcelle == "à préciser":
+        if nom_parcelle in [ "à préciser", "_"]:
             nom_parcelle = self.lineEditSession.text()
 
         chemin_vecteur = os.path.dirname( nom_fichier_shape_sans_0)
-        if version_3 == "YES":
+        if DATA_VERSION_3 == "YES":
             chemin_acces = os.path.join( os.path.dirname( chemin_vecteur), REPERTOIRE_SOURCE_V3)
         else:
             chemin_acces = os.path.join( os.path.dirname( chemin_vecteur), REPERTOIRE_SOURCES)
@@ -1683,7 +1683,7 @@ def physiocap_vecteur_vers_gpkg( self, chemin_session, nom_base_gpkg,
         
 #  AUTRE solution   Ne crée que l'enveloppe mais ne copie pas les données
 # CAS Géopackage par QgsVectorLayerExporter
-#    if self.fieldComboFormats.currentText() == GEOPACKAGE_NOM  and version_3 == "YES":
+#    if self.fieldComboFormats.currentText() == GEOPACKAGE_NOM  and DATA_VERSION_3 == "YES":
 #        # Copie dans geopackage et remplace  nom_vecteur_sans_0
 #        nom_court_gpkg = NOM_POINTS[1:] + extension_point
 #        layer_modele  = QgsVectorLayer( nom_vecteur, "INUTILE",  'ogr')
@@ -1701,7 +1701,7 @@ def physiocap_vecteur_vers_gpkg( self, chemin_session, nom_base_gpkg,
 
 #    Ne crée que l'enveloppe mais ne copie pas les données
 # CAS Géopackage par QgsVectorFileWriter.writeAsVectorFormat
-#    if self.fieldComboFormats.currentText() == GEOPACKAGE_NOM  and version_3 == "YES":
+#    if self.fieldComboFormats.currentText() == GEOPACKAGE_NOM  and DATA_VERSION_3 == "YES":
 #        # Copie dans geopackage et remplace  nom_vecteur_sans_0
 #        nom_court_gpkg_sans_0 = NOM_POINTS[1:] + extension_point
 #        layer_modele  = QgsVectorLayer( nom_vecteur, "INUTILE",  'ogr')
@@ -1715,7 +1715,7 @@ def physiocap_vecteur_vers_gpkg( self, chemin_session, nom_base_gpkg,
     return le_nom_gpkg_complete     
 
 def physiocap_segment_vers_vecteur( self, chemin_session,  nom_repertoire, nom_session,  segment,  info_segment, 
-        version_3 = "NO",  segment_simplifie="YES"):
+        DATA_VERSION_3 = "NO",  segment_simplifie="YES"):
     """ Creation de shape file à partir des données de segment """
 
     distancearea, quel_vecteur_demande, EXTENSION_CRS_VECTEUR, DRIVER_VECTEUR, _, \
@@ -1738,7 +1738,7 @@ def physiocap_segment_vers_vecteur( self, chemin_session,  nom_repertoire, nom_s
             # A_TESTER: je doute que ca marche sous windows mais voir nouvelle api V3.22 vector delete
             physiocap_log( self.tr( "Le vecteur existant déjà, il est détruit."), TRACE_TOOLS)
             os.remove( nom_vecteur_segment) 
-    elif quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
+    elif quel_vecteur_demande == GEOPACKAGE_NOM  and DATA_VERSION_3 == "YES":
         # Assert GPKG existe : nom_gpkg = 
         physiocap_vecteur_vers_gpkg( self, chemin_session, nom_session)
         nom_court_gpkg_extension = nom_court_vecteur + EXTENSION_GPKG
@@ -1750,7 +1750,7 @@ def physiocap_segment_vers_vecteur( self, chemin_session,  nom_repertoire, nom_s
 
     # Prepare les attributs
     les_champs = QgsFields()
-    if quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
+    if quel_vecteur_demande == GEOPACKAGE_NOM  and DATA_VERSION_3 == "YES":
         les_champs.append( QgsField("fid", QVariant.Int, "integer", 10))
     else:
         les_champs.append( QgsField("GID", QVariant.Int, "integer", 10))
@@ -1762,13 +1762,13 @@ def physiocap_segment_vers_vecteur( self, chemin_session,  nom_repertoire, nom_s
     les_champs.append( QgsField("GID_GARDE", QVariant.String, "varchar", 100))
     les_champs.append( QgsField("GID_TROU", QVariant.String, "varchar", 100))
 
-### OLD   if DRIVER_VECTEUR == GEOPACKAGE_DRIVER  and version_3 == "YES":
+### OLD   if DRIVER_VECTEUR == GEOPACKAGE_DRIVER  and DATA_VERSION_3 == "YES":
 ###        # CAS Géopackage
 ###        writer = QgsVectorFileWriter( nom_gpkg_intermediaire, "utf-8", les_champs, 
 ###            QgsWkbTypes.MultiLineString, laProjectionCRS, DRIVER_VECTEUR)
 ###    else:    
     # Nouvelle creation du vecteur
-    if V_majeure == 3 and V_mineure >= 16:
+    if CHOIX_create_file_writer:
         physiocap_log( "{0} {1} FileWriter V3 & create".format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI), TRACE_JH)        
         save_options = QgsVectorFileWriter.SaveVectorOptions()
         # TODO : récupérer le nom du driver et fabriquer le nom du vecteur avec la bonne extension
@@ -1791,7 +1791,7 @@ def physiocap_segment_vers_vecteur( self, chemin_session,  nom_repertoire, nom_s
         # GID gardé
         gid_points_gardes = info_segment[numero_ligne][GID_GARDE]
         nb_points_gardes = len( gid_points_gardes)
-        if  nb_points_gardes > 30:
+        if  nb_points_gardes > 20:
             str_gid_points_gardes = str( gid_points_gardes[0:2]) + "... " + \
                 str(nb_points_gardes) + " points gardés ..." + \
                 str( gid_points_gardes[nb_points_gardes-2:])
@@ -1800,7 +1800,7 @@ def physiocap_segment_vers_vecteur( self, chemin_session,  nom_repertoire, nom_s
         # GID manquants
         gid_points_manquants = info_segment[numero_ligne][GID_TROU]
         nb_points_manquants = len( gid_points_manquants)
-        if  nb_points_manquants > 30:
+        if  nb_points_manquants > 20:
             str_gid_points_manquants = str( gid_points_manquants[0:2]) + "... " + \
                 str(nb_points_manquants) + " points manquants ..." + \
                 str( gid_points_manquants[nb_points_manquants-2:])
@@ -1820,14 +1820,17 @@ def physiocap_segment_vers_vecteur( self, chemin_session,  nom_repertoire, nom_s
         numero_ligne = numero_ligne + 1
         # Ecrit le feature
         writer.addFeature( feat)
-    writer = None
+    if CHOIX_create_file_writer:
+        del writer
+    else:
+        writer = None
 
     # Creer .PRJ et .QPJ
     creer_extensions_pour_projection( nom_vecteur_segment,  laProjectionTXT)
 
     nom_layer_cree = nom_vecteur_segment
     # Cas geopackage
-    if quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
+    if quel_vecteur_demande == GEOPACKAGE_NOM  and DATA_VERSION_3 == "YES":
         nom_layer_cree = physiocap_vecteur_vers_gpkg( self, chemin_session, nom_session,  
             nom_court_vecteur, nom_vecteur_segment)
         
@@ -1835,7 +1838,7 @@ def physiocap_segment_vers_vecteur( self, chemin_session,  nom_repertoire, nom_s
 
 def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barre, extension_point,  
     csv_name,  chemin_vecteurs, nom_court_vecteur,
-    nom_fichier_synthese = "NO", details = "NO",  version_3 = "NO"):
+    nom_fichier_synthese = "NO", details = "NO",  DATA_VERSION_3 = "NO"):
     """ Creation de shape file à partir des données des CSV
     Si nom_fichier_synthese n'est pas "NO", on produit les moyennes dans le fichier 
     qui se nomme nom_fichier_synthese
@@ -1855,7 +1858,7 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
         if os.path.isfile( nom_vecteur):
             # A_TESTER: je doute que ca marche : detruire plutot par une option de creation
             os.remove( nom_vecteur)                      
-    elif quel_vecteur_demande == GEOPACKAGE_NOM and version_3 == "YES":
+    elif quel_vecteur_demande == GEOPACKAGE_NOM and DATA_VERSION_3 == "YES":
         # Creer seulement le geopackage
         physiocap_vecteur_vers_gpkg( self, chemin_session, Nom_Session)
         nom_court_gpkg = NOM_POINTS[1:] + extension_point
@@ -1898,7 +1901,7 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
                     progress_barre = progress_barre + 1
                     self.progressBar.setValue( progress_barre)
                     
-                if version_3 == "NO":
+                if DATA_VERSION_3 == "NO":
                     if ( laProjectionTXT == "L93"):
                         x.append(float(row[2]))
                         y.append(float(row[3]))
@@ -1932,7 +1935,7 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
                     vitesse.append(float(row[15]))
                     
                 if details == "YES":
-                    if version_3 == "NO":
+                    if DATA_VERSION_3 == "NO":
                         # Niveau de detail demandé
                         # assert sur len row
                         if len(row) != 14:
@@ -1958,13 +1961,13 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
     # Prepare les attributs
     les_champs = QgsFields()
     # V1.0 Ajout du GID puis V3.1.8 pas fid si GPKG
-    if DRIVER_VECTEUR == GEOPACKAGE_DRIVER  and version_3 == "YES":
+    if DRIVER_VECTEUR == GEOPACKAGE_DRIVER  and DATA_VERSION_3 == "YES":
         les_champs.append( QgsField("fid", QVariant.Int, "integer", 10))
     else:
         les_champs.append( QgsField("GID", QVariant.Int, "integer", 10))
     les_champs.append( QgsField("DATE", QVariant.String, "string", 25))
     les_champs.append( QgsField("VITESSE", QVariant.Double, "double", 10,2))
-    if version_3 == "YES":
+    if DATA_VERSION_3 == "YES":
         les_champs.append( QgsField("ALTITUDE", QVariant.Double, "double", 10,2))
         les_champs.append( QgsField("PDOP", QVariant.Double, "double", 10,2))
         les_champs.append( QgsField("DISTANCE", QVariant.Double, "double", 10,2))
@@ -1983,26 +1986,24 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
         les_champs.append(QgsField("BIOMGCEP", QVariant.Double,"double", 10,2))
 
     # Nouvelle creation du vecteur
-    if V_majeure == 3 and V_mineure >= 16:
+    type_geom_point=QgsWkbTypes.Point
+    if DATA_VERSION_3 == "YES":
+        type_geom_point=QgsWkbTypes.PointZM
+    if CHOIX_create_file_writer:
         physiocap_log( "{0} {1} FileWriter V3 & create".format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI), TRACE_JH)        
         save_options = QgsVectorFileWriter.SaveVectorOptions()
         # TODO : récupérer le nom du driver et fabriquer le nom du vecteur avec la bonne extension
         save_options.driverName = DRIVER_VECTEUR
         save_options.fileEncoding = "UTF-8"
-        writer = QgsVectorFileWriter.create( nom_vecteur, les_champs, QgsWkbTypes.PointZM, laProjectionCRS,   
+        writer = QgsVectorFileWriter.create( nom_vecteur, les_champs, type_geom_point, laProjectionCRS,   
             transform_context, save_options)
     else:
         physiocap_log( "{0} {1} OLD FileWriter sans create".format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI), TRACE_JH)        
-        if version_3 == "YES":
-            # Cas V3
-            writer = QgsVectorFileWriter( nom_vecteur, "utf-8", les_champs, 
-                        QgsWkbTypes.PointZM, laProjectionCRS , DRIVER_VECTEUR)
-        else:
-            writer = QgsVectorFileWriter( nom_vecteur, "utf-8", les_champs, 
-                        QgsWkbTypes.Point, laProjectionCRS , DRIVER_VECTEUR)
+        writer = QgsVectorFileWriter( nom_vecteur, "utf-8", les_champs, 
+                        type_geom_point, laProjectionCRS , DRIVER_VECTEUR)
 
 ### CAS Géopackage BAD ne n'a pas creer de vecteur, mais un tuple
-###    if self.fieldComboFormats.currentText() == GEOPACKAGE_NOM  and version_3 == "YES":
+###    if self.fieldComboFormats.currentText() == GEOPACKAGE_NOM  and DATA_VERSION_3 == "YES":
 ###        # Copie dans geopackage
 ###        nom_court_gpkg = NOM_POINTS[1:] + extension_point
 ###        layer_modele  = QgsVectorLayer( nom_vecteur, "INUTILE",  'ogr')
@@ -2017,7 +2018,7 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
 
     for numPoint,Xpoint in enumerate(x):
         feat = QgsFeature()
-        if version_3 == "YES":
+        if DATA_VERSION_3 == "YES":
             # choix de la données dans Z
             val_Z = 0.0
             val_M = altitude[numPoint]
@@ -2034,7 +2035,7 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
             feat.setGeometry( QgsGeometry.fromPointXY(QgsPointXY( Xpoint,y[numPoint]))) #écrit la géométrie
         
         if details == "YES":
-            if version_3 == "NO":
+            if DATA_VERSION_3 == "NO":
                 # Ecrit tous les attributs
                feat.setAttributes( [ numPoint, date_capture[numPoint], vitesse[numPoint], 
                                     nbsarm[numPoint], diam[numPoint], biom[numPoint],
@@ -2050,7 +2051,7 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
                                     biomgm2[numPoint], biomgcep[numPoint]
                                    ])                
         else: # sans les détails
-            if version_3 == "NO":
+            if DATA_VERSION_3 == "NO":
                 # Ecrit les 5 premiers attributs
                 feat.setAttributes( [ numPoint, date_capture[numPoint], vitesse[numPoint], 
                                     nbsarm[numPoint], diam[numPoint], biom[numPoint]
@@ -2065,8 +2066,10 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
         # Ecrit le feature
         writer.addFeature( feat)
     # Fermer le vecteur
-    writer = None
-
+    if CHOIX_create_file_writer:
+        del writer
+    else:
+        writer = None
     # Creer .PRJ et .QPJ
     creer_extensions_pour_projection( nom_vecteur, laProjectionTXT)
  
@@ -2076,7 +2079,7 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
  
     nom_layer_cree = None
     # Cas geopackage il faut faire une copie du gpkg intermediaire
-    if quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
+    if quel_vecteur_demande == GEOPACKAGE_NOM  and DATA_VERSION_3 == "YES":
         nom_layer_cree = physiocap_vecteur_vers_gpkg( self, chemin_session, Nom_Session,
             nom_court_gpkg, nom_vecteur)
     else:
@@ -2096,7 +2099,7 @@ def physiocap_csv_vers_vecteur( self, chemin_session, Nom_Session, progress_barr
             fichier_synthese.write("\n\nVECTEURS FORMAT : {0}\n".format( self.fieldComboFormats.currentText()))
             fichier_synthese.write("\n\nSTATISTIQUES\n")
             fichier_synthese.write("Vitesse moyenne d'avancement km/h \n	mean : %0.1f \n" %np.mean(vitesse))
-            if version_3 == "YES":
+            if DATA_VERSION_3 == "YES":
                 fichier_synthese.write("Altitude moyenne GPS en m \n	mean : %0.1f\t std : %0.1f\n" \
                     %(np.mean(altitude), np.std(altitude)))
                 fichier_synthese.write("Pdop  moyen du GPS \n	mean : %0.1f\t std : %0.1f\n" \

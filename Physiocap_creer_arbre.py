@@ -70,7 +70,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         """Class constructor."""
         super( PhysiocapFiltrer, self).__init__()
     def physiocap_creer_donnees_resultats( self, dialogue, laProjectionCRS, laProjectionTXT, EXTENSION_CRS_VECTEUR,
-        details = "NO", histogrammes = "NO", recursif = "NO",  version_3 = "NO"):
+        details = "NO", histogrammes = "NO", recursif = "NO",  DATA_VERSION_3 = "NO"):
         """ Récupération des paramètres saisies et 
         creation de l'arbre "source" "texte" et du fichier "resultats"
         Ce sont les résultats de l'analyse filtration des données brutes"""
@@ -88,7 +88,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
 
         leModeDeTrace = dialogue.fieldComboModeTrace.currentText() 
             
-        if version_3 == "YES":
+        if DATA_VERSION_3 == "YES":
             segment_mini_vitesse = float( dialogue.doubleSpinBoxVitesseMiniSegment.value())
             segment_maxi_vitesse = float( dialogue.doubleSpinBoxVitesseMaxiSegment.value())
             segment_max_pdop = float( dialogue.doubleSpinBoxPdopMaxSegment.value())   
@@ -145,7 +145,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         dialogue.progressBar.setValue( 2)
         
         # Verification de l'existance ou création du répertoire des sources MID et fichier csv
-        if version_3 == "YES":
+        if DATA_VERSION_3 == "YES":
             chemin_sources = os.path.join(chemin_session, REPERTOIRE_SOURCE_V3)
         else:
             chemin_sources = os.path.join(chemin_session, REPERTOIRE_SOURCES)
@@ -223,7 +223,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         fichier_synthese.write( "Sessioin Physiocap ")
         fichier_synthese.write( chemin_base_session)
         fichier_synthese.write( "\n")
-        if (version_3 == "NO"):
+        if (DATA_VERSION_3 == "NO"):
             fichier_synthese.write( "Nom des MID \t\t Date et heures\n=>Nb. Valeurs brutes\tVitesse km/h")
         else:
             fichier_synthese.write( "Nom des MID \t Tiny \t Date et heures\n=>Nb. Valeurs brutes\tVitesse km/h")
@@ -239,7 +239,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         
         for all_info in info_mid:
             info = all_info.split(";")
-            if (version_3 == "NO"):
+            if (DATA_VERSION_3 == "NO"):
                 fichier_synthese.write( str(info[0]) + "\t" + str(info[2]) + "->" + str(info[3])+ "\n")
             else:
                 fichier_synthese.write( str(info[0]) + "\t" + str(info[1]) + "\t" + str(info[2]) + "->" + str(info[3])+ "\n")
@@ -256,7 +256,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         dialogue.progressBarInter.setValue( 0)
         dialogue.progressBarIntra.setValue( 0)
         #physiocap_log( self.tr( "Fin de la création csv et début de synthèse"), leModeDeTrace)
-        if (version_3 == "NO"):
+        if (DATA_VERSION_3 == "NO"):
             rep_csv = REPERTOIRE_TEXTES
         else:
             rep_csv = REPERTOIRE_TEXTES_V3
@@ -337,7 +337,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         nom_dir_vecteur_segment = None
         if quel_vecteur_demande in [ SHAPEFILE_NOM,  GEOJSON_NOM]:
             # Verification de l'existance ou création du répertoire des SHAPEFILE
-            if (version_3 == "NO"):
+            if (DATA_VERSION_3 == "NO"):
                 rep_vecteur = REPERTOIRE_SHAPEFILE
             else:
                 rep_vecteur = REPERTOIRE_VECTEUR_V3
@@ -348,7 +348,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
                 except :
                     raise physiocap_exception_rep( rep_vecteur)
 
-            if (version_3 == "NO"):
+            if (DATA_VERSION_3 == "NO"):
                 nom_dir_vecteur_segment = os.path.join(chemin_session, rep_vecteur)
             else:
                 # Création du dir des shapes de segments
@@ -364,7 +364,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         dialogue.progressBar.setValue( 12)
         
         # Verification de l'existance 
-        if version_3 == "YES":
+        if DATA_VERSION_3 == "YES":
             chemin_histos = os.path.join(chemin_session, REPERTOIRE_HISTO_V3)
         else:
             chemin_histos = os.path.join(chemin_session, REPERTOIRE_HISTOS)
@@ -405,7 +405,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
         dialogue.progressBar.setValue( 15) 
                   
         # Création des csv
-        if (version_3 == "NO"):
+        if (DATA_VERSION_3 == "NO"):
             nom_court_csv_sans_0 = Nom_Session + SEPARATEUR_ + "OUT.csv"
             nom_court_csv_avec_0 = Nom_Session + SEPARATEUR_ + "OUT0.csv"
             nom_court_csv_0_seul = Nom_Session + SEPARATEUR_ + "0SEUL.csv"
@@ -440,7 +440,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
                 segment_mini_vitesse, segment_maxi_vitesse, segment_mini_point, segment_max_pdop, 
                 segment_max_derive,  segment_pas_de_derive, 
                 details, interrangs, interceps, densite, hauteur,
-                laProjectionCRS, laProjectionTXT, version_3)
+                laProjectionCRS, laProjectionTXT, DATA_VERSION_3)
             # Fermeture du fichier destination
             physiocap_ferme_csv( csv_sans_0, csv_avec_0, csv_0_seul, diametre_filtre, erreur, csv_concat)
         #################
@@ -495,33 +495,33 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
 
         nom_base_vecteur = Nom_Session + NOM_POINTS
         # Création des vecteurs sans 0
-        if (version_3 == "NO"):
+        if (DATA_VERSION_3 == "NO"):
             nom_court_vecteur_sans_0 = nom_base_vecteur
         else: 
             nom_court_vecteur_sans_0 = nom_base_vecteur + EXTENSION_SANS_ZERO                     
         nom_layer_sans_0 = physiocap_csv_vers_vecteur( dialogue, chemin_session, Nom_Session, 
             40, EXTENSION_SANS_ZERO, 
             nom_csv_sans_0,  chemin_shapes, nom_court_vecteur_sans_0,
-            "NO", details, version_3)
+            "NO", details, DATA_VERSION_3)
  
         # Progress BAR 50 %
         dialogue.progressBar.setValue( 50)
 
         # Création des vecteurs avec 0
-        if (version_3 == "NO"):
+        if (DATA_VERSION_3 == "NO"):
             nom_court_vecteur_avec_0 = nom_base_vecteur + EXTENSION_AVEC_ZERO_V2
         else:
             nom_court_vecteur_avec_0 =nom_base_vecteur + EXTENSION_AVEC_ZERO        
         nom_layer_avec_0 = physiocap_csv_vers_vecteur( dialogue, chemin_session, Nom_Session, 
             60, EXTENSION_AVEC_ZERO, 
             nom_csv_avec_0,  chemin_shapes, nom_court_vecteur_avec_0, 
-            nom_fichier_synthese, details, version_3)
+            nom_fichier_synthese, details, DATA_VERSION_3)
  
         # Progress BAR 
         dialogue.progressBar.setValue( 65)
 
         # Création des vecteurs O seul
-        if (version_3 == "NO"):
+        if (DATA_VERSION_3 == "NO"):
             pass
         else: # V3 seulement
             # Création des shapes avec seulement les 0
@@ -529,7 +529,7 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             nom_layer_0_seul = physiocap_csv_vers_vecteur( dialogue, chemin_session, Nom_Session, 
                 80, EXTENSION_ZERO_SEUL, 
                 nom_csv_0_seul,  chemin_shapes, nom_court_vecteur_0_seul,
-                "NO", details, version_3) 
+                "NO", details, DATA_VERSION_3) 
 
         # Progress BAR 
         dialogue.progressBar.setValue( 70)
@@ -586,15 +586,15 @@ class PhysiocapFiltrer( QtWidgets.QDialog):
             if dialogue.checkBoxContourSolo.isChecked() and os.path.exists(nom_contour):
                 SHAPE_A_AFFICHER.append( (nom_contour, 'Contour généré', qml_is))
                 
-        if (version_3 != "NO") and dialogue.checkBoxPasMesure.isChecked():
+        if (DATA_VERSION_3 != "NO") and dialogue.checkBoxPasMesure.isChecked():
             qml_is = dialogue.lineEditThematiquePasMesure.text().strip('"') + EXTENSION_QML
             SHAPE_A_AFFICHER.append( (nom_layer_0_seul, 'PAS DE MESURE', qml_is))
             
-        if (version_3 != "NO") and dialogue.checkBoxSegment.isChecked():
+        if (DATA_VERSION_3 != "NO") and dialogue.checkBoxSegment.isChecked():
             qml_is = dialogue.lineEditThematiqueSegment.text().strip('"') + EXTENSION_QML
             SHAPE_A_AFFICHER.append( (nom_layer_segment, 'SEGMENT', qml_is))
 
-        if (version_3 != "NO") and dialogue.checkBoxSegmentBrise.isChecked():
+        if (DATA_VERSION_3 != "NO") and dialogue.checkBoxSegmentBrise.isChecked():
             qml_is = dialogue.lineEditThematiqueSegmentBrise.text().strip('"') + EXTENSION_QML
             SHAPE_A_AFFICHER.append( (nom_layer_segment_brise, 'SEGMENT BRISE', qml_is))
 

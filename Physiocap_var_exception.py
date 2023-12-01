@@ -47,7 +47,7 @@ else:
     LE_MODE_PROD = "YES"
 LISTE_PROFIL= [ 'Standard', 'Champagne', 'Fronton'] #, 'IFV Bordeaux']
 # LIVRAISON : supprimer le commentaire suivant en Prod et si win à YES
-LE_MODE_PROD = "YES"
+#LE_MODE_PROD = "YES"
 
 # En prod CENTROIDES vaut NO
 CENTROIDES = "NO"  # CENTROIDES YES est pour voir les centroides dans la synthese
@@ -152,6 +152,9 @@ V_majeure = int( Texte_majeure)
 V_mineure = int( Texte_mineure)
 Texte_detail,  V_petit_nom = Texte_detail_complet.split("-")    
 V_detail = int( Texte_detail)
+CHOIX_create_file_writer="NO"
+if V_majeure == 3 and V_mineure >= 16:  # CHOIX_create_file_writer pour QGIS >= 3.16
+    CHOIX_create_file_writer="YES"
 
 # Répertoires des sources et de concaténation en fichiers texte
 FICHIER_RESULTAT = "resultat.txt"

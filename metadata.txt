@@ -9,7 +9,7 @@
 
 [general]
 name=Physiocap3
-qgisMinimumVersion=3.16
+qgisMinimumVersion=3.22
 qgisMaximumVersion=3.99
 
 description=This plugin helps analysing raw data from 
@@ -23,7 +23,7 @@ description=This plugin helps analysing raw data from
 about= Physiocap est un capteur qui géolocalise les sarments d'une vigne. 
   L'extension (plugin) Physiocap n'intéresse que le métier "Agronomie de la vigne".
   Physiocap est breveté par le CIVC.
-version=3.22.6B
+version=3.28.11
 author=jhemmi.eu
 email=jean@jhemmi.eu
 
@@ -35,7 +35,8 @@ repository=https://github.com/jhemmi/Physiocap3
 
 # Uncomment the following line and add your changelog:
 changelog=
-  V3.22.6 Scrolling pour test issue 19
+  V3.34.1 Fin du support SAGA par QGIS et par l'extension Physiocap3 	
+  V3.28.11 QgsFileWrite create & del pour issue 29 Limite 1080 pixels vertical pour issue 19
   V3.22.5 GeoJSON
   V3.16.15 AGRO SAGA7 & QPJ 
   V3.10.14 PDF CSVT_synthesys MID_to_contour Profil Champagne Enchainement

@@ -274,7 +274,7 @@ def physiocap_filtrer(self, nom_court_csv_concat, src, csv_sans_0, csv_avec_0, c
     segment_max_derive,  segment_pas_de_derive, 
     details, eer, eec, d, hv,
     laProjectionCRS, laProjectionTXT, 
-    version_3 = "NO" ):
+    DATA_VERSION_3 = "NO" ):
     """Fonction de traitement.
     Filtre ligne brute par ligne brute les données de source (src) pour les valeurs 
     comprises entre mindiam et maxdiam et verifie si on n'a pas atteint le max_sarments_metre.
@@ -288,7 +288,7 @@ def physiocap_filtrer(self, nom_court_csv_concat, src, csv_sans_0, csv_avec_0, c
     # S'il n'existe pas de données parcellaire, le script travaille avec les données brutes
     titre = ""
     titre_partie_details = " ; NBSARMM2 ; NBSARCEP ; BIOMMM2 ; BIOMGM2 ; BIOMGCEP "
-    if version_3 == "NO":
+    if DATA_VERSION_3 == "NO":
         titre_sans_detail = "X ; Y ; XL93 ; YL93 ; NBSARM ; DIAM ; BIOM ; DATE ; VITESSE"
     else: # Ajout en version 3 de l'altitude 
         titre_sans_detail = "ID;X ; Y ; XL93 ; YL93 ; ALTITUDE; PDOP ; DISTANCE; DERIVE; AZIMUTH; NBSART; NBSARM ; DIAM ; BIOM ; DATE ; VITESSE"
@@ -392,7 +392,7 @@ def physiocap_filtrer(self, nom_court_csv_concat, src, csv_sans_0, csv_avec_0, c
             ma_distance = 0.0
             mon_azimuth = 0.0
             # SEGMENT si V3
-            if version_3 == "NO":
+            if DATA_VERSION_3 == "NO":
                 pass
             elif precedent == [] or on_coupe == "PREMIER":
                 # Stocker le premier point pour comparer au prochain tour    
@@ -543,7 +543,7 @@ def physiocap_filtrer(self, nom_court_csv_concat, src, csv_sans_0, csv_avec_0, c
                 diam =0
                 biom = 0
                 # Ecrire les seuls_0 et aussi les points avec 0
-                if version_3 == "NO":
+                if DATA_VERSION_3 == "NO":
                     csv_0_seul.write("%.7f%s%.7f%s%.7f%s%.7f%s%i%s%i%s%i%s%s%s%0.2f\n" \
                         %(XY[0],";",XY[1],";",XY_L93[0],";",XY_L93[1],";",nbsarm,";",diam ,";",biom,";",result[0],";",XY[7]))  # on écrit la ligne dans le csv avec ZERO SEUL
                     csv_avec_0.write("%.7f%s%.7f%s%.7f%s%.7f%s%i%s%i%s%i%s%s%s%0.2f\n" \
@@ -567,7 +567,7 @@ def physiocap_filtrer(self, nom_court_csv_concat, src, csv_sans_0, csv_avec_0, c
                 if nbsarm > 1 and nbsarm < max_sarments_metre :                   
                     diam =sum(diamsF)/len(diamsF)
                     biom = 3.1416*(diam/2)*(diam/2)*nbsarm
-                    if version_3 == "NO":
+                    if DATA_VERSION_3 == "NO":
                         csv_avec_0.write("%.7f%s%.7f%s%.7f%s%.7f%s%0.2f%s%.2f%s%.2f%s%s%s%0.2f\n" \
                             %(XY[0],";",XY[1],";",XY_L93[0],";",XY_L93[1],";",nbsarm,";",diam,";",biom,";",result[0],";",XY[7])) # on écrit la ligne dans le csv avec ZERO
                         csv_sans_0.write("%.7f%s%.7f%s%.7f%s%.7f%s%0.2f%s%.2f%s%.2f%s%s%s%0.2f\n" \
@@ -596,7 +596,7 @@ def physiocap_filtrer(self, nom_court_csv_concat, src, csv_sans_0, csv_avec_0, c
                 biommm2 = 0
                 biomgm2 = 0
                 biomgcep = 0
-                if version_3 == "NO":
+                if DATA_VERSION_3 == "NO":
                     csv_0_seul.write("%.7f%s%.7f%s%.7f%s%.7f%s%i%s%i%s%i%s%s%s%0.2f%s%i%s%i%s%i%s%i%s%i\n" \
                     %(XY[0],";",XY[1],";",XY_L93[0],";",XY_L93[1],";",nbsarm,";",diam ,";",biom,";",result[0],";",XY[7],";",nbsarmm2,";",nbsarcep,";",biommm2,";",biomgm2,";",biomgcep))  
                     csv_avec_0.write("%.7f%s%.7f%s%.7f%s%.7f%s%i%s%i%s%i%s%s%s%0.2f%s%i%s%i%s%i%s%i%s%i\n" \
@@ -643,7 +643,7 @@ def physiocap_filtrer(self, nom_court_csv_concat, src, csv_sans_0, csv_avec_0, c
                         biommm2 = biom/eer*100
                         biomgm2 = biom*d*hv/eer
                         biomgcep = biom*d*hv*eec/100/100
-                    if version_3 == "NO":
+                    if DATA_VERSION_3 == "NO":
                         csv_avec_0.write("%.7f%s%.7f%s%.7f%s%.7f%s%.2f%s%.2f%s%.2f%s%s%s%.2f%s%.2f%s%.2f%s%.2f%s%.2f%s%.2f\n" \
                         %(XY[0],";",XY[1],";",XY_L93[0],";",XY_L93[1],";",nbsarm,";",diam ,";",biom,";",result[0],";",XY[7],";",nbsarmm2,";",nbsarcep,";",biommm2,";",biomgm2,";",biomgcep))
                         csv_sans_0.write("%.7f%s%.7f%s%.7f%s%.7f%s%.2f%s%.2f%s%.2f%s%s%s%.2f%s%.2f%s%.2f%s%.2f%s%.2f%s%.2f\n" \
@@ -677,7 +677,7 @@ def physiocap_filtrer(self, nom_court_csv_concat, src, csv_sans_0, csv_avec_0, c
 #            physiocap_error( self, aMsg, "CRITICAL")
 #            raise physiocap_exception_err_csv( aMsg)
 
-    if version_3 == "NO":
+    if DATA_VERSION_3 == "NO":
         vecteur_segment = None
         vecteur_segment_brise = None
     else:
@@ -706,9 +706,9 @@ def physiocap_filtrer(self, nom_court_csv_concat, src, csv_sans_0, csv_avec_0, c
 
         # Creer les lignes simplifiés ou brisés de ces segments et infos
         vecteur_segment = physiocap_segment_vers_vecteur( self, chemin_session, nom_dir_segment,  nom_session, 
-            mes_lignes_sans_coupure,  info_lignes_sans_coupure, version_3)
+            mes_lignes_sans_coupure,  info_lignes_sans_coupure, DATA_VERSION_3)
         vecteur_segment_brise = physiocap_segment_vers_vecteur( self, chemin_session, nom_dir_segment,  nom_session,
-            mes_lignes_sans_coupure,  info_lignes_sans_coupure, version_3,  "BRISE")
+            mes_lignes_sans_coupure,  info_lignes_sans_coupure, DATA_VERSION_3,  "BRISE")
 
     physiocap_log( "{0} {1} Fin du filtrage OK des {2} lignes.". \
         format( PHYSIOCAP_INFO, PHYSIOCAP_UNI, str(numero_point - 1)), leModeDeTrace)

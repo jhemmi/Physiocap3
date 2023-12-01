@@ -79,7 +79,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.plugins_dir = os.path.dirname( self.plugin_dir)
         self.python_dir = os.path.dirname( self.plugins_dir)
         self.gis_dir = os.path.dirname( self.python_dir)
-        
+                  
         self.dans_Quel_Settings()
         # Remplissage du mode de traces
         self.fieldComboModeTrace.setCurrentIndex( 0)
@@ -97,11 +97,16 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
 
         #physiocap_log( "Répertoire QGIS : {} est version {}.{}.{}-{}".format( self.gis_dir, V_majeure, V_mineure, V_detail, V_petit_nom), leModeDeTrace)
         physiocap_log( "Répertoire des extensions (plugins) : " +  self.plugins_dir, leModeDeTrace)
-#
-#        if V_majeure == 3:
-#            physiocap_log( "V3 QGIS", leModeDeTrace)
-#        if V_mineure == 4:
-#            physiocap_log( "V3.4 QGIS", leModeDeTrace)
+
+        if MACHINE != "Linux":
+            from win32api import GetSystemMetrics
+            _, height = GetSystemMetrics(0), GetSystemMetrics(1)
+            # if height < 1080:
+            aText="Votre écran {} supporte seulement une hauteur de {} pixels" . \
+                format(MACHINE,  height)
+            physiocap_log( aText, leModeDeTrace)  
+            physiocap_message_box( self, aText, "attention")
+
 #            
         # Slot for boutons : ces deux sont déjà sont dans UI
         ##self.buttonBox.button( QDialogButtonBox.Ok ).pressed.connect(self.accept)
@@ -635,7 +640,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.settings.setValue("Physiocap/pasContour", pasContour)
 
         self.memoriser_affichages_styles()
-        version_3, consolidation, leModeDeTrace = self.memoriser_expert()
+        DATA_VERSION_3, consolidation, leModeDeTrace = self.memoriser_expert()
         self.memoriser_agro()
         self.memoriser_saisies_InterIntraParcelles()
         # Profil Champagne
@@ -660,7 +665,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             self.settings.setValue("Profil/Champagne", VALEUR_PROFIL_INITIALISE)
             
         physiocap_log('Tous les settings PROFIL sont sauvegardées', TRACE_PROFIL) 
-        return version_3, consolidation, recursif,  details, TRACE_HISTO, pasContour 
+        return DATA_VERSION_3, consolidation, recursif,  details, TRACE_HISTO, pasContour 
         
     def memoriser_expert( self):
         """ Mémoriser les choix d'expert """        
@@ -677,11 +682,11 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.settings.setValue("Expert/pas_de_la_derive", int( self.spinBoxPasDeDerive.value()))
         self.settings.setValue("Expert/pdop_max_segment", float( self.doubleSpinBoxPdopMaxSegment.value()))
         # Cas version 3
-        version_3 = "NO"
+        DATA_VERSION_3 = "NO"
         if self.checkBoxV3.isChecked():
-            version_3 = "YES"
+            DATA_VERSION_3 = "YES"
             physiocap_log( self.tr( "Les formats de la version V3 sont choisis"), TRACE_PROFIL) 
-        self.settings.setValue("Expert/version3", version_3 )
+        self.settings.setValue("Expert/version3", DATA_VERSION_3 )
 
         # Cas consolidation
         consolidation = "YES" if self.checkBoxConsolidation.isChecked() else "NO"
@@ -690,7 +695,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         sagaTIFF = "YES" if self.checkBoxSagaTIFF.isChecked() else "NO"
         self.settings.setValue("Expert/SagaTIFF", sagaTIFF )
         physiocap_log('Les informations expertes sont sauvegardées', TRACE_PROFIL) 
-        return version_3, consolidation, leModeDeTrace
+        return DATA_VERSION_3, consolidation, leModeDeTrace
         
     def lire_agro( self):
         # Informations agronomiques (inspiré de ___Nadia___)
@@ -1478,7 +1483,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             return physiocap_message_box( self, aText, "information" )
 
         # Memorisation des saisies et expert et les affichages
-        version_3, consolidation, _, details, _,  _ = self.memoriser_tous_Settings()
+        DATA_VERSION_3, consolidation, _, details, _,  _ = self.memoriser_tous_Settings()
             
         try:
             # Création des répertoires et des résultats de synthèse
@@ -1608,7 +1613,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             aText = aText + self.tr( "nécessite de créer une nouvelle session Physiocap ")
             physiocap_error( self, aText, "CRITICAL")
             return physiocap_message_box( self, aText, "information" )    
-        except physiocap_exception_no_choix_raster_iso as e:
+        except physiocap_exception_no_choix_raster_iso:
             physiocap_log_for_error( self)
             aText = self.tr( "Le choix de continuation du traitement intra n'est pas prévu.")
             physiocap_error( self, aText, "CRITICAL")
@@ -1884,7 +1889,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         # Eviter les appels multiples
         self.ButtonInter.setEnabled( False)
         # Memorisation des saisies
-        version_3, consolidation, _, details, _, _ = self.memoriser_tous_Settings()
+        DATA_VERSION_3, consolidation, _, details, _, _ = self.memoriser_tous_Settings()
            
         try:
             inter = PhysiocapInter( self)
@@ -2112,8 +2117,8 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.lineEditDensite.setText( str( densite))
         
     def slot_AIDE_demander_contribution( self):
-        """ Pointer vers page de paiement en ligne """ 
-        help_url = QUrl("https://sites.google.com/a/jhemmi.eu/objectifs/tarifs")
+        """ Pointer vers page de paiement QGIS """ 
+        help_url = QUrl("https://donate.qgis.org/")
         QDesktopServices.openUrl(help_url)
     
     def slot_AIDE_demander(self):
@@ -2195,7 +2200,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
         self.settings.setValue("Expert/laProjection", laProjectionTXT)
         
         # On sauve les affichages et rend les bascules pour traitement
-        version_3, consolidation, recursif, details, TRACE_HISTO, pasContour = self.memoriser_tous_Settings()
+        DATA_VERSION_3, consolidation, recursif, details, TRACE_HISTO, pasContour = self.memoriser_tous_Settings()
 
         if recursif == "YES":
             physiocap_log( self.tr( "La recherche des MID fouille l'arbre de données"), leModeDeTrace)
@@ -2213,7 +2218,7 @@ class Physiocap3Dialog( QDialog, FORM_CLASS):
             # Création des répertoires et des résultats de synthèse
             retour = filtreur.physiocap_creer_donnees_resultats( self, 
                 laProjectionCRS,  laProjectionTXT, EXTENSION_CRS_VECTEUR, 
-                details, TRACE_HISTO, recursif, version_3)
+                details, TRACE_HISTO, recursif, DATA_VERSION_3)
 
         except physiocap_exception_rep as e:
             physiocap_log_for_error( self)

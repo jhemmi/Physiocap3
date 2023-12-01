@@ -57,7 +57,7 @@ from PyQt5.QtCore import ( Qt)
 
 from qgis.core import ( Qgis, QgsProject, QgsVectorLayer, \
     QgsLayerTreeGroup, QgsRasterLayer, QgsMessageLog,  \
-    QgsFeatureRequest, QgsExpression, QgsProcessingFeedback, \
+    QgsFeatureRequest, QgsExpression, QgsProcessingUtils,  QgsProcessingFeedback, \
     QgsRectangle, QgsLayout, QgsReadWriteContext, QgsLayoutExporter, QgsLayerTree)
 
 ### copy qpt import shutil
@@ -291,6 +291,9 @@ class PhysiocapIntra( QtWidgets.QDialog):
             SEPARATEUR_ + "ISOLIGNE_" + le_nom_entite_libere + EXTENSION_CRS_VECTEUR
         le_raster_possible = os.path.join( chemin_raster, nom_court_raster) 
         l_iso_possible = os.path.join( chemin_iso, nom_court_isoligne)
+        # 3.28.11 SAGA7 
+        nom_contour = os.path.join( chemin_iso,  nom_noeud_arbre + NOM_INTRA  + SEPARATEUR_  + le_champ_choisi  + \
+            SEPARATEUR_ + "LIGNE_CONTOUR_" + le_nom_entite_libere + EXTENSION_CRS_VECTEUR)
         if le_choix_INTRA_continue == 0:
             # CAS 0 : Arrêt si une interpolation existe
             if os.path.exists( le_raster_possible) or os.path.exists( l_iso_possible):
@@ -329,14 +332,16 @@ class PhysiocapIntra( QtWidgets.QDialog):
             
         # Création d'un raster temporaire
         try:
-            from processing.tools.system import ( getTempDirInTempFolder, getTempFilename)
+            from processing.tools.system import ( getTempFilename)
             if choix_force_interpolation in [ "SAGA", "SAGA7"]:
                 # on crée un repertoire temporaire 
-                nom_dir_temp = getTempDirInTempFolder()
+                nom_dir_temp = QgsProcessingUtils.tempFolder()
+                # OLD nom_dir_temp = getTempDirInTempFolder()
                 nom_raster_temp = os.path.join( nom_dir_temp, "TMP_RASTER_SAGA" + EXTENSION_RASTER_SAGA)
                 nom_raster_temp_clip = os.path.join( nom_dir_temp, "TMP_RASTER_SAGA_CLIP" + EXTENSION_RASTER_SAGA)
             else:
                 # cas GDAL (ou QGIS) : tiff
+                # parametre insuffisant nom_raster_temp = QgsProcessingUtils.generateTempFilename("xx", EXTENSION_RASTER_SANS_POINT)
                 nom_raster_temp = getTempFilename( EXTENSION_RASTER_SANS_POINT)                
         except:
             physiocap_log( self.tr( "Exception durant nommage temporaire {0} et chemin \n{1}").\
@@ -431,7 +436,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 nom_raster_produit = self.appel_processing( nom_point, \
                     "IDW_SAGA", "saga:inversedistanceweightedinterpolation", \
                     IDW_SAGA, "TARGET_OUT_GRID")     
-            else:
+            elif choix_force_interpolation == "SAGA7":
                 IDW_SAGA_7 = { 'POINTS' : nom_point, 
                     'FIELD' : le_champ_choisi, 
                     'CV_METHOD':0,'CV_SUMMARY':'TEMPORARY_OUTPUT',
@@ -501,22 +506,38 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 # On passe ISO si nom_raster_final existe
                 if ( nom_raster_final != ""):
                     le_raster_final = QgsRasterLayer( nom_raster_final, nom_court_raster)                
-                    ISO_SAGA = { 'GRID' : le_raster_final,
-                        'VERTEX' : 1,
-                        'ZMIN' : isoMin, 'ZMAX' : isoMax, 
-                        'ZSTEP' : isoInterlignes, 
-                        'CONTOUR' : nom_isoligne }
-                        
-                    nom_iso_final = self.appel_processing( nom_point, \
-                        "ISO_SAGA", "saga:contourlines", \
-                        ISO_SAGA, "CONTOUR")
+                    if choix_force_interpolation == "SAGA":
+                        ISO_SAGA = { 'GRID' : le_raster_final,
+                            'VERTEX' : 1,
+                            'ZMIN' : isoMin, 'ZMAX' : isoMax, 
+                            'ZSTEP' : isoInterlignes, 
+                            'CONTOUR' : nom_isoligne }
+                            
+                        nom_iso_final = self.appel_processing( nom_point, \
+                            "ISO_SAGA", "saga:contourlines", \
+                            ISO_SAGA, "CONTOUR")
+                    elif choix_force_interpolation == "SAGA7":
+                            #pour 2.18
+# ("saga:contourlinesfromraster", {'GRID':'L93.tiff','CONTOUR':'TEMPORARY_OUTPUT',
+#'POLYGONS':'TEMPORARY_OUTPUT',
+#'VERTEX':0,'SCALE':1,'LINE_PARTS':True,
+#'POLY_PARTS':False,'ZMIN':0,'ZMAX':10000,'ZSTEP':10})
+                        ISO_SAGA7 = { 'GRID' : le_raster_final, 
+                            'CONTOUR' : nom_isoligne, 'POLYGONS': nom_contour, 
+                            'VERTEX' : 1, 'SCALE':1, 'LINE_PARTS':True, 'POLY_PARTS':False,
+                            'ZMIN' : isoMin, 'ZMAX' : isoMax, 
+                            'ZSTEP' : isoInterlignes}
+                            
+                        nom_iso_final = self.appel_processing( nom_point, \
+                            "ISO_SAGA7", "saga:contourlinesfromraster", \
+                            ISO_SAGA7, "CONTOUR")                        
                     
                     le_raster_final = None
 
-                physiocap_log( self.tr( "=~= Interpolation SAGA - Fin iso - {0}").\
-                    format( nom_iso_final), TRACE_INTRA)   
+                    physiocap_log( self.tr( "=~= Interpolation SAGA - Fin iso - {0}").\
+                        format( nom_iso_final), TRACE_INTRA)   
             else:
-                physiocap_log( self.tr( "=~= Interpolation SAGA - Fin raster - {0}").\
+                physiocap_log( self.tr( "=~= Interpolation SAGA - Fin raster sans iso - {0}").\
                     format( nom_raster_final), TRACE_INTRA)   
                 
         elif choix_force_interpolation == "GDAL":
@@ -709,9 +730,9 @@ class PhysiocapIntra( QtWidgets.QDialog):
         """Interpolation des données de points intra parcellaires"""
         derniere_session = dialogue.lineEditDerniereSession.text()
         leModeDeTrace = dialogue.fieldComboModeTrace.currentText()     
-        version_3 = "NO"
+        DATA_VERSION_3 = "NO"
         if dialogue.checkBoxV3.isChecked():
-            version_3 = "YES"
+            DATA_VERSION_3 = "YES"
 
         # Répertoire
         repertoire_data = dialogue.lineEditDirectoryPhysiocap.text()
@@ -792,7 +813,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
             nom_point_exact  = nom_point_en_cours
 
         # TODO: ?V3.x GEOPACKAGE et autre type de vecteur
-        if quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
+        if quel_vecteur_demande == GEOPACKAGE_NOM  and DATA_VERSION_3 == "YES":
             chemin_session = os.path.dirname( nom_point_exact)
             # Version 3.4.0 pas de geopackage en intra
             return physiocap_message_box( dialogue, 
@@ -826,7 +847,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 os.mkdir( chemin_vecteur_nom_point)                    
             chemin_vignettes = os.path.join( chemin_vecteur_nom_point, VIGNETTES_INTER)
         else:            
-            if version_3 == "NO":                
+            if DATA_VERSION_3 == "NO":                
                 chemin_vignettes = os.path.join( chemin_shapes, VIGNETTES_INTER)
             else:
                 chemin_vignettes = os.path.join( chemin_session , REPERTOIRE_INTER_V3)
@@ -851,7 +872,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
             chemin_raster = os.path.join( chemin_vecteur_nom_point, REPERTOIRE_RASTERS)
             chemin_iso = chemin_raster
         else:
-            if version_3 == "NO":                
+            if DATA_VERSION_3 == "NO":                
                 chemin_raster = os.path.join( chemin_shapes, REPERTOIRE_RASTERS)
                 chemin_iso = chemin_raster
             else:
@@ -859,7 +880,7 @@ class PhysiocapIntra( QtWidgets.QDialog):
                 chemin_raster =  os.path.join( chemin_intra, REPERTOIRE_RASTER_V3)
                 chemin_iso =  os.path.join( chemin_intra, REPERTOIRE_ISO_V3)
 
-        if version_3 == "YES" and consolidation != "YES":
+        if DATA_VERSION_3 == "YES" and consolidation != "YES":
             if not (os.path.exists( chemin_intra)):
                 try:
                     os.mkdir( chemin_intra)

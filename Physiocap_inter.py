@@ -66,7 +66,7 @@ def creer_moyenne_un_contour( nom_vignette, quel_vecteur_demande, DRIVER_VECTEUR
         geom_poly, la_surface, un_nom, un_autre_ID, date_debut, date_fin,
         nombre_points, le_taux_de_sans_mesure, 
         moyennes_point, ecarts_point, medianes_point, sommes_point_segment,  
-        version_3 = "NO", details = "NO"):
+        DATA_VERSION_3 = "NO", details = "NO"):
     """ Creation d'une vignette nommé un_nom avec les moyennes
         qui se trouvent dans le dic "moyenne_point" :
         moyenne_vitesse, moyenne_sar, moyenne_dia 
@@ -91,7 +91,7 @@ def creer_moyenne_un_contour( nom_vignette, quel_vecteur_demande, DRIVER_VECTEUR
     les_champs.append( QgsField( "BIOM", QVariant.Double,"double", 10,2))
     les_champs.append( QgsField( "M_BIOM", QVariant.Double,"double", 10,2))
     les_champs.append( QgsField( "E_BIOM", QVariant.Double,"double", 10,2))
-    if version_3 == "YES":
+    if DATA_VERSION_3 == "YES":
         les_champs.append( QgsField( "0_MESURE", QVariant.Double, "double", 10,1))           
         les_champs.append( QgsField( "NBSART",QVariant.Int, "integer", 10))           
         les_champs.append( QgsField( "T_LONG_SEG", QVariant.Double, "double", 10,1))   
@@ -152,7 +152,7 @@ def creer_moyenne_un_contour( nom_vignette, quel_vecteur_demande, DRIVER_VECTEUR
     les_champs.append( QgsField( "NOMBRE", QVariant.Int, "int", 10))           
 
     # Nouvelle creation du vecteur
-    if V_majeure == 3 and V_mineure >= 16:
+    if CHOIX_create_file_writer:
         physiocap_log( "{0} {1} FileWriter V3 & create".\
             format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI), TRACE_JH)        
         save_options = QgsVectorFileWriter.SaveVectorOptions()
@@ -169,7 +169,7 @@ def creer_moyenne_un_contour( nom_vignette, quel_vecteur_demande, DRIVER_VECTEUR
     feat = QgsFeature()
     feat.setGeometry( QgsGeometry.fromMultiPolygonXY(geom_poly.asMultiPolygon())) #écrit la géométrie tel que lu dans shape contour
 
-    if version_3 == "YES":
+    if DATA_VERSION_3 == "YES":
         # Préparer le calcul de nombre de sarment au m (Méthode segments)
         longueur_segment = sommes_point_segment['la_longueur_des_segments']
         nbsarm_seg = -1.0
@@ -178,7 +178,7 @@ def creer_moyenne_un_contour( nom_vignette, quel_vecteur_demande, DRIVER_VECTEUR
         else:
             nbsarm_seg = 0.0
     if details == "YES":
-        if version_3 == "YES":
+        if DATA_VERSION_3 == "YES":
             # Ecrit tous les attributs avec V3
             feat.setAttributes( [ 1, un_nom, un_autre_ID, nombre_points/la_surface,
 
@@ -225,7 +225,7 @@ def creer_moyenne_un_contour( nom_vignette, quel_vecteur_demande, DRIVER_VECTEUR
                 date_debut, date_fin, la_surface, nombre_points
                 ])
     else:
-        if version_3 == "YES":
+        if DATA_VERSION_3 == "YES":
             # Ecrit tous les attributs avec V3
             feat.setAttributes( [ 1, un_nom, un_autre_ID, nombre_points/la_surface, 
 
@@ -263,7 +263,11 @@ def creer_moyenne_un_contour( nom_vignette, quel_vecteur_demande, DRIVER_VECTEUR
                 ])
    # Ecrit le feature
     writer.addFeature( feat)
-    
+    if CHOIX_create_file_writer:
+        del writer
+    else:
+        writer = None
+        
     # Creer .prj et .qpj
     creer_extensions_pour_projection( nom_vignette, EPSG_NUMBER)
     return 0
@@ -287,7 +291,7 @@ def creer_segment_tous_contours( nom_segment, quel_vecteur_demande, DRIVER_VECTE
     les_champs.append( QgsField("DATE_FIN", QVariant.String, "string", 25))
 
     # Nouvelle creation du Shape
-    if V_majeure == 3 and V_mineure >= 16:
+    if CHOIX_create_file_writer:
         save_options = QgsVectorFileWriter.SaveVectorOptions()
         save_options.driverName = DRIVER_VECTEUR
         save_options.fileEncoding = "UTF-8"
@@ -319,6 +323,11 @@ def creer_segment_tous_contours( nom_segment, quel_vecteur_demande, DRIVER_VECTE
             # Ecrit le feature
             writer.addFeature( feat)
 
+    if CHOIX_create_file_writer:
+        del writer
+    else:
+        writer = None
+        
     # Creer .prj et .qpj
     creer_extensions_pour_projection( nom_segment, EPSG_NUMBER)
     return 0
@@ -348,7 +357,7 @@ def creer_segments_un_contour( nom_segment, quel_vecteur_demande, DRIVER_VECTEUR
     les_champs.append( QgsField("DATE_FIN", QVariant.String, "string", 25))
 
     # Nouvelle creation du Shape
-    if V_majeure == 3 and V_mineure >= 16:
+    if CHOIX_create_file_writer:
         save_options = QgsVectorFileWriter.SaveVectorOptions()
         save_options.driverName = DRIVER_VECTEUR
         save_options.fileEncoding = "UTF-8"
@@ -395,6 +404,11 @@ def creer_segments_un_contour( nom_segment, quel_vecteur_demande, DRIVER_VECTEUR
         # Ecrit le feature
         writer.addFeature( feat)
 
+    if CHOIX_create_file_writer:
+        del writer
+    else:
+        writer = None
+
     # Creer .prj et .qpj
     creer_extensions_pour_projection( nom_segment, EPSG_NUMBER)
     return 0
@@ -414,7 +428,7 @@ def creer_sans_mesure_tous_contours( nom_sans_mesure, quel_vecteur_demande, DRIV
     les_champs.append(QgsField("PDOP", QVariant.Double,"double", 10,2)) 
 
     # Nouvelle creation du Shape
-    if V_majeure == 3 and V_mineure >= 16:
+    if CHOIX_create_file_writer:
         save_options = QgsVectorFileWriter.SaveVectorOptions()
         save_options.driverName = DRIVER_VECTEUR
         save_options.fileEncoding = "UTF-8"
@@ -437,6 +451,11 @@ def creer_sans_mesure_tous_contours( nom_sans_mesure, quel_vecteur_demande, DRIV
             # Ecrit le feature
             writer.addFeature( feat)
 
+    if CHOIX_create_file_writer:
+        del writer
+    else:
+        writer = None
+    
     # Creer .prj et .qpj
     creer_extensions_pour_projection( nom_sans_mesure, EPSG_NUMBER)
     return 0
@@ -456,7 +475,7 @@ def creer_sans_mesure_un_contour( nom_sans_mesure, quel_vecteur_demande, DRIVER_
     les_champs.append(QgsField("AZIMUTH", QVariant.Double,"double", 10,2)) 
 
     # Nouvelle creation du Shape
-    if V_majeure == 3 and V_mineure >= 16:
+    if CHOIX_create_file_writer:
         save_options = QgsVectorFileWriter.SaveVectorOptions()
         save_options.driverName = DRIVER_VECTEUR
         save_options.fileEncoding = "UTF-8"
@@ -477,6 +496,11 @@ def creer_sans_mesure_un_contour( nom_sans_mesure, quel_vecteur_demande, DRIVER_
        # Ecrit le feature
         writer.addFeature( feat)
 
+    if CHOIX_create_file_writer:
+        del writer
+    else:
+        writer = None
+    
     # Creer .prj et .qpj
     creer_extensions_pour_projection( nom_sans_mesure, EPSG_NUMBER)
     return 0
@@ -488,7 +512,7 @@ def creer_point_un_contour( nom_point, quel_vecteur_demande, DRIVER_VECTEUR, tra
                     les_altitudes, les_pdop, les_distances, les_derives, 
                     les_azimuths, les_nbsart_s, 
                     les_biomgm2, les_biomgcep, les_biomm2, les_nbsarmm2, les_nbsarcep,
-                    version_3 = "NO", details = "NO"):
+                    DATA_VERSION_3 = "NO", details = "NO"):
     """ Creation d'un shape de points se trouvant dans le contour
     """
     # Prepare les attributs
@@ -499,7 +523,7 @@ def creer_point_un_contour( nom_point, quel_vecteur_demande, DRIVER_VECTEUR, tra
     les_champs.append(QgsField( "NBSARM",  QVariant.Double, "double", 10,2))
     les_champs.append(QgsField( "DIAM",  QVariant.Double, "double", 10,2))
     les_champs.append(QgsField("BIOM", QVariant.Double,"double", 10,2)) 
-    if version_3 == "YES":
+    if DATA_VERSION_3 == "YES":
         les_champs.append(QgsField("ALTITUDE", QVariant.Double,"double", 10,2)) 
         les_champs.append(QgsField("PDOP", QVariant.Double,"double", 10,2)) 
         les_champs.append(QgsField("DISTANCE", QVariant.Double,"double", 10,2)) 
@@ -514,14 +538,14 @@ def creer_point_un_contour( nom_point, quel_vecteur_demande, DRIVER_VECTEUR, tra
         les_champs.append( QgsField( "NBSARMM2", QVariant.Double,"double", 10,2))
         les_champs.append( QgsField( "NBSARCEP", QVariant.Double,"double", 10,2))
     # Creation du Shape
-    if version_3 == "YES":
+    if DATA_VERSION_3 == "YES":
         # On ecrit le 3eme Dimension
         type_point = QgsWkbTypes.PointZ
     else:
         type_point = QgsWkbTypes.Point
 
     # Nouvelle creation du Shape
-    if V_majeure == 3 and V_mineure >= 16:
+    if CHOIX_create_file_writer:
         physiocap_log( "{0} {1} FileWriter V3 & create".\
             format( PHYSIOCAP_2_EGALS, PHYSIOCAP_UNI), TRACE_JH)        
         save_options = QgsVectorFileWriter.SaveVectorOptions()
@@ -539,7 +563,7 @@ def creer_point_un_contour( nom_point, quel_vecteur_demande, DRIVER_VECTEUR, tra
         feat = QgsFeature()
 #        physiocap_log( "INTER point un contour : {0}". \
 #                format( les_geoms_des_points[ i].asWkt()),  TRACE_SEGMENT) 
-        if version_3 == "YES":
+        if DATA_VERSION_3 == "YES":
             # On pose directement les 3D
             # BUG #17 en QGIS3.10 : feat.setGeometry( QgsGeometry( QgsPoint( les_geoms_des_points[ i])))
             feat.setGeometry( QgsGeometry.fromWkt(  les_geoms_des_points[ i].asWkt()))
@@ -547,7 +571,7 @@ def creer_point_un_contour( nom_point, quel_vecteur_demande, DRIVER_VECTEUR, tra
             # A_TESTER: test sans fromPointXY
             feat.setGeometry( QgsGeometry.fromPointXY( les_geoms_des_points[ i])) #écrit la géométrie tel que lu dans shape contour
         if details == "YES":
-            if version_3 == "YES":
+            if DATA_VERSION_3 == "YES":
                 # Ecrit tous les attributs avec V3
                 feat.setAttributes( [ les_GID[ i], les_dates[ i], les_vitesses[ i], 
                 les_sarments[ i], les_diametres[ i], les_biom[ i], 
@@ -560,7 +584,7 @@ def creer_point_un_contour( nom_point, quel_vecteur_demande, DRIVER_VECTEUR, tra
                 les_sarments[ i], les_diametres[ i], les_biom[ i], 
                 les_biomgm2[ i], les_biomgcep[ i], les_biomm2[ i], les_nbsarmm2[ i], les_nbsarcep[ i] ])                
         else:
-            if version_3 == "YES":
+            if DATA_VERSION_3 == "YES":
                 # Ecrit tous les attributs avec V3
                 # Ecrit les premiers attributs
                 feat.setAttributes( [ les_GID[ i], les_dates[ i], les_vitesses[ i], 
@@ -575,6 +599,11 @@ def creer_point_un_contour( nom_point, quel_vecteur_demande, DRIVER_VECTEUR, tra
        # Ecrit le feature
         writer.addFeature( feat)
 
+    if CHOIX_create_file_writer:
+        del writer
+    else:
+        writer = None
+    
     # Creer .prj et .qpj
     creer_extensions_pour_projection( nom_point, EPSG_NUMBER)
     return 0
@@ -586,7 +615,7 @@ def creer_moyennes_tous_contours( nom_contour_moyenne, quel_vecteur_demande, DRI
     les_nombres, les_taux_sans_mesure, 
     les_moyennes_par_contour, les_ecarts_par_contour, les_medianes_par_contour, 
     sommes_point_segment_par_contour, 
-    version_3 = "NO", details = "NO"):
+    DATA_VERSION_3 = "NO", details = "NO"):
     """ Creation d'un contour avec les moyennes, ecart et mediane dans un tableau de dict
        Il s'agit de tous les polygones du contour avec des moyennes 
     """
@@ -608,7 +637,7 @@ def creer_moyennes_tous_contours( nom_contour_moyenne, quel_vecteur_demande, DRI
     les_champs.append( QgsField( "M_BIOM", QVariant.Double,"double", 10,2))
     les_champs.append( QgsField( "E_BIOM", QVariant.Double,"double", 10,2))
     
-    if version_3 == "YES":
+    if DATA_VERSION_3 == "YES":
         les_champs.append( QgsField( "0_MESURE", QVariant.Double, "double", 10,1))                   
         les_champs.append( QgsField( "NBSART",QVariant.Int, "integer", 10))           
         les_champs.append( QgsField( "T_LONG_SEG", QVariant.Double, "double", 10,1))   
@@ -670,7 +699,7 @@ def creer_moyennes_tous_contours( nom_contour_moyenne, quel_vecteur_demande, DRI
     les_champs.append( QgsField( "NOMBRE", QVariant.Int, "int", 10))
 
     # Nouvelle creation du Shape
-    if V_majeure == 3 and V_mineure >= 16:
+    if CHOIX_create_file_writer:
         save_options = QgsVectorFileWriter.SaveVectorOptions()
         save_options.driverName = DRIVER_VECTEUR
         save_options.fileEncoding = "UTF-8"
@@ -686,7 +715,7 @@ def creer_moyennes_tous_contours( nom_contour_moyenne, quel_vecteur_demande, DRI
         la_geom = QgsGeometry.fromMultiPolygonXY( les_geoms_poly[ i])
         feat.setGeometry( la_geom) #écrit la géométrie tel que lu dans shape contour
 
-        if version_3 == "YES":
+        if DATA_VERSION_3 == "YES":
             # Préparer le calcul de nombre de sarment au m (Méthode segments)
             longueur_segment = sommes_point_segment_par_contour[ i].get( 'la_longueur_des_segments')
             nbsarm_seg = -1.0
@@ -696,7 +725,7 @@ def creer_moyennes_tous_contours( nom_contour_moyenne, quel_vecteur_demande, DRI
                 nbsarm_seg = 0.0
             
         if details == "YES":
-            if version_3 == "YES":
+            if DATA_VERSION_3 == "YES":
                 # Ecrit tous les attributs pour V3 (les_taux_sans_mesure puis alti..)
                 feat.setAttributes( [ i, les_parcelles[ i], les_parcelles_ID[ i], les_nombres[ i] / les_surfaces[ i],
 
@@ -756,7 +785,7 @@ def creer_moyennes_tous_contours( nom_contour_moyenne, quel_vecteur_demande, DRI
                 dates_debut_parcelle[ i],  dates_fin_parcelle[ i], les_surfaces[ i],  les_nombres[ i]
                     ])
         else:
-            if version_3 == "YES":
+            if DATA_VERSION_3 == "YES":
                 # Ecrit tous les attributs pour V3
                 feat.setAttributes( [ i, les_parcelles[ i], les_parcelles_ID[ i],les_nombres[ i] / les_surfaces[ i],
 
@@ -800,7 +829,12 @@ def creer_moyennes_tous_contours( nom_contour_moyenne, quel_vecteur_demande, DRI
                     ])                
         # Ecrit le feature
         writer.addFeature( feat)
-    
+
+    if CHOIX_create_file_writer:
+        del writer
+    else:
+        writer = None
+        
     # Creer .prj et .qpj
     creer_extensions_pour_projection( nom_contour_moyenne, EPSG_NUMBER)
     return 0
@@ -840,7 +874,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                 
         details = "YES" if dialogue.groupBoxDetailVignoble.isChecked() else "NO"
         consolidation = "YES" if dialogue.checkBoxConsolidation.isChecked() else "NO"
-        version_3 = "YES" if dialogue.checkBoxV3.isChecked() else "NO"
+        DATA_VERSION_3 = "YES" if dialogue.checkBoxV3.isChecked() else "NO"
 
         # Récupérer des styles pour chaque shape dans Affichage
         repertoire_template,  repertoire_secours = quel_chemin_templates( dialogue)
@@ -851,7 +885,7 @@ class PhysiocapInter( QtWidgets.QDialog):
         le_template_point = quel_qml_existe( \
             dialogue.lineEditThematiqueInterPoints.text().strip('"') + EXTENSION_QML, \
             repertoire_template,  repertoire_secours)    
-        if version_3 == "YES":
+        if DATA_VERSION_3 == "YES":
             le_template_sans_mesure = quel_qml_existe( \
                 dialogue.lineEditThematiqueInterPasMesure.text().strip('"') + EXTENSION_QML,  \
                 repertoire_template,  repertoire_secours)    
@@ -917,7 +951,7 @@ class PhysiocapInter( QtWidgets.QDialog):
         nom_vecteur_point = vecteur_point.dataProvider().dataSourceUri()
 #       physiocap_log( "Nom du vecteur point {0} type vecteur point {1}". \
 #                format( nom_vecteur_point, type(nom_vecteur_point)), leModeDeTrace)
-        if quel_vecteur_demande == GEOPACKAGE_NOM  and version_3 == "YES":
+        if quel_vecteur_demande == GEOPACKAGE_NOM  and DATA_VERSION_3 == "YES":
             # Retrouver le chemin de la session avec le géopackage choisi
             # TODO: ?V3.x GEOPACKAGE
             chemin_session = os.path.dirname( nom_vecteur_point)
@@ -947,7 +981,7 @@ class PhysiocapInter( QtWidgets.QDialog):
             shape_point_sans_extension = shape_point_extension[:pos_extension]
             if ( not os.path.exists( chemin_shapes)):
                 raise physiocap_exception_rep( chemin_shapes)
-            if  version_3 == "YES" and consolidation != "YES":
+            if  DATA_VERSION_3 == "YES" and consolidation != "YES":
                 if ( not os.path.exists( chemin_shapes_segment)):
                     raise physiocap_exception_rep( chemin_shapes_segment)
         else: # Assert type vecteur supporté
@@ -960,7 +994,7 @@ class PhysiocapInter( QtWidgets.QDialog):
         dialogue.progressBarInter.setValue( 15)
 
         # CAS DE CONSOLIDATION ne traite pas les points sans mesure et les segments 
-        if  version_3 == "YES" and consolidation != "YES":
+        if  DATA_VERSION_3 == "YES" and consolidation != "YES":
             # On remplace la chaine finale du vecteur point par segment
             pos_diametre = nom_vecteur_point.rfind( NOM_POINTS + EXTENSION_SANS_ZERO + EXTENSION_CRS_VECTEUR)
             physiocap_log( "{0} retrouve le 'sans zero' à position {1}". \
@@ -1119,7 +1153,7 @@ class PhysiocapInter( QtWidgets.QDialog):
             #physiocap_log( "Distancearea surface {0}".format( la_surface), leModeDeTrace)
 
             # PAS DE MESURE DU CONTOUR
-            if  version_3 == "YES": # init pour tous les cas V3
+            if  DATA_VERSION_3 == "YES": # init pour tous les cas V3
                 # on initialise pour ce contour
                 les_geoms_sans_mesure = []
                 les_dates_sans_mesure = []
@@ -1129,7 +1163,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                 les_pdop_sans_mesure = []
                 les_azimuths_sans_mesure = []
                 i_sans_mesure = 0
-            if  version_3 == "YES" and dialogue.checkBoxInterPasMesure.isChecked() and consolidation != "YES":
+            if  DATA_VERSION_3 == "YES" and dialogue.checkBoxInterPasMesure.isChecked() and consolidation != "YES":
                 # Préfiltre dans un rectangle
                 # Récupération des POINT SANS MESURE qui concernent ce contour
                 for un_sans_mesure in vecteur_pas_mesure.getFeatures(QgsFeatureRequest().
@@ -1165,7 +1199,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                 
             # FIN PAS DE MESURE DU CONTOUR
             # SEGMENT DU CONTOUR
-            if  version_3 == "YES": # init pour tous les cas V3
+            if  DATA_VERSION_3 == "YES": # init pour tous les cas V3
                 # on initialise pour ce contour
                 les_geoms_segment = []
                 les_longueurs_segment = []
@@ -1177,7 +1211,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                 les_nombres_points_segment = []
                 les_nombres_points_restant = []
                 i_segment = 0
-            if  version_3 == "YES" and ( dialogue.checkBoxInterSegment.isChecked() or \
+            if  DATA_VERSION_3 == "YES" and ( dialogue.checkBoxInterSegment.isChecked() or \
                 dialogue.checkBoxInterSegmentBrise.isChecked() ) and consolidation != "YES":
                 # Préfiltre dans un rectangle
                 # Récupération des SEGMENTS qui concernent ce contour
@@ -1296,7 +1330,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                             date_debut = un_point["DATE"]
                         
                         une_geom_2D = un_point.geometry().asPoint()
-                        if version_3 == "YES":
+                        if DATA_VERSION_3 == "YES":
                             # on ajoute la troisième dimension
                             une_geom_3D = QgsPoint( une_geom_2D.x(),  une_geom_2D.y(), un_point["DIAM"])
                             les_geoms_des_points.append( une_geom_3D)
@@ -1313,7 +1347,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                         les_sarments.append( un_point["NBSARM"])
                         les_diametres.append( un_point["DIAM"])
                         les_biom.append( un_point["BIOM"])
-                        if version_3 == "YES":
+                        if DATA_VERSION_3 == "YES":
                             les_altitudes.append( un_point["ALTITUDE"])
                             les_pdop.append( un_point["PDOP"])
                             les_distances.append( un_point["DISTANCE"])
@@ -1350,7 +1384,7 @@ class PhysiocapInter( QtWidgets.QDialog):
             nb_dia = len( les_diametres)
             nb_sarments_m = len( les_sarments) # sarments par metre
             le_taux_de_sans_mesure = -1
-            if  version_3 == "YES" and dialogue.checkBoxInterPasMesure.isChecked() \
+            if  DATA_VERSION_3 == "YES" and dialogue.checkBoxInterPasMesure.isChecked() \
                 and nb_dia > 0:
                 # Calcul du taux de sans mesure en % (Bug #4)
                 nb_total = nb_dia + i_sans_mesure
@@ -1376,7 +1410,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                 moyennes_point['biom'] = float(     np.mean( les_biom))
                 ecarts_point['biom'] = float(       np.std( les_biom))
                 medianes_point['biom'] = float(     np.median( les_biom))
-                if version_3 == "YES":
+                if DATA_VERSION_3 == "YES":
                     moyennes_point['altitude'] = float( np.mean( les_altitudes))
                     ecarts_point['altitude'] = float(   np.std( les_altitudes))
                     medianes_point['altitude'] = float( np.median( les_altitudes))
@@ -1453,7 +1487,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                 
 #                physiocap_log ( self.tr( "Date : {0}").\
 #                    format( date_debut), leModeDeTrace) 
-                if version_3 == "YES":                
+                if DATA_VERSION_3 == "YES":                
                     physiocap_log ( self.tr( "Moyenne des orientations Aller par segments : {0:6.1f} - Ecarts : {1:6.1f} en °").\
                         format( moyennes_point.get('azimuth_segments_pos'), ecarts_point.get('azimuth_segments_pos') ), leModeDeTrace)
                     physiocap_log ( self.tr( "Moyenne des orientations Retour par segments : {0:6.1f} - Ecarts : {1:6.1f} en °").\
@@ -1496,7 +1530,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                             os.mkdir( chemin_vecteur_nom_point)                    
                         chemin_vignettes = os.path.join( chemin_vecteur_nom_point, VIGNETTES_INTER)
                     else:
-                        if version_3 == "NO":                
+                        if DATA_VERSION_3 == "NO":                
                             chemin_vignettes = os.path.join( chemin_shapes, VIGNETTES_INTER)
                         else:
                             chemin_vignettes = os.path.join( chemin_session , REPERTOIRE_INTER_V3)
@@ -1505,7 +1539,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                         try:
                             os.mkdir( chemin_vignettes)
                         except:
-                            if version_3 == "NO":                
+                            if DATA_VERSION_3 == "NO":                
                                 raise physiocap_exception_rep( VIGNETTES_INTER)
                             else:
                                 raise physiocap_exception_rep( REPERTOIRE_INTER_V3)
@@ -1528,7 +1562,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                     geom_poly, la_surface,  un_nom, un_autre_ID, date_debut, date_fin,
                     nb_dia, le_taux_de_sans_mesure, 
                     moyennes_point, ecarts_point, medianes_point, sommes_point_segment, 
-                    version_3, details)
+                    DATA_VERSION_3, details)
                                      
                 # Memorisation de la parcelle du contour et des moyennes
                 les_geoms_poly.append( geom_poly.asMultiPolygon())
@@ -1557,9 +1591,9 @@ class PhysiocapInter( QtWidgets.QDialog):
                     les_altitudes,  les_pdop, les_distances, les_derives,
                     les_azimuths_points, les_nbsart_points, 
                     les_biomgm2, les_biomgcep, les_biomm2, les_nbsarmm2, les_nbsarcep,
-                    version_3, details)
+                    DATA_VERSION_3, details)
                 
-                if  version_3 == "YES" and dialogue.checkBoxInterPasMesureDetails.isChecked() and consolidation != "YES":
+                if  DATA_VERSION_3 == "YES" and dialogue.checkBoxInterPasMesureDetails.isChecked() and consolidation != "YES":
                     # ###################
                     # CRÉATION point sans mesure
                     # ###################
@@ -1571,7 +1605,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                         les_vitesses_sans_mesure, les_altitudes_sans_mesure, les_pdop_sans_mesure, 
                         les_azimuths_sans_mesure)
 
-                if  version_3 == "YES" and dialogue.checkBoxInterSegmentDetails.isChecked() and consolidation != "YES":
+                if  DATA_VERSION_3 == "YES" and dialogue.checkBoxInterSegmentDetails.isChecked() and consolidation != "YES":
                     # ###################
                     # CRÉATION segment droit dans contour
                     # ###################
@@ -1582,7 +1616,7 @@ class PhysiocapInter( QtWidgets.QDialog):
                         les_azimuths_segment,  les_longueurs_segment, les_distances_entre_segment,  
                         les_GID_segment, les_nombres_points_segment, les_nombres_points_restant)
 
-                if  version_3 == "YES" and dialogue.checkBoxInterSegmentBriseDetails.isChecked() and consolidation != "YES":
+                if  DATA_VERSION_3 == "YES" and dialogue.checkBoxInterSegmentBriseDetails.isChecked() and consolidation != "YES":
                     # ###################
                     # CRÉATION segment  brisé dans contour
                     # ###################
@@ -1602,15 +1636,15 @@ class PhysiocapInter( QtWidgets.QDialog):
                 if dialogue.checkBoxInterPoints.isChecked():
                     SHAPE_POINTS_PAR_CONTOUR = "YES"
                 SHAPE_SANS_MESURE_PAR_CONTOUR = "NO"
-                if  version_3 == "YES" and dialogue.checkBoxInterPasMesureDetails.isChecked() and consolidation != "YES":
+                if  DATA_VERSION_3 == "YES" and dialogue.checkBoxInterPasMesureDetails.isChecked() and consolidation != "YES":
                     SHAPE_SANS_MESURE_PAR_CONTOUR = "YES"
                     points_sans_mesure = QgsVectorLayer( nom_sans_mesure, nom_court_sans_mesure, 'ogr')
                 SHAPE_SEGMENT_PAR_CONTOUR = "NO"
-                if  version_3 == "YES" and dialogue.checkBoxInterSegmentDetails.isChecked() and consolidation != "YES":
+                if  DATA_VERSION_3 == "YES" and dialogue.checkBoxInterSegmentDetails.isChecked() and consolidation != "YES":
                     SHAPE_SEGMENT_PAR_CONTOUR = "YES"
                     ligne_segment = QgsVectorLayer( nom_segment, nom_court_segment, 'ogr')
                 SHAPE_SEGMENT_BRISE_PAR_CONTOUR = "NO"
-                if  version_3 == "YES" and dialogue.checkBoxInterSegmentBriseDetails.isChecked() and consolidation != "YES":
+                if  DATA_VERSION_3 == "YES" and dialogue.checkBoxInterSegmentBriseDetails.isChecked() and consolidation != "YES":
                     SHAPE_SEGMENT_BRISE_PAR_CONTOUR = "YES"
                     ligne_segment_brise = QgsVectorLayer( nom_segment_brise, nom_court_segment_brise, 'ogr')
                     
@@ -1638,13 +1672,13 @@ class PhysiocapInter( QtWidgets.QDialog):
                     if SHAPE_POINTS_PAR_CONTOUR == "YES":
                         mon_projet.addMapLayer( points_vector, False)
                         groupe_parcelle.addLayer( points_vector)
-                    if  version_3 == "YES" and SHAPE_SANS_MESURE_PAR_CONTOUR == "YES":
+                    if  DATA_VERSION_3 == "YES" and SHAPE_SANS_MESURE_PAR_CONTOUR == "YES":
                         mon_projet.addMapLayer( points_sans_mesure, False)
                         groupe_parcelle.addLayer( points_sans_mesure)
-                    if  version_3 == "YES" and SHAPE_SEGMENT_BRISE_PAR_CONTOUR == "YES":
+                    if  DATA_VERSION_3 == "YES" and SHAPE_SEGMENT_BRISE_PAR_CONTOUR == "YES":
                         mon_projet.addMapLayer( ligne_segment_brise, False)
                         groupe_parcelle.addLayer( ligne_segment_brise)
-                    if  version_3 == "YES" and SHAPE_SEGMENT_PAR_CONTOUR == "YES":
+                    if  DATA_VERSION_3 == "YES" and SHAPE_SEGMENT_PAR_CONTOUR == "YES":
                         mon_projet.addMapLayer( ligne_segment, False)
                         groupe_parcelle.addLayer( ligne_segment)
 
@@ -1654,11 +1688,11 @@ class PhysiocapInter( QtWidgets.QDialog):
                         mon_projet.addMapLayer( vignette_vector)
                     if SHAPE_POINTS_PAR_CONTOUR == "YES":
                         mon_projet.addMapLayer( points_vector)
-                    if  version_3 == "YES" and SHAPE_SANS_MESURE_PAR_CONTOUR == "YES" and consolidation != "YES":
+                    if  DATA_VERSION_3 == "YES" and SHAPE_SANS_MESURE_PAR_CONTOUR == "YES" and consolidation != "YES":
                         mon_projet.addMapLayer( points_sans_mesure, False)
-                    if  version_3 == "YES" and SHAPE_SEGMENT_BRISE_PAR_CONTOUR == "YES" and consolidation != "YES":
+                    if  DATA_VERSION_3 == "YES" and SHAPE_SEGMENT_BRISE_PAR_CONTOUR == "YES" and consolidation != "YES":
                         mon_projet.addMapLayer( ligne_segment_brise, False)
-                    if  version_3 == "YES" and SHAPE_SEGMENT_PAR_CONTOUR == "YES" and consolidation != "YES":
+                    if  DATA_VERSION_3 == "YES" and SHAPE_SEGMENT_PAR_CONTOUR == "YES" and consolidation != "YES":
                         mon_projet.addMapLayer( ligne_segment, False)
 
                         
@@ -1669,13 +1703,13 @@ class PhysiocapInter( QtWidgets.QDialog):
                 if SHAPE_POINTS_PAR_CONTOUR == "YES":
                     if ( os.path.exists( le_template_point)):
                         points_vector.loadNamedStyle( le_template_point)
-                if  version_3 == "YES" and SHAPE_SANS_MESURE_PAR_CONTOUR == "YES" and consolidation != "YES":                  
+                if  DATA_VERSION_3 == "YES" and SHAPE_SANS_MESURE_PAR_CONTOUR == "YES" and consolidation != "YES":                  
                     if ( os.path.exists( le_template_sans_mesure)):
                         points_sans_mesure.loadNamedStyle( le_template_sans_mesure)
-                if  version_3 == "YES" and SHAPE_SEGMENT_BRISE_PAR_CONTOUR == "YES" and consolidation != "YES":                  
+                if  DATA_VERSION_3 == "YES" and SHAPE_SEGMENT_BRISE_PAR_CONTOUR == "YES" and consolidation != "YES":                  
                     if ( os.path.exists( le_template_segment_brise)):
                         ligne_segment_brise.loadNamedStyle( le_template_segment_brise)
-                if  version_3 == "YES" and SHAPE_SEGMENT_PAR_CONTOUR == "YES" and consolidation != "YES":                  
+                if  DATA_VERSION_3 == "YES" and SHAPE_SEGMENT_PAR_CONTOUR == "YES" and consolidation != "YES":                  
                     if ( os.path.exists( le_template_segment)):
                         ligne_segment.loadNamedStyle( le_template_segment)
 
@@ -1716,22 +1750,22 @@ class PhysiocapInter( QtWidgets.QDialog):
                 les_nombres, les_taux_sans_mesure, 
                 les_moyennes_par_contour, les_ecarts_par_contour, les_medianes_par_contour,
                 sommes_point_segment_par_contour,  
-                version_3, details)
+                DATA_VERSION_3, details)
 
             # CREATION VECTEUR DE 0_SEUL ou sans mesure
-            if  version_3 == "YES" and dialogue.checkBoxInterPasMesure.isChecked():
+            if  DATA_VERSION_3 == "YES" and dialogue.checkBoxInterPasMesure.isChecked():
                 nom_court_sans_mesure_moyenne = nom_noeud_arbre + NOM_POINTS + EXTENSION_ZERO_SEUL + SEPARATEUR_ + nom_court_du_contour + EXTENSION_CRS_VECTEUR
                 nom_sans_mesure_moyenne = physiocap_rename_existing_file( os.path.join( chemin_vignettes, nom_court_sans_mesure_moyenne))        
                 creer_sans_mesure_tous_contours( nom_sans_mesure_moyenne, quel_vecteur_demande, DRIVER_VECTEUR, transform_context, laProjectionCRS, EPSG_NUMBER, 
                     toutes_les_geoms_sans_mesure, les_infos_sans_mesure)
                     
             # CREATION VECTEUR SEGMENT
-            if  version_3 == "YES" and dialogue.checkBoxInterSegment.isChecked() :
+            if  DATA_VERSION_3 == "YES" and dialogue.checkBoxInterSegment.isChecked() :
                 nom_court_segment_moyenne = nom_noeud_arbre + NOM_SEGMENTS + SEPARATEUR_ + nom_court_du_contour + EXTENSION_CRS_VECTEUR
                 nom_segment_moyenne = physiocap_rename_existing_file( os.path.join( chemin_segments, nom_court_segment_moyenne))        
                 creer_segment_tous_contours( nom_segment_moyenne, quel_vecteur_demande, DRIVER_VECTEUR, transform_context, laProjectionCRS, EPSG_NUMBER, 
                     toutes_les_geoms_segment, les_infos_segment)   
-            if  version_3 == "YES" and dialogue.checkBoxInterSegmentBrise.isChecked():
+            if  DATA_VERSION_3 == "YES" and dialogue.checkBoxInterSegmentBrise.isChecked():
                 nom_court_segment_brise_moyenne = nom_noeud_arbre + NOM_SEGMENTS + SEPARATEUR_ + nom_court_du_contour + EXTENSION_CRS_VECTEUR
                 nom_segment_brise_moyenne = physiocap_rename_existing_file( os.path.join( chemin_segments, nom_court_segment_brise_moyenne))        
                 creer_segment_tous_contours( nom_segment_brise_moyenne, quel_vecteur_demande, DRIVER_VECTEUR, transform_context, laProjectionCRS, EPSG_NUMBER, 
@@ -1767,15 +1801,15 @@ class PhysiocapInter( QtWidgets.QDialog):
                 nom_affichage = nom_court_affichage + 'LIBELLE' + SEPARATEUR_ + nom_court_du_contour
                 qml_is = dialogue.lineEditThematiqueInterLibelle.text().strip('"') + EXTENSION_QML
                 SHAPE_A_AFFICHER.append( (nom_affichage, qml_is, nom_contour_moyenne))
-            if version_3 == "YES" and dialogue.checkBoxInterPasMesure.isChecked():
+            if DATA_VERSION_3 == "YES" and dialogue.checkBoxInterPasMesure.isChecked():
                 nom_affichage = nom_court_affichage + 'PAS DE MESURE' + SEPARATEUR_ + nom_court_du_contour
                 qml_is = dialogue.lineEditThematiqueInterPasMesure.text().strip('"') + EXTENSION_QML
                 SHAPE_A_AFFICHER.append( (nom_affichage, qml_is, nom_sans_mesure_moyenne))
-            if version_3 == "YES" and dialogue.checkBoxInterSegmentBrise.isChecked():
+            if DATA_VERSION_3 == "YES" and dialogue.checkBoxInterSegmentBrise.isChecked():
                 nom_affichage = nom_court_affichage + 'SEGMENT BRISE' + SEPARATEUR_ + nom_court_du_contour
                 qml_is = dialogue.lineEditThematiqueInterSegmentBrise.text().strip('"') + EXTENSION_QML
                 SHAPE_A_AFFICHER.append( (nom_affichage, qml_is,  nom_segment_brise_moyenne))
-            if version_3 == "YES" and dialogue.checkBoxInterSegment.isChecked():
+            if DATA_VERSION_3 == "YES" and dialogue.checkBoxInterSegment.isChecked():
                 nom_affichage = nom_court_affichage + 'SEGMENT' + SEPARATEUR_ + nom_court_du_contour
                 qml_is = dialogue.lineEditThematiqueInterSegment.text().strip('"') + EXTENSION_QML
                 SHAPE_A_AFFICHER.append( (nom_affichage, qml_is, nom_segment_moyenne))
