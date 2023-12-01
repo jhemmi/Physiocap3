@@ -32,8 +32,11 @@ La documentation de la version 3 se trouve dans le Wiki https://github.com/jhemm
 
 La version 3.16.15 LTR est déposée sous QGIS 3 (accessible directement dans QGIS 3 depuis le Menu "Extension").
 
-La numérotation de l'extension suit le numéro des versions LTR de QGIS3 (3.4, 3.10, 3.16 ...).
+La version 3.34.1 LTR sera déposée sous QGIS 3 pour 3.28.11 LTR et 3.34.1 future LTR (accessible directement dans QGIS 3 depuis le Menu "Extension").
 
-**Attention, ce dépot GitHub contient la aussi dernière version en cours de test (la 3.22.x - Avril 2022 https://github.com/jhemmi/Physiocap3/releases) **
+La numérotation de l'extension suit le numéro des versions LTR de QGIS3 (3.22, 3.28, 3.34 ...).
+La sous version x est la version QGIS pour laquelle les tests ont été effectués.
 
-**Warning, this GitHub repo contains last evolution version (Version 3.22.x - april 2022 https://github.com/jhemmi/Physiocap3/releases) **
+**Attention, ce dépot GitHub contient la aussi dernière version en cours de test (la 3.34.x - décembre 2022 https://github.com/jhemmi/Physiocap3/releases) **
+
+**Warning, this GitHub repo contains last evolution version (Version 3.34.x - december 2023 https://github.com/jhemmi/Physiocap3/releases) ** 
